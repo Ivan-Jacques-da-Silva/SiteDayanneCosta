@@ -1,12 +1,31 @@
-# React + Vite
+# 🏠 Real Estate Website - Dayanne Costa
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este é um projeto de site imobiliário desenvolvido para a corretora **Dayanne Costa**, focado na apresentação de imóveis de alto padrão e navegação intuitiva.
 
-Currently, two official plugins are available:
+## 🚀 Tecnologias
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React.js
+- React Bootstrap
+- CSS Modules
+- Imagens otimizadas
+- Estrutura responsiva
 
-## Expanding the ESLint configuration
+## 📂 Estrutura
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- `components/`: componentes reutilizáveis como Header, HeroSection, Listings, etc.
+- `assets/img/`: imagens utilizadas no site.
+- `pages/`: estrutura de páginas do projeto.
+
+## 📸 Funcionalidades
+
+- Seções com destaque visual para venda e compra de imóveis
+- Apresentação da equipe
+- Galeria de estilos de vida (Lifestyle)
+- Destaque para empreendimentos e propostas
+- Layout moderno e responsivo
+
+## 💻 Instalação
+
+```bash
+npm install
+npm run dev
