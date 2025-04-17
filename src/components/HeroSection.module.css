@@ -1,0 +1,49 @@
+/* src/components/HeroSection.module.css */
+.hero {
+    background-color: #f8f9fa; /* Cor de fundo padrão, pode substituir por uma imagem */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('seu-background.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .customTabs .nav-link {
+    color: #fff;
+    font-weight: 500;
+    border: none !important;
+    padding: 12px 24px;
+  }
+  
+  .customTabs .nav-link.active {
+    color: #000;
+    background-color: #fff;
+    border-radius: 4px 4px 0 0;
+  }
+  
+  .searchForm {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .searchInput {
+    border-right: none;
+    border-radius: 4px 0 0 4px !important;
+  }
+  
+  .searchInput:focus {
+    box-shadow: none;
+    border-color: #ced4da;
+  }
+  
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .hero {
+      padding: 60px 0;
+    }
+    
+    .customTabs .nav-link {
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+  }

@@ -1,0 +1,52 @@
+.footer {
+  background-color: #2c3e50;
+  color: white;
+}
+
+.compassLogo {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+}
+
+.contactInfo div {
+  margin-bottom: 10px;
+}
+
+.name {
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.disclaimer p {
+  color: rgba(255,255,255,0.7);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.footerLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.footerLinks a {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  font-size: 0.8rem;
+}
+
+.footerLinks a:hover {
+  color: white;
+}
+
+.footerLinks span {
+  color: rgba(255,255,255,0.7);
+  font-size: 0.8rem;
+}
+
+.tremGroup {
+  color: rgba(255,255,255,0.7);
+  font-size: 0.8rem;
+}

@@ -1,0 +1,68 @@
+.featuredDevelopments {
+    background-color: #fff;
+  }
+  
+  .developmentCard {
+    border: none;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+  }
+  
+  .developmentCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  }
+  
+  .imageContainer {
+    height: 200px;
+    overflow: hidden;
+  }
+  
+  .developmentImage {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  
+  .developmentCard:hover .developmentImage {
+    transform: scale(1.05);
+  }
+  
+  .developmentTitle {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+  }
+  
+  .developmentDescription {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+  }
+  
+  .viewAllButton {
+    color: #2c3e50;
+    text-decoration: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+  }
+  
+  .viewAllButton:hover {
+    color: #e74c3c;
+  }
+  
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .imageContainer {
+      height: 160px;
+    }
+    
+    .developmentTitle {
+      font-size: 1.1rem;
+    }
+  }

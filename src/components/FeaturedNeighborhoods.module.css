@@ -1,0 +1,64 @@
+.featuredNeighborhoods {
+    background-color: #f8f9fa;
+  }
+  
+  .sectionTitle {
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #2c3e50;
+  }
+  
+  .neighborhoodCard {
+    background-color: white;
+    padding: 20px;
+    text-align: center;
+    font-weight: 600;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+  }
+  
+  .neighborhoodCard:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  .viewAllButton {
+    color: #2c3e50;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  
+  .viewAllButton:hover {
+    color: #e74c3c;
+  }
+  
+  .featuredListing {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin-top: 30px;
+  }
+  
+  .listingPrice {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #e74c3c;
+  }
+  
+  .listingAddress {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+  
+  .listingDescription {
+    color: #555;
+    line-height: 1.8;
+  }
+  
+  .listingDetails {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-top: 15px;
+  }
