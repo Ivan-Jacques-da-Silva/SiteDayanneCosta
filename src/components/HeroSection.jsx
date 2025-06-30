@@ -1,37 +1,43 @@
 import React from 'react';
 import { Container, Row, Col, Form, Button, Tab, Tabs } from 'react-bootstrap';
 import styles from './HeroSection.module.css';
+import BackgroundCarousel from './BackgroundCarousel';
 import mulherFixa from '../assets/img/mulher.png';
-// import Carousel from 'react-bootstrap/Carousel';
-// import slide1 from '../img/bg1.jpg';
-// import slide2 from '../img/bg2.jpg';
-// import slide3 from '../img/bg3.jpg';
+import bgImage1 from '../assets/img/fundoImg.jpeg';
+import bgImage2 from '../assets/img/bg-buy.jpeg';
+import bgImage3 from '../assets/img/bg-sell.jpeg';
 
 const HeroSection = () => {
+  const carouselImages = [bgImage1, bgImage2, bgImage3];
+
   return (
-    <section className={`${styles.hero} position-relative`} style={{ backgroundImage: "url('../img/bg1.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
-      <div className="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50"></div>
+    <section className={`${styles.hero} position-relative`}>
+      <BackgroundCarousel images={carouselImages} interval={4000}>
+        <Container className="position-relative z-1 py-5">
+          <Row className="justify-content-center text-center mb-4">
+            <Col lg={10} xl={8}>
+              <h1 className={`${styles.heroTitle} fw-bold text-white mb-4`}>
+                Building Relationships, Building Real Estate Legacies
+                <br />
+                <span className={`${styles.heroSubtitle} d-block mt-3`}>Dayanne Costa</span>
+              </h1>
+            </Col>
+          </Row>
 
-      <Container className="position-relative z-1 py-5">
-        <Row className="justify-content-center text-center mb-4">
-          <Col>
-            <h1 className="display-5 fw-bold text-white">
-              Building Relationships, Building Real Estate Legacies<br />
-              <span className="fs-2">Dayanne Costa</span>
-            </h1>
-          </Col>
-        </Row>
-
-        <Row className="justify-content-center">
-          <Col lg={8}>
-            <Row className="justify-content-center mb-3">
-              <Col md="auto">
-                <Button variant="light" className="px-4 py-2 fw-bold">I Want To Buy</Button>
-              </Col>
-              <Col md="auto">
-                <Button variant="light" className="px-4 py-2 fw-bold">I Want To Sell</Button>
-              </Col>
-            </Row>
+          <Row className="justify-content-center">
+            <Col lg={10} xl={8}>
+              <Row className="justify-content-center mb-4 g-2">
+                <Col xs={12} sm={6} md="auto">
+                  <Button variant="light" className={`${styles.heroButton} w-100 px-4 py-3 fw-bold`}>
+                    I Want To Buy
+                  </Button>
+                </Col>
+                <Col xs={12} sm={6} md="auto">
+                  <Button variant="light" className={`${styles.heroButton} w-100 px-4 py-3 fw-bold`}>
+                    I Want To Sell
+                  </Button>
+                </Col>
+              </Row>
 
             <Form className={styles.searchForm}>
               <Form.Group controlId="searchProperty">

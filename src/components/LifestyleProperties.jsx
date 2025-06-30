@@ -31,11 +31,16 @@ const LifestyleProperties = () => {
                 <img
                   src={item.image}
                   alt={item.title}
-                  className="w-100 h-100"
-                  style={{ objectFit: 'cover', transition: 'transform 0.4s ease' }}
+                  className="w-100"
+                  style={{ 
+                    height: '300px', 
+                    objectFit: 'cover', 
+                    transition: 'transform 0.4s ease',
+                    borderRadius: '8px'
+                  }}
                 />
-                <div className="text-center mt-2">
-                  <p className="fw-semibold mt-3 mb-0">{item.title}</p>
+                <div className="text-center mt-3">
+                  <p className="fw-semibold mb-0 fs-5">{item.title}</p>
                 </div>
               </div>
             </Col>

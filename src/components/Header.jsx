@@ -1,7 +1,7 @@
-import React from "react";
-import { Container, Navbar, Nav } from "react-bootstrap";
+import React, { useState } from "react";
+import { Container, Navbar, Nav, Collapse } from "react-bootstrap";
 import styles from "./Header.module.css";
-import { FaInstagram, FaLinkedin, FaUser, FaPhone } from "react-icons/fa";
+import { FaInstagram, FaLinkedin, FaUser, FaPhone, FaBars, FaTimes } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { IoMdLogIn } from "react-icons/io";
 import { MdOutlineAppRegistration } from "react-icons/md";
@@ -10,6 +10,12 @@ import usaFlag from "../assets/img/usa-flag.png"; // bandeira EUA
 import logo from "../assets/img/logo-dc.png";
 
 const Header = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleNavbar = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <Navbar
       bg="dark"
@@ -18,18 +24,16 @@ const Header = () => {
       className={`py-2 ${styles.navbarCustom}`}
     >
       <Container className="d-flex flex-column">
-        {/* Linha superior */}
-        <div className="d-flex w-100 justify-content-between align-items-center mb-1">
+        {/* Linha superior - apenas em desktop */}
+        <div className={`d-none d-lg-flex w-100 justify-content-between align-items-center mb-1 ${styles.topBar}`}>
           <div className="d-flex align-items-center gap-3">
             <BsYoutube size={14} className="text-white" />
             <FaInstagram size={14} className="text-white" />
             <FaLinkedin size={14} className="text-white" />
-            {/*<span className="text-white small">EN</span>
-            //<img src={usaFlag} alt="EN" style={{ width: 20, height: 13 }} />*/}
             <MdEmail className="text-white" size={14} />
-            <span className="text-white small">dayanne.costa@compass.com</span>
+            <span className="text-white small d-none d-xl-inline">dayanne.costa@compass.com</span>
             <FaPhone className="text-white" size={14} />
-            <span className="text-white small">+1 (646) 598-3588</span>
+            <span className="text-white small d-none d-xl-inline">+1 (646) 598-3588</span>
           </div>
           <div className="d-flex align-items-center gap-2">
             <FaUser className="text-white" size={14} />
@@ -43,11 +47,21 @@ const Header = () => {
         <div className="d-flex w-100 justify-content-between align-items-center">
           <div className="d-flex align-items-center gap-3">
             <img src={logo} alt="Logo DC" style={{ height: 40 }} />
-            <span className="text-white">|</span>
-            <span className="text-white fw-bold fs-5">COMPASS</span>
+            <span className="text-white d-none d-sm-inline">|</span>
+            <span className="text-white fw-bold fs-5 d-none d-sm-inline">COMPASS</span>
           </div>
 
-          <Nav className="d-flex gap-3">
+          {/* Menu toggle para mobile */}
+          <button 
+            className="d-lg-none btn btn-link text-white p-0"
+            onClick={toggleNavbar}
+            style={{ border: 'none', background: 'none' }}
+          >
+            {isOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+          </button>
+
+          {/* Menu desktop */}
+          <Nav className="d-none d-lg-flex gap-3">
             <Nav.Link href="/" className="text-white">
               Home
             </Nav.Link>
@@ -71,6 +85,52 @@ const Header = () => {
             </Nav.Link>
           </Nav>
         </div>
+
+        {/* Menu mobile colapsável */}
+        <Collapse in={isOpen}>
+          <div className="d-lg-none w-100 mt-3">
+            <Nav className="flex-column gap-2">
+              <Nav.Link href="/" className="text-white py-2">
+                Home
+              </Nav.Link>
+              <Nav.Link href="/search" className="text-white py-2">
+                Search Properties
+              </Nav.Link>
+              <Nav.Link href="/buy" className="text-white py-2">
+                Buy
+              </Nav.Link>
+              <Nav.Link href="/sell" className="text-white py-2">
+                Sell
+              </Nav.Link>
+              <Nav.Link href="/advantages" className="text-white py-2">
+                Advantages
+              </Nav.Link>
+              <Nav.Link href="/about" className="text-white py-2">
+                About
+              </Nav.Link>
+              <Nav.Link href="/contact" className="text-white py-2">
+                Contact
+              </Nav.Link>
+            </Nav>
+            
+            {/* Informações de contato no mobile */}
+            <div className="d-flex flex-column gap-2 mt-3 pt-3 border-top border-secondary">
+              <div className="d-flex align-items-center gap-2">
+                <MdEmail className="text-white" size={14} />
+                <span className="text-white small">dayanne.costa@compass.com</span>
+              </div>
+              <div className="d-flex align-items-center gap-2">
+                <FaPhone className="text-white" size={14} />
+                <span className="text-white small">+1 (646) 598-3588</span>
+              </div>
+              <div className="d-flex align-items-center gap-3 mt-2">
+                <BsYoutube size={16} className="text-white" />
+                <FaInstagram size={16} className="text-white" />
+                <FaLinkedin size={16} className="text-white" />
+              </div>
+            </div>
+          </div>
+        </Collapse>
       </Container>
     </Navbar>
   );

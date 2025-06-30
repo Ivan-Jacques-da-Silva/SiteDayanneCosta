@@ -1,7 +1,25 @@
 /* src/components/Header.module.css */
 .navbarCustom {
-  background-color: #000 !important;
-  padding: 1rem 0;
+  position: relative;
+  z-index: 1050;
+}
+
+.topBar {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 8px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .navbarCustom {
+    padding: 0.5rem 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .navbarCustom .container {
+    padding: 0 1rem;
+  }
 }
 
 .logo {
