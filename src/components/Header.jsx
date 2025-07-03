@@ -147,28 +147,19 @@ const Header = () => {
                 <li className={styles.menuItem}>
                   <a href="/" className={styles.menuLink}>Home</a>
                 </li>
+                <li className={styles.menuItem}>
+                  <a href="#" className={styles.menuLink}>Search properties - Under Maintenance</a>
+                </li>
                 <li className={`${styles.menuItem} ${styles.hasChildren}`}>
-                  <a href="#" className={styles.menuLink}>Search properties</a>
+                  <a href="#" className={styles.menuLink}>Buy/Sell</a>
                   <ul className={styles.submenu}>
                     <li className={styles.menuItem}>
-                      <a href="#" className={styles.menuLink}>New Developments</a>
+                      <a href="/buy/" className={styles.menuLink}>Buy</a>
                     </li>
                     <li className={styles.menuItem}>
-                      <a href="/single-family-homes/" className={styles.menuLink}>Single Family Homes</a>
-                    </li>
-                    <li className={styles.menuItem}>
-                      <a href="/luxury-condos/" className={styles.menuLink}>Luxury Condos</a>
-                    </li>
-                    <li className={styles.menuItem}>
-                      <a href="#" className={styles.menuLink}>Neighborhoods</a>
+                      <a href="/sell/" className={styles.menuLink}>Sell</a>
                     </li>
                   </ul>
-                </li>
-                <li className={styles.menuItem}>
-                  <a href="/buy/" className={styles.menuLink}>Buy</a>
-                </li>
-                <li className={styles.menuItem}>
-                  <a href="/sell/" className={styles.menuLink}>Sell</a>
                 </li>
                 <li className={`${styles.menuItem} ${styles.hasChildren}`}>
                   <a href="#" className={styles.menuLink}>Advantages</a>
@@ -231,22 +222,17 @@ const Header = () => {
                 <a href="/" className={styles.mobileMenuLink}>Home</a>
               </li>
               <li className={styles.mobileMenuItem}>
+                <a href="#" className={styles.mobileMenuLink}>Search properties - Under Maintenance</a>
+              </li>
+              <li className={styles.mobileMenuItem}>
                 <div className={styles.mobileMenuHeader}>
-                  <a href="#" className={styles.mobileMenuLink}>Search properties</a>
+                  <a href="#" className={styles.mobileMenuLink}>Buy/Sell</a>
                   <button className={styles.submenuToggle}></button>
                 </div>
                 <ul className={styles.mobileSubmenu}>
-                  <li><a href="#" className={styles.mobileMenuLink}>New Developments</a></li>
-                  <li><a href="/single-family-homes/" className={styles.mobileMenuLink}>Single Family Homes</a></li>
-                  <li><a href="/luxury-condos/" className={styles.mobileMenuLink}>Luxury Condos</a></li>
-                  <li><a href="#" className={styles.mobileMenuLink}>Neighborhoods</a></li>
+                  <li><a href="/buy/" className={styles.mobileMenuLink}>Buy</a></li>
+                  <li><a href="/sell/" className={styles.mobileMenuLink}>Sell</a></li>
                 </ul>
-              </li>
-              <li className={styles.mobileMenuItem}>
-                <a href="/buy/" className={styles.mobileMenuLink}>Buy</a>
-              </li>
-              <li className={styles.mobileMenuItem}>
-                <a href="/sell/" className={styles.mobileMenuLink}>Sell</a>
               </li>
               <li className={styles.mobileMenuItem}>
                 <div className={styles.mobileMenuHeader}>
