@@ -1,6 +1,25 @@
 .benMossSection {
     background-color: #f5f7fa;
   }
+
+  .imageWrapper {
+    height: 100vh;
+    min-height: 500px;
+    width: 100vw;
+    margin-left: -15px;
+    overflow: hidden;
+  }
+
+  .teamImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .textContent {
+    padding: 3rem 3rem 3rem 3rem;
+  }
   
   .teamCard {
     background-color: white;
@@ -57,6 +76,20 @@
   }
   
   /* Responsividade */
+  @media (max-width: 991px) {
+    .imageWrapper {
+      height: 60vh;
+      min-height: 400px;
+      width: 100vw;
+      margin-left: -15px;
+      margin-right: -15px;
+    }
+    
+    .textContent {
+      padding: 2rem;
+    }
+  }
+
   @media (max-width: 768px) {
     .sectionTitle {
       font-size: 1.8rem;
@@ -68,5 +101,14 @@
     
     .strengthsList {
       margin-bottom: 2rem;
+    }
+    
+    .imageWrapper {
+      height: 50vh;
+      min-height: 350px;
+    }
+    
+    .textContent {
+      padding: 1.5rem;
     }
   }

@@ -13,6 +13,7 @@
 
 .aboutContent {
   padding-right: 3rem;
+  padding-left: 3rem;
 }
 
 .subtitle {
@@ -71,9 +72,11 @@
 
 .imageWrapper {
   height: 100vh;
-  width: 100%;
+  width: 100vw;
   position: relative;
   overflow: hidden;
+  margin-left: 0;
+  margin-right: -15px;
 }
 
 .profileImage {
@@ -87,6 +90,7 @@
 @media (max-width: 1199px) {
   .aboutContent {
     padding-right: 2rem;
+    padding-left: 2rem;
   }
   
   .title {
@@ -100,13 +104,17 @@
   }
   
   .aboutContent {
-    padding-right: 0;
+    padding-right: 2rem;
+    padding-left: 2rem;
     margin-bottom: 3rem;
   }
   
   .imageWrapper {
     height: 60vh;
     min-height: 400px;
+    width: 100vw;
+    margin-left: -15px;
+    margin-right: -15px;
   }
 }
 

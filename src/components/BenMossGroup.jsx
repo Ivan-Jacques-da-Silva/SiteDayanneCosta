@@ -6,20 +6,21 @@ import equipe from '../assets/img/equipe.jpg';
 const BenMossGroup = () => {
   return (
     <section className={`${styles.benMossSection}`} style={{ backgroundColor: '#f5f5f5' }}>
-      <Container fluid>
+      <Container fluid className="p-0">
         <Row className="align-items-center g-0">
           {/* Imagem à esquerda */}
           <Col lg={6} className="p-0">
-            <img 
-              src={equipe} 
-              alt="Ben Moss Group" 
-              className="w-100 h-100" 
-              style={{ objectFit: 'cover' }} 
-            />
+            <div className={styles.imageWrapper}>
+              <img 
+                src={equipe} 
+                alt="Ben Moss Group" 
+                className={styles.teamImage}
+              />
+            </div>
           </Col>
 
           {/* Texto à direita */}
-          <Col lg={6} className="px-5 py-4">
+          <Col lg={6} className={styles.textContent}>
             <h2 className="fw-bold mb-4">Ben Moss Group</h2>
             <p>
               The Ben Moss Group combines individual strengths including negotiation, sales, marketing, and sports to create a strong
