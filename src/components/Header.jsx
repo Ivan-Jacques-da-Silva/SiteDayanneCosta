@@ -27,7 +27,6 @@ const Header = () => {
 
   return (
     <>
-      {/* Header */}
       <div className={`ip ip-theme-compass ${styles.ip}`} id="ip">
         <header 
           className={`ip-header ibc-t-design-1 js-header ${styles.ipHeader} ${scrolled ? styles.activeFixed : ''}`} 
@@ -91,6 +90,28 @@ const Header = () => {
                   <a className={`ibc-c-language-switcher-option ip-position-relative ip-d-flex ibc-u-align-items-center ibc-u-justify-content-center ip-w-full body-xs ip-text-uppercase notranslate js-language-switcher-option ${styles.languageOption}`} data-iso="es" href="#" rel="nofollow">
                     <span className="ip-d-inline-block ip-text-center">ES</span>
                     <span className={`ibc-c-language-switcher-flag ip-d-inline-block ip-my-0 ip-mx-1 flag-spanish ${styles.flagIcon}`}>🇪🇸</span>
+                  </a>
+                </div>
+              </div>
+
+              {/* Contact Section */}
+              <div className={`ip-contact ${styles.ipContact}`}>
+                <div className={`ip-contact-wrap ibc-u-d-flex ibc-u-align-items-center ${styles.ipContactWrap}`}>
+                  <a 
+                    className={`ip-contact-item ip-contact-email ibc-u-position-relative ip-d-flex ibc-u-align-items-center ${styles.ipContactItem} ${styles.ipContactEmail}`} 
+                    href="mailto:dayanne.costa@compass.com" 
+                    title="dayanne.costa@compass.com"
+                  >
+                    <span className={`ip-contact-text ip-ml-2 ${styles.ipContactText}`}>EMAIL</span>
+                    <span className={`ip-contact-value ip-ml-2 ${styles.ipContactValue}`}>dayanne.costa@compass.com</span>
+                  </a>
+                  <a 
+                    className={`ip-contact-item ip-contact-phone ibc-u-position-relative ip-d-flex ibc-u-align-items-center ${styles.ipContactItem} ${styles.ipContactPhone}`} 
+                    href="tel:+1 (646) 598-3588" 
+                    title="+1 (646) 598-3588"
+                  >
+                    <span className={`ip-contact-text ip-ml-2 ${styles.ipContactText}`}>PHONE</span>
+                    <span className={`ip-contact-value ip-ml-2 ${styles.ipContactValue}`}>+1 (646) 598-3588</span>
                   </a>
                 </div>
               </div>
