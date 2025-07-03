@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { MdEmail, MdPhone } from 'react-icons/md';
 import styles from './Header.module.css';
 
 const Header = () => {
@@ -129,7 +130,7 @@ const Header = () => {
                         href="mailto:dayanne.costa@compass.com" 
                         title="dayanne.costa@compass.com"
                       >
-                        <span className={`ip-contact-text ip-ml-2 ${styles.ipContactText}`}>EMAIL</span>
+                        <MdEmail className={`ip-contact-icon ${styles.ipContactIcon}`} />
                         <span className={`ip-contact-value ip-ml-2 ${styles.ipContactValue}`}>dayanne.costa@compass.com</span>
                       </a>
                       <a 
@@ -137,7 +138,7 @@ const Header = () => {
                         href="tel:+1 (646) 598-3588" 
                         title="+1 (646) 598-3588"
                       >
-                        <span className={`ip-contact-text ip-ml-2 ${styles.ipContactText}`}>PHONE</span>
+                        <MdPhone className={`ip-contact-icon ${styles.ipContactIcon}`} />
                         <span className={`ip-contact-value ip-ml-2 ${styles.ipContactValue}`}>+1 (646) 598-3588</span>
                       </a>
                     </div>

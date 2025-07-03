@@ -21,7 +21,7 @@
   --ip-header-mobile-top-link-hover-color: rgba(255, 255, 255, 1);
   --ip-header-bg: rgba(0, 0, 0, 1);
   --ip-header-top-bg: rgba(255, 255, 255, 0);
-  --ip-header-top-link-color: rgba(255, 255, 255, 1);
+  --ip-header-top-link-color: rgba(248, 248, 248, 1);
   --ip-header-top-link-hover-color: rgba(255, 255, 255, 1);
   --ip-title-color: #000;
   --ip-link-color: rgba(255, 255, 255, 1);
@@ -70,7 +70,7 @@
 /* Header Top */
 .ipHeaderTop {
   background-color: var(--ip-header-top-bg);
-  color: var(--ip-header-top-link-color);
+  color: rgba(248, 248, 248, 1);
   padding: 10px 0;
   display: flex;
   justify-content: space-between;
@@ -128,11 +128,15 @@
   gap: 0.25rem;
   background: none;
   border: none;
-  color: inherit;
+  color: rgba(248, 248, 248, 1);
   font-size: 12px;
   text-transform: uppercase;
   cursor: pointer;
   padding: 0;
+}
+
+.languageButton:hover {
+  color: rgba(255, 255, 255, 1);
 }
 
 .languageLabel {
@@ -145,6 +149,11 @@
 
 .activeFixed .languageButton {
   color: #000;
+}
+
+.activeFixed .languageButton:hover {
+  color: #000;
+  opacity: 0.8;
 }
 
 .languageSelect {
@@ -195,6 +204,11 @@
   margin: 0 1rem;
 }
 
+.ipContactIcon {
+  font-size: 14px;
+  margin-right: 0.5rem;
+}
+
 .ipContactWrap {
   display: flex;
   align-items: center;
@@ -202,7 +216,7 @@
 }
 
 .ipContactItem {
-  color: inherit;
+  color: rgba(248, 248, 248, 1);
   text-decoration: none;
   font-size: 12px;
   display: flex;
@@ -211,7 +225,7 @@
 }
 
 .ipContactItem:hover {
-  color: inherit;
+  color: rgba(255, 255, 255, 1);
   text-decoration: none;
   opacity: 0.8;
 }
@@ -266,13 +280,17 @@
 .ipLoginBtn {
   background: none;
   border: none;
-  color: inherit;
+  color: rgba(248, 248, 248, 1);
   font-size: 12px;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0;
+}
+
+.ipLoginBtn:hover {
+  color: rgba(255, 255, 255, 1);
 }
 
 .ipLoginIcon {
@@ -286,6 +304,11 @@
 
 .activeFixed .ipLoginBtn {
   color: #000;
+}
+
+.activeFixed .ipLoginBtn:hover {
+  color: #000;
+  opacity: 0.8;
 }
 
 /* Header Bottom */
