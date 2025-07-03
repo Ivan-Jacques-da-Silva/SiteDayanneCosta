@@ -37,16 +37,30 @@ const Header = () => {
               Home
             </Nav.Link>
             
-            <NavDropdown title="About" id="about-dropdown">
-              <NavDropdown.Item as={Link} to="/about" onClick={handleNavClick}>
-                About Dayanne
+            <NavDropdown title="Search properties" id="search-dropdown">
+              <NavDropdown.Item href="/new-developments/" onClick={handleNavClick}>
+                New Developments
               </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/about-team" onClick={handleNavClick}>
-                About Team
+              <NavDropdown.Item href="/single-family-homes/" onClick={handleNavClick}>
+                Single Family Homes
+              </NavDropdown.Item>
+              <NavDropdown.Item href="/luxury-condos/" onClick={handleNavClick}>
+                Luxury Condos
+              </NavDropdown.Item>
+              <NavDropdown.Item href="/neighborhoods/" onClick={handleNavClick}>
+                Neighborhoods
               </NavDropdown.Item>
             </NavDropdown>
             
-            <NavDropdown title="Buy/Sell" id="buy-sell-dropdown">
+            <Nav.Link href="/buy/" onClick={handleNavClick}>
+              Buy
+            </Nav.Link>
+            
+            <Nav.Link href="/sell/" onClick={handleNavClick}>
+              Sell
+            </Nav.Link>
+            
+            <NavDropdown title="Advantages" id="advantages-dropdown">
               <NavDropdown.Item as={Link} to="/compass-concierge" onClick={handleNavClick}>
                 Compass Concierge
               </NavDropdown.Item>
@@ -55,9 +69,14 @@ const Header = () => {
               </NavDropdown.Item>
             </NavDropdown>
             
-            <Nav.Link onClick={handleNavClick}>
-              Search (Em Manutenção)
-            </Nav.Link>
+            <NavDropdown title="About" id="about-dropdown">
+              <NavDropdown.Item as={Link} to="/about" onClick={handleNavClick}>
+                About Dayanne
+              </NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/about-team" onClick={handleNavClick}>
+                About Team
+              </NavDropdown.Item>
+            </NavDropdown>
             
             <Nav.Link onClick={handleNavClick}>
               Contact

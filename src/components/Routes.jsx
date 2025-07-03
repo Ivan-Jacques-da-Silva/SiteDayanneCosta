@@ -5,6 +5,7 @@ import About from '../pages/About';
 import AboutTeam from '../pages/AboutTeam';
 import CompassConcierge from '../pages/CompassConcierge';
 import PrivateExclusive from '../pages/PrivateExclusive';
+import Search from '../pages/Search';
 
 const AppRoutes = () => {
   return (
@@ -14,6 +15,7 @@ const AppRoutes = () => {
         <Route path="/about-team" element={<AboutTeam />} />
         <Route path="/compass-concierge" element={<CompassConcierge />} />
         <Route path="/private-exclusive" element={<PrivateExclusive />} />
+        <Route path="/search" element={<Search />} />
       </Routes>
   );
 };

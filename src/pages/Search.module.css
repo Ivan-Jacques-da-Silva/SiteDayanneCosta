@@ -1,0 +1,159 @@
+
+.mainContainer {
+  padding-top: 100px;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+}
+
+.maintenanceSection {
+  width: 100%;
+  padding: 60px 20px;
+}
+
+.contentWrapper {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.maintenanceContent {
+  background: white;
+  border-radius: 10px;
+  padding: 60px 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.iconContainer {
+  margin-bottom: 30px;
+}
+
+.maintenanceIcon {
+  font-size: 80px;
+  margin-bottom: 20px;
+  display: inline-block;
+  animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.maintenanceTitle {
+  font-size: 48px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  font-family: 'Raleway', sans-serif;
+}
+
+.maintenanceText {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.maintenanceSubtext {
+  font-size: 16px;
+  color: #888;
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
+.contactInfo {
+  background-color: #f8f9fa;
+  padding: 30px;
+  border-radius: 8px;
+  margin-bottom: 40px;
+}
+
+.contactInfo p {
+  margin: 10px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.contactLink {
+  color: #000;
+  text-decoration: none;
+  font-weight: 500;
+  margin-left: 8px;
+}
+
+.contactLink:hover {
+  color: #666;
+  text-decoration: underline;
+}
+
+.buttonContainer {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.backButton,
+.contactButton {
+  display: inline-block;
+  padding: 12px 30px;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  min-width: 160px;
+}
+
+.backButton {
+  background-color: transparent;
+  color: #000;
+  border: 1px solid #000;
+}
+
+.backButton:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+.contactButton {
+  background-color: #000;
+  color: #fff;
+  border: 1px solid #000;
+}
+
+.contactButton:hover {
+  background-color: transparent;
+  color: #000;
+}
+
+@media (max-width: 768px) {
+  .maintenanceContent {
+    padding: 40px 20px;
+  }
+  
+  .maintenanceTitle {
+    font-size: 36px;
+  }
+  
+  .maintenanceIcon {
+    font-size: 60px;
+  }
+  
+  .buttonContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .backButton,
+  .contactButton {
+    width: 100%;
+    max-width: 250px;
+  }
+}
