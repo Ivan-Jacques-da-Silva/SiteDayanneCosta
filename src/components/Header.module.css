@@ -173,40 +173,7 @@
   background-color: #e9ecef;
 }
 
-/* Contact Info */
-.ipContact {
-  display: flex;
-}
 
-.ipContactWrap {
-  display: flex;
-  gap: 1.5rem;
-}
-
-.contactItem {
-  display: flex;
-  flex-direction: column;
-  color: inherit;
-  text-decoration: none;
-  font-size: 11px;
-  line-height: 1.2;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.contactText {
-  font-weight: 600;
-  opacity: 0.8;
-}
-
-.contactValue {
-  font-weight: 400;
-}
-
-.contactItem:hover {
-  color: inherit;
-  text-decoration: none;
-}
 
 /* Login Section */
 .ipLogin {
@@ -572,11 +539,6 @@
     gap: 0.5rem;
   }
   
-  .ipContactWrap {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
   .ipSocial {
     order: 1;
   }
@@ -585,13 +547,8 @@
     order: 2;
   }
   
-  .ipContact {
-    order: 3;
-    width: 100%;
-  }
-  
   .ipLogin {
-    order: 4;
+    order: 3;
   }
 
   .ipMenuWrap {
@@ -607,16 +564,6 @@
   .ipHeaderTop {
     justify-content: center;
     text-align: center;
-  }
-  
-  .ipContactWrap {
-    flex-direction: row;
-    justify-content: center;
-    gap: 1rem;
-  }
-  
-  .contactItem {
-    font-size: 10px;
   }
   
   .ipHeaderBottom {
@@ -647,15 +594,6 @@
     font-size: 12px;
   }
   
-  .ipContactWrap {
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-  
-  .contactItem {
-    font-size: 9px;
-  }
-  
   .ipLoginWrap {
     gap: 0.5rem;
   }
@@ -682,9 +620,7 @@
   color: #000;
 }
 
-.ipHeader.activeFixed .contactItem {
-  color: #000;
-}
+
 
 @media (min-width: 1024px) {
   .ipHeader.activeFixed .ipLoginItem.register:before {

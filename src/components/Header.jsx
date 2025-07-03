@@ -95,20 +95,6 @@ const Header = () => {
                 </div>
               </div>
 
-              {/* Contact Info */}
-              <div className={`ip-contact ${styles.ipContact}`}>
-                <div className={`ip-contact-wrap ibc-u-d-flex ibc-u-align-items-center ${styles.ipContactWrap}`}>
-                  <a className={`ip-contact-item ip-contact-email ibc-u-position-relative ip-d-flex ibc-u-align-items-center ${styles.contactItem}`} href="mailto:dayanne.costa@compass.com" title="dayanne.costa@compass.com">
-                    <span className={`ip-contact-text ip-ml-2 ${styles.contactText}`}>EMAIL</span>
-                    <span className={`ip-contact-value ip-ml-2 ${styles.contactValue}`}>dayanne.costa@compass.com</span>
-                  </a>
-                  <a className={`ip-contact-item ip-contact-phone ibc-u-position-relative ip-d-flex ibc-u-align-items-center ${styles.contactItem}`} href="tel:+1 (646) 598-3588" title="+1 (646) 598-3588">
-                    <span className={`ip-contact-text ip-ml-2 ${styles.contactText}`}>PHONE</span>
-                    <span className={`ip-contact-value ip-ml-2 ${styles.contactValue}`}>+1 (646) 598-3588</span>
-                  </a>
-                </div>
-              </div>
-
               {/* Login Section */}
               <div className={`ip-login js-login ${styles.ipLogin}`}>
                 <ul className={`ip-login-wrap item-no-hea ibc-u-d-flex ibc-u-align-items-center ${styles.ipLoginWrap}`} id="user-options">
@@ -160,7 +146,7 @@ const Header = () => {
                     </li>
                     
                     <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
-                      <span className={`ip-menu-link ${styles.ipMenuLink}`}>Search properties</span>
+                      <Link to="" className={`ip-menu-link ${styles.ipMenuLink}`}>Search properties</Link>
                       <ul className={`ip-submenu ${styles.ipSubmenu}`}>
                         <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                           <Link to="/new-developments/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
@@ -198,7 +184,7 @@ const Header = () => {
                     </li>
 
                     <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
-                      <span className={`ip-menu-link ${styles.ipMenuLink}`}>Advantages</span>
+                      <Link to="" className={`ip-menu-link ${styles.ipMenuLink}`}>Advantages</Link>
                       <ul className={`ip-submenu ${styles.ipSubmenu}`}>
                         <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                           <Link to="/compass-concierge" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
@@ -214,7 +200,7 @@ const Header = () => {
                     </li>
 
                     <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
-                      <span className={`ip-menu-link ${styles.ipMenuLink}`}>About</span>
+                      <Link to="" className={`ip-menu-link ${styles.ipMenuLink}`}>About</Link>
                       <ul className={`ip-submenu ${styles.ipSubmenu}`}>
                         <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                           <Link to="/about" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
