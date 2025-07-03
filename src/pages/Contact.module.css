@@ -1,34 +1,54 @@
 
 .contactPage {
   min-height: 100vh;
-  padding-top: 80px;
 }
 
 .hero {
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../assets/img/fundoImg.jpeg');
-  background-size: cover;
-  background-position: center;
-  height: 400px;
+  height: 300px;
+  background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  margin-top: 80px;
+}
+
+.heroOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heroContent {
   text-align: center;
+  color: white;
 }
 
 .heroContent h1 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  font-weight: 300;
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  font-family: 'Raleway', sans-serif;
 }
 
-.heroContent p {
-  font-size: 1.2rem;
-  margin-bottom: 0;
+.breadcrumb {
+  font-size: 16px;
+  opacity: 0.8;
 }
 
-.content {
+.separator {
+  margin: 0 10px;
+}
+
+.mainContent {
   padding: 80px 0;
+  background-color: #f8f9fa;
 }
 
 .container {
@@ -37,80 +57,161 @@
   padding: 0 20px;
 }
 
-.contactGrid {
+.contactSection {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 60px;
   align-items: start;
 }
 
-.contactInfo h2,
-.contactForm h2 {
-  font-size: 2rem;
-  margin-bottom: 30px;
-  color: #000;
-  font-weight: 300;
+.leftSection h2 {
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #1a1a1a;
+  font-family: 'Raleway', sans-serif;
+}
+
+.leftSection p {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #666;
+  margin-bottom: 40px;
+}
+
+.contactDetails {
+  margin-bottom: 40px;
 }
 
 .contactItem {
+  display: flex;
+  align-items: flex-start;
   margin-bottom: 30px;
 }
 
-.contactItem h3 {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-  color: #000;
-  font-weight: 500;
+.contactIcon {
+  width: 50px;
+  height: 50px;
+  background: #1a1a1a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px;
+  flex-shrink: 0;
 }
 
-.contactItem p {
-  color: #666;
-  line-height: 1.6;
-  margin: 0;
+.contactIcon i {
+  color: white;
+  font-size: 18px;
+}
+
+.contactText {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.value {
+  font-size: 16px;
+  color: #1a1a1a;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.socialMedia h3 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.socialLinks {
+  display: flex;
+  gap: 15px;
+}
+
+.socialLinks a {
+  width: 45px;
+  height: 45px;
+  background: #1a1a1a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
+
+.socialLinks a:hover {
+  background: #333;
+  transform: translateY(-3px);
+}
+
+.rightSection {
+  position: relative;
 }
 
 .contactForm {
-  background: #f8f9fa;
+  background: white;
   padding: 40px;
   border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.contactForm h3 {
+  font-size: 28px;
+  margin-bottom: 30px;
+  color: #1a1a1a;
+  font-weight: 600;
 }
 
 .formGroup {
-  margin-bottom: 20px;
-}
-
-.formGroup label {
-  display: block;
-  margin-bottom: 5px;
-  color: #000;
-  font-weight: 500;
+  margin-bottom: 25px;
 }
 
 .formGroup input,
+.formGroup select,
 .formGroup textarea {
   width: 100%;
-  padding: 12px;
+  padding: 15px;
   border: 1px solid #ddd;
   border-radius: 5px;
-  font-size: 1rem;
+  font-size: 16px;
   transition: border-color 0.3s ease;
 }
 
 .formGroup input:focus,
+.formGroup select:focus,
 .formGroup textarea:focus {
   outline: none;
-  border-color: #000;
+  border-color: #1a1a1a;
+}
+
+.formGroup textarea {
+  resize: vertical;
+  min-height: 120px;
 }
 
 .submitBtn {
-  background: #000;
+  background: #1a1a1a;
   color: white;
-  padding: 12px 30px;
   border: none;
+  padding: 15px 40px;
   border-radius: 5px;
-  font-size: 1rem;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  width: 100%;
 }
 
 .submitBtn:hover {
@@ -119,19 +220,23 @@
 
 @media (max-width: 768px) {
   .heroContent h1 {
-    font-size: 2rem;
+    font-size: 36px;
   }
   
-  .heroContent p {
-    font-size: 1rem;
-  }
-  
-  .contactGrid {
+  .contactSection {
     grid-template-columns: 1fr;
     gap: 40px;
   }
   
+  .leftSection h2 {
+    font-size: 32px;
+  }
+  
   .contactForm {
     padding: 30px 20px;
+  }
+  
+  .mainContent {
+    padding: 40px 0;
   }
 }
