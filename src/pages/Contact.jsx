@@ -15,7 +15,7 @@ const Contact = () => {
             <h1>Contact</h1>
             <div className={styles.breadcrumb}>
               <span>Home</span>
-              <span className={styles.separator}>></span>
+              <span className={styles.separator}>&gt;</span>
               <span>Contact</span>
             </div>
           </div>
@@ -26,83 +26,76 @@ const Contact = () => {
         <div className={styles.container}>
           <div className={styles.contactSection}>
             <div className={styles.leftSection}>
-              <h2>Let's Talk Real Estate!</h2>
-              <p>Feel free to reach out to me with any real estate questions or to schedule a consultation. I'm here to help with all your buying, selling, and investing needs.</p>
+              <h2>Contact</h2>
               
               <div className={styles.contactDetails}>
                 <div className={styles.contactItem}>
-                  <div className={styles.contactIcon}>
-                    <i className="fas fa-phone"></i>
-                  </div>
-                  <div className={styles.contactText}>
-                    <span className={styles.label}>Phone Number</span>
-                    <span className={styles.value}>+1 (646) 598-3588</span>
-                  </div>
+                  <span className={styles.contactValue}>+1 (646) 598-3588</span>
                 </div>
                 
                 <div className={styles.contactItem}>
-                  <div className={styles.contactIcon}>
-                    <i className="fas fa-envelope"></i>
-                  </div>
-                  <div className={styles.contactText}>
-                    <span className={styles.label}>Email Address</span>
-                    <span className={styles.value}>dayanne.costa@compass.com</span>
-                  </div>
+                  <span className={styles.contactValue}>dayanne.costa@compass.com</span>
                 </div>
                 
                 <div className={styles.contactItem}>
-                  <div className={styles.contactIcon}>
-                    <i className="fas fa-map-marker-alt"></i>
-                  </div>
-                  <div className={styles.contactText}>
-                    <span className={styles.label}>Office Address</span>
-                    <span className={styles.value}>2550 South Bayshore Drive, Suite 106<br/>Miami, FL 33133</span>
-                  </div>
+                  <span className={styles.contactValue}>2550 South Bayshore Drive, Suite 106, Miami, FL 33133</span>
                 </div>
               </div>
               
-              <div className={styles.socialMedia}>
-                <h3>Follow Me</h3>
-                <div className={styles.socialLinks}>
-                  <a href="https://www.instagram.com/dayanne_vc?igsh=MXVuOG5heDdrbno1bw==" target="_blank" rel="noopener noreferrer">
-                    <i className="fab fa-instagram"></i>
-                  </a>
-                  <a href="https://www.youtube.com/@dayannecosta1958" target="_blank" rel="noopener noreferrer">
-                    <i className="fab fa-youtube"></i>
-                  </a>
-                  <a href="http://www.linkedin.com/in/dayanne-costa-66451162" target="_blank" rel="noopener noreferrer">
-                    <i className="fab fa-linkedin"></i>
-                  </a>
-                </div>
+              <div className={styles.mapSection}>
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3594.5937842847!2d-80.22634092462877!3d25.724440377368477!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d9b7b2b2b2b2b3%3A0x3f3f3f3f3f3f3f3f!2s2550%20S%20Bayshore%20Dr%20%23106%2C%20Miami%2C%20FL%2033133%2C%20USA!5e0!3m2!1sen!2sus!4v1652000000000!5m2!1sen!2sus"
+                  width="100%"
+                  height="300"
+                  style={{ border: 0 }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className={styles.mapIframe}
+                ></iframe>
               </div>
             </div>
             
             <div className={styles.rightSection}>
               <div className={styles.contactForm}>
-                <h3>Send Message</h3>
                 <form>
-                  <div className={styles.formGroup}>
-                    <input type="text" placeholder="Full Name" required />
+                  <div className={styles.formRow}>
+                    <div className={styles.formGroup}>
+                      <input type="text" placeholder="First Name *" required />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <input type="text" placeholder="Last Name *" required />
+                    </div>
                   </div>
-                  <div className={styles.formGroup}>
-                    <input type="email" placeholder="Email Address" required />
+                  
+                  <div className={styles.formRow}>
+                    <div className={styles.formGroup}>
+                      <input type="email" placeholder="Email *" required />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <input type="tel" placeholder="+55" />
+                    </div>
                   </div>
+                  
                   <div className={styles.formGroup}>
-                    <input type="tel" placeholder="Phone Number" />
+                    <textarea placeholder="Message" rows="6" required></textarea>
                   </div>
-                  <div className={styles.formGroup}>
-                    <select>
-                      <option value="">Select Subject</option>
-                      <option value="buying">Buying Property</option>
-                      <option value="selling">Selling Property</option>
-                      <option value="consultation">Free Consultation</option>
-                      <option value="other">Other</option>
-                    </select>
+                  
+                  <div className={styles.checkboxGroup}>
+                    <label className={styles.checkboxLabel}>
+                      Best Time to Reach You
+                    </label>
+                    <div className={styles.checkboxOptions}>
+                      <label className={styles.checkboxOption}>
+                        <input type="checkbox" /> am
+                      </label>
+                      <label className={styles.checkboxOption}>
+                        <input type="checkbox" /> pm
+                      </label>
+                    </div>
                   </div>
-                  <div className={styles.formGroup}>
-                    <textarea placeholder="Message" rows="5" required></textarea>
-                  </div>
-                  <button type="submit" className={styles.submitBtn}>Send Message</button>
+                  
+                  <button type="submit" className={styles.submitBtn}>Submit</button>
                 </form>
               </div>
             </div>
