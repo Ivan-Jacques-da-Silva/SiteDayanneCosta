@@ -3,6 +3,12 @@
   font-family: 'Raleway', sans-serif;
 }
 
+.ipPageCustom *, 
+.ipPageCustom *::before, 
+.ipPageCustom *::after {
+  box-sizing: border-box;
+}
+
 /* Seções */
 .ipPageSection {
   position: relative;
@@ -16,6 +22,8 @@
   padding: 0 20px;
   position: relative;
   z-index: 2;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .ipSectionContent {
