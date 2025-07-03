@@ -45,9 +45,9 @@ const Header = () => {
                     <img 
                       alt="" 
                       className={`ip-header-logo-image ip-h-auto js-header-logo-image ${styles.ipHeaderLogoImage}`} 
-                      data-logo-dark="https://idxboost-single-property.s3.amazonaws.com/25209957c98057eabecf846e81647334/2a02ad3d6f8da258f277ff2c4691490e.png" 
-                      data-logo-light="https://idxboost-single-property.s3.amazonaws.com/25209957c98057eabecf846e81647334/c4b0d267eaaa0258f12c3cce410e707f.png" 
-                      src={scrolled ? "https://idxboost-single-property.s3.amazonaws.com/25209957c98057eabecf846e81647334/2a02ad3d6f8da258f277ff2c4691490e.png" : "https://idxboost-single-property.s3.amazonaws.com/25209957c98057eabecf846e81647334/c4b0d267eaaa0258f12c3cce410e707f.png"}
+                      data-logo-dark="/src/assets/img/logo-dcBlack.png" 
+                      data-logo-light="/src/assets/img/logo-dc.png" 
+                      src={scrolled ? "/src/assets/img/logo-dcBlack.png" : "/src/assets/img/logo-dc.png"}
                     />
                   </div>
                   <img 
