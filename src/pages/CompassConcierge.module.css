@@ -1,43 +1,219 @@
-
-.compassPage {
+.ipPageCustom {
   background-color: #fff;
+  font-family: 'Raleway', sans-serif;
 }
 
-.heroSection {
+/* Seções */
+.ipPageSection {
+  position: relative;
   padding: 4rem 0;
-  background-color: #f8f9fa;
+  overflow: hidden;
 }
 
-.heroContent {
-  padding-right: 2rem;
+.ipSectionWrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 2;
 }
 
-.heroTitle {
-  font-size: 3rem;
+.ipSectionContent {
+  display: flex;
+  align-items: center;
+  min-height: 400px;
+}
+
+.ipSectionBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.ipSectionBackgroundOverlay {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Formatos de seção */
+.ipSectionAbout.ipFormatA .ipSectionContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.ipSectionVideo.ipFormatC .ipSectionContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.ipSectionOverview .ipSectionContent {
+  flex-direction: column;
+}
+
+.ipSectionText .ipSectionContent {
+  justify-content: center;
+  text-align: center;
+}
+
+/* Conteúdo de texto */
+.ipDescription {
+  margin: 2rem 0;
+}
+
+.ibcUHeading.headingSm {
+  font-size: 2.5rem;
   font-weight: 300;
   color: #000;
   margin-bottom: 1.5rem;
+  line-height: 1.2;
 }
 
-.heroSubtitle {
-  font-size: 1.5rem;
-  font-weight: 400;
-  color: #333;
-  margin-bottom: 1.5rem;
-}
-
-.heroDescription {
+.ibcUText.bodyMd {
   font-size: 1.1rem;
   line-height: 1.6;
-  color: #666;
-  margin-bottom: 2rem;
+  color: #333;
+  margin-bottom: 1rem;
 }
 
-.videoWrapper {
+.ibcUText.bodyMd strong {
+  color: #000;
+  font-weight: 600;
+}
+
+.textCenter {
+  text-align: center;
+}
+
+/* Imagens */
+.ipWrapImage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ipImage {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.ipWrapBtn {
+  margin-top: 2rem;
+}
+
+/* Sliders e itens */
+.ipSlider {
+  display: grid;
+  gap: 2rem;
+  width: 100%;
+}
+
+.ipColumns4 .ipSlider {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.ipColumns3 .ipSlider {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.ipItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2rem 1rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  height: 100%;
+}
+
+.ipItem:hover {
+  transform: translateY(-5px);
+}
+
+.ipItemContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ipItemTitle {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.ipItemText {
+  color: #666;
+  text-align: center;
+  flex: 1;
+}
+
+/* Seções específicas */
+#ip-section-about-compass-concierge {
+  background-color: #f8f9fa;
+}
+
+#ip-section-contentSectionTwo-smart-fast {
+  background-color: #fff;
+}
+
+#ip-section-video-success-stories {
+  background-color: #f8f9fa;
+}
+
+#ip-section-about-covered-services {
+  background-color: #fff;
+}
+
+#ip-section-contentSectionTwo-percentages {
+  background-color: #f8f9fa;
+}
+
+#ip-section-video-how-it-works {
+  background-color: #fff;
+}
+
+#ip-section-contentSectionTwo-your-questions {
+  background-color: #f8f9fa;
+}
+
+#ip-section-text-disclaimer {
+  background-color: #fff;
+  padding: 3rem 0;
+}
+
+/* Serviços */
+.servicesList {
+  margin-top: 1rem;
+}
+
+.servicesList p {
+  margin-bottom: 0.5rem;
+  padding-left: 1rem;
+}
+
+/* Vídeo */
+.ipVideo {
   position: relative;
   padding-bottom: 56.25%;
   height: 0;
   overflow: hidden;
+  border-radius: 8px;
 }
 
 .video {
@@ -49,300 +225,86 @@
   border-radius: 8px;
 }
 
-.featuresSection {
-  padding: 4rem 0;
-  background-color: #fff;
-}
-
-.sectionTitle {
-  font-size: 2.5rem;
-  font-weight: 300;
-  color: #000;
+/* Blocks */
+.ipBlock {
   margin-bottom: 2rem;
 }
 
-.featureCard {
-  text-align: center;
-  padding: 2rem 1rem;
-  height: 100%;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
+.ipBlockSpacer {
+  height: 2rem;
 }
 
-.featureCard:hover {
-  transform: translateY(-5px);
+.ipBlockContent h4 {
+  margin-bottom: 2rem;
 }
 
-.featureIcon h3 {
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: #000;
-  margin-bottom: 1.5rem;
-}
-
-.featureContent p {
-  font-size: 1rem;
-  color: #666;
-  line-height: 1.6;
-}
-
-.successSection {
-  padding: 4rem 0;
-  background-color: #f8f9fa;
-}
-
-.successContent {
-  padding-right: 2rem;
-}
-
-.testimonial {
-  font-size: 1.2rem;
-  font-style: italic;
-  color: #333;
-  border-left: 4px solid #000;
-  padding-left: 1.5rem;
-  margin: 2rem 0;
-}
-
-.testimonialAuthor {
-  font-weight: 600;
-  color: #000;
-  margin-bottom: 0.5rem;
-}
-
-.testimonialStats {
-  font-size: 1.1rem;
-  color: #333;
-  margin-bottom: 1rem;
-}
-
-.disclaimer {
-  font-size: 0.9rem;
-  color: #666;
-  font-style: italic;
-}
-
-.servicesSection {
-  padding: 4rem 0;
-  background-color: #fff;
-}
-
-.servicesContent {
-  padding-right: 2rem;
-}
-
-.servicesList ul {
-  list-style: none;
-  padding: 0;
-  margin-top: 2rem;
-}
-
-.servicesList li {
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #eee;
-  position: relative;
-  padding-left: 1.5rem;
-}
-
-.servicesList li:before {
-  content: "•";
-  color: #000;
-  font-weight: bold;
-  position: absolute;
-  left: 0;
-}
-
-.servicesImageWrapper {
-  height: 400px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.servicesImage {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.statsSection {
-  padding: 4rem 0;
-  background-color: #f8f9fa;
-}
-
-.statCard {
-  text-align: center;
-  padding: 2rem;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  height: 100%;
-}
-
-.statNumber {
-  font-size: 3rem;
-  font-weight: 700;
-  color: #000;
-  margin-bottom: 1rem;
-}
-
-.statText {
-  font-size: 1rem;
-  color: #666;
-  line-height: 1.5;
-}
-
-.howItWorksSection {
-  padding: 4rem 0;
-  background-color: #fff;
-}
-
-.howItWorksContent {
-  padding-right: 2rem;
-}
-
-.stepsContent p {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  color: #333;
-  margin-bottom: 1.5rem;
-  padding-left: 1.5rem;
-  position: relative;
-}
-
-.stepsContent p:before {
-  content: counter(step-counter);
-  counter-increment: step-counter;
-  position: absolute;
-  left: 0;
-  top: 0;
-  background: #000;
-  color: #fff;
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  font-weight: bold;
-}
-
-.stepsContent {
-  counter-reset: step-counter;
-}
-
-.faqSection {
-  padding: 4rem 0;
-  background-color: #f8f9fa;
-}
-
-.faqCard {
-  background: #fff;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  height: 100%;
-}
-
-.faqQuestion {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #000;
-  margin-bottom: 1rem;
-}
-
-.faqAnswer {
-  font-size: 1rem;
-  color: #666;
-  line-height: 1.5;
-}
-
-.disclaimerSection {
-  padding: 3rem 0;
-  background-color: #fff;
-}
-
-.disclaimerContent {
-  text-align: center;
-}
-
-.disclaimerContent p {
-  font-size: 0.9rem;
-  color: #666;
-  line-height: 1.5;
-  margin-bottom: 1rem;
-}
-
-/* Responsive styles */
+/* Responsividade */
 @media (max-width: 992px) {
-  .heroContent,
-  .successContent,
-  .servicesContent,
-  .howItWorksContent {
-    padding-right: 0;
-    margin-bottom: 2rem;
+  .ipSectionAbout.ipFormatA .ipSectionContent,
+  .ipSectionVideo.ipFormatC .ipSectionContent {
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
-  
-  .heroTitle {
-    font-size: 2.5rem;
+
+  .ipColumns4 .ipSlider {
+    grid-template-columns: repeat(2, 1fr);
   }
-  
-  .heroSubtitle {
-    font-size: 1.3rem;
+
+  .ipColumns3 .ipSlider {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ibcUHeading.headingSm {
+    font-size: 2rem;
+  }
+
+  .ipPageSection {
+    padding: 3rem 0;
   }
 }
 
 @media (max-width: 768px) {
-  .heroTitle {
-    font-size: 2rem;
+  .ipColumns4 .ipSlider,
+  .ipColumns3 .ipSlider {
+    grid-template-columns: 1fr;
   }
-  
-  .heroSubtitle {
-    font-size: 1.2rem;
+
+  .ibcUHeading.headingSm {
+    font-size: 1.8rem;
   }
-  
-  .sectionTitle {
-    font-size: 2rem;
+
+  .ibcUText.bodyMd {
+    font-size: 1rem;
   }
-  
-  .servicesImageWrapper {
-    height: 300px;
+
+  .ipItem {
+    padding: 1.5rem 1rem;
   }
-  
-  .statNumber {
-    font-size: 2.5rem;
+
+  .ipSectionWrapper {
+    padding: 0 15px;
   }
 }
 
 @media (max-width: 576px) {
-  .heroSection,
-  .featuresSection,
-  .successSection,
-  .servicesSection,
-  .statsSection,
-  .howItWorksSection,
-  .faqSection {
-    padding: 3rem 0;
+  .ipPageSection {
+    padding: 2rem 0;
   }
-  
-  .heroTitle {
-    font-size: 1.8rem;
+
+  .ibcUHeading.headingSm {
+    font-size: 1.5rem;
   }
-  
-  .sectionTitle {
-    font-size: 1.8rem;
+
+  .ipItem {
+    padding: 1rem;
   }
-  
-  .featureCard,
-  .statCard,
-  .faqCard {
-    padding: 1.5rem;
-  }
+}
+
+/* Utilities */
+.msLazy {
+  transition: opacity 0.3s ease;
+}
+
+.jsSliderOverview {
+  /* Placeholder para JavaScript slider functionality */
 }

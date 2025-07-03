@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import styles from './CompassConcierge.module.css';
@@ -10,124 +10,113 @@ const CompassConcierge = () => {
     <div>
       <Header />
 
-      <main className={styles.compassPage}>
-        {/* Hero Section */}
-        <section className={styles.heroSection}>
-          <Container>
-            <Row className="align-items-center min-vh-75">
-              <Col lg={6}>
-                <div className={styles.heroContent}>
-                  <h1 className={styles.heroTitle}>
+      <main className={styles.ipPageCustom} id="ip-page-custom">
+        {/* Hero Section - Compass Concierge */}
+        <section className={`${styles.ipPageSection} ${styles.ipSectionAbout} ${styles.ipFormatA}`} id="ip-section-about-compass-concierge">
+          <div className={styles.ipSectionBackground}>
+            <div className={styles.ipSectionBackgroundOverlay}></div>
+          </div>
+          <div className={styles.ipSectionWrapper}>
+            <div className={styles.ipSectionContent}>
+              <article>
+                <div className={`${styles.ipDescription} ${styles.ipMy5} ${styles.ipBlockContent}`}>
+                  <h4 className={`${styles.ibcUHeading} ${styles.headingSm}`}>
                     Compass Concierge
-                  </h1>
-                  <h2 className={styles.heroSubtitle}>
-                    Get fronted for the cost of home improvement services with no interest — ever.
-                  </h2>
-                  <p className={styles.heroDescription}>
+                  </h4>
+                  <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
+                    <strong>Get fronted for the cost of home improvement services with no interest — ever.</strong>
+                  </p>
+                  <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
                     Compass Concierge is the hassle-free way to sell your home faster and for a higher price with services like staging, flooring, painting, and more.
                   </p>
                 </div>
-              </Col>
-              <Col lg={6}>
-                <div className={styles.videoWrapper}>
-                  <iframe
-                    width="100%"
-                    height="315"
-                    src="https://www.youtube.com/embed/4hd018raScA"
-                    title="Compass Concierge Video"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className={styles.video}
-                  ></iframe>
-                </div>
-              </Col>
-            </Row>
-          </Container>
+                <div className={styles.ipWrapBtn}></div>
+              </article>
+              <div className={styles.ipWrapImage}>
+                <img 
+                  src="https://api-cms.idxboost.com/assets/images/compass/concierge-services.jpeg" 
+                  alt="Compass Concierge Services" 
+                  className={`${styles.ipImage} ${styles.msLazy}`}
+                />
+              </div>
+            </div>
+          </div>
         </section>
 
-        {/* Features Section */}
-        <section className={styles.featuresSection}>
-          <Container>
-            <Row>
-              <Col lg={12} className="text-center mb-5">
-                <h2 className={styles.sectionTitle}>Why Choose Compass Concierge</h2>
-              </Col>
-            </Row>
-            <Row>
-              <Col lg={3} md={6} className="mb-4">
-                <div className={styles.featureCard}>
-                  <div className={styles.featureIcon}>
-                    <h3>SMART</h3>
-                  </div>
-                  <div className={styles.featureContent}>
-                    <p>
+        {/* Features Section - SMART, FAST, TRANSPARENT, EASY */}
+        <section className={`${styles.ipPageSection} ${styles.ipSectionOverview} ${styles.ipColumns4}`} id="ip-section-contentSectionTwo-smart-fast">
+          <div className={styles.ipSectionBackground}>
+            <div className={styles.ipSectionBackgroundOverlay}></div>
+          </div>
+          <div className={styles.ipSectionWrapper}>
+            <div className={styles.ipSectionContent}>
+              <div className={`${styles.ipSlider} ${styles.jsSliderOverview}`} data-columns="4">
+                <div className={styles.ipItem}>
+                  <div className={styles.ipItemContent}>
+                    <h3 className={styles.ipItemTitle}>SMART</h3>
+                    <p className={`${styles.ipItemText} ${styles.ibcUText} ${styles.bodyMd}`}>
                       Your Compass agent will help you determine which services can deliver the greatest return on your investment.
                     </p>
                   </div>
                 </div>
-              </Col>
-              <Col lg={3} md={6} className="mb-4">
-                <div className={styles.featureCard}>
-                  <div className={styles.featureIcon}>
-                    <h3>FAST</h3>
-                  </div>
-                  <div className={styles.featureContent}>
-                    <p>
+                <div className={styles.ipItem}>
+                  <div className={styles.ipItemContent}>
+                    <h3 className={styles.ipItemTitle}>FAST</h3>
+                    <p className={`${styles.ipItemText} ${styles.ibcUText} ${styles.bodyMd}`}>
                       The entire process is designed for speed, so that work can begin — and your home can sell — as quickly as possible.
                     </p>
                   </div>
                 </div>
-              </Col>
-              <Col lg={3} md={6} className="mb-4">
-                <div className={styles.featureCard}>
-                  <div className={styles.featureIcon}>
-                    <h3>TRANSPARENT</h3>
-                  </div>
-                  <div className={styles.featureContent}>
-                    <p>
+                <div className={styles.ipItem}>
+                  <div className={styles.ipItemContent}>
+                    <h3 className={styles.ipItemTitle}>TRANSPARENT</h3>
+                    <p className={`${styles.ipItemText} ${styles.ibcUText} ${styles.bodyMd}`}>
                       With Compass Concierge services you'll never have to worry about any upfront costs or interest.
                     </p>
                   </div>
                 </div>
-              </Col>
-              <Col lg={3} md={6} className="mb-4">
-                <div className={styles.featureCard}>
-                  <div className={styles.featureIcon}>
-                    <h3>EASY</h3>
-                  </div>
-                  <div className={styles.featureContent}>
-                    <p>
+                <div className={styles.ipItem}>
+                  <div className={styles.ipItemContent}>
+                    <h3 className={styles.ipItemTitle}>EASY</h3>
+                    <p className={`${styles.ipItemText} ${styles.ibcUText} ${styles.bodyMd}`}>
                       Your Compass agent will be by your side throughout the process, advising you along the way.
                     </p>
                   </div>
                 </div>
-              </Col>
-            </Row>
-          </Container>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* Success Stories Section */}
-        <section className={styles.successSection}>
-          <Container>
-            <Row className="align-items-center">
-              <Col lg={6}>
-                <div className={styles.successContent}>
-                  <h2 className={styles.sectionTitle}>Success Stories</h2>
-                  <blockquote className={styles.testimonial}>
-                    "The thing that was the most daunting for me about selling the home was how would I get it to market, based on being retired and have limited income. And that's where the Compass Concierge service was absolutely remarkable."
-                  </blockquote>
-                  <p className={styles.testimonialAuthor}>Julia, Seller | Oakland</p>
-                  <p className={styles.testimonialStats}>
+        <section className={`${styles.ipPageSection} ${styles.ipSectionVideo} ${styles.ipFormatC}`} id="ip-section-video-success-stories">
+          <div className={styles.ipSectionBackground}>
+            <div className={styles.ipSectionBackgroundOverlay}></div>
+          </div>
+          <div className={styles.ipSectionWrapper}>
+            <div className={styles.ipSectionContent}>
+              <div className={`${styles.ipBlock} ${styles.ipBlockHtml}`}>
+                <div className={styles.ipBlockContent}>
+                  <h4 className={`${styles.ibcUHeading} ${styles.headingSm}`}>
+                    Success Stories
+                  </h4>
+                  <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
+                    <em>"The thing that was the most daunting for me about selling the home was how would I get it to market, based on being retired and have limited income. And that's where the Compass Concierge service was absolutely remarkable."</em>
+                  </p>
+                  <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
+                    Julia, Seller | Oakland
+                  </p>
+                  <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
                     <strong>12 Days on Market | 47% Over Ask</strong>
                   </p>
-                  <p className={styles.disclaimer}>
-                    Individual results may vary. Testimonials are not intended to guarantee the same or similar results.
+                  <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
+                    Individual results may vary. Testimonials are not intended to guarantee the same or similar results
                   </p>
                 </div>
-              </Col>
-              <Col lg={6}>
-                <div className={styles.videoWrapper}>
+              </div>
+              <div className={`${styles.ipBlock} ${styles.ipBlockSpacer}`}></div>
+              <div className={`${styles.ipBlock} ${styles.ipBlockVideo}`}>
+                <div className={styles.ipVideo}>
                   <iframe
                     width="100%"
                     height="315"
@@ -139,108 +128,149 @@ const CompassConcierge = () => {
                     className={styles.video}
                   ></iframe>
                 </div>
-              </Col>
-            </Row>
-          </Container>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* Covered Services Section */}
-        <section className={styles.servicesSection}>
-          <Container>
-            <Row className="align-items-center">
-              <Col lg={6}>
-                <div className={styles.servicesContent}>
-                  <h2 className={styles.sectionTitle}>Covered Services</h2>
+        <section className={`${styles.ipPageSection} ${styles.ipSectionAbout} ${styles.ipFormatA}`} id="ip-section-about-covered-services">
+          <div className={styles.ipSectionBackground}>
+            <div className={styles.ipSectionBackgroundOverlay}></div>
+          </div>
+          <div className={styles.ipSectionWrapper}>
+            <div className={styles.ipSectionContent}>
+              <article>
+                <div className={`${styles.ipDescription} ${styles.ipMy5} ${styles.ipBlockContent}`}>
+                  <h4 className={`${styles.ibcUHeading} ${styles.headingSm}`}>
+                    Covered Services
+                  </h4>
                   <div className={styles.servicesList}>
-                    <ul>
-                      <li>Floor repair</li>
-                      <li>Carpet cleaning and replacement</li>
-                      <li>Staging</li>
-                      <li>Deep-cleaning</li>
-                      <li>Decluttering</li>
-                      <li>Cosmetic renovations</li>
-                      <li>Landscaping</li>
-                      <li>Interior and exterior painting</li>
-                      <li>HVAC</li>
-                      <li>Roofing repair</li>
-                      <li>Moving and storage</li>
-                      <li>Pest control</li>
-                      <li>Custom closet work</li>
-                      <li>Fencing</li>
-                      <li>Electrical work</li>
-                      <li>Seller-side inspections and evaluations</li>
-                      <li>Kitchen improvements</li>
-                      <li>Bathroom improvements</li>
-                      <li>Pool and tennis court services</li>
-                      <li>Water heating and plumbing repair</li>
-                      <li>Sewer lateral inspections and remediation</li>
-                      <li>More than 100 other home improvement services</li>
-                    </ul>
+                    <p className={`${styles.ibcUText} ${styles.bodyMd}`}>• Floor repair</p>
+                    <p className={`${styles.ibcUText} ${styles.bodyMd}`}>• Carpet cleaning and replacement</p>
+                    <p className={`${styles.ibcUText} ${styles.bodyMd}`}>• Staging</p>
+                    <p className={`${styles.ibcUText} ${styles.bodyMd}`}>• Deep-cleaning</p>
+                    <p className={`${styles.ibcUText} ${styles.bodyMd}`}>• Decluttering</p>
+                    <p className={`${styles.ibcUText} ${styles.bodyMd}`}>• Cosmetic renovations</p>
+                    <p className={`${styles.ibcUText} ${styles.bodyMd}`}>• Landscaping</p>
+                    <p className={`${styles.ibcUText} ${styles.bodyMd}`}>• Interior and exterior painting</p>
+                    <p className={`${styles.ibcUText} ${styles.bodyMd}`}>• HVAC</p>
+                    <p className={`${styles.ibcUText} ${styles.bodyMd}`}>• Roofing repair</p>
+                    <p className={`${styles.ibcUText} ${styles.bodyMd}`}>• Moving and storage</p>
+                    <p className={`${styles.ibcUText} ${styles.bodyMd}`}>• Pest control</p>
+                    <p className={`${styles.ibcUText} ${styles.bodyMd}`}>• Custom closet work</p>
+                    <p className={`${styles.ibcUText} ${styles.bodyMd}`}>• Fencing</p>
+                    <p className={`${styles.ibcUText} ${styles.bodyMd}`}>• Electrical work</p>
+                    <p className={`${styles.ibcUText} ${styles.bodyMd}`}>• Seller-side inspections and evaluations</p>
+                    <p className={`${styles.ibcUText} ${styles.bodyMd}`}>• Kitchen improvements</p>
+                    <p className={`${styles.ibcUText} ${styles.bodyMd}`}>• Bathroom improvements</p>
+                    <p className={`${styles.ibcUText} ${styles.bodyMd}`}>• Pool and tennis court services</p>
+                    <p className={`${styles.ibcUText} ${styles.bodyMd}`}>• Water heating and plumbing repair</p>
+                    <p className={`${styles.ibcUText} ${styles.bodyMd}`}>• Sewer lateral inspections and remediation</p>
+                    <p className={`${styles.ibcUText} ${styles.bodyMd}`}>• More than 100 other home improvement services</p>
                   </div>
                 </div>
-              </Col>
-              <Col lg={6}>
-                <div className={styles.servicesImageWrapper}>
-                  <div className={styles.servicesImage}></div>
-                </div>
-              </Col>
-            </Row>
-          </Container>
+                <div className={styles.ipWrapBtn}></div>
+              </article>
+              <div className={styles.ipWrapImage}>
+                <img 
+                  src="https://api-cms.idxboost.com/assets/images/compass/concierge-covered-services.jpeg" 
+                  alt="Covered Services" 
+                  className={`${styles.ipImage} ${styles.msLazy}`}
+                />
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* Statistics Section */}
-        <section className={styles.statsSection}>
-          <Container>
-            <Row>
-              <Col lg={4} md={6} className="mb-4">
-                <div className={styles.statCard}>
-                  <div className={styles.statNumber}>54%</div>
-                  <p className={styles.statText}>
-                    The percentage of homebuyers willing to pay more for hardwood floors
-                  </p>
+        <section className={`${styles.ipPageSection} ${styles.ipSectionOverview} ${styles.ipColumns3}`} id="ip-section-contentSectionTwo-percentages">
+          <div className={styles.ipSectionBackground}>
+            <div className={styles.ipSectionBackgroundOverlay}></div>
+          </div>
+          <div className={styles.ipSectionWrapper}>
+            <div className={styles.ipSectionContent}>
+              <div className={`${styles.ipSlider} ${styles.jsSliderOverview}`} data-columns="3">
+                <div className={styles.ipItem}>
+                  <div className={styles.ipWrapImage}>
+                    <img 
+                      src="https://api-cms.idxboost.com/assets/images/compass/concierge-percentage-1.png" 
+                      alt="54%" 
+                      className={`${styles.ipImage} ${styles.msLazy}`}
+                    />
+                  </div>
+                  <div className={styles.ipItemContent}>
+                    <p className={`${styles.ipItemText} ${styles.ibcUText} ${styles.bodyMd}`}>
+                      The percentage of homebuyers willing to pay more for hardwood floors
+                    </p>
+                  </div>
                 </div>
-              </Col>
-              <Col lg={4} md={6} className="mb-4">
-                <div className={styles.statCard}>
-                  <div className={styles.statNumber}>$400</div>
-                  <p className={styles.statText}>
-                    The potential return of every $100 you invest in staging your home
-                  </p>
+                <div className={styles.ipItem}>
+                  <div className={styles.ipWrapImage}>
+                    <img 
+                      src="https://api-cms.idxboost.com/assets/images/compass/concierge-percentage-2.png" 
+                      alt="$400" 
+                      className={`${styles.ipImage} ${styles.msLazy}`}
+                    />
+                  </div>
+                  <div className={styles.ipItemContent}>
+                    <p className={`${styles.ipItemText} ${styles.ibcUText} ${styles.bodyMd}`}>
+                      The potential return of every $100 you invest in staging your home
+                    </p>
+                  </div>
                 </div>
-              </Col>
-              <Col lg={4} md={6} className="mb-4">
-                <div className={styles.statCard}>
-                  <div className={styles.statNumber}>85%</div>
-                  <p className={styles.statText}>
-                    The percentage of sellers' agents who say staging decreases a property's time on market
-                  </p>
+                <div className={styles.ipItem}>
+                  <div className={styles.ipWrapImage}>
+                    <img 
+                      src="https://api-cms.idxboost.com/assets/images/compass/concierge-percentage-3.png" 
+                      alt="85%" 
+                      className={`${styles.ipImage} ${styles.msLazy}`}
+                    />
+                  </div>
+                  <div className={styles.ipItemContent}>
+                    <p className={`${styles.ipItemText} ${styles.ibcUText} ${styles.bodyMd}`}>
+                      The percentage of sellers' agents who say staging decreases a property's time on market.
+                    </p>
+                  </div>
                 </div>
-              </Col>
-            </Row>
-          </Container>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* How It Works Section */}
-        <section className={styles.howItWorksSection}>
-          <Container>
-            <Row className="align-items-center">
-              <Col lg={6}>
-                <div className={styles.howItWorksContent}>
-                  <h2 className={styles.sectionTitle}>How It Works</h2>
-                  <div className={styles.stepsContent}>
-                    <p>You and your agent work together to decide which services can increase your home's value the most and set an estimated budget for the work.</p>
-                    <p>When you're ready to start, your Compass agent will be by your side as you engage vendors and commission work.</p>
-                    <p>Once the transformation is complete, your home will go on the market.</p>
-                    <p>You'll pay for the services when one of the following happens -- your home sells, you terminate your listing agreement with Compass, or 12 months pass from your Concierge start date.</p>
-                  </div>
+        <section className={`${styles.ipPageSection} ${styles.ipSectionVideo} ${styles.ipFormatC}`} id="ip-section-video-how-it-works">
+          <div className={styles.ipSectionBackground}>
+            <div className={styles.ipSectionBackgroundOverlay}></div>
+          </div>
+          <div className={styles.ipSectionWrapper}>
+            <div className={styles.ipSectionContent}>
+              <div className={`${styles.ipBlock} ${styles.ipBlockHtml}`}>
+                <div className={styles.ipBlockContent}>
+                  <h4 className={`${styles.ibcUHeading} ${styles.headingSm}`}>
+                    How It Works
+                  </h4>
+                  <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
+                    You and your agent work together to decide which services can increase your home's value the most and set an estimated budget for the work.
+                  </p>
+                  <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
+                    When you're ready to start, your Compass agent will be by your side as you engage vendors and commission work.
+                  </p>
+                  <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
+                    Once the transformation is complete, your home will go on the market.
+                  </p>
+                  <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
+                    You'll pay for the services when one of the following happens -- your home sells, you terminate your listing agreement with Compass, or 12 months pass from your Concierge start date.
+                  </p>
                 </div>
-              </Col>
-              <Col lg={6}>
-                <div className={styles.videoWrapper}>
+              </div>
+              <div className={`${styles.ipBlock} ${styles.ipBlockSpacer}`}></div>
+              <div className={`${styles.ipBlock} ${styles.ipBlockVideo}`}>
+                <div className={styles.ipVideo}>
                   <iframe
                     width="100%"
                     height="315"
-                    src="https://www.youtube.com/embed/4hd018raScA"
+                    src="https://24e3d2766e918fc4369a-2005f80a01533296a927e19ca48f1dcf.ssl.cf1.rackcdn.com/fitzgeral/3%20-%20Concierge%20Treatment%20Video.mp4"
                     title="How It Works Video"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -248,70 +278,80 @@ const CompassConcierge = () => {
                     className={styles.video}
                   ></iframe>
                 </div>
-              </Col>
-            </Row>
-          </Container>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* FAQ Section */}
-        <section className={styles.faqSection}>
-          <Container>
-            <Row>
-              <Col lg={12} className="text-center mb-5">
-                <h2 className={styles.sectionTitle}>Your Questions Answered</h2>
-              </Col>
-            </Row>
-            <Row>
-              <Col lg={4} className="mb-4">
-                <div className={styles.faqCard}>
-                  <h3 className={styles.faqQuestion}>
-                    Are there any services not covered by the program?
-                  </h3>
-                  <p className={styles.faqAnswer}>
-                    Our goal is for Concierge to help as many clients as possible. The program is intentionally flexible; we've developed Concierge to be used with most vendors for your convenience.
-                  </p>
+        <section className={`${styles.ipPageSection} ${styles.ipSectionOverview} ${styles.ipColumns3}`} id="ip-section-contentSectionTwo-your-questions">
+          <div className={styles.ipSectionBackground}>
+            <div className={styles.ipSectionBackgroundOverlay}></div>
+          </div>
+          <div className={styles.ipSectionWrapper}>
+            <div className={styles.ipSectionContent}>
+              <div className={`${styles.ipBlock} ${styles.ipBlockHtml}`}>
+                <div className={styles.ipBlockContent}>
+                  <h4 className={`${styles.ibcUHeading} ${styles.headingSm} ${styles.textCenter}`}>
+                    Your Questions Answered
+                  </h4>
                 </div>
-              </Col>
-              <Col lg={4} className="mb-4">
-                <div className={styles.faqCard}>
-                  <h3 className={styles.faqQuestion}>
-                    When do I have to pay for the services?
-                  </h3>
-                  <p className={styles.faqAnswer}>
-                    You'll pay once one of the following happens (whichever occurs first): - Your home sells - You terminate your listing agreement with Compass - 12 months pass from your Concierge start date.
-                  </p>
+              </div>
+              <div className={`${styles.ipSlider} ${styles.jsSliderOverview}`} data-columns="3">
+                <div className={styles.ipItem}>
+                  <div className={styles.ipItemContent}>
+                    <h3 className={styles.ipItemTitle}>
+                      Are there any services not covered by the program?
+                    </h3>
+                    <p className={`${styles.ipItemText} ${styles.ibcUText} ${styles.bodyMd}`}>
+                      Our goal is for Concierge to help as many clients as possible. The program is intentionally flexible; we've developed Concierge to be used with most vendors for your convenience.
+                    </p>
+                  </div>
                 </div>
-              </Col>
-              <Col lg={4} className="mb-4">
-                <div className={styles.faqCard}>
-                  <h3 className={styles.faqQuestion}>
-                    How can I participate in the program?
-                  </h3>
-                  <p className={styles.faqAnswer}>
-                    Easy! Call your Compass agent today to find out how to participate. Not yet working with one? Use the form to get started.
-                  </p>
+                <div className={styles.ipItem}>
+                  <div className={styles.ipItemContent}>
+                    <h3 className={styles.ipItemTitle}>
+                      When do I have to pay for the services?
+                    </h3>
+                    <p className={`${styles.ipItemText} ${styles.ibcUText} ${styles.bodyMd}`}>
+                      You'll pay once one of the following happens (whichever occurs first): - Your home sells - You terminate your listing agreement with Compass - 12 months pass from your Concierge start date.
+                    </p>
+                  </div>
                 </div>
-              </Col>
-            </Row>
-          </Container>
+                <div className={styles.ipItem}>
+                  <div className={styles.ipItemContent}>
+                    <h3 className={styles.ipItemTitle}>
+                      How can I participate in the program?
+                    </h3>
+                    <p className={`${styles.ipItemText} ${styles.ibcUText} ${styles.bodyMd}`}>
+                      Easy! Call your Compass agent today to find out how to participate. Not yet working with one? Use the form to get started.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* Disclaimer Section */}
-        <section className={styles.disclaimerSection}>
-          <Container>
-            <Row>
-              <Col lg={12}>
-                <div className={styles.disclaimerContent}>
-                  <p>
-                    <strong>Disclaimer:</strong> This information is provided for informational purposes only and is not a solicitation, recommendation, offer or promise to provide services. Rules & Exclusions apply. Compass offers no guarantee or warranty of results. Home must qualify under Compass Concierge guidelines. Subject to additional terms and conditions. Compass reserves the right to refuse, reject, or cancel the program for any reason at any time without liability.
+        <section className={`${styles.ipPageSection} ${styles.ipSectionText}`} id="ip-section-text-disclaimer">
+          <div className={styles.ipSectionBackground}>
+            <div className={styles.ipSectionBackgroundOverlay}></div>
+          </div>
+          <div className={styles.ipSectionWrapper}>
+            <div className={styles.ipSectionContent}>
+              <div className={`${styles.ipBlock} ${styles.ipBlockHtml}`}>
+                <div className={styles.ipBlockContent}>
+                  <p className={`${styles.ibcUText} ${styles.bodyMd} ${styles.textCenter}`}>
+                    This information is provided for informational purposes only and is not a solicitation, recommendation, offer or promise to provide services. Rules & Exclusions apply. Compass offers no guarantee or warranty of results. Home must qualify under Compass Concierge guidelines. Subject to additional terms and conditions. Compass reserves the right to refuse, reject, or cancel the program for any reason at any time without liability.
                   </p>
-                  <p>
+                  <p className={`${styles.ibcUText} ${styles.bodyMd} ${styles.textCenter}`}>
                     Concierge Capital loans are provided by Notable Finance, LLC, NMLS# 1824748 and are made or arranged pursuant to a California Finance Lenders Law license. Loan eligibility is not guaranteed and all loans are subject to credit approval and underwriting by Notable. Compass is not a lender and is not providing loans as part of the Compass Concierge program.
                   </p>
                 </div>
-              </Col>
-            </Row>
-          </Container>
+              </div>
+            </div>
+          </div>
         </section>
       </main>
 
