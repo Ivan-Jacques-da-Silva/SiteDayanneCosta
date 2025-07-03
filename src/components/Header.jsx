@@ -20,9 +20,9 @@ const Header = () => {
             <FaInstagram size={14} className="text-white" />
             <FaLinkedin size={14} className="text-white" />
             <span className="text-white small">EN</span>
-            <img src={usaFlag} alt="EN" style={{ width: 20, height: 13 }} />
+            {/* <img src={usaFlag} alt="EN" style={{ width: 20, height: 13 }} /> */}
             <MdEmail className="text-white" size={14} />
-            <span className="text-white small">dayanne.costa@compass.com</span>
+            <span className="text-white small">dayannecosta@compass.com</span>
             <FaPhone className="text-white" size={14} />
             <span className="text-white small">+1 (646) 598-3588</span>
           </div>
@@ -38,7 +38,6 @@ const Header = () => {
         <div className="d-flex w-100 justify-content-between align-items-center">
           <div className="d-flex align-items-center gap-3">
             <img src={logo} alt="Logo DC" style={{ height: 40 }} />
-            <span className="text-white fw-bold">DAYANNE COSTA</span>
             <span className="text-white">|</span>
             <span className="text-white fw-bold fs-5">COMPASS</span>
           </div>

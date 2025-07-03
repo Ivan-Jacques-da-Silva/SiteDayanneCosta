@@ -1,10 +1,11 @@
 /* src/components/HeroSection.module.css */
 .hero {
-    background-color: #f8f9fa; /* Cor de fundo padrão, pode substituir por uma imagem */
-    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('seu-background.jpg');
-    background-size: cover;
-    background-position: center;
-  }
+  min-height: 90vh;  /* Aumentei de 70vh para 90vh */
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;  /* Para garantir que nada ultrapasse os limites */
+}
   
   .customTabs .nav-link {
     color: #fff;
