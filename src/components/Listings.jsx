@@ -42,19 +42,24 @@ const Listings = () => {
           </Col>
         </Row>
 
-        <Row xs={1} md={2} lg={3} className="g-4">
+        <Row xs={1} sm={2} lg={3} className="g-4">
           {properties.map((property, index) => (
             <Col key={index}>
-              <Card className="border-0">
+              <Card className="border-0 h-100 shadow-sm">
                 <div className="position-relative">
                   <div className="position-absolute top-0 start-0 bg-dark text-white px-3 py-1 small fw-bold" style={{ zIndex: 1 }}>
                     {property.status}
                   </div>
-                  <Card.Img variant="top" src={property.image} className="rounded-0" />
+                  <Card.Img 
+                    variant="top" 
+                    src={property.image} 
+                    className="rounded-0" 
+                    style={{ height: '250px', objectFit: 'cover' }}
+                  />
                 </div>
-                <Card.Body className="px-3">
-                  <div className="d-flex justify-content-between align-items-start">
-                    <Card.Title className="fs-5 fw-bold">{property.price}</Card.Title>
+                <Card.Body className="px-3 d-flex flex-column">
+                  <div className="d-flex justify-content-between align-items-start mb-2">
+                    <Card.Title className="fs-5 fw-bold mb-0">{property.price}</Card.Title>
                     <i className="bi bi-star fs-4"></i>
                   </div>
                   <Card.Text className="text-muted small mb-1">{property.details}</Card.Text>
