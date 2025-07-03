@@ -5,121 +5,91 @@ import styles from './PrivateExclusive.module.css';
 
 const PrivateExclusive = () => {
   return (
-    <div>
+    <div className={styles.pageWrapper}>
       <Header />
 
-      <main className="ip-page ip-page-custom" id="ip-page-custom">
-        {/* First Section - Private Exclusives */}
-        <section className="ip-page-section ip-section-about ip-format-a content-width-narrow horizontal-alignment-left vertical-alignment-stretch background-width-full-bleed" id="ip-section-about-private-exclusives">
-          <div className="ip-section-background">
-            <div className="ip-section-background-overlay"></div>
-          </div>
-          <div className="ip-section-wrapper">
-            <div className="ip-section-content">
-              <article>
-                <div className="ip-description ip-my-5 ip-block-content">
-                  <h4 className="ibc-u-heading heading-sm">Private Exclusives</h4>
-                  <p className="ibc-u-text body-md">
-                    <strong>Sell your home, keep your privacy.</strong>
-                  </p>
-                  <p className="ibc-u-text body-md">
-                    Listing your home as a private exclusive allows you to control what information is shared about you and your home while still getting exposure to top agents at Compass.
-                  </p>
-                </div>
-                <div className="ip-wrap-btn"></div>
-              </article>
-              <div className="ip-wrap-image">
+      <main className={styles.mainContent}>
+        {/* Private Exclusives Section */}
+        <section className={styles.section}>
+          <div className={styles.container}>
+            <div className={styles.contentGrid}>
+              <div className={styles.textContent}>
+                <h1 className={styles.title}>Private Exclusives</h1>
+                <p className={styles.subtitle}>
+                  <strong>Sell your home, keep your privacy.</strong>
+                </p>
+                <p className={styles.description}>
+                  Listing your home as a private exclusive allows you to control what information is shared about you and your home while still getting exposure to top agents at Compass.
+                </p>
+              </div>
+              <div className={styles.imageContent}>
                 <img 
-                  className="ip-image ms-lazy" 
                   src="https://api-cms.idxboost.com/assets/images/compass/private-exclusive-services.jpeg" 
-                  alt=""
+                  alt="Private Exclusive Services"
+                  className={styles.sectionImage}
                 />
               </div>
-              <div className="ip-wrap-image ip-image-two"></div>
             </div>
           </div>
         </section>
 
         {/* What To Expect Section */}
-        <section className="ip-page-section ip-section-overview ip-columns-4 ip-section-height-small content-width-wide vertical-alignment-middle horizontal-alignment-center space-between-items-medium" id="ip-section-contentSectionTwo-what-to-expect">
-          <div className="ip-section-background">
-            <div className="ip-section-background-overlay"></div>
-          </div>
-          <div className="ip-section-wrapper">
-            <div className="ip-section-content">
-              <div className="ip-block ip-block-html">
-                <div className="ip-block-content">
-                  <h4 className="ibc-u-heading heading-sm">What To Expect</h4>
-                </div>
+        <section className={`${styles.section} ${styles.grayBg}`}>
+          <div className={styles.container}>
+            <h2 className={styles.sectionTitle}>What To Expect</h2>
+            <div className={styles.featuresGrid}>
+              <div className={styles.feature}>
+                <h3 className={styles.featureTitle}>DISCRETION</h3>
+                <p className={styles.featureText}>
+                  Privacy is the ultimate commodity and the decision to sell your home is a personal experience.
+                </p>
               </div>
-              <div className="ip-block ip-block-spacer"></div>
-              <div className="ip-slider js-slider-overview" data-columns="4" id="slider-contentSectionTwo-what-to-expect">
-                <div className="ip-item">
-                  <div className="ip-item-content">
-                    <h3 className="ip-item-title">DISCRETION</h3>
-                    <p className="ip-item-text ibc-u-text body-md">
-                      Privacy is the ultimate commodity and the decision to sell your home is a personal experience.
-                    </p>
-                  </div>
-                </div>
-                <div className="ip-item">
-                  <div className="ip-item-content">
-                    <h3 className="ip-item-title">FLEXIBILITY</h3>
-                    <p className="ip-item-text ibc-u-text body-md">
-                      Decide when to share details about your home, including price, more broadly on your own timing.
-                    </p>
-                  </div>
-                </div>
-                <div className="ip-item">
-                  <div className="ip-item-content">
-                    <h3 className="ip-item-title">QUALITY</h3>
-                    <p className="ip-item-text ibc-u-text body-md">
-                      Retain exposure to Compass agents, including premium placement on our agent facing platform.
-                    </p>
-                  </div>
-                </div>
-                <div className="ip-item">
-                  <div className="ip-item-content">
-                    <h3 className="ip-item-title">VALUE</h3>
-                    <p className="ip-item-text ibc-u-text body-md">
-                      Get the best offer by testing the market privately to gather key insights without your listing getting stale.
-                    </p>
-                  </div>
-                </div>
+              <div className={styles.feature}>
+                <h3 className={styles.featureTitle}>FLEXIBILITY</h3>
+                <p className={styles.featureText}>
+                  Decide when to share details about your home, including price, more broadly on your own timing.
+                </p>
+              </div>
+              <div className={styles.feature}>
+                <h3 className={styles.featureTitle}>QUALITY</h3>
+                <p className={styles.featureText}>
+                  Retain exposure to Compass agents, including premium placement on our agent facing platform.
+                </p>
+              </div>
+              <div className={styles.feature}>
+                <h3 className={styles.featureTitle}>VALUE</h3>
+                <p className={styles.featureText}>
+                  Get the best offer by testing the market privately to gather key insights without your listing getting stale.
+                </p>
               </div>
             </div>
           </div>
         </section>
 
         {/* Reasons Section */}
-        <section className="ip-page-section ip-section-about content-width-narrow horizontal-alignment-left vertical-alignment-stretch background-width-full-bleed" id="ip-section-about-reason-why">
-          <div className="ip-section-background">
-            <div className="ip-section-background-overlay"></div>
-          </div>
-          <div className="ip-section-wrapper">
-            <div className="ip-section-content">
-              <article>
-                <div className="ip-description ip-my-5 ip-block-content">
-                  <h4 className="ibc-u-heading heading-sm">
-                    Reasons why you might choose to sell your home as a private exclusive:
-                  </h4>
-                  <p className="ibc-u-text body-md">New job or relocation</p>
-                  <p className="ibc-u-text body-md">Family changes like marriage or divorce</p>
-                  <p className="ibc-u-text body-md">Evolving financial circumstances</p>
-                  <p className="ibc-u-text body-md">Health issues</p>
-                  <p className="ibc-u-text body-md">Valuable belongings like art or furniture</p>
-                  <p className="ibc-u-text body-md">Opposition to holding open houses</p>
-                </div>
-                <div className="ip-wrap-btn"></div>
-              </article>
-              <div className="ip-wrap-image">
+        <section className={styles.section}>
+          <div className={styles.container}>
+            <div className={styles.contentGrid}>
+              <div className={styles.textContent}>
+                <h2 className={styles.title}>
+                  Reasons why you might choose to sell your home as a private exclusive:
+                </h2>
+                <ul className={styles.reasonsList}>
+                  <li>New job or relocation</li>
+                  <li>Family changes like marriage or divorce</li>
+                  <li>Evolving financial circumstances</li>
+                  <li>Health issues</li>
+                  <li>Valuable belongings like art or furniture</li>
+                  <li>Opposition to holding open houses</li>
+                </ul>
+              </div>
+              <div className={styles.imageContent}>
                 <img 
-                  className="ip-image ms-lazy" 
                   src="https://api-cms.idxboost.com/assets/images/compass/private-exclusive-reasons.jpeg" 
-                  alt=""
+                  alt="Private Exclusive Reasons"
+                  className={styles.sectionImage}
                 />
               </div>
-              <div className="ip-wrap-image ip-image-two"></div>
             </div>
           </div>
         </section>
