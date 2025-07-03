@@ -21,16 +21,77 @@ const PrivateExclusive = () => {
                     Private Exclusives
                   </h1>
                   <h2 className={styles.heroSubtitle}>
-                    A discreet approach to luxury home sales
+                    Sell your home, keep your privacy.
                   </h2>
                   <p className={styles.heroDescription}>
-                    Some of the most exceptional properties deserve a marketing approach that's as unique as they are. Our Private Exclusives program gives sellers access to the most discerning purchasers through Compass's network of agents.
+                    Listing your home as a private exclusive allows you to control what information is shared about you and your home while still getting exposure to top agents at Compass.
                   </p>
                 </div>
               </Col>
               <Col lg={6}>
                 <div className={styles.heroImageWrapper}>
                   <div className={styles.heroImage}></div>
+                </div>
+              </Col>
+            </Row>
+          </Container>
+        </section>
+
+        {/* What To Expect Section */}
+        <section className={styles.expectSection}>
+          <Container>
+            <Row>
+              <Col lg={12}>
+                <h2 className={styles.sectionTitle}>What To Expect</h2>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={3} md={6} className="mb-4">
+                <div className={styles.expectCard}>
+                  <div className={styles.expectIcon}>
+                    <h3>DISCRETION</h3>
+                  </div>
+                  <div className={styles.expectContent}>
+                    <p>
+                      Privacy is the ultimate commodity and the decision to sell your home is a personal experience.
+                    </p>
+                  </div>
+                </div>
+              </Col>
+              <Col lg={3} md={6} className="mb-4">
+                <div className={styles.expectCard}>
+                  <div className={styles.expectIcon}>
+                    <h3>FLEXIBILITY</h3>
+                  </div>
+                  <div className={styles.expectContent}>
+                    <p>
+                      Decide when to share details about your home, including price, more broadly on your own timing.
+                    </p>
+                  </div>
+                </div>
+              </Col>
+              <Col lg={3} md={6} className="mb-4">
+                <div className={styles.expectCard}>
+                  <div className={styles.expectIcon}>
+                    <h3>QUALITY</h3>
+                  </div>
+                  <div className={styles.expectContent}>
+                    <p>
+                      Retain exposure to Compass agents, including premium placement on our agent facing platform.
+                    </p>
+                  </div>
+                </div>
+              </Col>
+              <Col lg={3} md={6} className="mb-4">
+                <div className={styles.expectCard}>
+                  <div className={styles.expectIcon}>
+                    <h3>VALUE</h3>
+                  </div>
+                  <div className={styles.expectContent}>
+                    <p>
+                      Get the best offer by testing the market privately to gather key insights without your listing getting stale.
+                    </p>
+                  </div>
                 </div>
               </Col>
             </Row>
@@ -134,13 +195,41 @@ const PrivateExclusive = () => {
           </Container>
         </section>
 
-        {/* Reason Why Section */}
-        <section className={styles.reasonSection}>
+        {/* Reasons Section */}
+        <section className={styles.reasonsSection}>
+          <Container>
+            <Row className="align-items-center">
+              <Col lg={6}>
+                <div className={styles.reasonsContent}>
+                  <h2 className={styles.sectionTitle}>Reasons why you might choose to sell your home as a private exclusive:</h2>
+                  <div className={styles.reasonsList}>
+                    <ul>
+                      <li>New job or relocation</li>
+                      <li>Family changes like marriage or divorce</li>
+                      <li>Evolving financial circumstances</li>
+                      <li>Health issues</li>
+                      <li>Valuable belongings like art or furniture</li>
+                      <li>Opposition to holding open houses</li>
+                    </ul>
+                  </div>
+                </div>
+              </Col>
+              <Col lg={6}>
+                <div className={styles.reasonsImageWrapper}>
+                  <div className={styles.reasonsImage}></div>
+                </div>
+              </Col>
+            </Row>
+          </Container>
+        </section>
+
+        {/* Compass Advantage Section */}
+        <section className={styles.advantageSection}>
           <Container>
             <Row>
               <Col lg={8} className="mx-auto text-center">
                 <h2 className={styles.sectionTitle}>The Compass Advantage</h2>
-                <p className={styles.reasonDescription}>
+                <p className={styles.advantageDescription}>
                   With our extensive network of luxury market specialists and proven track record in high-end real estate, 
                   Compass is uniquely positioned to deliver exceptional results for discerning sellers. Our Private Exclusives 
                   program combines cutting-edge technology with personalized service to ensure your property reaches the right 
