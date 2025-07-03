@@ -2,7 +2,7 @@
 .footer {
   background: #1a1a1a;
   color: white;
-  padding: 60px 0 30px;
+  padding: 40px 0 20px;
 }
 
 .container {
@@ -12,16 +12,13 @@
 }
 
 .topSection {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 60px;
-  margin-bottom: 50px;
-  align-items: start;
+  margin-bottom: 30px;
 }
 
 .logoSection {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
 }
 
 .compassLogo {
@@ -32,92 +29,93 @@
 }
 
 .logoImage {
-  height: 60px;
+  height: 50px;
   width: auto;
 }
 
-.compassText {
-  font-size: 32px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: white;
+.compassImage {
+  height: 40px;
+  width: auto;
 }
 
-.contactSection {
-  padding-left: 40px;
+.contactInfo {
+  margin-left: 0;
 }
 
-.agentInfo h3 {
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 10px;
-  color: white;
-}
-
-.agentInfo p {
-  font-size: 16px;
-  color: #ccc;
-  margin-bottom: 20px;
-}
-
-.contactDetails p {
-  margin-bottom: 8px;
+.contactInfo p {
+  margin: 5px 0;
   font-size: 14px;
-  line-height: 1.6;
-}
-
-.contactDetails strong {
-  color: white;
-  margin-right: 8px;
+  color: #ccc;
+  line-height: 1.4;
 }
 
 .middleSection {
-  text-align: center;
-  margin-bottom: 40px;
-  padding: 30px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 20px 0;
   border-top: 1px solid #333;
   border-bottom: 1px solid #333;
 }
 
-.logoGrid {
+.logoAndSocial {
   display: flex;
-  justify-content: center;
   align-items: center;
+  gap: 40px;
 }
 
 .ehoLogo {
-  height: 80px;
+  height: 60px;
   width: auto;
   opacity: 0.8;
-  transition: opacity 0.3s ease;
 }
 
-.ehoLogo:hover {
-  opacity: 1;
+.socialLinks {
+  display: flex;
+  gap: 15px;
 }
 
-.bottomSection {
+.socialLinks a {
+  width: 35px;
+  height: 35px;
+  background: #333;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.socialLinks a:hover {
+  background: #555;
+  transform: translateY(-2px);
+}
+
+.disclaimerSection {
   text-align: center;
-}
-
-.disclaimer {
   margin-bottom: 30px;
 }
 
 .disclaimer p {
-  font-size: 12px;
-  line-height: 1.6;
+  font-size: 11px;
+  line-height: 1.5;
   color: #999;
   max-width: 900px;
   margin: 0 auto;
+}
+
+.bottomSection {
+  border-top: 1px solid #333;
+  padding-top: 20px;
 }
 
 .footerBottom {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 20px;
-  border-top: 1px solid #333;
 }
 
 .footerLinks {
@@ -128,7 +126,7 @@
 .footerLinks a {
   color: #ccc;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 12px;
   transition: color 0.3s ease;
 }
 
@@ -140,7 +138,7 @@
   display: flex;
   align-items: center;
   gap: 20px;
-  font-size: 14px;
+  font-size: 12px;
   color: #999;
 }
 
@@ -151,30 +149,28 @@
 
 @media (max-width: 768px) {
   .footer {
-    padding: 40px 0 20px;
-  }
-  
-  .topSection {
-    grid-template-columns: 1fr;
-    gap: 30px;
-    text-align: center;
-  }
-  
-  .contactSection {
-    padding-left: 0;
+    padding: 30px 0 15px;
   }
   
   .compassLogo {
     justify-content: center;
+    margin-bottom: 15px;
   }
   
-  .compassText {
-    font-size: 24px;
+  .logoSection {
+    align-items: center;
+    text-align: center;
+  }
+  
+  .logoAndSocial {
+    flex-direction: column;
+    gap: 20px;
   }
   
   .footerBottom {
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
+    text-align: center;
   }
   
   .footerLinks {
