@@ -18,7 +18,7 @@ const HeroSection = () => {
       </div>
 
       {/* Conteúdo principal com z-index maior para ficar acima do carrossel */}
-      <Container className="position-relative z-2 py-5 h-100">
+      <Container className="position-relative py-5 h-100" style={{ zIndex: 3 }}>
         <Row className="justify-content-center text-center mb-4 h-100">
           <Col className="d-flex flex-column justify-content-center">
             <h1 className={`${styles.heroTitle} fw-bold text-white mb-4`}>
