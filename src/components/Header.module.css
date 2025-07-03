@@ -435,7 +435,12 @@
 }
 
 /* Dropdown Menus */
-.ipMenuItemHasChildren:hover .ipSubmenu {
+.ipMenuItemHasChildren {
+  position: relative;
+}
+
+.ipMenuItemHasChildren:hover .ipSubmenu,
+.ipSubmenu:hover {
   display: block;
 }
 
@@ -448,11 +453,21 @@
   border-radius: 8px;
   box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
   padding: 0.5rem 0;
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
   min-width: 200px;
   display: none;
   list-style: none;
   z-index: 1000;
+}
+
+.ipSubmenu::before {
+  content: '';
+  position: absolute;
+  top: -0.25rem;
+  left: 0;
+  right: 0;
+  height: 0.25rem;
+  background: transparent;
 }
 
 .ipSubmenu .ipMenuLink {

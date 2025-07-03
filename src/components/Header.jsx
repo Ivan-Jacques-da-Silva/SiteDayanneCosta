@@ -201,16 +201,20 @@ const Header = () => {
                       </ul>
                     </li>
 
-                    <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                      <Link to="/buy/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                        Buy
-                      </Link>
-                    </li>
-
-                    <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                      <Link to="/sell/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                        Sell
-                      </Link>
+                    <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
+                      <Link to="" className={`ip-menu-link ${styles.ipMenuLink}`}>Buy/Sell</Link>
+                      <ul className={`ip-submenu ${styles.ipSubmenu}`}>
+                        <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                          <Link to="/buy/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                            Buy
+                          </Link>
+                        </li>
+                        <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                          <Link to="/sell/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                            Sell
+                          </Link>
+                        </li>
+                      </ul>
                     </li>
 
                     <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
@@ -326,20 +330,23 @@ const Header = () => {
                 </ul>
               </li>
 
-              <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+              <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
-                  <Link to="/buy/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                    Buy
-                  </Link>
+                  <span className={`ip-menu-link ${styles.ipMenuLink}`}>Buy/Sell</span>
+                  <button className={`ip-submenu-toggle js-submenu-toggle ${styles.ipSubmenuToggle}`}></button>
                 </div>
-              </li>
-
-              <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
-                  <Link to="/sell/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                    Sell
-                  </Link>
-                </div>
+                <ul className={`ip-submenu js-submenu ${styles.ipSubmenu}`}>
+                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                    <Link to="/buy/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                      Buy
+                    </Link>
+                  </li>
+                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                    <Link to="/sell/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                      Sell
+                    </Link>
+                  </li>
+                </ul>
               </li>
 
               <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
