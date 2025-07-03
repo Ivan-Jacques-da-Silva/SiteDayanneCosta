@@ -1,309 +1,159 @@
-
-.privatePage {
-  background-color: #fff;
-}
-
-.heroSection {
-  padding: 4rem 0;
-  background-color: #f8f9fa;
-}
-
-.heroContent {
-  padding-right: 2rem;
-}
-
-.heroTitle {
-  font-size: 3rem;
-  font-weight: 300;
-  color: #000;
-  margin-bottom: 1.5rem;
-}
-
-.heroSubtitle {
-  font-size: 1.5rem;
-  font-weight: 400;
-  color: #333;
-  margin-bottom: 1.5rem;
-}
-
-.heroDescription {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  color: #666;
-  margin-bottom: 2rem;
-}
-
-.heroImageWrapper {
-  height: 400px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.heroImage {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-  border-radius: 8px;
-}
-
-.expectSection {
-  padding: 4rem 0;
-  background-color: #fff;
-}
-
-.sectionTitle {
-  font-size: 2.5rem;
-  font-weight: 300;
-  color: #000;
-  margin-bottom: 3rem;
-  text-align: center;
-}
-
-.expectCard {
-  text-align: center;
-  padding: 2rem 1rem;
-  height: 100%;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
-}
-
-.expectCard:hover {
-  transform: translateY(-5px);
-}
-
-.expectIcon h3 {
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: #000;
-  margin-bottom: 1.5rem;
-}
-
-.expectContent p {
-  font-size: 1rem;
-  color: #666;
-  line-height: 1.6;
-}
-
-.benefitsSection {
-  padding: 4rem 0;
-  background-color: #f8f9fa;
-}
-
-.benefitCard {
-  text-align: center;
-  padding: 2rem 1rem;
-  height: 100%;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
-}
-
-.benefitCard:hover {
-  transform: translateY(-5px);
-}
-
-.benefitIcon h3 {
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: #000;
-  margin-bottom: 1.5rem;
-}
-
-.benefitContent p {
-  font-size: 1rem;
-  color: #666;
-  line-height: 1.6;
-}
-
-.processSection {
-  padding: 4rem 0;
-  background-color: #fff;
-}
-
-.processContent {
-  padding-right: 2rem;
-}
-
-.processSteps {
-  margin-top: 2rem;
-}
-
-.processStep {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 2rem;
-}
-
-.stepNumber {
-  background-color: #000;
-  color: #fff;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  margin-right: 1.5rem;
-  flex-shrink: 0;
-}
-
-.stepContent h4 {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #000;
-  margin-bottom: 0.5rem;
-}
-
-.stepContent p {
-  font-size: 1rem;
-  color: #666;
-  line-height: 1.5;
-}
-
-.processImageWrapper {
-  height: 500px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.processImage {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 8px;
-}
-
-.reasonsSection {
-  padding: 4rem 0;
-  background-color: #f8f9fa;
-}
-
-.reasonsContent {
-  padding-right: 2rem;
-}
-
-.reasonsList ul {
-  list-style: none;
-  padding: 0;
-  margin-top: 2rem;
-}
-
-.reasonsList li {
-  padding: 0.75rem 0;
-  border-bottom: 1px solid #eee;
+.ip-page-section {
   position: relative;
-  padding-left: 1.5rem;
-  font-size: 1.1rem;
+  padding: 4rem 0;
+}
+
+.ip-section-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.ip-section-background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.ip-section-wrapper {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.ip-section-content {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.content-width-narrow .ip-section-content {
+  max-width: 1000px;
+}
+
+.content-width-wide .ip-section-content {
+  max-width: 1400px;
+}
+
+.ip-description {
+  margin: 2rem 0;
+}
+
+.ibc-u-heading {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 300;
+  color: #000;
+  margin-bottom: 1.5rem;
+}
+
+.heading-sm {
+  font-size: 32px;
+}
+
+.ibc-u-text {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.body-md {
+  font-size: 16px;
   color: #333;
 }
 
-.reasonsList li:before {
-  content: "•";
-  color: #000;
-  font-weight: bold;
-  position: absolute;
-  left: 0;
+.ip-wrap-image {
+  flex: 1;
+  min-height: 300px;
 }
 
-.reasonsImageWrapper {
-  height: 400px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.reasonsImage {
+.ip-image {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  object-fit: cover;
   border-radius: 8px;
 }
 
-.advantageSection {
-  padding: 4rem 0;
-  background-color: #fff;
+/* What To Expect Section */
+.ip-section-overview {
+  background-color: #f8f9fa;
 }
 
-.advantageDescription {
-  font-size: 1.1rem;
-  line-height: 1.6;
+.ip-slider {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.ip-item {
+  text-align: center;
+  padding: 2rem 1rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.ip-item:hover {
+  transform: translateY(-5px);
+}
+
+.ip-item-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 1.5rem;
+}
+
+.ip-item-text {
   color: #666;
 }
 
-/* Responsive styles */
+/* Responsive */
 @media (max-width: 992px) {
-  .heroContent,
-  .processContent,
-  .reasonsContent {
-    padding-right: 0;
-    margin-bottom: 2rem;
+  .ip-section-content {
+    flex-direction: column;
+    text-align: center;
   }
-  
-  .heroTitle {
-    font-size: 2.5rem;
+
+  .ip-slider {
+    grid-template-columns: repeat(2, 1fr);
   }
-  
-  .heroSubtitle {
-    font-size: 1.3rem;
-  }
-  
-  .heroImageWrapper,
-  .processImageWrapper,
-  .reasonsImageWrapper {
-    height: 300px;
+
+  .heading-sm {
+    font-size: 28px;
   }
 }
 
 @media (max-width: 768px) {
-  .heroTitle {
-    font-size: 2rem;
+  .ip-slider {
+    grid-template-columns: 1fr;
   }
-  
-  .heroSubtitle {
-    font-size: 1.2rem;
+
+  .heading-sm {
+    font-size: 24px;
   }
-  
-  .sectionTitle {
-    font-size: 2rem;
-  }
-  
-  .processStep {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  .stepNumber {
-    margin-right: 0;
-    margin-bottom: 1rem;
+
+  .ip-page-section {
+    padding: 3rem 0;
   }
 }
 
 @media (max-width: 576px) {
-  .heroSection,
-  .expectSection,
-  .benefitsSection,
-  .processSection,
-  .reasonsSection,
-  .advantageSection {
-    padding: 3rem 0;
+  .ip-section-wrapper {
+    padding: 0 15px;
   }
-  
-  .heroTitle {
-    font-size: 1.8rem;
-  }
-  
-  .sectionTitle {
-    font-size: 1.8rem;
-  }
-  
-  .expectCard,
-  .benefitCard {
+
+  .ip-item {
     padding: 1.5rem 0.5rem;
   }
 }
