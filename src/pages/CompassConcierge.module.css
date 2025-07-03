@@ -17,12 +17,11 @@
 }
 
 .ipSectionWrapper {
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
+  margin: 0;
   padding: 0 20px;
   position: relative;
   z-index: 2;
-  width: 100%;
   box-sizing: border-box;
 }
 
