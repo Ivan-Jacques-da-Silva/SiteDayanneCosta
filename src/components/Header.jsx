@@ -1,6 +1,5 @@
 
 import React, { useState, useEffect } from 'react';
-import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import logo from '../assets/img/logo-dc.png';
 import logoBlack from '../assets/img/logo-dcBlack.png';
@@ -10,14 +9,31 @@ const Header = () => {
   const [expanded, setExpanded] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [dropdownStates, setDropdownStates] = useState({
+    searchProperties: false,
+    advantages: false,
+    about: false
+  });
 
   const handleNavClick = () => {
     setExpanded(false);
     setShowMobileMenu(false);
+    setDropdownStates({
+      searchProperties: false,
+      advantages: false,
+      about: false
+    });
   };
 
   const toggleMobileMenu = () => {
     setShowMobileMenu(!showMobileMenu);
+  };
+
+  const toggleDropdown = (dropdown) => {
+    setDropdownStates(prev => ({
+      ...prev,
+      [dropdown]: !prev[dropdown]
+    }));
   };
 
   useEffect(() => {
@@ -34,7 +50,7 @@ const Header = () => {
     <>
       {/* Header Top */}
       <div className={`${styles.headerTop} ${scrolled ? styles.headerTopScrolled : ''}`}>
-        <Container>
+        <div className={styles.container}>
           <div className={styles.headerTopContent}>
             {/* Social Links */}
             <div className={styles.socialLinks}>
@@ -94,12 +110,12 @@ const Header = () => {
               </button>
             </div>
           </div>
-        </Container>
+        </div>
       </div>
 
-      {/* Main Navbar */}
+      {/* Main Header */}
       <header className={`${styles.header} ${scrolled ? styles.activeFixed : ''}`}>
-        <Container>
+        <div className={styles.container}>
           <div className={styles.headerWrap}>
             <div className={styles.headerBottom}>
               <Link to="/" className={styles.headerLogo} onClick={handleNavClick}>
@@ -221,7 +237,7 @@ const Header = () => {
               </div>
             </div>
           </div>
-        </Container>
+        </div>
 
         {/* Mobile Menu Overlay */}
         {showMobileMenu && <div className={styles.overlay} onClick={toggleMobileMenu}></div>}
@@ -252,9 +268,14 @@ const Header = () => {
             <li className={`${styles.menuItem} ${styles.menuItemHasChildren}`}>
               <div className={styles.menuItemWrapper}>
                 <span className={styles.menuLink}>Search properties</span>
-                <button className={styles.submenuToggle}></button>
+                <button 
+                  className={styles.submenuToggle}
+                  onClick={() => toggleDropdown('searchProperties')}
+                >
+                  {dropdownStates.searchProperties ? '-' : '+'}
+                </button>
               </div>
-              <ul className={styles.submenu}>
+              <ul className={`${styles.submenu} ${dropdownStates.searchProperties ? styles.open : ''}`}>
                 <li className={styles.menuItem}>
                   <Link to="/new-developments/" className={styles.menuLink} onClick={handleNavClick}>
                     New Developments
@@ -297,9 +318,14 @@ const Header = () => {
             <li className={`${styles.menuItem} ${styles.menuItemHasChildren}`}>
               <div className={styles.menuItemWrapper}>
                 <span className={styles.menuLink}>Advantages</span>
-                <button className={styles.submenuToggle}></button>
+                <button 
+                  className={styles.submenuToggle}
+                  onClick={() => toggleDropdown('advantages')}
+                >
+                  {dropdownStates.advantages ? '-' : '+'}
+                </button>
               </div>
-              <ul className={styles.submenu}>
+              <ul className={`${styles.submenu} ${dropdownStates.advantages ? styles.open : ''}`}>
                 <li className={styles.menuItem}>
                   <Link to="/compass-concierge" className={styles.menuLink} onClick={handleNavClick}>
                     Compass Concierge
@@ -316,9 +342,14 @@ const Header = () => {
             <li className={`${styles.menuItem} ${styles.menuItemHasChildren}`}>
               <div className={styles.menuItemWrapper}>
                 <span className={styles.menuLink}>About</span>
-                <button className={styles.submenuToggle}></button>
+                <button 
+                  className={styles.submenuToggle}
+                  onClick={() => toggleDropdown('about')}
+                >
+                  {dropdownStates.about ? '-' : '+'}
+                </button>
               </div>
-              <ul className={styles.submenu}>
+              <ul className={`${styles.submenu} ${dropdownStates.about ? styles.open : ''}`}>
                 <li className={styles.menuItem}>
                   <Link to="/about" className={styles.menuLink} onClick={handleNavClick}>
                     About Dayanne
@@ -340,6 +371,29 @@ const Header = () => {
               </div>
             </li>
           </ul>
+
+          {/* Contact info in mobile menu */}
+          <div className={styles.mobileContactInfo}>
+            <div className={styles.contactItem}>
+              <i className="fas fa-envelope"></i>
+              <span>dayanne.costa@compass.com</span>
+            </div>
+            <div className={styles.contactItem}>
+              <i className="fas fa-phone"></i>
+              <span>+1 (646) 598-3588</span>
+            </div>
+            <div className={styles.socialLinks}>
+              <a href="https://www.youtube.com/@dayannecosta1958" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
+                <i className="fab fa-youtube"></i>
+              </a>
+              <a href="https://www.instagram.com/dayanne_vc?igsh=MXVuOG5heDdrbno1bw==" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
+                <i className="fab fa-instagram"></i>
+              </a>
+              <a href="http://www.linkedin.com/in/dayanne-costa-66451162" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
+                <i className="fab fa-linkedin"></i>
+              </a>
+            </div>
+          </div>
         </nav>
       </div>
     </>

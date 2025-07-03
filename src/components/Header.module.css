@@ -1,4 +1,11 @@
 
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
 /* Header Top Section */
 .headerTop {
   background-color: transparent;
@@ -133,6 +140,8 @@
   text-decoration: none;
   font-size: 11px;
   line-height: 1.2;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .contactText {
@@ -207,10 +216,6 @@
   color: #000 !important;
 }
 
-.activeFixed .headerLogo {
-  filter: invert(1);
-}
-
 .headerWrap {
   width: 100%;
 }
@@ -227,22 +232,36 @@
   align-items: center;
   gap: 1rem;
   text-decoration: none;
+  position: relative;
+  z-index: 1025;
 }
 
 .headerLogoWrapper {
   position: relative;
+  z-index: 1026;
 }
 
 .headerLogoImage {
   height: 40px;
   width: auto;
   transition: all 0.3s ease;
+  position: relative;
+  z-index: 1027;
 }
 
 .headerLogoBroker {
   height: 30px;
   width: auto;
   transition: all 0.3s ease;
+  position: relative;
+  z-index: 1027;
+}
+
+/* Ensure logo visibility when scrolled */
+.activeFixed .headerLogoImage,
+.activeFixed .headerLogoBroker {
+  filter: brightness(0);
+  z-index: 1027;
 }
 
 /* Navigation */
@@ -306,7 +325,7 @@
 }
 
 .submenu .menuLink {
-  color: #333;
+  color: #333 !important;
   padding: 0.6rem 1.5rem;
   font-size: 0.9rem;
   white-space: nowrap;
@@ -314,7 +333,7 @@
 
 .submenu .menuLink:hover {
   background-color: #f8f9fa;
-  color: #000;
+  color: #000 !important;
 }
 
 /* Mobile Menu Button */
@@ -450,10 +469,7 @@
   cursor: pointer;
   padding: 1rem;
   font-size: 18px;
-}
-
-.submenuToggle::before {
-  content: '+';
+  line-height: 1;
 }
 
 .mobileMenu .submenu {
@@ -466,13 +482,40 @@
   padding: 0;
 }
 
-.mobileMenu .menuItemHasChildren.open .submenu {
+.mobileMenu .submenu.open {
   display: block;
 }
 
 .mobileMenu .submenu .menuLink {
   padding-left: 2rem;
   font-size: 0.9rem;
+}
+
+/* Mobile Contact Info */
+.mobileContactInfo {
+  padding: 1rem;
+  border-top: 1px solid #eee;
+  margin-top: 1rem;
+}
+
+.mobileContactInfo .contactItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  color: #000;
+  font-size: 0.9rem;
+}
+
+.mobileContactInfo .socialLinks {
+  margin-top: 1rem;
+  justify-content: flex-start;
+}
+
+.mobileContactInfo .socialLink {
+  width: 28px;
+  height: 28px;
+  font-size: 12px;
 }
 
 /* Overlay */
