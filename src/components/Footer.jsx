@@ -12,7 +12,7 @@ const Footer = () => {
           <div className={styles.logoSection}>
             <div className={styles.compassLogo}>
               <img 
-                src="/src/assets/img/logo-dc.png" 
+                src="/src/assets/img/logo-dcBlack.png" 
                 alt="Dayanne Costa Logo" 
                 className={styles.logoImage}
               />
