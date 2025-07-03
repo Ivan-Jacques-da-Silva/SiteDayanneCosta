@@ -1,64 +1,110 @@
 
-/* Container */
-.container {
+/* IP Theme Variables */
+.ip {
+  --ibc-heading-font-family: Raleway, sans-serif;
+  --ibc-heading-font-weight: 300;
+  --ibc-body-font-family: Raleway, sans-serif;
+  --ibc-body-font-weight: 400;
+  --ibc-button-font-family: Raleway, sans-serif;
+  --ibc-button-font-weight: 400;
+  --ibc-heading-color: #000;
+  --ibc-button-bg: rgba(255, 255, 255, 0);
+  --ibc-button-border-color: #000;
+  --ibc-button-color: #000;
+  --ibc-button-hover-bg: #000;
+  --ibc-button-hover-border-color: #000;
+  --ibc-button-hover-color: #fff;
+  --ibc--idx-primary-color: #000000ff;
+  --ibc--idx-secondary-color: #ffffff;
+  --ip-header-mobile-top-bg: #f3f4f4;
+  --ip-header-mobile-top-link-color: rgba(255, 255, 255, 1);
+  --ip-header-mobile-top-link-hover-color: rgba(255, 255, 255, 1);
+  --ip-header-bg: rgba(0, 0, 0, 1);
+  --ip-header-top-bg: rgba(255, 255, 255, 0);
+  --ip-header-top-link-color: rgba(255, 255, 255, 1);
+  --ip-header-top-link-hover-color: rgba(255, 255, 255, 1);
+  --ip-title-color: #000;
+  --ip-link-color: rgba(255, 255, 255, 1);
+  --ip-link-hover-color: rgba(255, 255, 255, 1);
+  --ip-menu-button-color: #000;
+  --ip-menu-button-hover-color: #000;
+  --ip-social-link-color: rgba(255, 255, 255, 1);
+  --ip-social-link-bg: rgba(0, 0, 0, 1);
+  --ip-social-link-border-color: #000;
+  --ip-social-link-border-radius: 12px;
+  --ip-social-link-hover-color: #000;
+  --ip-social-link-hover-bg: #fff;
+  --ip-social-link-hover-border-color: #000;
+  --ip-social-mobile-link-color: rgba(255, 255, 255, 1);
+  --ip-social-mobile-link-bg: rgba(0, 0, 0, 1);
+  --ip-social-mobile-link-border-color: #000;
+  --ip-social-mobile-link-hover-color: #000;
+  --ip-social-mobile-link-hover-bg: #fff;
+  --ip-social-mobile-link-hover-border-color: #000;
+  --ip-menu-mobile-bg: #fff;
+  --ip-menu-mobile-link-color: #000;
+  --ip-menu-mobile-link-border-color: #ccc;
+}
+
+/* Header Main */
+.ipHeader {
+  background-color: var(--ip-header-bg);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1020;
+  transition: all 0.3s ease;
+}
+
+.ipHeader.activeFixed {
+  background-color: #fff;
+}
+
+.ipHeaderWrap {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 15px;
 }
 
-/* Header Top Section */
-.headerTop {
-  background-color: transparent;
-  color: white;
+/* Header Top */
+.ipHeaderTop {
+  background-color: var(--ip-header-top-bg);
+  color: var(--ip-header-top-link-color);
   padding: 10px 0;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1030;
-  transition: all 0.3s ease;
-}
-
-.headerTopScrolled {
-  background-color: white;
-  color: #000;
-}
-
-.headerTopContent {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
 }
 
+.activeFixed .ipHeaderTop {
+  color: #000;
+}
+
 /* Social Links */
-.socialLinks {
+.ipSocial {
   display: flex;
   gap: 0.5rem;
 }
 
-.socialLink {
+.ipSocialLink {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 32px;
   height: 32px;
-  background-color: rgba(0, 0, 0, 1);
-  color: white;
-  border-radius: 6px;
+  background-color: var(--ip-social-link-bg);
+  color: var(--ip-social-link-color);
+  border-radius: var(--ip-social-link-border-radius);
   text-decoration: none;
   font-size: 14px;
   transition: all 0.3s ease;
 }
 
-.headerTopScrolled .socialLink {
-  background-color: rgba(0, 0, 0, 1);
-  color: white;
-}
-
-.socialLink:hover {
-  background-color: white;
-  color: #000;
+.ipSocialLink:hover {
+  background-color: var(--ip-social-link-hover-bg);
+  color: var(--ip-social-link-hover-color);
 }
 
 /* Language Switcher */
@@ -128,7 +174,11 @@
 }
 
 /* Contact Info */
-.contactInfo {
+.ipContact {
+  display: flex;
+}
+
+.ipContactWrap {
   display: flex;
   gap: 1.5rem;
 }
@@ -159,13 +209,40 @@
 }
 
 /* Login Section */
-.loginSection {
+.ipLogin {
+  display: flex;
+}
+
+.ipLoginWrap {
   display: flex;
   align-items: center;
   gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-.loginBtn, .registerBtn {
+.ipLoginItem {
+  list-style: none;
+}
+
+.ipLoginItem.register {
+  position: relative;
+  padding-left: 1rem;
+}
+
+.ipLoginItem.register::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 16px;
+  background-color: currentColor;
+}
+
+.ipLoginBtn {
   background: none;
   border: none;
   color: inherit;
@@ -177,57 +254,29 @@
   padding: 0;
 }
 
-.registerBtn {
-  position: relative;
-  padding-left: 1rem;
-}
-
-.registerBtn::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 1px;
-  height: 16px;
-  background-color: currentColor;
-}
-
-/* Main Header */
-.header {
-  background-color: rgba(0, 0, 0, 1);
-  padding: 1rem 0;
-  margin-top: 60px;
-  transition: all 0.3s ease;
-  box-shadow: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1020;
-}
-
-.activeFixed {
-  background-color: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.activeFixed .menuLink {
-  color: #000 !important;
-}
-
-.headerWrap {
-  width: 100%;
-}
-
-.headerBottom {
+.ipLoginIcon {
   display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 
-/* Brand/Logo */
-.headerLogo {
+.ipLoginText {
+  font-size: 12px;
+}
+
+/* Header Bottom */
+.ipHeaderBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.activeFixed .ipHeaderBottom {
+  padding: 0.5rem 0;
+}
+
+/* Logo */
+.ipHeaderLogo {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -236,12 +285,12 @@
   z-index: 1025;
 }
 
-.headerLogoWrapper {
+.ipHeaderLogoWrapper {
   position: relative;
   z-index: 1026;
 }
 
-.headerLogoImage {
+.ipHeaderLogoImage {
   height: 40px;
   width: auto;
   transition: all 0.3s ease;
@@ -249,7 +298,7 @@
   z-index: 1027;
 }
 
-.headerLogoBroker {
+.ipHeaderLogoBroker {
   height: 30px;
   width: auto;
   transition: all 0.3s ease;
@@ -257,25 +306,18 @@
   z-index: 1027;
 }
 
-/* Ensure logo visibility when scrolled */
-.activeFixed .headerLogoImage,
-.activeFixed .headerLogoBroker {
-  filter: brightness(0);
-  z-index: 1027;
-}
-
 /* Navigation */
-.headerNavigation {
+.ipHeaderNavigation {
   display: flex;
   align-items: center;
   gap: 2rem;
 }
 
-.menuWrap {
+.ipMenuWrap {
   display: flex;
 }
 
-.menu {
+.ipMenu {
   display: flex;
   list-style: none;
   margin: 0;
@@ -283,12 +325,13 @@
   gap: 0;
 }
 
-.menuItem {
+.ipMenuItem {
   position: relative;
+  list-style: none;
 }
 
-.menuLink {
-  color: rgba(255, 255, 255, 1);
+.ipMenuLink {
+  color: var(--ip-link-color);
   font-weight: 400;
   font-size: 14px;
   padding: 0.5rem 1rem;
@@ -298,17 +341,27 @@
   cursor: pointer;
 }
 
-.menuLink:hover {
-  color: rgba(255, 255, 255, 0.8);
+.ipMenuLink:hover {
+  color: var(--ip-link-hover-color);
   text-decoration: none;
+  opacity: 0.8;
+}
+
+.activeFixed .ipMenuLink {
+  color: #000 !important;
+}
+
+.activeFixed .ipMenuLink:hover {
+  color: #000 !important;
+  opacity: 0.8;
 }
 
 /* Dropdown Menus */
-.menuItemHasChildren:hover .submenu {
+.ipMenuItemHasChildren:hover .ipSubmenu {
   display: block;
 }
 
-.submenu {
+.ipSubmenu {
   position: absolute;
   top: 100%;
   left: 0;
@@ -324,23 +377,23 @@
   z-index: 1000;
 }
 
-.submenu .menuLink {
+.ipSubmenu .ipMenuLink {
   color: #333 !important;
   padding: 0.6rem 1.5rem;
   font-size: 0.9rem;
   white-space: nowrap;
 }
 
-.submenu .menuLink:hover {
+.ipSubmenu .ipMenuLink:hover {
   background-color: #f8f9fa;
   color: #000 !important;
 }
 
 /* Mobile Menu Button */
-.menuButton {
+.ipMenuButton {
   border: none;
   background: none;
-  color: white;
+  color: var(--ip-link-color);
   cursor: pointer;
   display: none;
   flex-direction: column;
@@ -349,11 +402,11 @@
   padding: 0.5rem;
 }
 
-.activeFixed .menuButton {
+.activeFixed .ipMenuButton {
   color: #000;
 }
 
-.menuButtonIcon {
+.ipMenuButtonIcon {
   display: flex;
   flex-direction: column;
   width: 20px;
@@ -361,9 +414,9 @@
   position: relative;
 }
 
-.menuButtonIcon span,
-.menuButtonIcon span::before,
-.menuButtonIcon span::after {
+.ipMenuButtonIcon span,
+.ipMenuButtonIcon span::before,
+.ipMenuButtonIcon span::after {
   display: block;
   height: 2px;
   width: 100%;
@@ -371,108 +424,108 @@
   transition: all 0.3s ease;
 }
 
-.menuButtonIcon span {
+.ipMenuButtonIcon span {
   position: relative;
   top: 6px;
 }
 
-.menuButtonIcon span::before,
-.menuButtonIcon span::after {
+.ipMenuButtonIcon span::before,
+.ipMenuButtonIcon span::after {
   content: '';
   position: absolute;
   left: 0;
 }
 
-.menuButtonIcon span::before {
+.ipMenuButtonIcon span::before {
   top: -6px;
 }
 
-.menuButtonIcon span::after {
+.ipMenuButtonIcon span::after {
   top: 6px;
 }
 
-.menuButtonText {
+.ipMenuButtonText {
   font-size: 12px;
   text-transform: uppercase;
 }
 
 /* Mobile Menu */
-.mobileMenuWrap {
+.ipMobileMenuWrap {
   position: fixed;
   top: 0;
   right: -100%;
   width: 300px;
   height: 100vh;
-  background: white;
+  background: var(--ip-menu-mobile-bg);
   z-index: 1040;
   transition: right 0.3s ease;
   overflow-y: auto;
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.mobileMenuWrap.show {
+.ipMobileMenuWrap.show {
   right: 0;
 }
 
-.menuButtonClose {
+.ipMenuButtonClose {
   border: none;
   background: none;
-  color: #000;
+  color: var(--ip-menu-mobile-link-color);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
   padding: 1rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--ip-menu-mobile-link-border-color);
 }
 
-.mobileMenu {
+.ipMobileMenu {
   padding: 0;
 }
 
-.mobileMenu ul {
+.ipMobileMenu ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.mobileMenu .menuItem {
-  border-bottom: 1px solid #eee;
+.ipMobileMenu .ipMenuItem {
+  border-bottom: 1px solid var(--ip-menu-mobile-link-border-color);
 }
 
-.mobileMenu .menuItemWrapper {
+.ipMenuItemWrapper {
   display: flex;
   align-items: center;
   justify-content: space-between;
   position: relative;
 }
 
-.mobileMenu .menuLink {
-  color: #000;
+.ipMobileMenu .ipMenuLink {
+  color: var(--ip-menu-mobile-link-color);
   padding: 1rem;
   text-decoration: none;
   display: block;
   flex: 1;
 }
 
-.mobileMenu .menuLink:hover {
+.ipMobileMenu .ipMenuLink:hover {
   background-color: #f8f9fa;
-  color: #000;
+  color: var(--ip-menu-mobile-link-color);
   text-decoration: none;
 }
 
-.submenuToggle {
+.ipSubmenuToggle {
   border: none;
   background: none;
-  color: #000;
+  color: var(--ip-menu-mobile-link-color);
   cursor: pointer;
   padding: 1rem;
   font-size: 18px;
   line-height: 1;
 }
 
-.mobileMenu .submenu {
+.ipMobileMenu .ipSubmenu {
   position: static;
   display: none;
   background: #f8f9fa;
@@ -482,40 +535,17 @@
   padding: 0;
 }
 
-.mobileMenu .submenu.open {
+.ipMobileMenu .ipSubmenu.open {
   display: block;
 }
 
-.mobileMenu .submenu .menuLink {
+.ipMobileMenu .ipSubmenu .ipMenuLink {
   padding-left: 2rem;
   font-size: 0.9rem;
 }
 
-/* Mobile Contact Info */
-.mobileContactInfo {
+.ipCta {
   padding: 1rem;
-  border-top: 1px solid #eee;
-  margin-top: 1rem;
-}
-
-.mobileContactInfo .contactItem {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-  color: #000;
-  font-size: 0.9rem;
-}
-
-.mobileContactInfo .socialLinks {
-  margin-top: 1rem;
-  justify-content: flex-start;
-}
-
-.mobileContactInfo .socialLink {
-  width: 28px;
-  height: 28px;
-  font-size: 12px;
 }
 
 /* Overlay */
@@ -527,25 +557,27 @@
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
   z-index: 1030;
+  display: none;
+}
+
+.overlay.show {
+  display: block;
 }
 
 /* Responsive Design */
 @media (max-width: 991.98px) {
-  .headerTop {
+  .ipHeaderTop {
     padding: 8px 0;
-  }
-  
-  .headerTopContent {
     flex-wrap: wrap;
     gap: 0.5rem;
   }
   
-  .contactInfo {
+  .ipContactWrap {
     flex-direction: column;
     gap: 0.5rem;
   }
   
-  .socialLinks {
+  .ipSocial {
     order: 1;
   }
   
@@ -553,35 +585,31 @@
     order: 2;
   }
   
-  .contactInfo {
+  .ipContact {
     order: 3;
     width: 100%;
   }
   
-  .loginSection {
+  .ipLogin {
     order: 4;
   }
-  
-  .header {
-    margin-top: 100px;
-  }
 
-  .menuWrap {
+  .ipMenuWrap {
     display: none;
   }
 
-  .menuButton {
+  .ipMenuButton {
     display: flex;
   }
 }
 
 @media (max-width: 767.98px) {
-  .headerTopContent {
+  .ipHeaderTop {
     justify-content: center;
     text-align: center;
   }
   
-  .contactInfo {
+  .ipContactWrap {
     flex-direction: row;
     justify-content: center;
     gap: 1rem;
@@ -591,36 +619,35 @@
     font-size: 10px;
   }
   
-  .header {
-    margin-top: 80px;
+  .ipHeaderBottom {
     padding: 0.5rem 0;
   }
   
-  .headerLogoImage {
+  .ipHeaderLogoImage {
     height: 35px;
   }
   
-  .headerLogoBroker {
+  .ipHeaderLogoBroker {
     height: 25px;
   }
 }
 
 @media (max-width: 575.98px) {
-  .headerTop {
+  .ipHeaderTop {
     padding: 5px 0;
   }
   
-  .socialLinks {
+  .ipSocial {
     gap: 0.25rem;
   }
   
-  .socialLink {
+  .ipSocialLink {
     width: 28px;
     height: 28px;
     font-size: 12px;
   }
   
-  .contactInfo {
+  .ipContactWrap {
     flex-direction: column;
     gap: 0.25rem;
   }
@@ -629,11 +656,48 @@
     font-size: 9px;
   }
   
-  .loginSection {
+  .ipLoginWrap {
     gap: 0.5rem;
   }
   
-  .loginBtn, .registerBtn {
+  .ipLoginBtn {
     font-size: 10px;
   }
+}
+
+/* Header Fixed Styles */
+.ipHeader.activeFixed {
+  background-color: #fff;
+}
+
+.ipHeader.activeFixed .ipMenuLink {
+  color: #000 !important;
+}
+
+.ipHeader.activeFixed .ipHeaderTop {
+  color: #000;
+}
+
+.ipHeader.activeFixed .ipLoginBtn {
+  color: #000;
+}
+
+.ipHeader.activeFixed .contactItem {
+  color: #000;
+}
+
+@media (min-width: 1024px) {
+  .ipHeader.activeFixed .ipLoginItem.register:before {
+    background-color: #000;
+  }
+}
+
+.ipHeader.activeFixed .ipMenuButton {
+  color: #000;
+}
+
+/* Ensure proper z-index for logos when scrolled */
+.ipHeader.activeFixed .ipHeaderLogoImage,
+.ipHeader.activeFixed .ipHeaderLogoBroker {
+  z-index: 1027;
 }
