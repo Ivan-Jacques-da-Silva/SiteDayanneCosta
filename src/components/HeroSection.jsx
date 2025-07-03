@@ -54,8 +54,12 @@ const HeroSection = () => {
                         placeholder="Enter an address, city, zip code or MLS number"
                         className="py-3"
                       />
-                      <Button variant="primary" className="px-4">
-                        <i className="bi bi-search"></i>
+                      <Button 
+                        variant="outline-dark" 
+                        className="px-4 bg-white"
+                        style={{ border: '1px solid #ccc' }}
+                      >
+                        <i className="fas fa-search"></i>
                       </Button>
                     </div>
                   </Form.Group>
@@ -75,7 +79,7 @@ const HeroSection = () => {
         className="position-absolute end-0 bottom-0"
         style={{
           maxHeight: '90%',
-          zIndex: 2,
+          zIndex: 1,
           width: 'auto' 
         }}
       />

@@ -770,3 +770,8 @@
 .ipHeader.activeFixed .ipHeaderLogoBroker {
   z-index: 1027;
 }
+
+/* Add black filter to Compass logo when header is fixed */
+.ipHeader.activeFixed .ipHeaderLogoBroker {
+  filter: brightness(0);
+}

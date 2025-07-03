@@ -67,7 +67,7 @@
   .heroTitle {
     font-size: 2.8rem;
   }
-  
+
   .heroSubtitle {
     font-size: 2rem;
   }
@@ -78,17 +78,17 @@
     min-height: 60vh;
     padding: 40px 0;
   }
-  
+
   .heroTitle {
     font-size: 2.2rem;
     line-height: 1.3;
   }
-  
+
   .heroSubtitle {
     font-size: 1.6rem;
     margin-top: 1rem !important;
   }
-  
+
   .heroButton {
     font-size: 1rem;
     padding: 12px 20px !important;
@@ -104,11 +104,11 @@
   .heroTitle {
     font-size: 1.8rem;
   }
-  
+
   .heroSubtitle {
     font-size: 1.4rem;
   }
-  
+
   .hero {
     min-height: 50vh;
   }
