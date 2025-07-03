@@ -16,6 +16,13 @@ const AppRoutes = () => {
         <Route path="/compass-concierge" element={<CompassConcierge />} />
         <Route path="/private-exclusive" element={<PrivateExclusive />} />
         <Route path="/search" element={<Search />} />
+        <Route path="/contact" element={<Search />} />
+        <Route path="/buy" element={<Search />} />
+        <Route path="/sell" element={<Search />} />
+        <Route path="/new-developments" element={<Search />} />
+        <Route path="/single-family-homes" element={<Search />} />
+        <Route path="/luxury-condos" element={<Search />} />
+        <Route path="/neighborhoods" element={<Search />} />
       </Routes>
   );
 };

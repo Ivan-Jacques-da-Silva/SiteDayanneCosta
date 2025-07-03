@@ -1,55 +1,204 @@
-/* Header Styles */
-.navbar {
+
+/* Header Top Section */
+.headerTop {
+  background-color: transparent;
+  color: white;
+  padding: 10px 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1030;
   transition: all 0.3s ease;
-  font-weight: 500;
-  width: 100%;
-  padding: 1rem 0;
-  z-index: 1050;
 }
 
-/* Estado transparente (no topo) */
-.transparent {
-  background-color: rgba(0, 0, 0, 0.9) !important;
-  backdrop-filter: blur(10px);
+.headerTopScrolled {
+  background-color: white;
+  color: #000;
+}
+
+.headerTopContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Social Links */
+.socialLinks {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.socialLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background-color: rgba(0, 0, 0, 1);
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.headerTopScrolled .socialLink {
+  background-color: rgba(0, 0, 0, 1);
+  color: white;
+}
+
+.socialLink:hover {
+  background-color: white;
+  color: #000;
+}
+
+/* Language Switcher */
+.languageSwitcher {
+  position: relative;
+}
+
+.languageButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 12px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.flagIcon {
+  font-size: 16px;
+}
+
+/* Contact Info */
+.contactInfo {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.contactItem {
+  display: flex;
+  flex-direction: column;
+  color: inherit;
+  text-decoration: none;
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+.contactItem span:first-child {
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.contactItem span:last-child {
+  font-weight: 400;
+}
+
+.contactItem:hover {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Login Section */
+.loginSection {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.loginBtn, .registerBtn {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0;
+}
+
+.registerBtn {
+  position: relative;
+  padding-left: 1rem;
+}
+
+.registerBtn::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 16px;
+  background-color: currentColor;
+}
+
+/* Main Navbar */
+.navbar {
+  background-color: rgba(0, 0, 0, 1);
+  padding: 1rem 0;
+  margin-top: 60px;
+  transition: all 0.3s ease;
   box-shadow: none;
 }
 
-/* Estado com scroll */
+.transparent {
+  background-color: rgba(0, 0, 0, 1);
+}
+
 .scrolled {
-  background-color: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-  padding: 0.5rem 0;
+  background-color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.scrolled .headerTop {
+  background-color: white;
+  color: #000;
 }
 
 /* Brand/Logo */
 .brand {
   display: flex;
   align-items: center;
+  gap: 1rem;
   text-decoration: none;
 }
 
+.logoWrapper {
+  position: relative;
+}
+
 .logo {
-  height: 45px;
+  height: 40px;
+  width: auto;
+  transition: all 0.3s ease;
+}
+
+.brokerLogo {
+  height: 30px;
   width: auto;
   transition: all 0.3s ease;
 }
 
 /* Navigation Links */
 .navLink {
-  color: white !important;
-  font-weight: 500 !important;
-  font-size: 0.95rem !important;
+  color: rgba(255, 255, 255, 1) !important;
+  font-weight: 400;
+  font-size: 14px;
   padding: 0.5rem 1rem !important;
-  margin: 0 0.2rem;
-  border-radius: 4px;
-  transition: all 0.3s ease !important;
   text-decoration: none !important;
+  transition: all 0.3s ease;
+  position: relative;
 }
 
 .navLink:hover {
   color: rgba(255, 255, 255, 0.8) !important;
-  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .navLinkScrolled {
@@ -58,21 +207,18 @@
 
 .navLinkScrolled:hover {
   color: #000 !important;
-  background-color: rgba(0, 0, 0, 0.05);
 }
 
-/* Dropdown */
+/* Dropdown Styles */
 .navDropdown .dropdown-toggle {
-  color: white !important;
-  font-weight: 500 !important;
-  font-size: 0.95rem !important;
+  color: rgba(255, 255, 255, 1) !important;
+  font-weight: 400;
+  font-size: 14px;
   padding: 0.5rem 1rem !important;
-  margin: 0 0.2rem;
-  border-radius: 4px;
-  transition: all 0.3s ease !important;
   text-decoration: none !important;
-  border: none !important;
   background: none !important;
+  border: none !important;
+  transition: all 0.3s ease;
 }
 
 .navDropdown .dropdown-toggle:hover {
@@ -130,137 +276,106 @@
 }
 
 .togglerScrolled .navbar-toggler-icon {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2833, 37, 41, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
 }
 
-/* Responsividade */
+/* Responsive Design */
 @media (max-width: 991.98px) {
+  .headerTop {
+    padding: 8px 0;
+  }
+  
+  .headerTopContent {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .contactInfo {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .socialLinks {
+    order: 1;
+  }
+  
+  .languageSwitcher {
+    order: 2;
+  }
+  
+  .contactInfo {
+    order: 3;
+    width: 100%;
+  }
+  
+  .loginSection {
+    order: 4;
+  }
+  
   .navbar {
-    padding: 0.75rem 0;
-  }
-
-  .scrolled {
-    padding: 0.5rem 0;
-  }
-
-  .logo {
-    height: 40px;
-  }
-
-  /* Mobile Menu */
-  .navbar-collapse {
-    background-color: rgba(255, 255, 255, 0.98);
-    margin-top: 1rem;
-    border-radius: 8px;
-    padding: 1rem;
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
-  }
-
-  .navLink {
-    color: #333 !important;
-    padding: 0.75rem 1rem !important;
-    margin: 0.2rem 0;
-    border-radius: 6px;
-  }
-
-  .navLink:hover {
-    color: #000 !important;
-    background-color: rgba(0, 0, 0, 0.05);
-  }
-
-  .navDropdown .dropdown-toggle {
-    color: #333 !important;
-    padding: 0.75rem 1rem !important;
-    margin: 0.2rem 0;
-  }
-
-  .navDropdown .dropdown-toggle:hover {
-    color: #000 !important;
-    background-color: rgba(0, 0, 0, 0.05) !important;
-  }
-
-  .navDropdown .dropdown-menu {
-    background-color: #f8f9fa;
-    border: none;
-    box-shadow: none;
-    margin: 0;
-    padding: 0.5rem 0;
-  }
-
-  .navDropdown .dropdown-item {
-    padding: 0.5rem 2rem;
-    font-size: 0.85rem;
+    margin-top: 100px;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767.98px) {
+  .headerTopContent {
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .contactInfo {
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .contactItem {
+    font-size: 10px;
+  }
+  
+  .navbar {
+    margin-top: 80px;
+    padding: 0.5rem 0;
+  }
+  
   .logo {
     height: 35px;
   }
-
-  .navbar {
-    padding: 0.5rem 0;
-  }
-
-  .scrolled {
-    padding: 0.25rem 0;
-  }
-
-  .navLink {
-    font-size: 0.9rem !important;
-    padding: 0.6rem 1rem !important;
-  }
-
-  .navDropdown .dropdown-toggle {
-    font-size: 0.9rem !important;
-    padding: 0.6rem 1rem !important;
+  
+  .brokerLogo {
+    height: 25px;
   }
 }
 
-@media (max-width: 576px) {
-  .logo {
-    height: 32px;
+@media (max-width: 575.98px) {
+  .headerTop {
+    padding: 5px 0;
   }
-
-  .navbar-collapse {
-    margin-top: 0.75rem;
-    padding: 0.75rem;
+  
+  .socialLinks {
+    gap: 0.25rem;
   }
-
-  .navLink {
-    font-size: 0.85rem !important;
-    padding: 0.5rem 0.75rem !important;
+  
+  .socialLink {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
   }
-
-  .navDropdown .dropdown-toggle {
-    font-size: 0.85rem !important;
-    padding: 0.5rem 0.75rem !important;
+  
+  .contactInfo {
+    flex-direction: column;
+    gap: 0.25rem;
   }
-
-  .navDropdown .dropdown-item {
-    padding: 0.4rem 1.5rem;
-    font-size: 0.8rem;
+  
+  .contactItem {
+    font-size: 9px;
   }
-}
-
-/* Remove estilos antigos que podem estar causando conflito */
-.ipHeader,
-.headerWrap,
-.headerTop,
-.socialSection,
-.languageSwitcher,
-.contactSection,
-.loginSection,
-.headerBottom,
-.logoSection,
-.navigation,
-.menu,
-.menuItem,
-.menuLink,
-.submenu,
-.menuButton,
-.mobileMenuWrap,
-.mobileMenu,
-.overlay {
-  display: none;
+  
+  .loginSection {
+    gap: 0.5rem;
+  }
+  
+  .loginBtn, .registerBtn {
+    font-size: 10px;
+  }
 }
