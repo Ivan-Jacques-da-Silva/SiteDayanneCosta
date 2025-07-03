@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import styles from './BackgroundCarousel.module.css';
 
-const BackgroundCarousel = ({ images, interval = 5000, children }) => {
+const BackgroundCarousel = ({ images = [], interval = 5000, children }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    if (images.length === 0) return;
+    if (!images || images.length === 0) return;
 
     const timer = setInterval(() => {
       setCurrentIndex((prevIndex) => 
@@ -17,7 +17,7 @@ const BackgroundCarousel = ({ images, interval = 5000, children }) => {
     return () => clearInterval(timer);
   }, [images.length, interval]);
 
-  if (images.length === 0) return <div className={styles.carousel}>{children}</div>;
+  if (!images || images.length === 0) return <div className={styles.carousel}>{children}</div>;
 
   return (
     <div className={styles.carousel}>

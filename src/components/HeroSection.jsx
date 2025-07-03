@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import styles from './HeroSection.module.css';
-import BackgroundCarousel from './BackgroundCarousel';
+import BackgroundCarousel from './BackgroundCarousel.jsx';
 import mulherFixa from '../assets/img/mulher.png';
 import slide1 from '../assets/img/slide1.jpeg';
 import slide2 from '../assets/img/slide2.jpeg';

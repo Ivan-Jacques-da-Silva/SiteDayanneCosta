@@ -6,7 +6,6 @@
   position: relative;
   overflow: hidden;  /* Para garantir que nada ultrapasse os limites */
 }
-
 .heroTitle {
   font-size: 3.5rem;
   line-height: 1.2;
@@ -94,7 +93,7 @@
     font-size: 1rem;
     padding: 12px 20px !important;
   }
-  
+
   .customTabs .nav-link {
     padding: 8px 16px;
     font-size: 14px;
