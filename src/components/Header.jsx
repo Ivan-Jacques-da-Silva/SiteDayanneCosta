@@ -298,12 +298,13 @@ const Header = () => {
 
               <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
-                  <span className={`ip-menu-link ${styles.ipMenuLink}`}>Search properties</span>
                   <button 
-                    className={`ip-submenu-toggle js-submenu-toggle ${styles.ipSubmenuToggle}`}
+                    className={`ip-menu-link ${styles.ipMenuLink}`}
+                    style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer' }}
                     onClick={() => toggleSubmenu('search')}
                   >
-                    {openSubmenu === 'search' ? '−' : '+'}
+                    <span style={{ flex: 1 }}>Search properties</span>
+                    <span style={{ marginLeft: 'auto' }}>{openSubmenu === 'search' ? '−' : '+'}</span>
                   </button>
                 </div>
                 <ul className={`ip-submenu js-submenu ${styles.ipSubmenu} ${openSubmenu === 'search' ? styles.open : ''}`}>
@@ -340,12 +341,13 @@ const Header = () => {
 
               <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
-                  <span className={`ip-menu-link ${styles.ipMenuLink}`}>Advantages</span>
                   <button 
-                    className={`ip-submenu-toggle js-submenu-toggle ${styles.ipSubmenuToggle}`}
+                    className={`ip-menu-link ${styles.ipMenuLink}`}
+                    style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer' }}
                     onClick={() => toggleSubmenu('advantages')}
                   >
-                    {openSubmenu === 'advantages' ? '−' : '+'}
+                    <span style={{ flex: 1 }}>Advantages</span>
+                    <span style={{ marginLeft: 'auto' }}>{openSubmenu === 'advantages' ? '−' : '+'}</span>
                   </button>
                 </div>
                 <ul className={`ip-submenu js-submenu ${styles.ipSubmenu} ${openSubmenu === 'advantages' ? styles.open : ''}`}>
@@ -364,12 +366,13 @@ const Header = () => {
 
               <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
-                  <span className={`ip-menu-link ${styles.ipMenuLink}`}>About</span>
                   <button 
-                    className={`ip-submenu-toggle js-submenu-toggle ${styles.ipSubmenuToggle}`}
+                    className={`ip-menu-link ${styles.ipMenuLink}`}
+                    style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer' }}
                     onClick={() => toggleSubmenu('about')}
                   >
-                    {openSubmenu === 'about' ? '−' : '+'}
+                    <span style={{ flex: 1 }}>About</span>
+                    <span style={{ marginLeft: 'auto' }}>{openSubmenu === 'about' ? '−' : '+'}</span>
                   </button>
                 </div>
                 <ul className={`ip-submenu js-submenu ${styles.ipSubmenu} ${openSubmenu === 'about' ? styles.open : ''}`}>
@@ -434,7 +437,7 @@ const Header = () => {
               </div>
 
               {/* Contact Section */}
-              <div className={`ip-contact ${styles.ipContact}`}>
+              <div className={`ip-contact ${styles.ipContact}`} style={{ flexDirection: 'column', gap: '0.5rem' }}>
                 <a 
                   className={`ip-contact-item ${styles.ipContactItem}`} 
                   href="mailto:dayannecosta@compass.com" 

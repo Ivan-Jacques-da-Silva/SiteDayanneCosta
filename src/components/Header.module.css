@@ -712,28 +712,37 @@
 /* Responsive Design */
 @media (max-width: 991.98px) {
   .ipHeaderBottom {
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     gap: 1rem;
   }
   
   .ipHeaderLeft {
-    width: 100%;
-    justify-content: center;
+    flex: 1;
   }
   
   .ipHeaderRight {
-    width: 100%;
+    display: flex;
     align-items: center;
+    gap: 1rem;
   }
   
   .ipHeaderTopRow {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.5rem;
+    display: none;
   }
   
   .ipHeaderBottomRow {
-    justify-content: center;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  /* Ocultar elementos no mobile - eles estarão no menu lateral */
+  .ipSocial,
+  .ipContact,
+  .ipLogin {
+    display: none;
   }
 
   .ipMenuWrap {
@@ -742,6 +751,11 @@
 
   .ipMenuButton {
     display: flex;
+  }
+
+  /* Manter apenas o seletor de idioma visível */
+  .languageSwitcher {
+    display: block;
   }
 }
 
