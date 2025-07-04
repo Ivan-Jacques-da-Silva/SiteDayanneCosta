@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { MdEmail, MdPhone } from 'react-icons/md';
 import styles from './Header.module.css';
 import compassImg from '../assets/img/compas.png';
+import logoLight from '../assets/img/logo-dc.png';
+import logoDark from '../assets/img/logo-dcBlack.png';
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -52,9 +54,7 @@ const Header = () => {
                     <img 
                       alt="" 
                       className={`ip-header-logo-image ip-h-auto js-header-logo-image ${styles.ipHeaderLogoImage}`} 
-                      data-logo-dark="/src/assets/img/logo-dcBlack.png" 
-                      data-logo-light="/src/assets/img/logo-dc.png" 
-                      src={scrolled ? "/src/assets/img/logo-dcBlack.png" : "/src/assets/img/logo-dc.png"}
+                      src={scrolled ? logoDark : logoLight}
                     />
                   </div>
                   <img 
