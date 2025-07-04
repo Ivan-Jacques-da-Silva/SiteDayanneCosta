@@ -19,7 +19,7 @@
 .ipSectionWrapper {
   width: 100%;
   margin: 0;
-  padding: 0 20px;
+  padding: 0;
   position: relative;
   z-index: 2;
   box-sizing: border-box;
@@ -52,6 +52,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 3rem;
   align-items: center;
+  padding: 0 20px;
 }
 
 .ipSectionVideo.ipFormatC .ipSectionContent {
@@ -59,15 +60,39 @@
   grid-template-columns: 1fr 1fr;
   gap: 3rem;
   align-items: center;
+  padding: 0 20px;
+}
+
+.ipSectionVideo.ipFormatTextVideo .ipSectionContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: flex-start;
+  padding: 0 20px;
 }
 
 .ipSectionOverview .ipSectionContent {
   flex-direction: column;
+  padding: 0 20px;
 }
 
 .ipSectionText .ipSectionContent {
   justify-content: center;
   text-align: center;
+  padding: 0 20px;
+}
+
+.ipTextColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-right: 1rem;
+}
+
+.ipVideoColumn {
+  display: flex;
+  align-items: flex-start;
+  padding-left: 1rem;
 }
 
 /* Conteúdo de texto */
@@ -248,9 +273,19 @@
 /* Responsividade */
 @media (max-width: 992px) {
   .ipSectionAbout.ipFormatA .ipSectionContent,
-  .ipSectionVideo.ipFormatC .ipSectionContent {
+  .ipSectionVideo.ipFormatC .ipSectionContent,
+  .ipSectionVideo.ipFormatTextVideo .ipSectionContent {
     grid-template-columns: 1fr;
     gap: 2rem;
+  }
+
+  .ipTextColumn {
+    padding-right: 0;
+    margin-bottom: 2rem;
+  }
+
+  .ipVideoColumn {
+    padding-left: 0;
   }
 
   .ipColumns4 .ipSlider {
@@ -304,6 +339,14 @@
 
   .ipItem {
     padding: 1rem;
+  }
+
+  .ipSectionAbout.ipFormatA .ipSectionContent,
+  .ipSectionVideo.ipFormatC .ipSectionContent,
+  .ipSectionVideo.ipFormatTextVideo .ipSectionContent,
+  .ipSectionOverview .ipSectionContent,
+  .ipSectionText .ipSectionContent {
+    padding: 0 15px;
   }
 }
 

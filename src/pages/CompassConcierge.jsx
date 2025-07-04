@@ -88,41 +88,38 @@ const CompassConcierge = () => {
         </section>
 
         {/* Success Stories Section */}
-        <section className={`${styles.ipPageSection} ${styles.ipSectionVideo} ${styles.ipFormatC}`} id="ip-section-video-success-stories">
+        <section className={`${styles.ipPageSection} ${styles.ipSectionVideo} ${styles.ipFormatTextVideo}`} id="ip-section-video-success-stories">
           <div className={styles.ipSectionBackground}>
             <div className={styles.ipSectionBackgroundOverlay}></div>
           </div>
           <div className={styles.ipSectionWrapper}>
             <div className={styles.ipSectionContent}>
-              <div className={`${styles.ipBlock} ${styles.ipBlockHtml}`}>
-                <div className={styles.ipBlockContent}>
-                  <h4 className={`${styles.ibcUHeading} ${styles.headingSm}`}>
-                    Success Stories
-                  </h4>
-                  <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
-                    <em>"The thing that was the most daunting for me about selling the home was how would I get it to market, based on being retired and have limited income. And that's where the Compass Concierge service was absolutely remarkable."</em>
-                  </p>
-                  <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
-                    Julia, Seller | Oakland
-                  </p>
-                  <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
-                    <strong>12 Days on Market | 47% Over Ask</strong>
-                  </p>
-                  <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
-                    Individual results may vary. Testimonials are not intended to guarantee the same or similar results
-                  </p>
-                </div>
+              <div className={styles.ipTextColumn}>
+                <h4 className={`${styles.ibcUHeading} ${styles.headingSm}`}>
+                  Success Stories
+                </h4>
+                <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
+                  <em>"The thing that was the most daunting for me about selling the home was how would I get it to market, based on being retired and have limited income. And that's where the Compass Concierge service was absolutely remarkable."</em>
+                </p>
+                <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
+                  Julia, Seller | Oakland
+                </p>
+                <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
+                  <strong>12 Days on Market | 47% Over Ask</strong>
+                </p>
+                <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
+                  Individual results may vary. Testimonials are not intended to guarantee the same or similar results
+                </p>
               </div>
-              <div className={`${styles.ipBlock} ${styles.ipBlockSpacer}`}></div>
-              <div className={`${styles.ipBlock} ${styles.ipBlockVideo}`}>
+              <div className={styles.ipVideoColumn}>
                 <div className={styles.ipVideo}>
                   <iframe
                     width="100%"
                     height="315"
-                    src="https://www.youtube.com/embed/4hd018raScA"
+                    src="https://www.youtube.com/embed/4hd018raScA?autoplay=0"
                     title="Success Stories Video"
                     frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                     className={styles.video}
                   ></iframe>
@@ -238,41 +235,38 @@ const CompassConcierge = () => {
         </section>
 
         {/* How It Works Section */}
-        <section className={`${styles.ipPageSection} ${styles.ipSectionVideo} ${styles.ipFormatC}`} id="ip-section-video-how-it-works">
+        <section className={`${styles.ipPageSection} ${styles.ipSectionVideo} ${styles.ipFormatTextVideo}`} id="ip-section-video-how-it-works">
           <div className={styles.ipSectionBackground}>
             <div className={styles.ipSectionBackgroundOverlay}></div>
           </div>
           <div className={styles.ipSectionWrapper}>
             <div className={styles.ipSectionContent}>
-              <div className={`${styles.ipBlock} ${styles.ipBlockHtml}`}>
-                <div className={styles.ipBlockContent}>
-                  <h4 className={`${styles.ibcUHeading} ${styles.headingSm}`}>
-                    How It Works
-                  </h4>
-                  <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
-                    You and your agent work together to decide which services can increase your home's value the most and set an estimated budget for the work.
-                  </p>
-                  <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
-                    When you're ready to start, your Compass agent will be by your side as you engage vendors and commission work.
-                  </p>
-                  <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
-                    Once the transformation is complete, your home will go on the market.
-                  </p>
-                  <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
-                    You'll pay for the services when one of the following happens -- your home sells, you terminate your listing agreement with Compass, or 12 months pass from your Concierge start date.
-                  </p>
-                </div>
+              <div className={styles.ipTextColumn}>
+                <h4 className={`${styles.ibcUHeading} ${styles.headingSm}`}>
+                  How It Works
+                </h4>
+                <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
+                  You and your agent work together to decide which services can increase your home's value the most and set an estimated budget for the work.
+                </p>
+                <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
+                  When you're ready to start, your Compass agent will be by your side as you engage vendors and commission work.
+                </p>
+                <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
+                  Once the transformation is complete, your home will go on the market.
+                </p>
+                <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
+                  You'll pay for the services when one of the following happens -- your home sells, you terminate your listing agreement with Compass, or 12 months pass from your Concierge start date.
+                </p>
               </div>
-              <div className={`${styles.ipBlock} ${styles.ipBlockSpacer}`}></div>
-              <div className={`${styles.ipBlock} ${styles.ipBlockVideo}`}>
+              <div className={styles.ipVideoColumn}>
                 <div className={styles.ipVideo}>
                   <iframe
                     width="100%"
                     height="315"
-                    src="https://24e3d2766e918fc4369a-2005f80a01533296a927e19ca48f1dcf.ssl.cf1.rackcdn.com/fitzgeral/3%20-%20Concierge%20Treatment%20Video.mp4"
+                    src="https://24e3d2766e918fc4369a-2005f80a01533296a927e19ca48f1dcf.ssl.cf1.rackcdn.com/fitzgeral/3%20-%20Concierge%20Treatment%20Video.mp4?autoplay=0"
                     title="How It Works Video"
                     frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                     className={styles.video}
                   ></iframe>
