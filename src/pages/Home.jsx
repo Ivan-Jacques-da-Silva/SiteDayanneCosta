@@ -210,26 +210,7 @@ const Home = () => {
             />
           </div>
 
-          {/* Scroll Button */}
-          <button 
-            style={{
-              position: 'absolute',
-              bottom: '30px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              background: 'transparent',
-              border: 'none',
-              color: '#fff',
-              cursor: 'pointer',
-              zIndex: 2
-            }}
-          >
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
-              <span style={{ width: '2px', height: '20px', backgroundColor: '#fff', opacity: 0.7 }}></span>
-              <span style={{ width: '2px', height: '20px', backgroundColor: '#fff', opacity: 0.5 }}></span>
-              <span style={{ width: '2px', height: '20px', backgroundColor: '#fff', opacity: 0.3 }}></span>
-            </div>
-          </button>
+          
         </section>
 
         {/* Featured Listings */}

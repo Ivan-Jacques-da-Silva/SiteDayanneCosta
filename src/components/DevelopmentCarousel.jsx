@@ -56,19 +56,20 @@ const DevelopmentCarousel = ({ developments = [] }) => {
       </div>
 
       {/* Indicators */}
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '20px' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', marginBottom: '20px' }}>
         {Array.from({ length: Math.ceil(developments.length / itemsPerSlide) }).map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentIndex(index)}
             style={{
-              width: '12px',
-              height: '12px',
-              borderRadius: '50%',
+              width: currentIndex === index ? '25px' : '10px',
+              height: '10px',
+              borderRadius: '5px',
               border: 'none',
-              backgroundColor: currentIndex === index ? '#fff' : 'rgba(255, 255, 255, 0.5)',
+              backgroundColor: currentIndex === index ? '#fff' : 'rgba(255, 255, 255, 0.4)',
               cursor: 'pointer',
-              transition: 'all 0.3s ease'
+              transition: 'all 0.4s ease',
+              boxShadow: currentIndex === index ? '0 2px 8px rgba(255, 255, 255, 0.3)' : 'none'
             }}
           />
         ))}
