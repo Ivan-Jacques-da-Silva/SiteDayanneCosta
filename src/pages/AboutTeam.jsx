@@ -16,7 +16,7 @@ const AboutTeam = () => {
           <Container>
             <Row className="align-items-center min-vh-100">
               {/* Content column */}
-              <Col lg={6} className="pe-lg-5">
+              <Col lg={4} className="pe-lg-4">
                 <div className={styles.aboutTeamContent}>
                   <h1 className={styles.title}>
                     <strong>Ben Moss Group</strong>
@@ -31,7 +31,7 @@ const AboutTeam = () => {
               </Col>
               
               {/* Image column */}
-              <Col lg={6} className="p-0">
+              <Col lg={8} className="p-0">
                 <div className={styles.imageWrapper}>
                   <img 
                     src={equipe} 
