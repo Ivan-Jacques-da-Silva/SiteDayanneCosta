@@ -168,7 +168,7 @@ const Home = () => {
                         padding: window.innerWidth <= 480 ? '8px 12px' : '10px 15px',
                         backgroundColor: '#fff',
                         color: '#333',
-                        border: '2px solid #333',
+                        border: '1px solid #ccc',
                         cursor: 'pointer',
                         fontSize: window.innerWidth <= 480 ? '14px' : '16px',
                         flex: window.innerWidth <= 768 ? '1 1 100%' : '0 0 auto',

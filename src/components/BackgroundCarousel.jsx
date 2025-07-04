@@ -36,6 +36,17 @@ const BackgroundCarousel = ({ images = [], interval = 5000, children }) => {
       <div className={styles.content}>
         {children}
       </div>
+      <div className={styles.indicators}>
+        {images.map((_, index) => (
+          <div
+            key={index}
+            className={`${styles.indicator} ${
+              index === currentIndex ? styles.active : ''
+            }`}
+            onClick={() => setCurrentIndex(index)}
+          />
+        ))}
+      </div>
     </div>
   );
 };
