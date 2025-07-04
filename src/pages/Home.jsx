@@ -166,16 +166,16 @@ const Home = () => {
                       type="submit" 
                       style={{
                         padding: window.innerWidth <= 480 ? '8px 12px' : '10px 15px',
-                        backgroundColor: '#333',
-                        color: '#fff',
-                        border: 'none',
+                        backgroundColor: '#fff',
+                        color: '#333',
+                        border: '2px solid #333',
                         cursor: 'pointer',
                         fontSize: window.innerWidth <= 480 ? '14px' : '16px',
                         flex: window.innerWidth <= 768 ? '1 1 100%' : '0 0 auto',
                         order: window.innerWidth <= 768 ? '3' : '0'
                       }}
                     >
-                      🔍
+                      <i className="fas fa-search"></i>
                     </button>
                   </form>
                   <div style={{ textAlign: 'center', marginTop: '15px' }}>

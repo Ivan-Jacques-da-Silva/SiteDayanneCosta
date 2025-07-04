@@ -29,12 +29,12 @@
 }
 
 .logoImage {
-  height: 50px;
+  height: 60px;
   width: auto;
 }
 
 .compassImage {
-  height: 40px;
+  height: 30px;
   width: auto;
   filter: brightness(0);
 }
