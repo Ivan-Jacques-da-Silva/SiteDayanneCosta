@@ -25,11 +25,20 @@ const DevelopmentCarousel = ({ developments = [] }) => {
 
   return (
     <div style={{ position: 'relative', overflow: 'hidden' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '30px', marginBottom: '40px' }}>
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: window.innerWidth <= 768 ? (window.innerWidth <= 480 ? '1fr' : 'repeat(2, 1fr)') : 'repeat(3, 1fr)', 
+        gap: window.innerWidth <= 480 ? '20px' : '30px', 
+        marginBottom: '40px' 
+      }}>
         {visibleDevelopments.map((item, index) => (
           <div key={startIndex + index} style={{ position: 'relative', overflow: 'hidden' }}>
             <a href={item.link} style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}>
-              <div style={{ position: 'relative', overflow: 'hidden', height: '250px' }}>
+              <div style={{ 
+                position: 'relative', 
+                overflow: 'hidden', 
+                height: window.innerWidth <= 768 ? (window.innerWidth <= 480 ? '200px' : '220px') : '250px' 
+              }}>
                 <img 
                   src={item.image} 
                   alt={item.name}
@@ -62,9 +71,9 @@ const DevelopmentCarousel = ({ developments = [] }) => {
             key={index}
             onClick={() => setCurrentIndex(index)}
             style={{
-              width: currentIndex === index ? '25px' : '10px',
-              height: '10px',
-              borderRadius: '5px',
+              width: currentIndex === index ? '12px' : '8px',
+              height: currentIndex === index ? '12px' : '8px',
+              borderRadius: '50%',
               border: 'none',
               backgroundColor: currentIndex === index ? '#fff' : 'rgba(255, 255, 255, 0.4)',
               cursor: 'pointer',

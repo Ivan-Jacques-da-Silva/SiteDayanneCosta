@@ -247,7 +247,7 @@ const Home = () => {
         {/* Featured New Developments */}
         <section 
           style={{
-            padding: '80px 0',
+            padding: window.innerWidth <= 768 ? '60px 0' : '80px 0',
             backgroundImage: 'url(https://idxboost-single-property.s3.amazonaws.com/25209957c98057eabecf846e81647334/d81c21679f6d011bf9b6cb158b669d40-2048x1059.jpeg)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
@@ -258,10 +258,20 @@ const Home = () => {
         >
           <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.63)' }}></div>
           <div style={{ position: 'relative', zIndex: 2, maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
-            <h6 style={{ fontSize: '20px', fontWeight: 'normal', marginBottom: '10px', color: 'rgba(255,255,255,1)' }}>
+            <h6 style={{ 
+              fontSize: window.innerWidth <= 480 ? '16px' : '20px', 
+              fontWeight: 'normal', 
+              marginBottom: '10px', 
+              color: 'rgba(255,255,255,1)' 
+            }}>
               Featured
             </h6>
-            <h5 style={{ fontSize: '32px', fontWeight: 'normal', marginBottom: '40px', color: 'rgba(255,255,255,1)' }}>
+            <h5 style={{ 
+              fontSize: window.innerWidth <= 768 ? (window.innerWidth <= 480 ? '24px' : '28px') : '32px', 
+              fontWeight: 'normal', 
+              marginBottom: window.innerWidth <= 768 ? '30px' : '40px', 
+              color: 'rgba(255,255,255,1)' 
+            }}>
               New Developments
             </h5>
             
@@ -572,7 +582,11 @@ const Home = () => {
                 { name: 'Luxury Condos', image: 'https://idxboost-spw-assets.idxboost.us/assets/themes/IB001/images/img-neighborhoods-lifestyle-04-640x360.jpeg', link: '/luxury-condos/' }
               ].map((item, index) => (
                 <a key={index} href={item.link} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
-                  <div style={{ position: 'relative', overflow: 'hidden', height: window.innerWidth <= 480 ? '200px' : '250px' }}>
+                  <div style={{ 
+                    position: 'relative', 
+                    overflow: 'hidden', 
+                    height: window.innerWidth <= 480 ? '180px' : window.innerWidth <= 768 ? '200px' : '250px' 
+                  }}>
                     <img 
                       src={item.image} 
                       alt={item.name}
@@ -633,7 +647,11 @@ const Home = () => {
                 { name: 'Coconut Grove', image: 'https://idxboost-single-property.s3.amazonaws.com/25209957c98057eabecf846e81647334/3a59fb376c4036324fa545e8bfe6ace1-640x474.jpg', link: '/coconut-grove/' }
               ].map((item, index) => (
                 <a key={index} href={item.link} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
-                  <div style={{ position: 'relative', overflow: 'hidden', height: window.innerWidth <= 480 ? '250px' : '300px' }}>
+                  <div style={{ 
+                    position: 'relative', 
+                    overflow: 'hidden', 
+                    height: window.innerWidth <= 480 ? '220px' : window.innerWidth <= 768 ? '250px' : '300px' 
+                  }}>
                     <img 
                       src={item.image} 
                       alt={item.name}
@@ -682,7 +700,11 @@ const Home = () => {
                 { name: 'The Roads', image: 'https://idxboost-single-property.s3.amazonaws.com/25209957c98057eabecf846e81647334/bc5815af0083a744e85217609f6b622e-640x333.png', link: '/the-roads/' }
               ].map((item, index) => (
                 <a key={index} href={item.link} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
-                  <div style={{ position: 'relative', overflow: 'hidden', height: window.innerWidth <= 480 ? '150px' : '200px' }}>
+                  <div style={{ 
+                    position: 'relative', 
+                    overflow: 'hidden', 
+                    height: window.innerWidth <= 480 ? '130px' : window.innerWidth <= 768 ? '160px' : '200px' 
+                  }}>
                     <img 
                       src={item.image} 
                       alt={item.name}
