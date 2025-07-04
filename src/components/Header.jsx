@@ -53,10 +53,8 @@ const Header = () => {
                   </div>
                   <img 
                     alt="" 
-                    className={`ip-header-logo-broker js-header-logo-image ${styles.ipHeaderLogoBroker}`} 
-                    data-logo-dark="https://idxboost-single-property.s3.amazonaws.com/25209957c98057eabecf846e81647334/942207c45d8a02752b0a81240bb7c35d.png" 
-                    data-logo-light="https://api-cms.idxboost.com/assets/images/logo-compass-white.png" 
-                    src={scrolled ? "https://idxboost-single-property.s3.amazonaws.com/25209957c98057eabecf846e81647334/942207c45d8a02752b0a81240bb7c35d.png" : "https://api-cms.idxboost.com/assets/images/logo-compass-white.png"}
+                    className={`ip-header-logo-broker js-header-logo-image ${styles.ipHeaderLogoBroker} ${scrolled ? styles.logoBlack : ''}`} 
+                    src={compassImg}
                   />
                 </Link>
               </div>

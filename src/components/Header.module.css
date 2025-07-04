@@ -775,3 +775,8 @@
 .ipHeader.activeFixed .ipHeaderLogoBroker {
   filter: brightness(0);
 }
+
+/* Alternative class for black logo filter */
+.logoBlack {
+  filter: brightness(0) !important;
+}
