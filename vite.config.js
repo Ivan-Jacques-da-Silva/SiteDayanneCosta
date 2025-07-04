@@ -10,7 +10,7 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
     allowedHosts: [
-      "83b5b6ef-257c-48c6-a2e4-092ea7b55b80-00-win6xoba0yl8.picard.replit.dev",
+      "5f6e2497-6175-4164-b323-78ae5e79eade-00-3gfaxbxz5guq7.kirk.replit.dev",
     ],
   },
   plugins: [react()],
