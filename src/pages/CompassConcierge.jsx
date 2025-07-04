@@ -116,10 +116,10 @@ const CompassConcierge = () => {
                   <iframe
                     width="100%"
                     height="315"
-                    src="https://www.youtube.com/embed/4hd018raScA?autoplay=0"
+                    src="https://www.youtube.com/embed/4hd018raScA?rel=0&modestbranding=1&autoplay=0"
                     title="Success Stories Video"
                     frameBorder="0"
-                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
                     className={styles.video}
                   ></iframe>
@@ -260,16 +260,19 @@ const CompassConcierge = () => {
               </div>
               <div className={styles.ipVideoColumn}>
                 <div className={styles.ipVideo}>
-                  <iframe
+                  <video
                     width="100%"
                     height="315"
-                    src="https://24e3d2766e918fc4369a-2005f80a01533296a927e19ca48f1dcf.ssl.cf1.rackcdn.com/fitzgeral/3%20-%20Concierge%20Treatment%20Video.mp4?autoplay=0"
-                    title="How It Works Video"
-                    frameBorder="0"
-                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
+                    controls
+                    preload="metadata"
                     className={styles.video}
-                  ></iframe>
+                  >
+                    <source 
+                      src="https://24e3d2766e918fc4369a-2005f80a01533296a927e19ca48f1dcf.ssl.cf1.rackcdn.com/fitzgeral/3%20-%20Concierge%20Treatment%20Video.mp4" 
+                      type="video/mp4" 
+                    />
+                    Seu navegador não suporta o elemento de vídeo.
+                  </video>
                 </div>
               </div>
             </div>
