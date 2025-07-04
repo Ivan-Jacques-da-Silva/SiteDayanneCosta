@@ -403,75 +403,138 @@ const Header = () => {
             {/* Mobile Menu Footer */}
             <div className={`ip-mobile-menu-footer ${styles.ipMobileMenuFooter}`}>
               {/* Social Links */}
-              <div className={`ip-social ${styles.ipSocial}`}>
-                <a 
-                  aria-label="Follow us on Youtube" 
-                  className={`ip-social-link ${styles.ipSocialLink}`} 
-                  href="https://www.youtube.com/@dayannecosta1958" 
-                  rel="nofollow noreferrer" 
-                  target="_blank" 
-                  title="Youtube"
-                >
-                  <i className="fab fa-youtube"></i>
-                </a>
-                <a 
-                  aria-label="Follow us on Instagram" 
-                  className={`ip-social-link ${styles.ipSocialLink}`} 
-                  href="https://www.instagram.com/dayanne_vc?igsh=MXVuOG5heDdrbno1bw==" 
-                  rel="nofollow noreferrer" 
-                  target="_blank" 
-                  title="Instagram"
-                >
-                  <i className="fab fa-instagram"></i>
-                </a>
-                <a 
-                  aria-label="Follow us on Linked In" 
-                  className={`ip-social-link ${styles.ipSocialLink}`} 
-                  href="http://www.linkedin.com/in/dayanne-costa-66451162" 
-                  rel="nofollow noreferrer" 
-                  target="_blank" 
-                  title="Linked In"
-                >
-                  <i className="fab fa-linkedin"></i>
-                </a>
-              </div>
+              <div className={`ip-menu-item ${styles.ipMenuItem}`}>
+                <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
+                  <div className={`ip-menu-link ${styles.ipMenuLink}`} style={{ display: 'flex', alignItems: 'center', gap: '1rem', justifyContent: 'center', padding: '1rem' }}>
+                    <a 
+                      aria-label="Follow us on Youtube" 
+                      className={`ip-social-link ${styles.ipSocialLink}`} 
+                      href="https://www.youtube.com/@dayannecosta1958" 
+                      rel="nofollow noreferrer" 
+                      target="_blank" 
+                      title="Youtube"
+                      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', backgroundColor: '#000', color: '#fff', borderRadius: '50%', fontSize: '18px' }}
+                    >
+                      <i className="fab fa-youtube"></i>
+                    </a>
+                    <a 
+                      aria-label="Follow us on Instagram" 
+                      className={`ip-social-link ${styles.ipSocialLink}`} 
+                      href="https://www.instagram.com/dayanne_vc?igsh=MXVuOG5heDdrbno1bw==" 
+                      rel="nofollow noreferrer" 
+                      target="_blank" 
+                      title="Instagram"
+                      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', backgroundColor: '#000', color: '#fff', borderRadius: '50%', fontSize: '18px' }}
+                    >
+                      <i className="fab fa-instagram"></i>
+                    </a>
+                    <a 
+                      aria-label="Follow us on Linked In" 
+                      className={`ip-social-link ${styles.ipSocialLink}`} 
+                      href="http://www.linkedin.com/in/dayanne-costa-66451162" 
+                      rel="nofollow noreferrer" 
+                      target="_blank" 
+                      title="Linked In"
+                      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', backgroundColor: '#000', color: '#fff', borderRadius: '50%', fontSize: '18px' }}
+                    >
+                      <i className="fab fa-linkedin"></i>
+                    </a>
+                  </div>
+                </div>
+              </li>
 
-              {/* Contact Section */}
-              <div className={`ip-contact ${styles.ipContact}`} style={{ flexDirection: 'column', gap: '0.5rem' }}>
-                <a 
-                  className={`ip-contact-item ${styles.ipContactItem}`} 
-                  href="mailto:dayannecosta@compass.com" 
-                  title="dayannecosta@compass.com"
-                >
-                  <i className="fas fa-envelope"></i>
-                  <span>dayannecosta@compass.com</span>
-                </a>
-                <a 
-                  className={`ip-contact-item ${styles.ipContactItem}`} 
-                  href="tel:+1 (646) 598-3588" 
-                  title="+1 (646) 598-3588"
-                >
-                  <i className="fas fa-phone"></i>
-                  <span>+1 (646) 598-3588</span>
-                </a>
-              </div>
+              {/* Email Contact */}
+              <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
+                  <a 
+                    className={`ip-menu-link ${styles.ipMenuLink}`} 
+                    href="mailto:dayannecosta@compass.com" 
+                    title="dayannecosta@compass.com"
+                    style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}
+                  >
+                    <i className="fas fa-envelope" style={{ fontSize: '16px', width: '20px' }}></i>
+                    <span>dayannecosta@compass.com</span>
+                  </a>
+                </div>
+              </li>
 
-              {/* Login Section */}
-              <div className={`ip-login ${styles.ipLogin}`}>
-                <ul className={`ip-login-wrap ${styles.ipLoginWrap}`}>
-                  <li className={`ip-login-item ${styles.ipLoginItem}`}>
-                    <button className={`ip-login-btn ${styles.ipLoginBtn}`}>
-                      <i className="fas fa-user"></i>
-                      <span>Login</span>
-                    </button>
+              {/* Phone Contact */}
+              <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
+                  <a 
+                    className={`ip-menu-link ${styles.ipMenuLink}`} 
+                    href="tel:+1 (646) 598-3588" 
+                    title="+1 (646) 598-3588"
+                    style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}
+                  >
+                    <i className="fas fa-phone" style={{ fontSize: '16px', width: '20px' }}></i>
+                    <span>+1 (646) 598-3588</span>
+                  </a>
+                </div>
+              </li>
+
+              {/* Login */}
+              <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
+                  <button 
+                    className={`ip-menu-link ${styles.ipMenuLink}`}
+                    style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.75rem' }}
+                  >
+                    <i className="fas fa-user" style={{ fontSize: '16px', width: '20px' }}></i>
+                    <span>Login</span>
+                  </button>
+                </div>
+              </li>
+
+              {/* Register */}
+              <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
+                  <button 
+                    className={`ip-menu-link ${styles.ipMenuLink}`}
+                    style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.75rem' }}
+                  >
+                    <i className="fas fa-user-plus" style={{ fontSize: '16px', width: '20px' }}></i>
+                    <span>Register</span>
+                  </button>
+                </div>
+              </li>
+
+              {/* Language Switcher */}
+              <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
+                <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
+                  <button 
+                    className={`ip-menu-link ${styles.ipMenuLink}`}
+                    style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer' }}
+                    onClick={() => toggleSubmenu('language')}
+                  >
+                    <span style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                      <i className="fas fa-globe" style={{ fontSize: '16px', width: '20px' }}></i>
+                      <span>Language</span>
+                    </span>
+                    <span style={{ marginLeft: 'auto' }}>{openSubmenu === 'language' ? '−' : '+'}</span>
+                  </button>
+                </div>
+                <ul className={`ip-submenu js-submenu ${styles.ipSubmenu} ${openSubmenu === 'language' ? styles.open : ''}`}>
+                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                    <a className={`ip-menu-link ${styles.ipMenuLink}`} href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <span>🇺🇸</span>
+                      <span>English</span>
+                    </a>
                   </li>
-                  <li className={`ip-login-item ${styles.ipLoginItem}`}>
-                    <button className={`ip-login-btn ${styles.ipLoginBtn}`}>
-                      <span>Register</span>
-                    </button>
+                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                    <a className={`ip-menu-link ${styles.ipMenuLink}`} href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <span>🇧🇷</span>
+                      <span>Português</span>
+                    </a>
+                  </li>
+                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                    <a className={`ip-menu-link ${styles.ipMenuLink}`} href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <span>🇪🇸</span>
+                      <span>Español</span>
+                    </a>
                   </li>
                 </ul>
-              </div>
+              </li>
             </div>
           </nav>
         </div>
