@@ -542,257 +542,103 @@
   text-transform: uppercase;
 }
 
-/* Mobile Menu Sidebar */
-.mobileMenuSidebar {
+/* Mobile Menu */
+.ipMobileMenuWrap {
   position: fixed;
   top: 0;
-  left: -350px;
-  width: 350px;
+  right: -100%;
+  width: 300px;
   height: 100vh;
-  background: #fff;
+  background: var(--ip-menu-mobile-bg);
   z-index: 1040;
-  transition: left 0.3s ease;
+  transition: right 0.3s ease;
   overflow-y: auto;
-  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.15);
-  display: flex;
-  flex-direction: column;
-  font-family: var(--ibc-body-font-family);
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.mobileMenuSidebar.show {
-  left: 0;
+.ipMobileMenuWrap.show {
+  right: 0;
 }
 
-/* Mobile Menu Header */
-.mobileMenuHeader {
+.ipMenuButtonClose {
+  border: none;
+  background: none;
+  color: var(--ip-menu-mobile-link-color);
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.5rem 1.25rem;
-  border-bottom: 1px solid #e9ecef;
-  background: #fff;
-}
-
-.mobileMenuLogo {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  text-decoration: none;
-}
-
-.mobileLogoImage {
-  height: 45px;
-  width: auto;
-}
-
-.mobileCompassImage {
-  height: 18px;
-  width: auto;
-  filter: brightness(0);
-}
-
-.mobileMenuClose {
-  background: none;
-  border: none;
-  font-size: 20px;
-  color: #000;
-  cursor: pointer;
-  padding: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  transition: all 0.3s ease;
-}
-
-.mobileMenuClose:hover {
-  background: #f8f9fa;
-}
-
-/* Mobile Navigation */
-.mobileNavigation {
-  flex: 1;
-  padding: 1rem 0;
-}
-
-.mobileMenuList {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.mobileMenuItem {
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.mobileMenuParent {
-  cursor: pointer;
-}
-
-.mobileMenuLink {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem 1.25rem;
-  color: #000;
-  text-decoration: none;
-  font-size: 16px;
-  font-weight: 400;
-  transition: all 0.3s ease;
-  border: none;
-  background: none;
   width: 100%;
-  text-align: left;
-  cursor: pointer;
+  padding: 1rem;
+  border-bottom: 1px solid var(--ip-menu-mobile-link-border-color);
 }
 
-.mobileMenuLink:hover {
-  background: #f8f9fa;
-  color: #000;
-  text-decoration: none;
+.ipMobileMenu {
+  padding: 0;
 }
 
-.mobileMenuLink i {
-  font-size: 18px;
-  width: 20px;
-  text-align: center;
-  color: #666;
-}
-
-.mobileSubmenu {
-  background: #f8f9fa;
-  border-top: 1px solid #e9ecef;
+.ipMobileMenu ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.mobileSubmenu li {
-  border-bottom: 1px solid #e9ecef;
+.ipMobileMenu .ipMenuItem {
+  border-bottom: 1px solid var(--ip-menu-mobile-link-border-color);
 }
 
-.mobileSubmenu li:last-child {
-  border-bottom: none;
+.ipMenuItemWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
 }
 
-.mobileSubmenuLink {
+.ipMobileMenu .ipMenuLink {
+  color: var(--ip-menu-mobile-link-color);
+  padding: 1rem;
+  text-decoration: none;
   display: block;
-  padding: 0.875rem 1.25rem 0.875rem 3rem;
-  color: #333;
-  text-decoration: none;
-  font-size: 14px;
-  transition: all 0.3s ease;
-}
-
-.mobileSubmenuLink:hover {
-  background: #e9ecef;
-  color: #000;
-  text-decoration: none;
-}
-
-/* Social Links Section */
-.mobileSocialSection {
-  padding: 1.5rem 1.25rem;
-  border-top: 1px solid #e9ecef;
-  border-bottom: 1px solid #e9ecef;
-}
-
-.mobileSocialLinks {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.mobileSocialLink {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  background: #000;
-  color: #fff;
-  border-radius: 50%;
-  text-decoration: none;
-  font-size: 18px;
-  transition: all 0.3s ease;
-}
-
-.mobileSocialLink:hover {
-  background: #333;
-  color: #fff;
-  text-decoration: none;
-  transform: translateY(-2px);
-}
-
-/* Contact & Login Section */
-.mobileContactSection {
-  padding: 1.5rem 1.25rem;
-  background: #f8f9fa;
-}
-
-.mobileContactItem {
-  margin-bottom: 1rem;
-}
-
-.mobileContactItem:last-of-type {
-  margin-bottom: 1.5rem;
-}
-
-.mobileContactLink {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  color: #333;
-  text-decoration: none;
-  font-size: 14px;
-  padding: 0.5rem 0;
-  transition: all 0.3s ease;
-}
-
-.mobileContactLink:hover {
-  color: #000;
-  text-decoration: none;
-}
-
-.mobileContactIcon {
-  font-size: 16px;
-  color: #666;
-}
-
-.mobileLoginSection {
-  display: flex;
-  gap: 0.75rem;
-  margin-top: 1rem;
-}
-
-.mobileLoginBtn,
-.mobileRegisterBtn {
   flex: 1;
-  padding: 0.75rem 1rem;
-  border: 1px solid #000;
+}
+
+.ipMobileMenu .ipMenuLink:hover {
+  background-color: #f8f9fa;
+  color: var(--ip-menu-mobile-link-color);
+  text-decoration: none;
+}
+
+.ipSubmenuToggle {
+  border: none;
   background: none;
-  color: #000;
-  font-size: 14px;
-  font-weight: 500;
+  color: var(--ip-menu-mobile-link-color);
   cursor: pointer;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+  padding: 1rem;
+  font-size: 18px;
+  line-height: 1;
 }
 
-.mobileLoginBtn:hover,
-.mobileRegisterBtn:hover {
-  background: #000;
-  color: #fff;
+.ipMobileMenu .ipSubmenu {
+  position: static;
+  display: none;
+  background: #f8f9fa;
+  box-shadow: none;
+  border-radius: 0;
+  margin: 0;
+  padding: 0;
 }
 
-.mobileLoginBtn i {
-  font-size: 14px;
+.ipMobileMenu .ipSubmenu.open {
+  display: block;
+}
+
+.ipMobileMenu .ipSubmenu .ipMenuLink {
+  padding-left: 2rem;
+  font-size: 0.9rem;
+}
+
+.ipCta {
+  padding: 1rem;
 }
 
 /* Overlay */
@@ -814,19 +660,28 @@
 /* Responsive Design */
 @media (max-width: 991.98px) {
   .ipHeaderBottom {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
     gap: 1rem;
-    padding: 1rem 0;
   }
   
   .ipHeaderLeft {
-    flex: 1;
+    width: 100%;
+    justify-content: center;
   }
   
   .ipHeaderRight {
-    display: none;
+    width: 100%;
+    align-items: center;
+  }
+  
+  .ipHeaderTopRow {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  .ipHeaderBottomRow {
+    justify-content: center;
   }
 
   .ipMenuWrap {

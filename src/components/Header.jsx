@@ -270,183 +270,113 @@ const Header = () => {
         </header>
 
         {/* Mobile Menu */}
-        <div className={`${styles.mobileMenuSidebar} ${showMobileMenu ? styles.show : ''}`}>
-          {/* Logo Section */}
-          <div className={styles.mobileMenuHeader}>
-            <Link to="/" className={styles.mobileMenuLogo} onClick={handleNavClick}>
-              <img 
-                src="/src/assets/img/logo-dcBlack.png" 
-                alt="Dayanne Costa Logo" 
-                className={styles.mobileLogoImage}
-              />
-              <img 
-                src="https://idxboost-single-property.s3.amazonaws.com/25209957c98057eabecf846e81647334/942207c45d8a02752b0a81240bb7c35d.png" 
-                alt="Compass Logo" 
-                className={styles.mobileCompassImage}
-              />
-            </Link>
-            <button 
-              aria-label="Close menu" 
-              className={styles.mobileMenuClose}
-              onClick={toggleMobileMenu}
-            >
-              <i className="fas fa-times"></i>
-            </button>
-          </div>
+        <div className={`ip-mobile-menu-wrap ${styles.ipMobileMenuWrap} ${showMobileMenu ? styles.show : ''}`}>
+          <button 
+            aria-expanded={showMobileMenu}
+            aria-label="Close main menu" 
+            className={`ip-menu-button ip-menu-button-close js-toggle-menu ${styles.ipMenuButton} ${styles.ipMenuButtonClose}`}
+            onClick={toggleMobileMenu}
+          >
+            <span className={`ip-menu-button-text ${styles.ipMenuButtonText}`}>Close Menu</span>
+            <span className={`ip-menu-button-icon ${styles.ipMenuButtonIcon}`}></span>
+          </button>
 
-          {/* Navigation Menu */}
-          <nav className={styles.mobileNavigation}>
-            <ul className={styles.mobileMenuList}>
-              <li className={styles.mobileMenuItem}>
-                <Link to="/" className={styles.mobileMenuLink} onClick={handleNavClick}>
-                  <i className="fas fa-home"></i>
-                  <span>Home</span>
-                </Link>
+          <nav aria-label="Mobile" className={`ip-mobile-menu ${styles.ipMobileMenu}`} role="navigation">
+            <ul>
+              <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
+                  <Link to="/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                    Home
+                  </Link>
+                </div>
               </li>
 
-              <li className={styles.mobileMenuItem}>
-                <div className={styles.mobileMenuParent}>
-                  <span className={styles.mobileMenuLink}>
-                    <i className="fas fa-search"></i>
-                    <span>Search Properties</span>
-                  </span>
+              <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
+                <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
+                  <span className={`ip-menu-link ${styles.ipMenuLink}`}>Search properties</span>
+                  <button className={`ip-submenu-toggle js-submenu-toggle ${styles.ipSubmenuToggle}`}></button>
                 </div>
-                <ul className={styles.mobileSubmenu}>
-                  <li>
-                    <Link to="/new-developments/" className={styles.mobileSubmenuLink} onClick={handleNavClick}>
+                <ul className={`ip-submenu js-submenu ${styles.ipSubmenu}`}>
+                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                    <Link to="/new-developments/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
                       New Developments
                     </Link>
                   </li>
-                  <li>
-                    <Link to="/single-family-homes/" className={styles.mobileSubmenuLink} onClick={handleNavClick}>
+                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                    <Link to="/single-family-homes/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
                       Single Family Homes
                     </Link>
                   </li>
-                  <li>
-                    <Link to="/luxury-condos/" className={styles.mobileSubmenuLink} onClick={handleNavClick}>
+                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                    <Link to="/luxury-condos/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
                       Luxury Condos
                     </Link>
                   </li>
-                  <li>
-                    <Link to="/neighborhoods/" className={styles.mobileSubmenuLink} onClick={handleNavClick}>
+                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                    <Link to="/neighborhoods/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
                       Neighborhoods
                     </Link>
                   </li>
                 </ul>
               </li>
 
-              <li className={styles.mobileMenuItem}>
-                <Link to="/search" className={styles.mobileMenuLink} onClick={handleNavClick}>
-                  <i className="fas fa-handshake"></i>
-                  <span>Buy/Sell</span>
-                </Link>
+              <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
+                  <Link to="/search" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                    Buy/Sell
+                  </Link>
+                </div>
               </li>
 
-              <li className={styles.mobileMenuItem}>
-                <div className={styles.mobileMenuParent}>
-                  <span className={styles.mobileMenuLink}>
-                    <i className="fas fa-star"></i>
-                    <span>Advantages</span>
-                  </span>
+              <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
+                <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
+                  <span className={`ip-menu-link ${styles.ipMenuLink}`}>Advantages</span>
+                  <button className={`ip-submenu-toggle js-submenu-toggle ${styles.ipSubmenuToggle}`}></button>
                 </div>
-                <ul className={styles.mobileSubmenu}>
-                  <li>
-                    <Link to="/compass-concierge" className={styles.mobileSubmenuLink} onClick={handleNavClick}>
+                <ul className={`ip-submenu js-submenu ${styles.ipSubmenu}`}>
+                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                    <Link to="/compass-concierge" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
                       Compass Concierge
                     </Link>
                   </li>
-                  <li>
-                    <Link to="/private-exclusive" className={styles.mobileSubmenuLink} onClick={handleNavClick}>
+                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                    <Link to="/private-exclusive" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
                       Private Exclusive
                     </Link>
                   </li>
                 </ul>
               </li>
 
-              <li className={styles.mobileMenuItem}>
-                <div className={styles.mobileMenuParent}>
-                  <span className={styles.mobileMenuLink}>
-                    <i className="fas fa-info-circle"></i>
-                    <span>About</span>
-                  </span>
+              <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
+                <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
+                  <span className={`ip-menu-link ${styles.ipMenuLink}`}>About</span>
+                  <button className={`ip-submenu-toggle js-submenu-toggle ${styles.ipSubmenuToggle}`}></button>
                 </div>
-                <ul className={styles.mobileSubmenu}>
-                  <li>
-                    <Link to="/about" className={styles.mobileSubmenuLink} onClick={handleNavClick}>
+                <ul className={`ip-submenu js-submenu ${styles.ipSubmenu}`}>
+                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                    <Link to="/about" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
                       About Dayanne
                     </Link>
                   </li>
-                  <li>
-                    <Link to="/about-team" className={styles.mobileSubmenuLink} onClick={handleNavClick}>
+                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                    <Link to="/about-team" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
                       About Team
                     </Link>
                   </li>
                 </ul>
               </li>
 
-              <li className={styles.mobileMenuItem}>
-                <Link to="/contact" className={styles.mobileMenuLink} onClick={handleNavClick}>
-                  <i className="fas fa-envelope"></i>
-                  <span>Contact</span>
-                </Link>
+              <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
+                  <Link to="/contact" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                    Contact
+                  </Link>
+                </div>
               </li>
             </ul>
+
+            <div className={`ip-cta ${styles.ipCta}`}></div>
           </nav>
-
-          {/* Social Links Section */}
-          <div className={styles.mobileSocialSection}>
-            <div className={styles.mobileSocialLinks}>
-              <a 
-                href="https://www.youtube.com/@dayannecosta1958" 
-                target="_blank" 
-                rel="nofollow noreferrer"
-                className={styles.mobileSocialLink}
-              >
-                <i className="fab fa-youtube"></i>
-              </a>
-              <a 
-                href="https://www.instagram.com/dayanne_vc?igsh=MXVuOG5heDdrbno1bw==" 
-                target="_blank" 
-                rel="nofollow noreferrer"
-                className={styles.mobileSocialLink}
-              >
-                <i className="fab fa-instagram"></i>
-              </a>
-              <a 
-                href="http://www.linkedin.com/in/dayanne-costa-66451162" 
-                target="_blank" 
-                rel="nofollow noreferrer"
-                className={styles.mobileSocialLink}
-              >
-                <i className="fab fa-linkedin"></i>
-              </a>
-            </div>
-          </div>
-
-          {/* Contact & Login Section */}
-          <div className={styles.mobileContactSection}>
-            <div className={styles.mobileContactItem}>
-              <a href="mailto:dayanne.costa@compass.com" className={styles.mobileContactLink}>
-                <MdEmail className={styles.mobileContactIcon} />
-                <span>dayanne.costa@compass.com</span>
-              </a>
-            </div>
-            <div className={styles.mobileContactItem}>
-              <a href="tel:+1 (646) 598-3588" className={styles.mobileContactLink}>
-                <MdPhone className={styles.mobileContactIcon} />
-                <span>+1 (646) 598-3588</span>
-              </a>
-            </div>
-            <div className={styles.mobileLoginSection}>
-              <button className={styles.mobileLoginBtn}>
-                <i className="fas fa-user"></i>
-                <span>Login</span>
-              </button>
-              <button className={styles.mobileRegisterBtn}>
-                <span>Register</span>
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </>
