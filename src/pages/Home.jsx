@@ -39,7 +39,7 @@ const Home = () => {
 
           <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.23)', zIndex: 1 }}></div>
 
-          <div className="ip-section-wrapper" style={{ position: 'relative', zIndex: 2, textAlign: 'center', maxWidth: '600px', margin: '0 auto', padding: '0 20px' }}>
+          <div className="ip-section-wrapper" style={{ position: 'relative', zIndex: 3, textAlign: 'center', maxWidth: '600px', margin: '0 auto', padding: '0 20px' }}>
             <div className="ip-section-content">
               <div className="ip-description ip-my-5 ip-block-content">
                 <h4 style={{ 
@@ -196,7 +196,7 @@ const Home = () => {
             position: 'absolute', 
             right: window.innerWidth <= 768 ? '10px' : '20px', 
             bottom: '0', 
-            zIndex: 2, 
+            zIndex: 1, 
             display: window.innerWidth <= 480 ? 'none' : 'block' 
           }}>
             <img 
