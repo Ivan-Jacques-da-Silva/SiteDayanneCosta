@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -17,17 +18,17 @@ const Search = () => {
               </div>
 
               <h1 className={styles.maintenanceTitle}>
-                Em Manutenção
+                Under Maintenance
               </h1>
 
               <p className={styles.maintenanceText}>
-                Nossa funcionalidade de busca está temporariamente em manutenção. 
-                Estamos trabalhando para melhorar sua experiência.
+                Our search functionality is temporarily under maintenance. 
+                We are working to improve your experience.
               </p>
 
               <p className={styles.maintenanceSubtext}>
-                Por favor, tente novamente em breve ou entre em contato conosco 
-                para assistência imediata.
+                Please try again shortly or contact us 
+                for immediate assistance.
               </p>
 
               <div className={styles.contactInfo}>
@@ -40,16 +41,17 @@ const Search = () => {
                 <p>
                   <strong>Email:</strong> 
                   <a href="mailto:dayannecosta@compass.com" className={styles.contactLink}>
-                    dayannecosta@compass.com</a>
+                    dayannecosta@compass.com
+                  </a>
                 </p>
               </div>
 
               <div className={styles.buttonContainer}>
                 <a href="/" className={styles.backButton}>
-                  Voltar ao Início
+                  Back to Home
                 </a>
                 <a href="/contact" className={styles.contactButton}>
-                  Entre em Contato
+                  Contact Us
                 </a>
               </div>
             </div>
