@@ -70,13 +70,17 @@ const DevelopmentCarousel = ({ developments = [] }) => {
             key={index}
             onClick={() => setCurrentIndex(index)}
             style={{
-              width: '12px',
-              height: '12px',
-              borderRadius: '50%',
+              width: '8px',
+              height: '8px',
+              minWidth: '8px',
+              minHeight: '8px',
+              borderRadius: '4px',
               border: 'none',
               backgroundColor: currentIndex === index ? '#fff' : 'rgba(255, 255, 255, 0.5)',
               cursor: 'pointer',
-              transition: 'all 0.3s ease'
+              transition: 'all 0.3s ease',
+              padding: '0',
+              outline: 'none'
             }}
           />
         ))}
