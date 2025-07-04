@@ -137,7 +137,30 @@
 }
 
 /* Responsive Design */
+@media (max-width: 1200px) {
+  .container {
+    max-width: 100%;
+    padding: 0 30px;
+  }
+  
+  .contentGrid {
+    gap: 2.5rem;
+  }
+  
+  .featuresGrid {
+    gap: 1.8rem;
+  }
+}
+
 @media (max-width: 992px) {
+  .section {
+    padding: 3rem 0;
+  }
+  
+  .container {
+    padding: 0 25px;
+  }
+  
   .contentGrid {
     grid-template-columns: 1fr;
     gap: 2rem;
@@ -146,6 +169,11 @@
 
   .textContent {
     padding-right: 0;
+    order: 2;
+  }
+  
+  .imageContent {
+    order: 1;
   }
 
   .featuresGrid {
@@ -154,57 +182,83 @@
   }
 
   .title {
-    font-size: 2rem;
+    font-size: 2.2rem;
   }
 
   .sectionTitle {
     font-size: 1.8rem;
+    margin-bottom: 2.5rem;
   }
 }
 
 @media (max-width: 768px) {
   .section {
-    padding: 3rem 0;
+    padding: 2.5rem 0;
   }
 
   .container {
-    padding: 0 15px;
+    padding: 0 20px;
   }
 
   .featuresGrid {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 1.2rem;
   }
 
   .feature {
-    padding: 1.5rem 1rem;
+    padding: 1.8rem 1.2rem;
   }
 
   .title {
-    font-size: 1.8rem;
-  }
-
-  .sectionTitle {
-    font-size: 1.5rem;
-    margin-bottom: 2rem;
-  }
-
-  .contentGrid {
-    gap: 1.5rem;
-  }
-}
-
-@media (max-width: 576px) {
-  .title {
-    font-size: 1.5rem;
+    font-size: 2rem;
   }
 
   .subtitle {
     font-size: 1.1rem;
   }
 
+  .sectionTitle {
+    font-size: 1.6rem;
+    margin-bottom: 2rem;
+  }
+
+  .contentGrid {
+    gap: 1.8rem;
+  }
+  
+  .textContent {
+    text-align: left;
+  }
+}
+
+@media (max-width: 576px) {
+  .section {
+    padding: 2rem 0;
+  }
+  
+  .container {
+    padding: 0 15px;
+  }
+
+  .title {
+    font-size: 1.8rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
   .description {
     font-size: 0.95rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .feature {
+    padding: 1.5rem 1rem;
   }
 
   .featureTitle {
@@ -212,6 +266,51 @@
   }
 
   .featureText {
+    font-size: 0.9rem;
+  }
+  
+  .reasonsList li {
+    font-size: 0.95rem;
+  }
+  
+  .contentGrid {
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 10px;
+  }
+  
+  .title {
+    font-size: 1.6rem;
+    line-height: 1.3;
+  }
+  
+  .sectionTitle {
+    font-size: 1.3rem;
+  }
+  
+  .feature {
+    padding: 1.2rem 0.8rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .title {
+    font-size: 1.4rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.2rem;
+  }
+  
+  .subtitle {
+    font-size: 0.95rem;
+  }
+  
+  .description {
     font-size: 0.9rem;
   }
 }
