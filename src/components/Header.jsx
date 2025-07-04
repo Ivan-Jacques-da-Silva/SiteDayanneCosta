@@ -403,7 +403,7 @@ const Header = () => {
             {/* Mobile Menu Footer */}
             <div className={`ip-mobile-menu-footer ${styles.ipMobileMenuFooter}`}>
               {/* Social Links */}
-              <div className={`ip-menu-item ${styles.ipMenuItem}`}>
+              <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
                   <div className={`ip-menu-link ${styles.ipMenuLink}`} style={{ display: 'flex', alignItems: 'center', gap: '1rem', justifyContent: 'center', padding: '1rem' }}>
                     <a 
