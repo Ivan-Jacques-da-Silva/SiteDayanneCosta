@@ -25,7 +25,7 @@ const Footer = () => {
             
             <div className={styles.contactInfo}>
               <p>+1 (646) 598-3588</p>
-              <p>dayanne.costa@compass.com</p>
+              <p>dayannecosta@compass.com</p>
               <p>2550 South Bayshore Drive, Suite 106, Miami, FL 33133</p>
             </div>
           </div>

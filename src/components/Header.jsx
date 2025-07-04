@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MdEmail, MdPhone } from 'react-icons/md';
 import styles from './Header.module.css';
+import compassImg from '../assets/img/compas.png';
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -127,11 +128,11 @@ const Header = () => {
                     <div className={`ip-contact-wrap ibc-u-d-flex ibc-u-align-items-center ${styles.ipContactWrap}`}>
                       <a 
                         className={`ip-contact-item ip-contact-email ibc-u-position-relative ip-d-flex ibc-u-align-items-center ${styles.ipContactItem} ${styles.ipContactEmail}`} 
-                        href="mailto:dayanne.costa@compass.com" 
-                        title="dayanne.costa@compass.com"
+                        href="mailto:dayannecosta@compass.com" 
+                        title="dayannecosta@compass.com"
                       >
                         <MdEmail className={`ip-contact-icon ${styles.ipContactIcon}`} />
-                        <span className={`ip-contact-value ip-ml-2 ${styles.ipContactValue}`}>dayanne.costa@compass.com</span>
+                        <span className={`ip-contact-value ip-ml-2 ${styles.ipContactValue}`}>dayannecosta@compass.com</span>
                       </a>
                       <a 
                         className={`ip-contact-item ip-contact-phone ibc-u-position-relative ip-d-flex ibc-u-align-items-center ${styles.ipContactItem} ${styles.ipContactPhone}`} 

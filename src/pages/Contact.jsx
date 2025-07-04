@@ -34,7 +34,7 @@ const Contact = () => {
                 </div>
                 
                 <div className={styles.contactItem}>
-                  <span className={styles.contactValue}>dayanne.costa@compass.com</span>
+                  <span className={styles.contactValue}>dayannecosta@compass.com</span>
                 </div>
                 
                 <div className={styles.contactItem}>

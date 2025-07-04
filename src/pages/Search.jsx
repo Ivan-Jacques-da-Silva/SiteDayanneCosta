@@ -40,8 +40,8 @@ const Search = () => {
                 </p>
                 <p>
                   <strong>Email:</strong> 
-                  <a href="mailto:dayanne.costa@compass.com" className={styles.contactLink}>
-                    dayanne.costa@compass.com
+                  <a href="mailto:dayannecosta@compass.com" className={styles.contactLink}>
+                    dayannecosta@compass.com
                   </a>
                 </p>
               </div>
