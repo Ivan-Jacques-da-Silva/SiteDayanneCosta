@@ -112,7 +112,7 @@ const CompassConcierge = () => {
                 </p>
               </div>
               <div className={styles.ipVideoColumn}>
-                <div className={styles.ipVideo}>
+                <div className={styles.ipVideo} style={{ border: '3px solid #ccc', borderRadius: '8px', overflow: 'hidden' }}>
                   <iframe
                     width="100%"
                     height="315"
@@ -259,17 +259,17 @@ const CompassConcierge = () => {
                 </p>
               </div>
               <div className={styles.ipVideoColumn}>
-                <div className={styles.ipVideo}>
-                  <iframe
+                <div className={styles.ipVideo} style={{ border: '3px solid #ccc', borderRadius: '8px', overflow: 'hidden' }}>
+                  <video
                     width="100%"
                     height="315"
-                    src="https://24e3d2766e918fc4369a-2005f80a01533296a927e19ca48f1dcf.ssl.cf1.rackcdn.com/fitzgeral/3%20-%20Concierge%20Treatment%20Video.mp4?autoplay=0"
-                    title="How It Works Video"
-                    frameBorder="0"
-                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
+                    controls
                     className={styles.video}
-                  ></iframe>
+                    style={{ display: 'block' }}
+                  >
+                    <source src="/src/assets/img/3 - Concierge Treatment Video.mp4" type="video/mp4" />
+                    Seu navegador não suporta o elemento de vídeo.
+                  </video>
                 </div>
               </div>
             </div>
