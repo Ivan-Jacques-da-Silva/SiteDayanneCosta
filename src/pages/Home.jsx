@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -20,7 +19,7 @@ const Home = () => {
   return (
     <div className="ip ip-theme-compass">
       <Header />
-      
+
       <main>
         {/* Hero Section with Background Carousel */}
         <section 
@@ -37,9 +36,9 @@ const Home = () => {
           <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }}>
             <BackgroundCarousel images={carouselImages} interval={5000} />
           </div>
-          
+
           <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.23)', zIndex: 1 }}></div>
-          
+
           <div className="ip-section-wrapper" style={{ position: 'relative', zIndex: 2, textAlign: 'center', maxWidth: '600px', margin: '0 auto', padding: '0 20px' }}>
             <div className="ip-section-content">
               <div className="ip-description ip-my-5 ip-block-content">
@@ -62,7 +61,7 @@ const Home = () => {
                   Dayanne Costa
                 </h5>
               </div>
-              
+
               <div className="ip-wrap-btn ip-buttons-2" style={{ display: 'flex', gap: '15px', justifyContent: 'center', marginBottom: '40px', flexWrap: 'wrap', padding: '0 10px' }}>
                 <a 
                   href="/buy/" 
@@ -210,7 +209,7 @@ const Home = () => {
             />
           </div>
 
-          
+
         </section>
 
         {/* Featured Listings */}
@@ -274,7 +273,7 @@ const Home = () => {
             }}>
               New Developments
             </h5>
-            
+
             {/* Development Items */}
             <DevelopmentCarousel developments={[
               { name: 'The Perigon', image: 'https://idxboost-single-property.s3.amazonaws.com/25209957c98057eabecf846e81647334/cc02ec61740605b377a36a46a0a43545-640x792.jpg', link: '/building/the-perigon/' },
@@ -284,7 +283,7 @@ const Home = () => {
               { name: 'St Regis Sunny Isles', image: 'https://idxboost-single-property.s3.amazonaws.com/25209957c98057eabecf846e81647334/4d404ec3ecd8348620a403d7babd0793-640x667.jpg', link: '/building/st-regis-sunny-isles/' },
               { name: 'St Regis Residences Miami', image: 'https://idxboost-single-property.s3.amazonaws.com/25209957c98057eabecf846e81647334/5fe94a123c8f7afb603dbe7ca14dfcb8-640x473.jpg', link: '/building/st-regis-residences-miami/' }
             ]} />
-            
+
             <a 
               href="/new-developments/" 
               style={{
@@ -569,7 +568,7 @@ const Home = () => {
             }}>
               LIFESTYLE PROPERTIES
             </h5>
-            
+
             <div style={{ 
               display: 'grid', 
               gridTemplateColumns: window.innerWidth <= 480 ? '1fr' : window.innerWidth <= 768 ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', 
@@ -636,7 +635,7 @@ const Home = () => {
             }}>
               FEATURED NEIGHBORHOODS
             </h5>
-            
+
             <div style={{ 
               display: 'grid', 
               gridTemplateColumns: window.innerWidth <= 768 ? '1fr' : 'repeat(2, 1fr)', 
@@ -733,7 +732,7 @@ const Home = () => {
                 </a>
               ))}
             </div>
-            
+
             <a 
               href="/neighborhoods/" 
               style={{
@@ -831,7 +830,7 @@ const Home = () => {
             <h5 style={{ fontSize: '32px', fontWeight: 'normal', marginBottom: '50px', color: 'rgba(255,255,255,1)' }}>
               Testimonials
             </h5>
-            
+
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '40px' }}>
               {[
                 {

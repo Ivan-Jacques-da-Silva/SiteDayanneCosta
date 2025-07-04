@@ -8,6 +8,7 @@ import compassImg from '../assets/img/compas.png';
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [openSubmenu, setOpenSubmenu] = useState(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,6 +26,11 @@ const Header = () => {
 
   const handleNavClick = () => {
     setShowMobileMenu(false);
+    setOpenSubmenu(null);
+  };
+
+  const toggleSubmenu = (menuName) => {
+    setOpenSubmenu(openSubmenu === menuName ? null : menuName);
   };
 
   return (
@@ -293,9 +299,14 @@ const Header = () => {
               <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
                   <span className={`ip-menu-link ${styles.ipMenuLink}`}>Search properties</span>
-                  <button className={`ip-submenu-toggle js-submenu-toggle ${styles.ipSubmenuToggle}`}></button>
+                  <button 
+                    className={`ip-submenu-toggle js-submenu-toggle ${styles.ipSubmenuToggle}`}
+                    onClick={() => toggleSubmenu('search')}
+                  >
+                    {openSubmenu === 'search' ? '−' : '+'}
+                  </button>
                 </div>
-                <ul className={`ip-submenu js-submenu ${styles.ipSubmenu}`}>
+                <ul className={`ip-submenu js-submenu ${styles.ipSubmenu} ${openSubmenu === 'search' ? styles.open : ''}`}>
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                     <Link to="/new-developments/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
                       New Developments
@@ -330,9 +341,14 @@ const Header = () => {
               <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
                   <span className={`ip-menu-link ${styles.ipMenuLink}`}>Advantages</span>
-                  <button className={`ip-submenu-toggle js-submenu-toggle ${styles.ipSubmenuToggle}`}></button>
+                  <button 
+                    className={`ip-submenu-toggle js-submenu-toggle ${styles.ipSubmenuToggle}`}
+                    onClick={() => toggleSubmenu('advantages')}
+                  >
+                    {openSubmenu === 'advantages' ? '−' : '+'}
+                  </button>
                 </div>
-                <ul className={`ip-submenu js-submenu ${styles.ipSubmenu}`}>
+                <ul className={`ip-submenu js-submenu ${styles.ipSubmenu} ${openSubmenu === 'advantages' ? styles.open : ''}`}>
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                     <Link to="/compass-concierge" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
                       Compass Concierge
@@ -349,9 +365,14 @@ const Header = () => {
               <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
                   <span className={`ip-menu-link ${styles.ipMenuLink}`}>About</span>
-                  <button className={`ip-submenu-toggle js-submenu-toggle ${styles.ipSubmenuToggle}`}></button>
+                  <button 
+                    className={`ip-submenu-toggle js-submenu-toggle ${styles.ipSubmenuToggle}`}
+                    onClick={() => toggleSubmenu('about')}
+                  >
+                    {openSubmenu === 'about' ? '−' : '+'}
+                  </button>
                 </div>
-                <ul className={`ip-submenu js-submenu ${styles.ipSubmenu}`}>
+                <ul className={`ip-submenu js-submenu ${styles.ipSubmenu} ${openSubmenu === 'about' ? styles.open : ''}`}>
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                     <Link to="/about" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
                       About Dayanne
@@ -375,6 +396,80 @@ const Header = () => {
             </ul>
 
             <div className={`ip-cta ${styles.ipCta}`}></div>
+
+            {/* Mobile Menu Footer */}
+            <div className={`ip-mobile-menu-footer ${styles.ipMobileMenuFooter}`}>
+              {/* Social Links */}
+              <div className={`ip-social ${styles.ipSocial}`}>
+                <a 
+                  aria-label="Follow us on Youtube" 
+                  className={`ip-social-link ${styles.ipSocialLink}`} 
+                  href="https://www.youtube.com/@dayannecosta1958" 
+                  rel="nofollow noreferrer" 
+                  target="_blank" 
+                  title="Youtube"
+                >
+                  <i className="fab fa-youtube"></i>
+                </a>
+                <a 
+                  aria-label="Follow us on Instagram" 
+                  className={`ip-social-link ${styles.ipSocialLink}`} 
+                  href="https://www.instagram.com/dayanne_vc?igsh=MXVuOG5heDdrbno1bw==" 
+                  rel="nofollow noreferrer" 
+                  target="_blank" 
+                  title="Instagram"
+                >
+                  <i className="fab fa-instagram"></i>
+                </a>
+                <a 
+                  aria-label="Follow us on Linked In" 
+                  className={`ip-social-link ${styles.ipSocialLink}`} 
+                  href="http://www.linkedin.com/in/dayanne-costa-66451162" 
+                  rel="nofollow noreferrer" 
+                  target="_blank" 
+                  title="Linked In"
+                >
+                  <i className="fab fa-linkedin"></i>
+                </a>
+              </div>
+
+              {/* Contact Section */}
+              <div className={`ip-contact ${styles.ipContact}`}>
+                <a 
+                  className={`ip-contact-item ${styles.ipContactItem}`} 
+                  href="mailto:dayannecosta@compass.com" 
+                  title="dayannecosta@compass.com"
+                >
+                  <i className="fas fa-envelope"></i>
+                  <span>dayannecosta@compass.com</span>
+                </a>
+                <a 
+                  className={`ip-contact-item ${styles.ipContactItem}`} 
+                  href="tel:+1 (646) 598-3588" 
+                  title="+1 (646) 598-3588"
+                >
+                  <i className="fas fa-phone"></i>
+                  <span>+1 (646) 598-3588</span>
+                </a>
+              </div>
+
+              {/* Login Section */}
+              <div className={`ip-login ${styles.ipLogin}`}>
+                <ul className={`ip-login-wrap ${styles.ipLoginWrap}`}>
+                  <li className={`ip-login-item ${styles.ipLoginItem}`}>
+                    <button className={`ip-login-btn ${styles.ipLoginBtn}`}>
+                      <i className="fas fa-user"></i>
+                      <span>Login</span>
+                    </button>
+                  </li>
+                  <li className={`ip-login-item ${styles.ipLoginItem}`}>
+                    <button className={`ip-login-btn ${styles.ipLoginBtn}`}>
+                      <span>Register</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </nav>
         </div>
       </div>
