@@ -22,7 +22,7 @@ const Search = () => {
               </h1>
 
               <p className={styles.maintenanceText}>
-                Our search functionality is temporarily under maintenance. 
+                Our buy/sell functionality is temporarily under maintenance. 
                 We are working to improve your experience.
               </p>
 

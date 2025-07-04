@@ -18,8 +18,7 @@ const AppRoutes = () => {
       <Route path="/about-team" element={<AboutTeam />} />
       <Route path="/compass-concierge" element={<CompassConcierge />} />
       <Route path="/private-exclusive" element={<PrivateExclusive />} />
-      <Route path="/buy/" element={<Buy />} />
-      <Route path="/sell/" element={<Sell />} />
+      <Route path="/buy-sell" element={<Search />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/new-developments/" element={<Search />} />
       <Route path="/single-family-homes/" element={<Search />} />

@@ -201,7 +201,7 @@ const Header = () => {
                     </li>
 
                     <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                      <Link to="/search" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                      <Link to="/buy-sell" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
                         Buy/Sell
                       </Link>
                     </li>
@@ -321,7 +321,7 @@ const Header = () => {
 
               <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
-                  <Link to="/search" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                  <Link to="/buy-sell" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
                     Buy/Sell
                   </Link>
                 </div>
