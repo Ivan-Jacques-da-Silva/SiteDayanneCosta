@@ -1,69 +1,65 @@
 
 import React from 'react';
-import styles from './Buy.module.css';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import styles from './Search.module.css';
 
 const Buy = () => {
   return (
-    <div className={styles.buyPage}>
-      <div className={styles.hero}>
-        <div className={styles.heroContent}>
-          <h1>Buy Your Dream Home</h1>
-          <p>Discover the perfect property with our expert guidance</p>
-        </div>
-      </div>
-      
-      <div className={styles.content}>
-        <div className={styles.container}>
-          <section className={styles.section}>
-            <h2>Why Buy with Dayanne Costa?</h2>
-            <div className={styles.features}>
-              <div className={styles.feature}>
-                <h3>Market Expertise</h3>
-                <p>Deep knowledge of Miami's real estate market and neighborhoods</p>
+    <div className="ip ip-theme-compass">
+      <Header />
+
+      <main className={styles.mainContainer}>
+        <section className={styles.maintenanceSection}>
+          <div className={styles.contentWrapper}>
+            <div className={styles.maintenanceContent}>
+              <div className={styles.iconContainer}>
+                <div className={styles.maintenanceIcon}>🔧</div>
               </div>
-              <div className={styles.feature}>
-                <h3>Personalized Service</h3>
-                <p>Tailored approach to find properties that match your lifestyle</p>
+
+              <h1 className={styles.maintenanceTitle}>
+                Under Maintenance
+              </h1>
+
+              <p className={styles.maintenanceText}>
+                Our buy functionality is temporarily under maintenance. 
+                We are working to improve your experience.
+              </p>
+
+              <p className={styles.maintenanceSubtext}>
+                Please try again shortly or contact us 
+                for immediate assistance.
+              </p>
+
+              <div className={styles.contactInfo}>
+                <p>
+                  <strong>Phone:</strong> 
+                  <a href="tel:+16465983588" className={styles.contactLink}>
+                    +1 (646) 598-3588
+                  </a>
+                </p>
+                <p>
+                  <strong>Email:</strong> 
+                  <a href="mailto:dayannecosta@compass.com" className={styles.contactLink}>
+                    dayannecosta@compass.com
+                  </a>
+                </p>
               </div>
-              <div className={styles.feature}>
-                <h3>Negotiation Skills</h3>
-                <p>Expert negotiation to get you the best deal possible</p>
-              </div>
-            </div>
-          </section>
-          
-          <section className={styles.section}>
-            <h2>Our Buying Process</h2>
-            <div className={styles.process}>
-              <div className={styles.step}>
-                <div className={styles.stepNumber}>1</div>
-                <h4>Initial Consultation</h4>
-                <p>Understanding your needs and budget</p>
-              </div>
-              <div className={styles.step}>
-                <div className={styles.stepNumber}>2</div>
-                <h4>Property Search</h4>
-                <p>Finding properties that match your criteria</p>
-              </div>
-              <div className={styles.step}>
-                <div className={styles.stepNumber}>3</div>
-                <h4>Viewing & Selection</h4>
-                <p>Touring properties and making informed decisions</p>
-              </div>
-              <div className={styles.step}>
-                <div className={styles.stepNumber}>4</div>
-                <h4>Offer & Negotiation</h4>
-                <p>Making competitive offers and negotiating terms</p>
-              </div>
-              <div className={styles.step}>
-                <div className={styles.stepNumber}>5</div>
-                <h4>Closing</h4>
-                <p>Finalizing the purchase and getting your keys</p>
+
+              <div className={styles.buttonContainer}>
+                <a href="/" className={styles.backButton}>
+                  Back to Home
+                </a>
+                <a href="/contact" className={styles.contactButton}>
+                  Contact Us
+                </a>
               </div>
             </div>
-          </section>
-        </div>
-      </div>
+          </div>
+        </section>
+      </main>
+
+      <Footer />
     </div>
   );
 };
