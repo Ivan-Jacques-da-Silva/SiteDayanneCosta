@@ -9,6 +9,9 @@ import Search from '../pages/Search';
 import Buy from '../pages/Buy';
 import Sell from '../pages/Sell';
 import Contact from '../pages/Contact';
+import Login from '../pages/Login';
+import Register from '../pages/Register';
+import ForgotPassword from '../pages/ForgotPassword';
 
 const AppRoutes = () => {
   return (
@@ -20,6 +23,9 @@ const AppRoutes = () => {
       <Route path="/private-exclusive" element={<PrivateExclusive />} />
       <Route path="/buy-sell" element={<Search />} />
       <Route path="/contact" element={<Contact />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/new-developments/" element={<Search />} />
       <Route path="/single-family-homes/" element={<Search />} />
       <Route path="/luxury-condos/" element={<Search />} />

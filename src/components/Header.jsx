@@ -105,12 +105,12 @@ const Header = () => {
 
                   {/* Language Switcher */}
                   <div className={`ibc-c-language-switcher ip-position-relative notranslate js-language-switcher ${styles.languageSwitcher}`}>
-                    <button className={`ibc-c-language-switcher-button ip-position-relative ip-d-flex ibc-u-align-items-center ibc-u-justify-content-center ip-h-full body-xs ip-text-uppercase js-language-switcher-button ${styles.languageButton}`}>
+                    <Link to="/login" aria-label="Login" className={`lg-login ip-login-btn ${styles.ipLoginBtn}`}>
                       <span className={`ibc-c-language-switcher-flag ip-d-inline-block ip-my-0 ip-mr-1 flag-english js-language-switcher-flag ${styles.flagIcon}`}>
                         <i className="fas fa-globe"></i>
                       </span>
                       <span className={`ibc-c-language-switcher-label ip-mr-1 notranslate js-language-switcher-label ${styles.languageLabel}`}>EN</span>
-                    </button>
+                    </Link>
                     <div className={`ibc-c-language-switcher-select ip-position-absolute js-language-switcher-select ${styles.languageSelect}`}>
                       <a className={`ibc-c-language-switcher-option ip-position-relative ip-d-flex ibc-u-align-items-center ibc-u-justify-content-center ip-w-full body-xs ip-text-uppercase notranslate ibc-is-active js-language-switcher-option ${styles.languageOption} ${styles.active}`} data-iso="en" href="#" rel="nofollow">
                         <span className="ip-d-inline-block ip-text-center">EN</span>
@@ -261,9 +261,9 @@ const Header = () => {
                 >
                   <span className={`ip-menu-button-icon ${styles.ipMenuButtonIcon}`}>
                     <span></span>
-                  </span>
+                    <Link to="/register" aria-label="Register" className={`lg-register ip-login-btn ${styles.ipLoginBtn}`}>
                   <span className={`ip-menu-button-text ${styles.ipMenuButtonText}`}>Menu</span>
-                </button>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -476,26 +476,30 @@ const Header = () => {
               {/* Login */}
               <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
-                  <button 
+                  <Link
+                    to="/login"
                     className={`ip-menu-link ${styles.ipMenuLink}`}
-                    style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.75rem' }}
+                    style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}
+                    onClick={handleNavClick}
                   >
                     <i className="fas fa-user" style={{ fontSize: '16px', width: '20px' }}></i>
                     <span>Login</span>
-                  </button>
+                  </Link>
                 </div>
               </li>
 
               {/* Register */}
               <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
-                  <button 
+                  <Link
+                    to="/register"
                     className={`ip-menu-link ${styles.ipMenuLink}`}
-                    style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.75rem' }}
+                    style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}
+                    onClick={handleNavClick}
                   >
                     <i className="fas fa-user-plus" style={{ fontSize: '16px', width: '20px' }}></i>
                     <span>Register</span>
-                  </button>
+                  </Link>
                 </div>
               </li>
 
