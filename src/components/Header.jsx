@@ -105,12 +105,12 @@ const Header = () => {
 
                   {/* Language Switcher */}
                   <div className={`ibc-c-language-switcher ip-position-relative notranslate js-language-switcher ${styles.languageSwitcher}`}>
-                    <Link to="/login" aria-label="Login" className={`lg-login ip-login-btn ${styles.ipLoginBtn}`}>
+                    <button className={`ibc-c-language-switcher-button ip-position-relative ip-d-flex ibc-u-align-items-center ibc-u-justify-content-center ip-h-full body-xs ip-text-uppercase js-language-switcher-button ${styles.languageButton}`}>
                       <span className={`ibc-c-language-switcher-flag ip-d-inline-block ip-my-0 ip-mr-1 flag-english js-language-switcher-flag ${styles.flagIcon}`}>
                         <i className="fas fa-globe"></i>
                       </span>
                       <span className={`ibc-c-language-switcher-label ip-mr-1 notranslate js-language-switcher-label ${styles.languageLabel}`}>EN</span>
-                    </Link>
+                    </button>
                     <div className={`ibc-c-language-switcher-select ip-position-absolute js-language-switcher-select ${styles.languageSelect}`}>
                       <a className={`ibc-c-language-switcher-option ip-position-relative ip-d-flex ibc-u-align-items-center ibc-u-justify-content-center ip-w-full body-xs ip-text-uppercase notranslate ibc-is-active js-language-switcher-option ${styles.languageOption} ${styles.active}`} data-iso="en" href="#" rel="nofollow">
                         <span className="ip-d-inline-block ip-text-center">EN</span>
@@ -153,17 +153,17 @@ const Header = () => {
                   <div className={`ip-login js-login ${styles.ipLogin}`}>
                     <ul className={`ip-login-wrap item-no-hea ibc-u-d-flex ibc-u-align-items-center ${styles.ipLoginWrap}`} id="user-options">
                       <li className={`ip-login-item login ${styles.ipLoginItem}`} data-modal="modal_login" data-tab="tabLogin">
-                        <button aria-label="Login" className={`lg-login ip-login-btn ${styles.ipLoginBtn}`}>
+                        <Link to="/login" aria-label="Login" className={`lg-login ip-login-btn ${styles.ipLoginBtn}`}>
                           <span className={`ip-login-icon idx-icon-user ${styles.ipLoginIcon}`}>
                             <i className="fas fa-user"></i>
                           </span>
                           <span className={`ip-login-text ${styles.ipLoginText}`}>Login</span>
-                        </button>
+                        </Link>
                       </li>
                       <li className={`ip-login-item register ibc-u-position-relative ip-pl-2 ${styles.ipLoginItem} ${styles.register}`} data-modal="modal_login" data-tab="tabRegister">
-                        <button aria-label="Register" className={`lg-register ip-login-btn ${styles.ipLoginBtn}`}>
+                        <Link to="/register" aria-label="Register" className={`lg-register ip-login-btn ${styles.ipLoginBtn}`}>
                           <span className={`ip-login-text ${styles.ipLoginText}`}>Register</span>
-                        </button>
+                        </Link>
                       </li>
                     </ul>
                   </div>
@@ -261,9 +261,9 @@ const Header = () => {
                 >
                   <span className={`ip-menu-button-icon ${styles.ipMenuButtonIcon}`}>
                     <span></span>
-                    <Link to="/register" aria-label="Register" className={`lg-register ip-login-btn ${styles.ipLoginBtn}`}>
+                  </span>
                   <span className={`ip-menu-button-text ${styles.ipMenuButtonText}`}>Menu</span>
-                    </Link>
+                </button>
                   </div>
                 </div>
               </div>
@@ -548,6 +548,3 @@ const Header = () => {
 };
 
 export default Header;
-
-  )
-}
