@@ -28,5 +28,10 @@
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
     "vite": "^6.3.0"
-  }
+  },
+  "description": "Este é um projeto de site imobiliário desenvolvido para a corretora **Dayanne Costa**, focado na apresentação de imóveis de alto padrão e navegação intuitiva.",
+  "main": "eslint.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
