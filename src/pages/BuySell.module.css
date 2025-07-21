@@ -1,359 +1,388 @@
 
-.mainContainer {
-  min-height: 100vh;
-  padding-top: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Base styles matching the original HTML */
+.ip {
+  --ibc-heading-font-family: Raleway, sans-serif;
+  --ibc-heading-font-weight: 300;
+  --ibc-body-font-family: Raleway, sans-serif;
+  --ibc-body-font-weight: 400;
+  --ibc-button-font-family: Raleway, sans-serif;
+  --ibc-button-font-weight: 400;
+  --ibc-heading-color: #000;
+  --ibc-button-bg: rgba(255, 255, 255, 0);
+  --ibc-button-border-color: #000;
+  --ibc-button-color: #000;
+  --ibc-button-hover-bg: #000;
+  --ibc-button-hover-border-color: #000;
+  --ibc-button-hover-color: #fff;
+  --ibc--idx-primary-color: #000000ff;
+  --ibc--idx-secondary-color: #ffffff;
 }
 
-.choiceSection {
-  width: 100%;
-  max-width: 1200px;
-  padding: 40px 20px;
-}
-
-.contentWrapper {
-  text-align: center;
-}
-
-.choiceContent {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.choiceTitle {
-  font-size: 3rem;
-  font-weight: 300;
-  margin-bottom: 20px;
-  color: #000;
-}
-
-.choiceSubtitle {
-  font-size: 1.2rem;
-  color: #666;
-  margin-bottom: 60px;
-}
-
-.optionsContainer {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 40px;
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-.optionButton {
-  background: #fff;
-  border: 2px solid #e0e0e0;
-  border-radius: 10px;
-  padding: 40px 30px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  color: inherit;
-}
-
-.optionButton:hover {
-  border-color: #000;
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-}
-
-.optionIcon {
-  font-size: 4rem;
-  margin-bottom: 20px;
-}
-
-.optionButton h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 15px;
-  color: #000;
-}
-
-.optionButton p {
-  color: #666;
-  font-size: 1rem;
-  line-height: 1.5;
-  margin: 0;
-}
-
-/* Form Styles */
-.formContainer {
-  background-image: url('https://dayannecosta.com/wp-content/uploads/2024/01/Brickell-min-scaled.jpg');
+#main-wrap {
+  position: relative;
+  background: url('https://dayannecosta.com/wp-content/uploads/2024/01/Edgewater-scaled.jpg') center center;
   background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 80px 20px 20px;
 }
 
-.formSection {
+.ibFormBuyandsell {
+  position: relative;
   width: 100%;
   max-width: 600px;
-  position: relative;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-.formArticle {
+.ibFormBg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.ibFbscontainer {
   background: rgba(255, 255, 255, 0.95);
-  border-radius: 10px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-
-.form {
-  padding: 0;
-}
-
-.form fieldset {
-  border: none;
+  border-radius: 8px;
   padding: 40px;
-  margin: 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1;
 }
 
-.form legend {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: #000;
-  text-align: center;
-  margin-bottom: 30px;
+.ibFormWrapper {
   width: 100%;
 }
 
-.formWrapper {
-  width: 100%;
-}
-
-.steps {
+.ibFsteps {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.step {
+.ibFsitem {
   display: none;
   text-align: center;
 }
 
-.stepActive {
+.ibFsitemActive {
   display: block;
 }
 
-.stepTitle {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #000;
-  margin-bottom: 15px;
+.ibFstitle {
+  font-family: var(--ibc-heading-font-family);
+  font-weight: var(--ibc-heading-font-weight);
+  color: var(--ibc-heading-color);
+  margin-bottom: 20px;
+  font-size: 28px;
+  line-height: 1.2;
 }
 
-.stepText {
-  color: #666;
-  font-size: 1rem;
-  line-height: 1.5;
+.ibFstitle h4 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.ibFtext {
+  display: block;
   margin-bottom: 30px;
-  display: block;
+  color: #666;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
-.addressInput {
+.ibFsradios {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 30px 0;
   display: flex;
   flex-direction: column;
   gap: 15px;
-  max-width: 400px;
-  margin: 0 auto;
 }
 
-.hiddenLabel {
-  position: absolute;
-  left: -9999px;
+.ibFsrnumbers {
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
-.input {
-  padding: 15px;
-  border: 2px solid #e0e0e0;
-  border-radius: 5px;
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
-}
-
-.input:focus {
-  outline: none;
-  border-color: #000;
-}
-
-.findButton {
-  background: #000;
-  color: #fff;
-  border: none;
-  padding: 15px 30px;
-  border-radius: 5px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.findButton:hover {
-  background: #333;
-}
-
-.radioOptions {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-  gap: 15px;
-  max-width: 400px;
-  margin: 0 auto;
-}
-
-.radioItem {
+.ibFsritem {
   position: relative;
 }
 
-.radio {
+.ibFsrnumbers .ibFsritem {
+  margin: 0 10px;
+}
+
+.ibFiradio {
   position: absolute;
   opacity: 0;
+  cursor: pointer;
 }
 
-.radioLabel {
+.ibFilabel {
   display: block;
-  padding: 20px;
-  border: 2px solid #e0e0e0;
-  border-radius: 5px;
-  text-align: center;
+  padding: 15px 30px;
+  background: transparent;
+  border: 2px solid #ddd;
+  border-radius: 4px;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-weight: 600;
+  font-family: var(--ibc-button-font-family);
+  font-weight: var(--ibc-button-font-weight);
+  color: var(--ibc-button-color);
+  text-decoration: none;
+  min-width: 150px;
+  text-align: center;
 }
 
-.radio:checked + .radioLabel {
-  background: #000;
-  color: #fff;
-  border-color: #000;
+.ibFsrnumbers .ibFilabel {
+  min-width: 60px;
+  padding: 15px 20px;
 }
 
-.radioLabel:hover {
-  border-color: #000;
+.ibFiradio:checked + .ibFilabel,
+.ibFilabel:hover {
+  background: var(--ibc-button-hover-bg);
+  border-color: var(--ibc-button-hover-border-color);
+  color: var(--ibc-button-hover-color);
 }
 
-.contactFields {
+.optionButton {
+  width: 100%;
+  max-width: 300px;
+  margin: 10px auto;
+  padding: 20px 30px;
+  background: transparent;
+  border: 2px solid var(--ibc-button-border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--ibc-button-font-family);
+  font-weight: var(--ibc-button-font-weight);
+  color: var(--ibc-button-color);
+  font-size: 18px;
+}
+
+.optionButton:hover {
+  background: var(--ibc-button-hover-bg);
+  border-color: var(--ibc-button-hover-border-color);
+  color: var(--ibc-button-hover-color);
+}
+
+.ibFsifind {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.ibFsinput {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  font-family: var(--ibc-body-font-family);
+  margin-bottom: 15px;
+}
+
+.ibFsinput:focus {
+  outline: none;
+  border-color: var(--ibc-button-border-color);
+}
+
+.ibFsifsubmit {
+  display: inline-block;
+  padding: 15px 30px;
+  background: var(--ibc-button-bg);
+  border: 2px solid var(--ibc-button-border-color);
+  border-radius: 4px;
+  color: var(--ibc-button-color);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--ibc-button-font-family);
+  font-weight: var(--ibc-button-font-weight);
+  text-decoration: none;
+}
+
+.ibFsifsubmit:hover {
+  background: var(--ibc-button-hover-bg);
+  border-color: var(--ibc-button-hover-border-color);
+  color: var(--ibc-button-hover-color);
+}
+
+.ibFsinformation {
   list-style: none;
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
 }
 
-.fieldItem {
+.ibFsftem {
+  margin-bottom: 20px;
+}
+
+.ibFsftemTextarea {
+  margin-bottom: 20px;
+}
+
+.ibFstextarea {
   width: 100%;
-}
-
-.textarea {
   padding: 15px;
-  border: 2px solid #e0e0e0;
-  border-radius: 5px;
-  font-size: 1rem;
-  min-height: 120px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  font-family: var(--ibc-body-font-family);
+  min-height: 100px;
   resize: vertical;
-  font-family: inherit;
-  width: 100%;
-  box-sizing: border-box;
-  transition: border-color 0.3s ease;
 }
 
-.textarea:focus {
+.ibFstextarea:focus {
   outline: none;
-  border-color: #000;
+  border-color: var(--ibc-button-border-color);
 }
 
-.buttons {
+.ibFbtns {
   display: flex;
-  gap: 15px;
   justify-content: center;
-  margin-top: 40px;
+  gap: 15px;
+  margin-top: 30px;
 }
 
-.backButton,
-.nextButton,
-.submitButton {
+.ibFbtnsContinue {
+  justify-content: space-between;
+}
+
+.ibFbtn {
   padding: 15px 30px;
-  border-radius: 5px;
-  font-size: 1rem;
+  background: var(--ibc-button-bg);
+  border: 2px solid var(--ibc-button-border-color);
+  border-radius: 4px;
+  color: var(--ibc-button-color);
   cursor: pointer;
   transition: all 0.3s ease;
-  border: none;
+  font-family: var(--ibc-button-font-family);
+  font-weight: var(--ibc-button-font-weight);
+  text-decoration: none;
+  min-width: 120px;
+  text-align: center;
 }
 
-.backButton {
-  background: #f0f0f0;
-  color: #333;
+.ibFbtn:hover {
+  background: var(--ibc-button-hover-bg);
+  border-color: var(--ibc-button-hover-border-color);
+  color: var(--ibc-button-hover-color);
 }
 
-.backButton:hover {
-  background: #e0e0e0;
+.ibFsubmit {
+  background: var(--ibc-button-hover-bg);
+  color: var(--ibc-button-hover-color);
+  border-color: var(--ibc-button-hover-border-color);
 }
 
-.nextButton,
-.submitButton {
-  background: #000;
-  color: #fff;
+.ibFsubmit:hover {
+  background: var(--ibc-button-bg);
+  color: var(--ibc-button-color);
+  border-color: var(--ibc-button-border-color);
 }
 
-.nextButton:hover,
-.submitButton:hover {
-  background: #333;
+.msHidden {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .choiceTitle {
-    font-size: 2rem;
+  .ibFbscontainer {
+    padding: 20px;
+    margin: 20px;
   }
   
-  .optionsContainer {
-    grid-template-columns: 1fr;
-    gap: 20px;
+  .ibFstitle {
+    font-size: 24px;
+  }
+  
+  .ibFsradios {
+    gap: 10px;
+  }
+  
+  .ibFsrnumbers {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .ibFsrnumbers .ibFsritem {
+    margin: 5px 0;
+  }
+  
+  .ibFilabel {
+    padding: 12px 20px;
+    min-width: 120px;
   }
   
   .optionButton {
-    padding: 30px 20px;
+    padding: 15px 20px;
+    font-size: 16px;
   }
   
-  .formArticle {
-    margin: 0 10px;
-  }
-  
-  .form fieldset {
-    padding: 30px 20px;
-  }
-  
-  .buttons {
+  .ibFbtns {
     flex-direction: column;
+    gap: 10px;
   }
   
-  .backButton,
-  .nextButton,
-  .submitButton {
-    width: 100%;
+  .ibFbtnsContinue {
+    flex-direction: row;
+    justify-content: space-between;
   }
 }
 
 @media (max-width: 480px) {
-  .radioOptions {
-    grid-template-columns: repeat(2, 1fr);
+  .ibFbscontainer {
+    padding: 15px;
+    margin: 10px;
   }
   
-  .choiceTitle {
-    font-size: 1.5rem;
+  .ibFstitle {
+    font-size: 20px;
   }
   
-  .stepTitle {
-    font-size: 1.2rem;
+  .ibFilabel {
+    padding: 10px 15px;
+    min-width: 100px;
+    font-size: 14px;
+  }
+  
+  .ibFsrnumbers .ibFilabel {
+    min-width: 50px;
+    padding: 10px 15px;
+  }
+  
+  .optionButton {
+    padding: 12px 15px;
+    font-size: 15px;
+  }
+  
+  .ibFbtn {
+    padding: 12px 20px;
+    min-width: 100px;
+    font-size: 14px;
+  }
+}
+
+/* Fix for third and subsequent radio items margin */
+.ibFsritem:nth-child(n+3) {
+  margin-left: 10px;
+}
+
+@media (max-width: 1024px) {
+  .ibFsritem:nth-child(n+3) {
+    margin-left: 0;
   }
 }
