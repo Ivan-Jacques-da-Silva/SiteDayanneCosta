@@ -219,7 +219,7 @@ const Home = () => {
               FEATURED LISTINGS
             </h5>
             <a 
-              href="/brickell-condos-1m/" 
+              href="/brickell-condos-1m" 
               style={{
                 display: 'inline-block',
                 padding: '12px 30px',
