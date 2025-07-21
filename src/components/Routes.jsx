@@ -14,6 +14,7 @@ import Register from '../pages/Register';
 import ForgotPassword from '../pages/ForgotPassword';
 import BrickellCondos from '../pages/BrickellCondos';
 import BuySell from '../pages/BuySell'; // Import the BuySell component
+import NewDevelopments from '../pages/NewDevelopments'; //Import NewDevelopments
 
 const AppRoutes = () => {
   return (
@@ -30,11 +31,12 @@ const AppRoutes = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/new-developments/" element={<Search />} />
+      <Route path="/brickell-condos" element={<BrickellCondos />} />
+      <Route path="/new-developments" element={<NewDevelopments />} />
       <Route path="/single-family-homes/" element={<Search />} />
       <Route path="/luxury-condos/" element={<Search />} />
       <Route path="/neighborhoods/" element={<Search />} />
-      <Route path="/brickell-condos-1m" element={<BrickellCondos />} />
+      <Route path="/buy-sell" element={<BuySell />} />
     </Routes>
   );
 };
