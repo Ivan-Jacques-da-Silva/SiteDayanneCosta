@@ -153,17 +153,17 @@ const Header = () => {
                   <div className={`ip-login js-login ${styles.ipLogin}`}>
                     <ul className={`ip-login-wrap item-no-hea ibc-u-d-flex ibc-u-align-items-center ${styles.ipLoginWrap}`} id="user-options">
                       <li className={`ip-login-item login ${styles.ipLoginItem}`} data-modal="modal_login" data-tab="tabLogin">
-                        <button aria-label="Login" className={`lg-login ip-login-btn ${styles.ipLoginBtn}`}>
+                        <Link to="/login" aria-label="Login" className={`lg-login ip-login-btn ${styles.ipLoginBtn}`}>
                           <span className={`ip-login-icon idx-icon-user ${styles.ipLoginIcon}`}>
                             <i className="fas fa-user"></i>
                           </span>
                           <span className={`ip-login-text ${styles.ipLoginText}`}>Login</span>
-                        </button>
+                        </Link>
                       </li>
                       <li className={`ip-login-item register ibc-u-position-relative ip-pl-2 ${styles.ipLoginItem} ${styles.register}`} data-modal="modal_login" data-tab="tabRegister">
-                        <button aria-label="Register" className={`lg-register ip-login-btn ${styles.ipLoginBtn}`}>
+                        <Link to="/register" aria-label="Register" className={`lg-register ip-login-btn ${styles.ipLoginBtn}`}>
                           <span className={`ip-login-text ${styles.ipLoginText}`}>Register</span>
-                        </button>
+                        </Link>
                       </li>
                     </ul>
                   </div>
@@ -476,26 +476,30 @@ const Header = () => {
               {/* Login */}
               <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
-                  <button 
+                  <Link
+                    to="/login"
                     className={`ip-menu-link ${styles.ipMenuLink}`}
-                    style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.75rem' }}
+                    style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}
+                    onClick={handleNavClick}
                   >
                     <i className="fas fa-user" style={{ fontSize: '16px', width: '20px' }}></i>
                     <span>Login</span>
-                  </button>
+                  </Link>
                 </div>
               </li>
 
               {/* Register */}
               <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
-                  <button 
+                  <Link
+                    to="/register"
                     className={`ip-menu-link ${styles.ipMenuLink}`}
-                    style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.75rem' }}
+                    style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}
+                    onClick={handleNavClick}
                   >
                     <i className="fas fa-user-plus" style={{ fontSize: '16px', width: '20px' }}></i>
                     <span>Register</span>
-                  </button>
+                  </Link>
                 </div>
               </li>
 

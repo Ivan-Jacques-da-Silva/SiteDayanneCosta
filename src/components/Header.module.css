@@ -295,10 +295,12 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0;
+  text-decoration: none;
 }
 
 .ipLoginBtn:hover {
   color: rgba(255, 255, 255, 1);
+  text-decoration: none;
 }
 
 .ipLoginIcon {
