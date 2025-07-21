@@ -1,0 +1,359 @@
+
+.mainContainer {
+  min-height: 100vh;
+  padding-top: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.choiceSection {
+  width: 100%;
+  max-width: 1200px;
+  padding: 40px 20px;
+}
+
+.contentWrapper {
+  text-align: center;
+}
+
+.choiceContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.choiceTitle {
+  font-size: 3rem;
+  font-weight: 300;
+  margin-bottom: 20px;
+  color: #000;
+}
+
+.choiceSubtitle {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 60px;
+}
+
+.optionsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 40px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.optionButton {
+  background: #fff;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 40px 30px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.optionButton:hover {
+  border-color: #000;
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.optionIcon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+}
+
+.optionButton h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #000;
+}
+
+.optionButton p {
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Form Styles */
+.formContainer {
+  background-image: url('https://dayannecosta.com/wp-content/uploads/2024/01/Brickell-min-scaled.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px 20px;
+}
+
+.formSection {
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+}
+
+.formArticle {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 10px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.form {
+  padding: 0;
+}
+
+.form fieldset {
+  border: none;
+  padding: 40px;
+  margin: 0;
+}
+
+.form legend {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #000;
+  text-align: center;
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+.formWrapper {
+  width: 100%;
+}
+
+.steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.step {
+  display: none;
+  text-align: center;
+}
+
+.stepActive {
+  display: block;
+}
+
+.stepTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 15px;
+}
+
+.stepText {
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 30px;
+  display: block;
+}
+
+.addressInput {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.hiddenLabel {
+  position: absolute;
+  left: -9999px;
+}
+
+.input {
+  padding: 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #000;
+}
+
+.findButton {
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.findButton:hover {
+  background: #333;
+}
+
+.radioOptions {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 15px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.radioItem {
+  position: relative;
+}
+
+.radio {
+  position: absolute;
+  opacity: 0;
+}
+
+.radioLabel {
+  display: block;
+  padding: 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.radio:checked + .radioLabel {
+  background: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+.radioLabel:hover {
+  border-color: #000;
+}
+
+.contactFields {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.fieldItem {
+  width: 100%;
+}
+
+.textarea {
+  padding: 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 5px;
+  font-size: 1rem;
+  min-height: 120px;
+  resize: vertical;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #000;
+}
+
+.buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.backButton,
+.nextButton,
+.submitButton {
+  padding: 15px 30px;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.backButton {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.backButton:hover {
+  background: #e0e0e0;
+}
+
+.nextButton,
+.submitButton {
+  background: #000;
+  color: #fff;
+}
+
+.nextButton:hover,
+.submitButton:hover {
+  background: #333;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .choiceTitle {
+    font-size: 2rem;
+  }
+  
+  .optionsContainer {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .optionButton {
+    padding: 30px 20px;
+  }
+  
+  .formArticle {
+    margin: 0 10px;
+  }
+  
+  .form fieldset {
+    padding: 30px 20px;
+  }
+  
+  .buttons {
+    flex-direction: column;
+  }
+  
+  .backButton,
+  .nextButton,
+  .submitButton {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .radioOptions {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .choiceTitle {
+    font-size: 1.5rem;
+  }
+  
+  .stepTitle {
+    font-size: 1.2rem;
+  }
+}

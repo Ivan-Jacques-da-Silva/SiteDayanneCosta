@@ -13,6 +13,7 @@ import Login from '../pages/Login';
 import Register from '../pages/Register';
 import ForgotPassword from '../pages/ForgotPassword';
 import BrickellCondos from '../pages/BrickellCondos';
+import BuySell from '../pages/BuySell'; // Import the BuySell component
 
 const AppRoutes = () => {
   return (
@@ -22,7 +23,9 @@ const AppRoutes = () => {
       <Route path="/about-team" element={<AboutTeam />} />
       <Route path="/compass-concierge" element={<CompassConcierge />} />
       <Route path="/private-exclusive" element={<PrivateExclusive />} />
-      <Route path="/buy-sell" element={<Search />} />
+      <Route path="/buy" element={<Buy />} />
+      <Route path="/sell" element={<Sell />} />
+      <Route path="/buy-sell" element={<BuySell />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
