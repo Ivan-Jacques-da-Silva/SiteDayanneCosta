@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -134,55 +135,88 @@ const NewDevelopments = () => {
       <Header />
 
       <main className={styles.mainContent}>
-        {/* Top Navigation Bar */}
-        <div className={styles.topBar}>
-          <div className={styles.topBarContent}>
-            <div className={styles.searchContainer}>
-              <input
-                type="search"
-                placeholder="Search Condos"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className={styles.searchInput}
-              />
-              <button className={styles.searchButton}>🔍</button>
-            </div>
-
-            <select 
-              className={styles.selectFilter}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            >
-              <option value="">Condos by Name</option>
-              {ItemSearch.map((item, index) => (
-                <option key={index} value={item.title}>{item.title}</option>
-              ))}
-            </select>
-
-            <select 
-              className={styles.selectFilter}
-              value={selectedNeighborhood}
-              onChange={(e) => setSelectedNeighborhood(e.target.value)}
-            >
-              <option value="all">All Neighborhoods</option>
-              {neighborhoods.map(neighborhood => (
-                <option key={neighborhood.id} value={neighborhood.id}>
-                  {neighborhood.name}
-                </option>
-              ))}
-            </select>
-
-            <div className={styles.rightControls}>
-              <span className={styles.compassConcierge}>Compass Concierge</span>
-              <button className={styles.mapToggle}>Map 🗺️</button>
-            </div>
+        <div className={styles.breadcrumb}>
+          <div className={styles.breadcrumbContent}>
+            <ol>
+              <li><a href="/" title="Home">Home</a></li>
+              <li>New Developments</li>
+            </ol>
           </div>
         </div>
 
-        {/* Main Layout: Map + Sidebar */}
-        <div className={styles.contentLayout}>
-          {/* Map Section */}
-          <div className={styles.mapSection}>
+        <div className={styles.contentBlock}>
+          <h1 className={styles.titleBlock}>New Developments</h1>
+        </div>
+
+        {/* Filter Bar */}
+        <div className={styles.filterBar}>
+          <div className={styles.filterContent}>
+            <div className={styles.headerFilters}>
+              <div className={styles.textWrapper}>
+                <div className={styles.callUs}>Call us: <a href="tel:">+1 (646) 598-3588</a></div>
+                <button className={styles.saveSearch}>Save this Search</button>
+              </div>
+            </div>
+
+            <ul className={styles.filters}>
+              <li className={styles.miniSearch}>
+                <form className={styles.searchForm}>
+                  <input
+                    className={styles.searchBuilding}
+                    placeholder="Search Condos"
+                    type="search"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <button type="submit" className={styles.searchSubmit}>
+                    <span>🔍</span>
+                  </button>
+                </form>
+              </li>
+
+              <li className={styles.filterItem}>
+                <select 
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className={styles.selectFilter}
+                >
+                  <option value="">Condos by Name</option>
+                  {ItemSearch.map((item, index) => (
+                    <option key={index} value={item.title}>{item.title}</option>
+                  ))}
+                </select>
+              </li>
+
+              <li className={styles.filterItem}>
+                <select 
+                  value={selectedNeighborhood}
+                  onChange={(e) => setSelectedNeighborhood(e.target.value)}
+                  className={styles.selectFilter}
+                >
+                  <option value="all">All Neighborhoods</option>
+                  {neighborhoods.map(neighborhood => (
+                    <option key={neighborhood.id} value={neighborhood.id}>
+                      {neighborhood.name}
+                    </option>
+                  ))}
+                </select>
+              </li>
+
+              <li className={styles.compassConcierge}>
+                <span>Compass Concierge</span>
+              </li>
+
+              <li className={styles.mapToggle}>
+                <button>Map</button>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Main Layout Container */}
+        <div className={styles.wrapPageIdx}>
+          <div className={styles.contentFilters}>
+            {/* Map Section */}
             <div className={styles.mapContainer}>
               <div className={styles.mapError}>
                 <div className={styles.errorIcon}>⚠️</div>
@@ -190,38 +224,37 @@ const NewDevelopments = () => {
                 <p>Esta página não carregou o Google Maps corretamente. Consulte o console JavaScript para ver detalhes técnicos.</p>
               </div>
             </div>
-            <button className={styles.closeMapBtn}>Close</button>
-          </div>
 
-          {/* Sidebar with Properties */}
-          <div className={styles.sidebar}>
-            {Object.entries(groupedByNeighborhood).map(([neighborhood, buildings]) => (
-              <div key={neighborhood} className={styles.neighborhoodGroup}>
-                <h2 className={styles.neighborhoodTitle}>{neighborhood}</h2>
+            {/* Properties List */}
+            <div className={styles.propertiesList}>
+              {Object.entries(groupedByNeighborhood).map(([neighborhood, buildings]) => (
+                <div key={neighborhood} className={styles.neighborhoodSection}>
+                  <h2 className={styles.neighborhoodTitle}>{neighborhood}</h2>
 
-                {buildings.map((building, index) => (
-                  <div key={index} className={styles.propertyCard}>
-                    <div className={styles.propertyImage}>
-                      <img src={building.image} alt={building.title} />
-                      <span className={styles.propertyStatus}>{building.status}</span>
+                  {buildings.map((building, index) => (
+                    <div key={index} className={styles.propertyItem}>
+                      <div className={styles.propertyImageContainer}>
+                        <img src={building.image} alt={building.title} className={styles.propertyImage} />
+                        <span className={styles.propertyStatus}>{building.status}</span>
+                      </div>
+
+                      <div className={styles.propertyDetails}>
+                        <h3 className={styles.propertyTitle}>{building.title}</h3>
+                        <p className={styles.propertyAddress}>{building.address}</p>
+                      </div>
+
+                      <button className={styles.favoriteButton}>♡</button>
                     </div>
+                  ))}
+                </div>
+              ))}
 
-                    <div className={styles.propertyInfo}>
-                      <h3 className={styles.propertyTitle}>{building.title}</h3>
-                      <p className={styles.propertyAddress}>{building.address}</p>
-                    </div>
-
-                    <button className={styles.favoriteBtn}>♡</button>
-                  </div>
-                ))}
-              </div>
-            ))}
-
-            {filteredBuildings.length === 0 && (
-              <div className={styles.noResults}>
-                <p>Nenhum resultado encontrado para os filtros selecionados.</p>
-              </div>
-            )}
+              {filteredBuildings.length === 0 && (
+                <div className={styles.noResults}>
+                  <p>Nenhum resultado encontrado para os filtros selecionados.</p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </main>
