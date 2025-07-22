@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 import styles from './BrickellCondos.module.css';
 
 const BrickellCondos = () => {
@@ -69,7 +71,9 @@ const BrickellCondos = () => {
   };
 
   return (
-    <div className={styles.brickellCondos}>
+    <div>
+      <Header />
+      <div className={styles.brickellCondos}>
       {/* Header Section */}
       <div className={styles.headerSection}>
         <div className={styles.container}>
@@ -256,6 +260,8 @@ const BrickellCondos = () => {
           </div>
         </div>
       </div>
+      </div>
+      <Footer />
     </div>
   );
 };
