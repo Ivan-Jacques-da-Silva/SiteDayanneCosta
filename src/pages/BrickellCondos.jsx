@@ -1,337 +1,261 @@
 import React, { useState, useEffect } from 'react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 import styles from './BrickellCondos.module.css';
 
 const BrickellCondos = () => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
-    minPrice: '',
-    maxPrice: '',
+    priceMin: '',
+    priceMax: '',
     bedrooms: '',
     bathrooms: '',
-    sortBy: 'price-desc',
-    propertyType: '',
-    sqft: ''
+    sortBy: 'price-desc'
   });
 
-  // Fetch data from API
+  useEffect(() => {
+    fetchProperties();
+  }, [filters]);
+
   const fetchProperties = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5000/api/brickell-condos-1m');
+      const queryParams = new URLSearchParams();
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      if (filters.priceMin) queryParams.append('priceMin', filters.priceMin);
+      if (filters.priceMax) queryParams.append('priceMax', filters.priceMax);
+      if (filters.bedrooms) queryParams.append('bedrooms', filters.bedrooms);
+      if (filters.bathrooms) queryParams.append('bathrooms', filters.bathrooms);
+      queryParams.append('sortBy', filters.sortBy);
 
+      const response = await fetch(`http://localhost:3001/api/properties?${queryParams.toString()}`);
       const data = await response.json();
-      setProperties(data);
-    } catch (err) {
-      console.error('Error fetching properties:', err);
+
+      if (data.success) {
+        setProperties(data.properties || []);
+      } else {
+        console.error('API Error:', data.error);
+        setProperties([]);
+      }
+    } catch (error) {
+      console.error('Error fetching properties:', error);
       setProperties([]);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchProperties();
-  }, []);
-
-  const handleFilterChange = (key, value) => {
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
     setFilters(prev => ({
       ...prev,
-      [key]: value
+      [name]: value
     }));
   };
 
-  const filteredProperties = properties.filter(property => {
-    const price = parseInt(property.price.replace(/[$,]/g, ''));
-    const minPrice = filters.minPrice ? parseInt(filters.minPrice) : 0;
-    const maxPrice = filters.maxPrice ? parseInt(filters.maxPrice) : Infinity;
-
-    if (price < minPrice || price > maxPrice) return false;
-    if (filters.bedrooms && parseInt(property.beds) < parseInt(filters.bedrooms)) return false;
-    if (filters.bathrooms && parseInt(property.baths) < parseInt(filters.bathrooms)) return false;
-
-    return true;
-  });
-
-  const sortedProperties = [...filteredProperties].sort((a, b) => {
-    const priceA = parseInt(a.price.replace(/[$,]/g, ''));
-    const priceB = parseInt(b.price.replace(/[$,]/g, ''));
-
-    switch (filters.sortBy) {
-      case 'price-asc':
-        return priceA - priceB;
-      case 'price-desc':
-        return priceB - priceA;
-      case 'newest':
-        return a.daysOnMarket - b.daysOnMarket;
-      case 'oldest':
-        return b.daysOnMarket - a.daysOnMarket;
-      default:
-        return priceB - priceA;
+  const formatPrice = (price) => {
+    if (!price) return 'Price Upon Request';
+    const numPrice = parseInt(price.replace(/[^0-9]/g, ''));
+    if (numPrice >= 1000000) {
+      return `$${(numPrice / 1000000).toFixed(1)}M`;
+    } else if (numPrice >= 1000) {
+      return `$${(numPrice / 1000).toFixed(0)}K`;
     }
-  });
+    return `$${numPrice.toLocaleString()}`;
+  };
+
+  const formatSqFt = (sqft) => {
+    if (!sqft) return '';
+    return sqft.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
 
   return (
-    <div className="ip ip-theme-compass">
-      <Header />
-
-      <main id="flex-filters-theme">
-        {/* Breadcrumb */}
-        <div className="gwr gwr-breadcrumb">
-          <div className="flex-breadcrumb">
-            <ol>
-              <li><a href="/" title="Home">Home</a></li>
-              <li>Brickell condos +1M</li>
-            </ol>
+    <div className={styles.brickellCondos}>
+      {/* Header Section */}
+      <div className={styles.headerSection}>
+        <div className={styles.container}>
+          <div className={styles.breadcrumb}>
+            <span>Home</span> / <span>Brickell Condos +1M</span>
           </div>
+          <h1 className={styles.pageTitle}>Brickell Condos Over $1 Million</h1>
+          <p className={styles.pageDescription}>
+            Discover luxury condominium living in the heart of Brickell. These exclusive properties 
+            offer world-class amenities, stunning city and water views, and prime location access.
+          </p>
         </div>
+      </div>
 
-        {/* Filters Section */}
-        <div id="wrap-filters">
-          <div className="gwr">
-            <div id="all-filters">
-              <div id="mini-filters">
-                <li className="filter-box">
-                  <div className="wrap-item">
-                    <div className="wrap-select">
-                      <select 
-                        value={filters.propertyType}
-                        onChange={(e) => handleFilterChange('propertyType', e.target.value)}
-                      >
-                        <option value="">Property Type</option>
-                        <option value="condo">Condo</option>
-                        <option value="house">House</option>
-                        <option value="townhouse">Townhouse</option>
-                      </select>
-                    </div>
-                  </div>
-                </li>
-
-                <li className="filter-box">
-                  <div className="wrap-item">
-                    <div className="wrap-select">
-                      <select 
-                        value={filters.minPrice}
-                        onChange={(e) => handleFilterChange('minPrice', e.target.value)}
-                      >
-                        <option value="">Min Price</option>
-                        <option value="1000000">$1,000,000</option>
-                        <option value="2000000">$2,000,000</option>
-                        <option value="5000000">$5,000,000</option>
-                        <option value="10000000">$10,000,000</option>
-                        <option value="20000000">$20,000,000</option>
-                      </select>
-                    </div>
-                  </div>
-                </li>
-
-                <li className="filter-box">
-                  <div className="wrap-item">
-                    <div className="wrap-select">
-                      <select 
-                        value={filters.maxPrice}
-                        onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
-                      >
-                        <option value="">Max Price</option>
-                        <option value="2000000">$2,000,000</option>
-                        <option value="5000000">$5,000,000</option>
-                        <option value="10000000">$10,000,000</option>
-                        <option value="20000000">$20,000,000</option>
-                        <option value="50000000">$50,000,000</option>
-                      </select>
-                    </div>
-                  </div>
-                </li>
-
-                <li className="filter-box">
-                  <div className="wrap-item">
-                    <div className="wrap-select">
-                      <select 
-                        value={filters.bedrooms}
-                        onChange={(e) => handleFilterChange('bedrooms', e.target.value)}
-                      >
-                        <option value="">Beds</option>
-                        <option value="1">1+</option>
-                        <option value="2">2+</option>
-                        <option value="3">3+</option>
-                        <option value="4">4+</option>
-                        <option value="5">5+</option>
-                      </select>
-                    </div>
-                  </div>
-                </li>
-
-                <li className="filter-box">
-                  <div className="wrap-item">
-                    <div className="wrap-select">
-                      <select 
-                        value={filters.bathrooms}
-                        onChange={(e) => handleFilterChange('bathrooms', e.target.value)}
-                      >
-                        <option value="">Baths</option>
-                        <option value="1">1+</option>
-                        <option value="2">2+</option>
-                        <option value="3">3+</option>
-                        <option value="4">4+</option>
-                        <option value="5">5+</option>
-                      </select>
-                    </div>
-                  </div>
-                </li>
-
-                <li className="filter-box">
-                  <div className="wrap-item">
-                    <div className="wrap-select">
-                      <select 
-                        value={filters.sqft}
-                        onChange={(e) => handleFilterChange('sqft', e.target.value)}
-                      >
-                        <option value="">Square Feet</option>
-                        <option value="1000">1,000+ sqft</option>
-                        <option value="2000">2,000+ sqft</option>
-                        <option value="3000">3,000+ sqft</option>
-                        <option value="5000">5,000+ sqft</option>
-                      </select>
-                    </div>
-                  </div>
-                </li>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Sub Filters */}
-        <div id="wrap-subfilters">
-          <div className="gwr">
-            <div id="sub-filters">
-              <li id="filter-views">
-                <ul>
-                  <li className="grid active">Grid</li>
-                  <li className="list">List</li>
-                  <li className="map">Map</li>
-                </ul>
-              </li>
-              <li className="order-by">
+      {/* Filters Section */}
+      <div className={styles.filtersSection}>
+        <div className={styles.container}>
+          <div className={styles.filtersWrapper}>
+            <div className={styles.filterGroup}>
+              <label>Price Range</label>
+              <div className={styles.priceInputs}>
                 <select 
-                  value={filters.sortBy}
-                  onChange={(e) => handleFilterChange('sortBy', e.target.value)}
+                  name="priceMin" 
+                  value={filters.priceMin} 
+                  onChange={handleFilterChange}
+                  className={styles.filterSelect}
                 >
-                  <option value="price-desc">Price (High to Low)</option>
-                  <option value="price-asc">Price (Low to High)</option>
-                  <option value="newest">Newest</option>
-                  <option value="oldest">Oldest</option>
+                  <option value="">Min Price</option>
+                  <option value="1000000">$1M+</option>
+                  <option value="2000000">$2M+</option>
+                  <option value="3000000">$3M+</option>
+                  <option value="5000000">$5M+</option>
                 </select>
-              </li>
+                <select 
+                  name="priceMax" 
+                  value={filters.priceMax} 
+                  onChange={handleFilterChange}
+                  className={styles.filterSelect}
+                >
+                  <option value="">Max Price</option>
+                  <option value="2000000">$2M</option>
+                  <option value="3000000">$3M</option>
+                  <option value="5000000">$5M</option>
+                  <option value="10000000">$10M+</option>
+                </select>
+              </div>
             </div>
-          </div>
-        </div>
 
-        {/* Results Section */}
-        <div className="wrap-result view-grid">
-          <div className="gwr">
-            <div className="nav-results">
-              <span className="total-results">
-                {sortedProperties.length} Properties Found
-              </span>
-              <button 
-                className="refresh-btn"
-                onClick={fetchProperties}
-                disabled={loading}
+            <div className={styles.filterGroup}>
+              <label>Bedrooms</label>
+              <select 
+                name="bedrooms" 
+                value={filters.bedrooms} 
+                onChange={handleFilterChange}
+                className={styles.filterSelect}
               >
-                {loading ? 'Loading...' : 'Refresh'}
-              </button>
+                <option value="">Any</option>
+                <option value="1">1+</option>
+                <option value="2">2+</option>
+                <option value="3">3+</option>
+                <option value="4">4+</option>
+              </select>
             </div>
 
-            {/* Loading State */}
-            {loading && (
-              <div className="loading-container">
-                <div className="spinner"></div>
-                <p>Loading properties...</p>
-              </div>
-            )}
+            <div className={styles.filterGroup}>
+              <label>Bathrooms</label>
+              <select 
+                name="bathrooms" 
+                value={filters.bathrooms} 
+                onChange={handleFilterChange}
+                className={styles.filterSelect}
+              >
+                <option value="">Any</option>
+                <option value="2">2+</option>
+                <option value="3">3+</option>
+                <option value="4">4+</option>
+              </select>
+            </div>
 
-            {/* Properties Grid */}
-            <div id="result-search">
-              {sortedProperties.map((property) => (
-                <div key={property.id} className="propertie">
-                  <div className="wrap-slider">
-                    <div className="slider-container">
+            <div className={styles.filterGroup}>
+              <label>Sort By</label>
+              <select 
+                name="sortBy" 
+                value={filters.sortBy} 
+                onChange={handleFilterChange}
+                className={styles.filterSelect}
+              >
+                <option value="price-desc">Price High to Low</option>
+                <option value="price-asc">Price Low to High</option>
+                <option value="sqft-desc">Largest First</option>
+                <option value="bedrooms-desc">Most Bedrooms</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Results Section */}
+      <div className={styles.resultsSection}>
+        <div className={styles.container}>
+          <div className={styles.resultsHeader}>
+            <h2>
+              {loading ? 'Loading...' : `${properties.length} Properties Found`}
+            </h2>
+          </div>
+
+          {loading ? (
+            <div className={styles.loading}>
+              <div className={styles.spinner}></div>
+              <p>Loading luxury properties...</p>
+            </div>
+          ) : (
+            <div className={styles.propertiesGrid}>
+              {properties.length > 0 ? (
+                properties.map((property, index) => (
+                  <div key={property.listingID || index} className={styles.propertyCard}>
+                    <div className={styles.propertyImageContainer}>
                       <img 
-                        src={property.image} 
-                        alt={property.address}
-                        className="property-image"
+                        src={`https://via.placeholder.com/400x300?text=Luxury+Condo`} 
+                        alt={`Property in ${property.cityName}`}
+                        className={styles.propertyImage}
                       />
-                    </div>
-                    <div className="status-badge">{property.status}</div>
-                    <div className="days-market">{property.daysOnMarket} days</div>
-                  </div>
-
-                  <div className="property-details">
-                    <div className="price">{property.price}</div>
-                    <div className="address">{property.address}</div>
-                    <div className="city">{property.city}</div>
-
-                    <div className="property-info">
-                      <span className="beds">{property.beds} Beds</span>
-                      <span className="baths">{property.baths} Baths</span>
-                      <span className="sqft">{property.sqft} Sqft</span>
+                      <div className={styles.propertyBadge}>
+                        {property.propStatus || 'Active'}
+                      </div>
                     </div>
 
-                    {property.development !== 'N/A' && (
-                      <div className="development">{property.development}</div>
-                    )}
+                    <div className={styles.propertyContent}>
+                      <div className={styles.propertyPrice}>
+                        {formatPrice(property.listPrice)}
+                      </div>
 
-                    {property.pricePerSqft !== 'N/A' && (
-                      <div className="price-per-sqft">{property.pricePerSqft} per sqft</div>
-                    )}
-                  </div>
+                      <div className={styles.propertyDetails}>
+                        <div className={styles.propertySpecs}>
+                          <span className={styles.spec}>
+                            <strong>{property.bedrooms || 'N/A'}</strong> Beds
+                          </span>
+                          <span className={styles.spec}>
+                            <strong>{property.fullBaths || 'N/A'}</strong> Baths
+                          </span>
+                          <span className={styles.spec}>
+                            <strong>{formatSqFt(property.sqFt) || 'N/A'}</strong> SqFt
+                          </span>
+                        </div>
+                      </div>
 
-                  <div className="property-actions">
-                    <button className="btn-details">View Details</button>
-                    <button className="btn-contact">Contact Agent</button>
-                    <button className="btn-favorite">♡</button>
+                      <div className={styles.propertyLocation}>
+                        <p>{property.cityName || 'Brickell'}, {property.state || 'FL'}</p>
+                        <p className={styles.propertyCounty}>{property.countyName || 'Miami-Dade'}</p>
+                      </div>
+
+                      <div className={styles.propertyActions}>
+                        <button className={styles.viewDetailsBtn}>
+                          View Details
+                        </button>
+                        <button className={styles.favoriteBtn}>
+                          ♡
+                        </button>
+                      </div>
+                    </div>
                   </div>
+                ))
+              ) : (
+                <div className={styles.noResults}>
+                  <h3>No Properties Found</h3>
+                  <p>Try adjusting your search criteria to see more results.</p>
                 </div>
-              ))}
+              )}
             </div>
-
-            {/* No Results */}
-            {!loading && sortedProperties.length === 0 && (
-              <div className="no-results">
-                <h3>No properties found</h3>
-                <p>Try adjusting your search criteria</p>
-              </div>
-            )}
-
-            {/* Load More */}
-            {sortedProperties.length > 0 && (
-              <div className="load-more-container">
-                <button className="btn-load-more">Load More Properties</button>
-              </div>
-            )}
-          </div>
+          )}
         </div>
+      </div>
 
-        {/* CTA Section */}
-        <div className="cta-section">
-          <div className="gwr">
-            <h3>Looking for something specific?</h3>
-            <p>Contact Dayanne Costa for personalized assistance</p>
-            <div className="cta-buttons">
-              <button className="btn-contact-agent">Contact Agent</button>
-              <button className="btn-advanced-search">Advanced Search</button>
+      {/* Call to Action Section */}
+      <div className={styles.ctaSection}>
+        <div className={styles.container}>
+          <div className={styles.ctaContent}>
+            <h2>Ready to Find Your Dream Home?</h2>
+            <p>Contact our luxury real estate specialists for personalized assistance</p>
+            <div className={styles.ctaButtons}>
+              <button className={styles.primaryBtn}>Schedule Viewing</button>
+              <button className={styles.secondaryBtn}>Get Market Report</button>
             </div>
           </div>
         </div>
-      </main>
-
-      <Footer />
+      </div>
     </div>
   );
 };

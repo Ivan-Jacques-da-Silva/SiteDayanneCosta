@@ -1,195 +1,177 @@
 
-/* Base styles matching original HTML */
-.ip {
-  font-family: Raleway, sans-serif;
-}
-
-.ip-theme-compass {
-  --ibc-heading-font-family: Raleway, sans-serif;
-  --ibc-heading-font-weight: 300;
-  --ibc-body-font-family: Raleway, sans-serif;
-  --ibc-body-font-weight: 400;
-  --ibc-button-font-family: Raleway, sans-serif;
-  --ibc-button-font-weight: 400;
-  --ibc-heading-color: #000;
-  --ibc-button-bg: rgba(255, 255, 255, 0);
-  --ibc-button-border-color: #000;
-  --ibc-button-color: #000;
-  --ibc-button-hover-bg: #000;
-  --ibc-button-hover-border-color: #000;
-  --ibc-button-hover-color: #fff;
-}
-
-/* Breadcrumb */
-.gwr {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.gwr-breadcrumb {
-  padding: 20px 0;
-  border-bottom: 1px solid #eee;
-}
-
-.flex-breadcrumb ol {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  align-items: center;
-}
-
-.flex-breadcrumb li {
-  margin-right: 10px;
-}
-
-.flex-breadcrumb li:after {
-  content: ">";
-  margin-left: 10px;
-  color: #ccc;
-}
-
-.flex-breadcrumb li:last-child:after {
-  display: none;
-}
-
-.flex-breadcrumb a {
+/* Brickell Condos Page Styles */
+.brickellCondos {
+  font-family: "Open Sans", sans-serif;
+  line-height: 1.6;
   color: #333;
-  text-decoration: none;
+  background-color: #fff;
 }
 
-.flex-breadcrumb a:hover {
+.container {
+  width: 96%;
+  max-width: 1755px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Header Section */
+.headerSection {
+  background-color: #f8f8f8;
+  padding: 80px 0 60px;
+  margin-top: 80px;
+}
+
+@media screen and (min-width: 1024px) {
+  .headerSection {
+    margin-top: 90px;
+    padding: 100px 0 80px;
+  }
+}
+
+.breadcrumb {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.breadcrumb span:last-child {
+  color: #333;
+  font-weight: 600;
+}
+
+.pageTitle {
+  font-size: 2.5rem;
+  font-weight: 600;
   color: #000;
+  margin-bottom: 20px;
+  line-height: 1.2;
+  text-transform: uppercase;
 }
 
-/* Filters */
-#wrap-filters {
-  background: #f8f8f8;
-  padding: 20px 0;
-  border-bottom: 1px solid #ddd;
+@media screen and (max-width: 767px) {
+  .pageTitle {
+    font-size: 2rem;
+  }
 }
 
-#mini-filters {
+.pageDescription {
+  font-size: 1.125rem;
+  color: #666;
+  max-width: 800px;
+  line-height: 1.8;
+}
+
+@media screen and (max-width: 767px) {
+  .pageDescription {
+    font-size: 1rem;
+  }
+}
+
+/* Filters Section */
+.filtersSection {
+  background-color: #fff;
+  padding: 40px 0;
+  border-bottom: 1px solid #eee;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.filtersWrapper {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  gap: 20px;
+  align-items: end;
 }
 
-.filter-box .wrap-item .wrap-select select {
-  padding: 10px 15px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background: white;
-  font-size: 14px;
+@media screen and (max-width: 767px) {
+  .filtersWrapper {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
   min-width: 150px;
 }
 
-.filter-box .wrap-item .wrap-select select:focus {
-  border-color: #333;
+@media screen and (max-width: 767px) {
+  .filterGroup {
+    width: 100%;
+  }
+}
+
+.filterGroup label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.filterSelect {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 0;
+  font-size: 14px;
+  background-color: #fff;
+  color: #333;
+  min-height: 45px;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 40px;
+}
+
+.filterSelect:focus {
   outline: none;
+  border-color: #000;
 }
 
-/* Sub Filters */
-#wrap-subfilters {
-  background: white;
-  padding: 15px 0;
-  border-bottom: 1px solid #eee;
-}
-
-#sub-filters {
+.priceInputs {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  gap: 10px;
 }
 
-#filter-views ul {
-  display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  gap: 20px;
+.priceInputs .filterSelect {
+  flex: 1;
 }
 
-#filter-views li {
-  padding: 8px 16px;
-  cursor: pointer;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
+/* Results Section */
+.resultsSection {
+  padding: 60px 0;
+  background-color: #fff;
 }
 
-#filter-views li.active,
-#filter-views li:hover {
-  background-color: #333;
-  color: white;
-  border-color: #333;
-}
-
-.order-by select {
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background: white;
-  font-size: 14px;
-}
-
-/* Results */
-.wrap-result {
-  padding: 30px 0;
-}
-
-.nav-results {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #eee;
-}
-
-.total-results {
-  font-size: 18px;
-  font-weight: 500;
-  color: #333;
-}
-
-.refresh-btn {
-  padding: 10px 20px;
-  background: transparent;
-  border: 1px solid #333;
-  color: #333;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.3s ease;
-}
-
-.refresh-btn:hover {
-  background: #333;
-  color: white;
-}
-
-.refresh-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* Loading */
-.loading-container {
+.resultsHeader {
+  margin-bottom: 40px;
   text-align: center;
-  padding: 60px 20px;
+}
+
+.resultsHeader h2 {
+  font-size: 1.875rem;
+  font-weight: 600;
+  color: #333;
+  text-transform: uppercase;
+}
+
+@media screen and (max-width: 767px) {
+  .resultsHeader h2 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Loading State */
+.loading {
+  text-align: center;
+  padding: 80px 0;
 }
 
 .spinner {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border: 4px solid #f3f3f3;
   border-top: 4px solid #333;
   border-radius: 50%;
@@ -203,290 +185,284 @@
 }
 
 /* Properties Grid */
-#result-search {
+.propertiesGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: 1fr;
   gap: 30px;
-  margin-bottom: 40px;
 }
 
-.propertie {
-  background: white;
-  border: 1px solid #eee;
-  border-radius: 8px;
+@media screen and (min-width: 768px) {
+  .propertiesGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .propertiesGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (min-width: 1360px) {
+  .propertiesGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Property Card */
+.propertyCard {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  transition: all 0.3s ease;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.propertie:hover {
-  transform: translateY(-5px);
+.propertyCard:hover {
   box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  border-color: #000;
+  transform: translateY(-2px);
 }
 
-.wrap-slider {
+.propertyImageContainer {
   position: relative;
+  width: 100%;
   height: 250px;
   overflow: hidden;
+  background-color: #f0f0f0;
 }
 
-.property-image {
+.propertyImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.3s ease;
 }
 
-.status-badge {
+.propertyCard:hover .propertyImage {
+  transform: scale(1.05);
+}
+
+.propertyBadge {
   position: absolute;
   top: 15px;
   left: 15px;
-  background: #333;
-  color: white;
-  padding: 5px 10px;
+  background-color: #000;
+  color: #fff;
+  padding: 6px 12px;
   font-size: 12px;
-  border-radius: 4px;
-}
-
-.days-market {
-  position: absolute;
-  bottom: 15px;
-  right: 15px;
-  background: rgba(0,0,0,0.8);
-  color: white;
-  padding: 5px 10px;
-  font-size: 12px;
-  border-radius: 4px;
-}
-
-.property-details {
-  padding: 20px;
-}
-
-.price {
-  font-size: 24px;
   font-weight: 600;
-  color: #333;
-  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.address {
-  font-size: 16px;
-  color: #333;
-  margin-bottom: 4px;
+.propertyContent {
+  padding: 25px;
 }
 
-.city {
-  font-size: 14px;
-  color: #666;
+.propertyPrice {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #000;
   margin-bottom: 15px;
 }
 
-.property-info {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 10px;
-  font-size: 14px;
-  color: #666;
+@media screen and (max-width: 767px) {
+  .propertyPrice {
+    font-size: 1.5rem;
+  }
 }
 
-.development {
-  font-size: 14px;
-  color: #333;
-  margin-bottom: 5px;
-  font-weight: 500;
-}
-
-.price-per-sqft {
-  font-size: 14px;
-  color: #666;
-}
-
-/* Property Actions */
-.property-actions {
-  padding: 15px 20px;
-  border-top: 1px solid #eee;
-  display: flex;
-  gap: 10px;
-}
-
-.btn-details,
-.btn-contact {
-  flex: 1;
-  padding: 10px;
-  border: 1px solid #333;
-  background: transparent;
-  color: #333;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 14px;
-  transition: all 0.3s ease;
-}
-
-.btn-details:hover,
-.btn-contact:hover {
-  background: #333;
-  color: white;
-}
-
-.btn-favorite {
-  width: 40px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  background: white;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 16px;
-  transition: all 0.3s ease;
-}
-
-.btn-favorite:hover {
-  border-color: #333;
-  color: red;
-}
-
-/* No Results */
-.no-results {
-  text-align: center;
-  padding: 60px 20px;
-}
-
-.no-results h3 {
-  font-size: 24px;
-  color: #333;
-  margin-bottom: 10px;
-}
-
-.no-results p {
-  color: #666;
-  font-size: 16px;
-}
-
-/* Load More */
-.load-more-container {
-  text-align: center;
-  padding: 30px 0;
-}
-
-.btn-load-more {
-  padding: 15px 30px;
-  background: transparent;
-  border: 1px solid #333;
-  color: #333;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 16px;
-  transition: all 0.3s ease;
-}
-
-.btn-load-more:hover {
-  background: #333;
-  color: white;
-}
-
-/* CTA Section */
-.cta-section {
-  background: #f8f8f8;
-  padding: 60px 0;
-  text-align: center;
-}
-
-.cta-section h3 {
-  font-size: 28px;
-  color: #333;
-  margin-bottom: 15px;
-}
-
-.cta-section p {
-  font-size: 16px;
-  color: #666;
-  margin-bottom: 30px;
-}
-
-.cta-buttons {
+.propertySpecs {
   display: flex;
   gap: 20px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.spec {
+  font-size: 14px;
+  color: #666;
+}
+
+.spec strong {
+  color: #333;
+  font-weight: 600;
+}
+
+.propertyLocation {
+  margin-bottom: 20px;
+}
+
+.propertyLocation p {
+  font-size: 14px;
+  color: #333;
+  margin: 4px 0;
+}
+
+.propertyCounty {
+  color: #666 !important;
+}
+
+.propertyActions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.viewDetailsBtn {
+  flex: 1;
+  background-color: #000;
+  color: #fff;
+  border: 1px solid #000;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.viewDetailsBtn:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+.favoriteBtn {
+  width: 45px;
+  height: 45px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
   justify-content: center;
 }
 
-.btn-contact-agent,
-.btn-advanced-search {
+.favoriteBtn:hover {
+  background-color: #f0f0f0;
+  border-color: #000;
+}
+
+/* No Results */
+.noResults {
+  text-align: center;
+  padding: 80px 20px;
+  grid-column: 1 / -1;
+}
+
+.noResults h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.noResults p {
+  color: #666;
+  font-size: 1rem;
+}
+
+/* CTA Section */
+.ctaSection {
+  background-color: #000;
+  color: #fff;
+  padding: 80px 0;
+}
+
+.ctaContent {
+  text-align: center;
+}
+
+.ctaContent h2 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+@media screen and (max-width: 767px) {
+  .ctaContent h2 {
+    font-size: 2rem;
+  }
+}
+
+.ctaContent p {
+  font-size: 1.125rem;
+  color: #ccc;
+  margin-bottom: 40px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ctaButtons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.primaryBtn,
+.secondaryBtn {
   padding: 15px 30px;
-  border: 1px solid #333;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  border: 1px solid #fff;
   cursor: pointer;
-  border-radius: 4px;
-  font-size: 16px;
   transition: all 0.3s ease;
+  min-width: 200px;
 }
 
-.btn-contact-agent {
-  background: #333;
-  color: white;
+.primaryBtn {
+  background-color: #fff;
+  color: #000;
 }
 
-.btn-contact-agent:hover {
-  background: transparent;
-  color: #333;
+.primaryBtn:hover {
+  background-color: transparent;
+  color: #fff;
 }
 
-.btn-advanced-search {
-  background: transparent;
-  color: #333;
+.secondaryBtn {
+  background-color: transparent;
+  color: #fff;
 }
 
-.btn-advanced-search:hover {
-  background: #333;
-  color: white;
+.secondaryBtn:hover {
+  background-color: #fff;
+  color: #000;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  #mini-filters {
-    flex-direction: column;
-  }
-  
-  .filter-box .wrap-item .wrap-select select {
-    width: 100%;
-  }
-  
-  #sub-filters {
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  #filter-views ul {
-    justify-content: center;
-  }
-  
-  #result-search {
-    grid-template-columns: 1fr;
-  }
-  
-  .cta-buttons {
+@media screen and (max-width: 767px) {
+  .ctaButtons {
     flex-direction: column;
     align-items: center;
   }
   
-  .btn-contact-agent,
-  .btn-advanced-search {
-    width: 200px;
+  .primaryBtn,
+  .secondaryBtn {
+    width: 100%;
+    max-width: 300px;
   }
 }
 
-@media (max-width: 480px) {
-  .gwr {
-    padding: 0 15px;
+/* Responsive Design */
+@media screen and (max-width: 480px) {
+  .container {
+    padding: 0 10px;
   }
   
-  .property-info {
-    flex-direction: column;
-    gap: 5px;
+  .propertyContent {
+    padding: 20px;
   }
   
-  .property-actions {
-    flex-direction: column;
+  .propertySpecs {
+    gap: 15px;
   }
   
-  .btn-favorite {
-    width: 100%;
+  .ctaSection {
+    padding: 60px 0;
   }
 }
