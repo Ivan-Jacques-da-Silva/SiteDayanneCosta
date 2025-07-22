@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, Form, InputGroup } from 'react-bootstrap';
 import Header from '../components/Header';
@@ -8,15 +7,45 @@ import styles from './BrickellCondos.module.css';
 const BrickellCondos = () => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [filters, setFilters] = useState({
-    minPrice: 1000000,
+    minPrice: '',
     maxPrice: '',
     bedrooms: '',
     bathrooms: '',
     sortBy: 'price-desc'
   });
 
-  // Sample data based on the HTML content
+  // Fetch data from API
+  const fetchProperties = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await fetch('http://localhost:5000/api/brickell-condos-1m');
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.erro) {
+        throw new Error(data.detalhes || 'Erro ao carregar propriedades');
+      }
+
+      setProperties(data);
+    } catch (err) {
+      console.error('Erro ao buscar propriedades:', err);
+      setError(err.message);
+      // Fallback to sample data in case of error
+      setProperties(sampleProperties);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Sample data as fallback
   const sampleProperties = [
     {
       id: "A11661732",
@@ -133,11 +162,7 @@ const BrickellCondos = () => {
   ];
 
   useEffect(() => {
-    // Simulate loading data
-    setTimeout(() => {
-      setProperties(sampleProperties);
-      setLoading(false);
-    }, 1000);
+    fetchProperties();
   }, []);
 
   const handleFilterChange = (key, value) => {
@@ -151,18 +176,18 @@ const BrickellCondos = () => {
     const price = parseInt(property.price.replace(/[$,]/g, ''));
     const minPrice = filters.minPrice || 0;
     const maxPrice = filters.maxPrice ? parseInt(filters.maxPrice) : Infinity;
-    
+
     if (price < minPrice || price > maxPrice) return false;
     if (filters.bedrooms && parseInt(property.beds) !== parseInt(filters.bedrooms)) return false;
     if (filters.bathrooms && parseInt(property.baths) < parseInt(filters.bathrooms)) return false;
-    
+
     return true;
   });
 
   const sortedProperties = [...filteredProperties].sort((a, b) => {
     const priceA = parseInt(a.price.replace(/[$,]/g, ''));
     const priceB = parseInt(b.price.replace(/[$,]/g, ''));
-    
+
     switch (filters.sortBy) {
       case 'price-asc':
         return priceA - priceB;
@@ -177,20 +202,10 @@ const BrickellCondos = () => {
     }
   });
 
-  if (loading) {
-    return (
-      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
-        <div className="spinner-border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="ip ip-theme-compass">
       <Header />
-      
+
       <main>
         {/* Breadcrumb */}
         <div className={styles.breadcrumb}>
@@ -213,13 +228,18 @@ const BrickellCondos = () => {
           <Container>
             <Row>
               <Col>
-                <h1 className={styles.pageTitle}>Brickell Condos +1M</h1>
-                <p className={styles.pageSubtitle}>
-                  Luxury condominiums in Brickell starting from $1,000,000
+                <h1 className={styles.pageTitle}>Condos em Brickell - Acima de $1M</h1>
+                <p className={styles.pageDescription}>
+                  Descubra as melhores oportunidades de investimento em condominios de luxo em Brickell, 
+                  com propriedades acima de $1 milhão.
                 </p>
-                <div className={styles.resultsCount}>
-                  {sortedProperties.length} properties found
-                </div>
+                {error && (
+                  <div className="alert alert-info alert-dismissible fade show" role="alert">
+                    <i className="bi bi-info-circle me-2"></i>
+                    <strong>Dados de Exemplo:</strong> Exibindo propriedades de demonstração devido a erro na API.
+                    <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                )}
               </Col>
             </Row>
           </Container>
@@ -316,6 +336,47 @@ const BrickellCondos = () => {
         {/* Properties Listing */}
         <section className={styles.propertiesSection}>
           <Container>
+             {/* Loading State */}
+            {loading && (
+              <Container className="text-center my-5">
+                <div className="spinner-border" role="status">
+                  <span className="visually-hidden">Carregando...</span>
+                </div>
+                <p className="mt-3">Carregando propriedades...</p>
+              </Container>
+            )}
+
+            {/* Error State */}
+            {error && !loading && (
+              <Container className="text-center my-5">
+                <div className="alert alert-warning" role="alert">
+                  <h4 className="alert-heading">Aviso!</h4>
+                  <p>Não foi possível carregar os dados da API: {error}</p>
+                  <p className="mb-0">Exibindo dados de exemplo.</p>
+                </div>
+              </Container>
+            )}
+            {/* Results Count and Refresh */}
+            <div className="d-flex justify-content-between align-items-center mb-4">
+              <h3>Propriedades Encontradas: {sortedProperties.length}</h3>
+              <button 
+                className="btn btn-outline-primary"
+                onClick={fetchProperties}
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Carregando...
+                  </>
+                ) : (
+                  <>
+                    <i className="bi bi-arrow-clockwise me-2"></i>
+                    Atualizar
+                  </>
+                )}
+              </button>
+            </div>
             <Row>
               {sortedProperties.map((property) => (
                 <Col key={property.id} lg={6} xl={4} className="mb-4">
@@ -347,18 +408,32 @@ const BrickellCondos = () => {
                       <Card.Text className={styles.city}>
                         {property.city}
                       </Card.Text>
-                      <Card.Text className={styles.development}>
-                        {property.development}
+                      <Card.Text className={styles.details}>
+                        <span><i className="bi bi-bed"></i> {property.beds} Quartos</span>
+                        <span><i className="bi bi-droplet"></i> {property.baths} Banheiros</span>
+                        <span><i className="bi bi-rulers"></i> {property.sqft} ft²</span>
                       </Card.Text>
-                      <div className={styles.propertyDetails}>
-                        <span>{property.beds} Bed(s)</span>
-                        <span>{property.baths} Bath(s)</span>
-                        <span>{property.sqft} Sq.Ft.</span>
-                      </div>
-                      {property.pricePerSqft !== "N/A" && (
-                        <div className={styles.pricePerSqft}>
-                          {property.pricePerSqft}/sq ft
-                        </div>
+                      {property.development !== 'N/A' && (
+                        <Card.Text className={styles.development}>
+                          <i className="bi bi-building"></i> {property.development}
+                        </Card.Text>
+                      )}
+                      {property.pricePerSqft !== 'N/A' && (
+                        <Card.Text className={styles.pricePerSqft}>
+                          {property.pricePerSqft} por ft²
+                        </Card.Text>
+                      )}
+                      {property.fullDetailsURL && (
+                        <Card.Text>
+                          <a 
+                            href={property.fullDetailsURL} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="btn btn-sm btn-outline-primary"
+                          >
+                            Ver Detalhes <i className="bi bi-arrow-up-right"></i>
+                          </a>
+                        </Card.Text>
                       )}
                     </Card.Body>
                     <Card.Footer className="bg-transparent border-0">
