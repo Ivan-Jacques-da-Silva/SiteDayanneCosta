@@ -8,6 +8,7 @@ const NewDevelopments = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedNeighborhood, setSelectedNeighborhood] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [viewMode, setViewMode] = useState('list');
 
   // Sample data based on the original file
   const ItemSearch = [
@@ -20,7 +21,7 @@ const NewDevelopments = () => {
       floors: "18", 
       year: "2025",
       status: "Private Exclusive",
-      image: "https://via.placeholder.com/150x100/000000/FFFFFF?text=COMING+SOON"
+      image: "https://via.placeholder.com/150x100/333/FFFFFF?text=COMING+SOON"
     },
     { 
       title: "9900 West", 
@@ -31,7 +32,7 @@ const NewDevelopments = () => {
       floors: "12", 
       year: "2024",
       status: "Private Exclusive",
-      image: "https://via.placeholder.com/150x100/000000/FFFFFF?text=COMING+SOON"
+      image: "https://via.placeholder.com/150x100/333/FFFFFF?text=COMING+SOON"
     },
     { 
       title: "Indian Creek Residences & Yacht Club", 
@@ -42,7 +43,7 @@ const NewDevelopments = () => {
       floors: "10", 
       year: "2025",
       status: "Private Exclusive",
-      image: "https://via.placeholder.com/150x100/000000/FFFFFF?text=COMING+SOON"
+      image: "https://via.placeholder.com/150x100/333/FFFFFF?text=COMING+SOON"
     },
     { 
       title: "La Baia Bay Harbor", 
@@ -53,7 +54,7 @@ const NewDevelopments = () => {
       floors: "8", 
       year: "2024",
       status: "Private Exclusive",
-      image: "https://via.placeholder.com/150x100/000000/FFFFFF?text=COMING+SOON"
+      image: "https://via.placeholder.com/150x100/333/FFFFFF?text=COMING+SOON"
     },
     { 
       title: "La Baia North", 
@@ -64,7 +65,7 @@ const NewDevelopments = () => {
       floors: "11", 
       year: "2025",
       status: "Private Exclusive",
-      image: "https://via.placeholder.com/150x100/000000/FFFFFF?text=COMING+SOON"
+      image: "https://via.placeholder.com/150x100/333/FFFFFF?text=COMING+SOON"
     },
     { 
       title: "La Maré", 
@@ -75,7 +76,7 @@ const NewDevelopments = () => {
       floors: "15", 
       year: "2024",
       status: "Private Exclusive",
-      image: "https://via.placeholder.com/150x100/000000/FFFFFF?text=COMING+SOON"
+      image: "https://via.placeholder.com/150x100/333/FFFFFF?text=COMING+SOON"
     },
     { 
       title: "Onda Residences", 
@@ -86,7 +87,7 @@ const NewDevelopments = () => {
       floors: "6", 
       year: "2025",
       status: "Private Exclusive",
-      image: "https://via.placeholder.com/150x100/000000/FFFFFF?text=COMING+SOON"
+      image: "https://via.placeholder.com/150x100/333/FFFFFF?text=COMING+SOON"
     }
   ];
 
@@ -151,13 +152,6 @@ const NewDevelopments = () => {
         {/* Filter Bar */}
         <div className={styles.filterBar}>
           <div className={styles.filterContent}>
-            <div className={styles.headerFilters}>
-              <div className={styles.textWrapper}>
-                <div className={styles.callUs}>Call us: <a href="tel:">+1 (646) 598-3588</a></div>
-                <button className={styles.saveSearch}>Save this Search</button>
-              </div>
-            </div>
-
             <ul className={styles.filters}>
               <li className={styles.miniSearch}>
                 <form className={styles.searchForm}>
@@ -169,7 +163,7 @@ const NewDevelopments = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                   <button type="submit" className={styles.searchSubmit}>
-                    <span>🔍</span>
+                    <span className={styles.searchIcon}>🔍</span>
                   </button>
                 </form>
               </li>
@@ -202,12 +196,25 @@ const NewDevelopments = () => {
                 </select>
               </li>
 
-              <li className={styles.compassConcierge}>
-                <span>Compass Concierge</span>
-              </li>
-
-              <li className={styles.mapToggle}>
-                <button>Map</button>
+              <li className={styles.viewModeButtons}>
+                <button 
+                  className={`${styles.viewButton} ${viewMode === 'grid' ? styles.active : ''}`}
+                  onClick={() => setViewMode('grid')}
+                >
+                  Grid
+                </button>
+                <button 
+                  className={`${styles.viewButton} ${viewMode === 'list' ? styles.active : ''}`}
+                  onClick={() => setViewMode('list')}
+                >
+                  List
+                </button>
+                <button 
+                  className={`${styles.viewButton} ${viewMode === 'map' ? styles.active : ''}`}
+                  onClick={() => setViewMode('map')}
+                >
+                  Map
+                </button>
               </li>
             </ul>
           </div>
@@ -232,18 +239,21 @@ const NewDevelopments = () => {
                   <h2 className={styles.neighborhoodTitle}>{neighborhood}</h2>
 
                   {buildings.map((building, index) => (
-                    <div key={index} className={styles.propertyItem}>
-                      <div className={styles.propertyImageContainer}>
-                        <img src={building.image} alt={building.title} className={styles.propertyImage} />
-                        <span className={styles.propertyStatus}>{building.status}</span>
-                      </div>
+                    <div key={index} className={styles.propertyCard}>
+                      <div className={styles.propertyContent}>
+                        <div className={styles.propertyImageContainer}>
+                          <img src={building.image} alt={building.title} className={styles.propertyImage} />
+                        </div>
 
-                      <div className={styles.propertyDetails}>
-                        <h3 className={styles.propertyTitle}>{building.title}</h3>
-                        <p className={styles.propertyAddress}>{building.address}</p>
-                      </div>
+                        <div className={styles.propertyInfo}>
+                          <h3 className={styles.propertyTitle}>{building.title}</h3>
+                          <p className={styles.propertyAddress}>{building.address}</p>
+                        </div>
 
-                      <button className={styles.favoriteButton}>♡</button>
+                        <div className={styles.propertyActions}>
+                          <button className={styles.favoriteButton}>♡</button>
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
