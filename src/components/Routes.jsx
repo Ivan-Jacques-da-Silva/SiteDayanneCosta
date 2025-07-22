@@ -22,17 +22,18 @@ const AppRoutes = () => {
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
       <Route path="/about-team" element={<AboutTeam />} />
-      <Route path="/compass-concierge" element={<CompassConcierge />} />
-      <Route path="/private-exclusive" element={<PrivateExclusive />} />
       <Route path="/buy" element={<Buy />} />
       <Route path="/sell" element={<Sell />} />
       <Route path="/buy-sell" element={<BuySell />} />
+      <Route path="/search" element={<Search />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/brickell-condos" element={<BrickellCondos />} />
+      <Route path="/compass-concierge" element={<CompassConcierge />} />
+      <Route path="/private-exclusive" element={<PrivateExclusive />} />
       <Route path="/new-developments" element={<NewDevelopments />} />
+      <Route path="/brickell-condos-1m" element={<BrickellCondos />} />
       <Route path="/single-family-homes/" element={<Search />} />
       <Route path="/luxury-condos/" element={<Search />} />
       <Route path="/neighborhoods/" element={<Search />} />
