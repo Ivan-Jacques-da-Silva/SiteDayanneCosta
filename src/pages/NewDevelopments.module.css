@@ -1,15 +1,12 @@
 
-.pageWrapper {
+.newDevelopments {
   font-family: 'Raleway', sans-serif;
   background-color: #fff;
-  min-height: 100vh;
 }
 
-/* Breadcrumb */
 .breadcrumbWrapper {
-  background-color: #f5f5f5;
-  padding: 1rem 0;
-  border-bottom: 1px solid #e0e0e0;
+  background-color: #f8f8f8;
+  padding: 10px 0;
 }
 
 .breadcrumb {
@@ -27,13 +24,13 @@
 }
 
 .breadcrumb li {
-  font-size: 14px;
   color: #666;
+  font-size: 14px;
 }
 
 .breadcrumb li:not(:last-child)::after {
   content: '>';
-  margin: 0 8px;
+  margin: 0 10px;
   color: #999;
 }
 
@@ -43,82 +40,59 @@
 }
 
 .breadcrumb a:hover {
-  text-decoration: underline;
+  color: #000;
 }
 
-/* Main Content */
-.main {
-  padding: 100px 0 40px 0;
-  position: relative;
-}
-
-.container {
+.mainWrapper {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-.content {
-  position: relative;
+.contentBlock {
+  padding: 40px 0;
 }
 
-.titleBlock {
+.pageTitle {
   font-size: 2.5rem;
   font-weight: 300;
   color: #000;
-  margin-bottom: 2rem;
+  margin-bottom: 30px;
   text-align: center;
 }
 
-/* Filter Section */
-.filterOverlay {
-  position: fixed;
+/* Filters Section */
+.filtersSection {
+  position: sticky;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 998;
-  display: none;
-}
-
-.wrapPageIdx {
-  position: relative;
-  z-index: 999;
-}
-
-.contentFilters {
-  margin-bottom: 3rem;
-}
-
-.filtersBox {
+  z-index: 100;
   background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 30px;
 }
 
 .filtersContainer {
+  background: #f8f8f8;
   padding: 20px;
+  border-radius: 8px;
 }
 
-.headerFilters {
+.filterHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #e0e0e0;
 }
 
-.logoWeb {
-  flex: 1;
+.logoWrapper {
+  width: 150px;
+  height: 40px;
 }
 
-.textWrapper {
+.headerActions {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 20px;
 }
 
 .callUs {
@@ -138,9 +112,8 @@
   border: none;
   padding: 8px 16px;
   border-radius: 4px;
-  font-size: 14px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  font-size: 14px;
 }
 
 .saveSearch:hover {
@@ -152,30 +125,31 @@
   background: none;
   border: none;
   cursor: pointer;
+  padding: 5px;
 }
 
 .mobileMenuBtn span {
   display: block;
   width: 25px;
   height: 3px;
-  background: #333;
+  background: #000;
   margin: 5px 0;
   transition: 0.3s;
 }
 
-/* Filter Controls */
-.activeSelect {
+.filtersList {
+  display: flex;
   list-style: none;
   padding: 0;
   margin: 0;
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 15px;
-  align-items: end;
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
-.miniSearch {
-  position: relative;
+.searchFilter {
+  flex: 1;
+  min-width: 200px;
 }
 
 .searchForm {
@@ -184,134 +158,240 @@
   align-items: center;
 }
 
-.searchBuilding {
+.searchInput {
   width: 100%;
-  padding: 12px 50px 12px 15px;
+  padding: 12px 40px 12px 16px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 14px;
+  background: #fff;
+}
+
+.searchInput:focus {
   outline: none;
-  transition: border-color 0.3s ease;
-}
-
-.searchBuilding:focus {
-  border-color: #333;
-}
-
-.lineForm {
-  position: absolute;
-  right: 40px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 1px;
-  height: 20px;
-  background: #ddd;
+  border-color: #000;
 }
 
 .searchIcon {
   position: absolute;
-  right: 15px;
+  right: 8px;
   top: 50%;
   transform: translateY(-50%);
 }
 
 .searchIcon input {
-  background: none;
+  background: #000;
+  color: #fff;
   border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
   cursor: pointer;
-  color: #666;
-  font-size: 16px;
+  font-size: 12px;
 }
 
-.autocompleteResults {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-top: none;
-  border-radius: 0 0 4px 4px;
-  max-height: 200px;
-  overflow-y: auto;
-  z-index: 1000;
-}
-
-.autocompleteItem {
-  padding: 10px 15px;
-  cursor: pointer;
-  border-bottom: 1px solid #f0f0f0;
-  font-size: 14px;
-}
-
-.autocompleteItem:hover {
-  background: #f5f5f5;
-}
-
-.autocompleteItem:last-child {
-  border-bottom: none;
-}
-
-.contentSelect {
-  position: relative;
+.selectFilter {
+  min-width: 180px;
 }
 
 .condosSelect,
 .neighborhoodSelect,
 .typeSelect {
   width: 100%;
-  padding: 12px 15px;
+  padding: 12px 16px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 14px;
   background: #fff;
-  outline: none;
+  font-size: 14px;
   cursor: pointer;
-  transition: border-color 0.3s ease;
 }
 
 .condosSelect:focus,
 .neighborhoodSelect:focus,
 .typeSelect:focus {
-  border-color: #333;
+  outline: none;
+  border-color: #000;
 }
 
-.hidden {
-  position: absolute;
-  left: -9999px;
-  opacity: 0;
+.viewToggle {
+  display: flex;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.viewBtn {
+  padding: 12px 16px;
+  border: none;
+  background: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.viewBtn:hover,
+.viewBtn.active {
+  background: #000;
+  color: #fff;
+}
+
+.filtersToggle button {
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.filtersToggle button:hover {
+  background: #333;
+}
+
+.closeText {
+  display: none;
+}
+
+/* Sub Filters */
+.subFilters {
+  background: #f0f0f0;
+  padding: 10px 0;
+  margin-bottom: 20px;
+}
+
+.subFiltersWrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.subFiltersList {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.favoritesLink a {
+  color: #666;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.favoritesLink a:hover {
+  color: #000;
+}
+
+.viewSelect select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 14px;
 }
 
 /* Results Section */
 .resultsSection {
-  margin-top: 3rem;
+  min-height: 400px;
 }
 
-.resultsHeader {
-  margin-bottom: 2rem;
-  text-align: center;
-}
-
-.resultsHeader h2 {
-  font-size: 2rem;
-  font-weight: 300;
+.resultsTitle {
+  font-size: 1.5rem;
+  font-weight: 500;
   color: #000;
-  margin-bottom: 0.5rem;
+  margin-bottom: 30px;
 }
 
-.resultsHeader p {
+.resultsWrapper {
+  width: 100%;
+}
+
+.resultsList {
+  width: 100%;
+}
+
+.neighborhoodSection {
+  margin-bottom: 40px;
+}
+
+.neighborhoodTitle {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #000;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #000;
+}
+
+/* List View */
+.listHeader {
+  display: grid;
+  grid-template-columns: 2fr 3fr 1fr 1fr 1fr;
+  gap: 20px;
+  list-style: none;
+  padding: 15px 20px;
+  margin: 0 0 10px 0;
+  background: #f8f8f8;
+  font-weight: 600;
+  color: #000;
+  border-radius: 4px;
+}
+
+.buildingsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.view-list .buildingItem {
+  display: grid;
+  grid-template-columns: 2fr 3fr 1fr 1fr 1fr;
+  gap: 20px;
+  padding: 15px 20px;
+  border-bottom: 1px solid #e0e0e0;
+  transition: background-color 0.3s ease;
+}
+
+.view-list .buildingItem:hover {
+  background-color: #f8f8f8;
+}
+
+.buildingName {
+  font-weight: 500;
+}
+
+.buildingLink {
+  color: #000;
+  text-decoration: none;
+}
+
+.buildingLink:hover {
   color: #666;
-  font-size: 1rem;
 }
 
-.developmentGrid {
+.buildingAddress {
+  color: #666;
+  font-size: 14px;
+}
+
+.buildingUnits,
+.buildingFloors,
+.buildingYear {
+  color: #333;
+  font-size: 14px;
+}
+
+/* Grid View */
+.view-grid .buildingsList {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-bottom: 3rem;
+  gap: 30px;
 }
 
-.developmentCard {
+.gridCard {
   background: #fff;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -320,7 +400,7 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
-.developmentCard:hover {
+.gridCard:hover {
   transform: translateY(-5px);
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
 }
@@ -337,35 +417,34 @@
   transition: transform 0.3s ease;
 }
 
-.developmentCard:hover .cardImage img {
+.gridCard:hover .cardImage img {
   transform: scale(1.05);
 }
 
 .cardContent {
-  padding: 1.5rem;
+  padding: 20px;
 }
 
 .cardTitle {
   font-size: 1.25rem;
   font-weight: 500;
   color: #000;
-  margin-bottom: 0.5rem;
+  margin-bottom: 10px;
   line-height: 1.4;
 }
 
-.cardDetails {
-  margin-bottom: 1rem;
+.cardAddress {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 15px;
 }
 
-.cardType {
-  display: inline-block;
-  background: #f0f0f0;
-  color: #666;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+.cardDetails {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #333;
 }
 
 .cardActions {
@@ -402,38 +481,73 @@
 }
 
 .getInfo:hover {
-  background: #000;
-  color: #fff;
+  background: #f0f0f0;
 }
 
+/* Map View */
+.view-map .buildingsList {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.mapCard {
+  padding: 20px;
+  background: #f8f8f8;
+  border-radius: 8px;
+  border-left: 4px solid #000;
+}
+
+.mapCard h3 {
+  margin: 0 0 5px 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #000;
+}
+
+.mapCard p {
+  margin: 0 0 5px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.mapCard span {
+  color: #333;
+  font-size: 13px;
+}
+
+/* No Results */
 .noResults {
   text-align: center;
-  padding: 3rem 0;
+  padding: 60px 20px;
+}
+
+.errorMessage {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.errorMessage h3 {
+  font-size: 1.5rem;
+  color: #000;
+  margin-bottom: 10px;
+}
+
+.errorMessage p {
   color: #666;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .main {
-    padding: 80px 0 20px 0;
-  }
-
-  .container {
-    padding: 0 15px;
-  }
-
-  .titleBlock {
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .headerFilters {
+  .filterHeader {
     flex-direction: column;
-    align-items: stretch;
     gap: 15px;
   }
 
-  .textWrapper {
+  .headerActions {
+    width: 100%;
     justify-content: space-between;
   }
 
@@ -441,59 +555,79 @@
     display: block;
   }
 
-  .activeSelect {
-    grid-template-columns: 1fr;
+  .filtersList {
+    flex-direction: column;
     gap: 15px;
   }
 
-  .developmentGrid {
+  .searchFilter,
+  .selectFilter {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .viewToggle {
+    width: 100%;
+  }
+
+  .subFiltersList {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .listHeader {
+    display: none;
+  }
+
+  .view-list .buildingItem {
+    display: block;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 15px;
+  }
+
+  .buildingName {
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+  }
+
+  .buildingAddress {
+    margin-bottom: 10px;
+  }
+
+  .view-grid .buildingsList {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+  }
+
+  .cardDetails {
+    flex-direction: column;
+    gap: 5px;
   }
 
   .cardActions {
     flex-direction: column;
   }
-
-  .resultsHeader h2 {
-    font-size: 1.5rem;
-  }
 }
 
 @media (max-width: 480px) {
+  .pageTitle {
+    font-size: 2rem;
+  }
+
+  .mainWrapper {
+    padding: 0 15px;
+  }
+
   .filtersContainer {
     padding: 15px;
   }
 
-  .searchBuilding,
-  .condosSelect,
-  .neighborhoodSelect,
-  .typeSelect {
-    padding: 10px 12px;
-    font-size: 13px;
+  .neighborhoodTitle {
+    font-size: 1.25rem;
   }
 
   .cardContent {
-    padding: 1rem;
+    padding: 15px;
   }
-
-  .cardTitle {
-    font-size: 1.1rem;
-  }
-}
-
-/* Animation for mobile menu */
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.activeSelect {
-  animation: slideDown 0.3s ease;
 }
