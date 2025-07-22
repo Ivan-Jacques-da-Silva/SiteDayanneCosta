@@ -242,16 +242,12 @@ const NewDevelopments = () => {
                     <div key={index} className={styles.propertyCard}>
                       <div className={styles.propertyContent}>
                         <div className={styles.propertyImageContainer}>
-                          <img src={building.image} alt={building.title} className={styles.propertyImage} />
+                          <div className={styles.propertyImage}></div>
                         </div>
 
                         <div className={styles.propertyInfo}>
                           <h3 className={styles.propertyTitle}>{building.title}</h3>
                           <p className={styles.propertyAddress}>{building.address}</p>
-                        </div>
-
-                        <div className={styles.propertyActions}>
-                          <button className={styles.favoriteButton}>♡</button>
                         </div>
                       </div>
                     </div>
