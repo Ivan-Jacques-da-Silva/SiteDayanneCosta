@@ -1,112 +1,83 @@
-
 .newDevelopments {
   font-family: 'Raleway', sans-serif;
   background-color: #fff;
 }
 
-.breadcrumbWrapper {
-  background-color: #f8f8f8;
-  padding: 10px 0;
-}
-
-.breadcrumb {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.breadcrumb ol {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.mainContent {
+  margin-top: 80px;
+  height: calc(100vh - 80px);
   display: flex;
-  align-items: center;
+  flex-direction: column;
 }
 
-.breadcrumb li {
-  color: #666;
-  font-size: 14px;
-}
-
-.breadcrumb li:not(:last-child)::after {
-  content: '>';
-  margin: 0 10px;
-  color: #999;
-}
-
-.breadcrumb a {
-  color: #333;
-  text-decoration: none;
-}
-
-.breadcrumb a:hover {
-  color: #000;
-}
-
-.mainWrapper {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.contentBlock {
-  padding: 40px 0;
-}
-
-.pageTitle {
-  font-size: 2.5rem;
-  font-weight: 300;
-  color: #000;
-  margin-bottom: 30px;
-  text-align: center;
-}
-
-/* Filters Section */
-.filtersSection {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: #fff;
+/* Top Navigation Bar */
+.topBar {
+  background-color: #fff;
   border-bottom: 1px solid #e0e0e0;
-  margin-bottom: 30px;
+  padding: 10px 0;
+  position: sticky;
+  top: 80px;
+  z-index: 100;
 }
 
-.filtersContainer {
-  background: #f8f8f8;
-  padding: 20px;
-  border-radius: 8px;
-}
-
-.filterHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.logoWrapper {
-  width: 150px;
-  height: 40px;
-}
-
-.headerActions {
+.topBarContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
-.callUs {
+.searchContainer {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 8px 40px 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.searchButton {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.selectFilter {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  min-width: 150px;
+  background: #fff;
+}
+
+.rightControls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-left: auto;
+}
+
+.compassConcierge {
   font-size: 14px;
   color: #666;
+  white-space: nowrap;
 }
 
-.callUs a {
-  color: #000;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.saveSearch {
+.mapToggle {
   background: #000;
   color: #fff;
   border: none;
@@ -116,518 +87,223 @@
   font-size: 14px;
 }
 
-.saveSearch:hover {
-  background: #333;
-}
-
-.mobileMenuBtn {
-  display: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 5px;
-}
-
-.mobileMenuBtn span {
-  display: block;
-  width: 25px;
-  height: 3px;
-  background: #000;
-  margin: 5px 0;
-  transition: 0.3s;
-}
-
-.filtersList {
+/* Main Content Layout */
+.contentLayout {
   display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  gap: 20px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.searchFilter {
   flex: 1;
-  min-width: 200px;
+  height: calc(100vh - 160px);
+  overflow: hidden;
 }
 
-.searchForm {
+/* Map Section */
+.mapSection {
+  flex: 1;
   position: relative;
-  display: flex;
-  align-items: center;
+  background-color: #f5f5f5;
 }
 
-.searchInput {
-  width: 100%;
-  padding: 12px 40px 12px 16px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-  background: #fff;
-}
-
-.searchInput:focus {
-  outline: none;
-  border-color: #000;
-}
-
-.searchIcon {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.searchIcon input {
-  background: #000;
-  color: #fff;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 12px;
-}
-
-.selectFilter {
-  min-width: 180px;
-}
-
-.condosSelect,
-.neighborhoodSelect,
-.typeSelect {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background: #fff;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.condosSelect:focus,
-.neighborhoodSelect:focus,
-.typeSelect:focus {
-  outline: none;
-  border-color: #000;
-}
-
-.viewToggle {
-  display: flex;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  overflow: hidden;
-  background: #fff;
-}
-
-.viewBtn {
-  padding: 12px 16px;
-  border: none;
-  background: #fff;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.3s ease;
-}
-
-.viewBtn:hover,
-.viewBtn.active {
-  background: #000;
-  color: #fff;
-}
-
-.filtersToggle button {
-  background: #000;
-  color: #fff;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.filtersToggle button:hover {
-  background: #333;
-}
-
-.closeText {
-  display: none;
-}
-
-/* Sub Filters */
-.subFilters {
-  background: #f0f0f0;
-  padding: 10px 0;
-  margin-bottom: 20px;
-}
-
-.subFiltersWrapper {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.subFiltersList {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.favoritesLink a {
-  color: #666;
-  text-decoration: none;
-  font-size: 14px;
-}
-
-.favoritesLink a:hover {
-  color: #000;
-}
-
-.viewSelect select {
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background: #fff;
-  font-size: 14px;
-}
-
-/* Results Section */
-.resultsSection {
-  min-height: 400px;
-}
-
-.resultsTitle {
-  font-size: 1.5rem;
-  font-weight: 500;
-  color: #000;
-  margin-bottom: 30px;
-}
-
-.resultsWrapper {
-  width: 100%;
-}
-
-.resultsList {
-  width: 100%;
-}
-
-.neighborhoodSection {
-  margin-bottom: 40px;
-}
-
-.neighborhoodTitle {
-  font-size: 1.5rem;
-  font-weight: 400;
-  color: #000;
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #000;
-}
-
-/* List View */
-.listHeader {
-  display: grid;
-  grid-template-columns: 2fr 3fr 1fr 1fr 1fr;
-  gap: 20px;
-  list-style: none;
-  padding: 15px 20px;
-  margin: 0 0 10px 0;
-  background: #f8f8f8;
-  font-weight: 600;
-  color: #000;
-  border-radius: 4px;
-}
-
-.buildingsList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.view-list .buildingItem {
-  display: grid;
-  grid-template-columns: 2fr 3fr 1fr 1fr 1fr;
-  gap: 20px;
-  padding: 15px 20px;
-  border-bottom: 1px solid #e0e0e0;
-  transition: background-color 0.3s ease;
-}
-
-.view-list .buildingItem:hover {
-  background-color: #f8f8f8;
-}
-
-.buildingName {
-  font-weight: 500;
-}
-
-.buildingLink {
-  color: #000;
-  text-decoration: none;
-}
-
-.buildingLink:hover {
-  color: #666;
-}
-
-.buildingAddress {
-  color: #666;
-  font-size: 14px;
-}
-
-.buildingUnits,
-.buildingFloors,
-.buildingYear {
-  color: #333;
-  font-size: 14px;
-}
-
-/* Grid View */
-.view-grid .buildingsList {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 30px;
-}
-
-.gridCard {
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-}
-
-.gridCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-}
-
-.cardImage {
-  height: 200px;
-  overflow: hidden;
-}
-
-.cardImage img {
+.mapContainer {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.gridCard:hover .cardImage img {
-  transform: scale(1.05);
-}
-
-.cardContent {
-  padding: 20px;
-}
-
-.cardTitle {
-  font-size: 1.25rem;
-  font-weight: 500;
-  color: #000;
-  margin-bottom: 10px;
-  line-height: 1.4;
-}
-
-.cardAddress {
-  color: #666;
-  font-size: 14px;
-  margin-bottom: 15px;
-}
-
-.cardDetails {
   display: flex;
-  gap: 15px;
+  align-items: center;
+  justify-content: center;
+}
+
+.mapError {
+  text-align: center;
+  max-width: 400px;
+  padding: 40px 20px;
+}
+
+.errorIcon {
+  font-size: 48px;
   margin-bottom: 20px;
-  font-size: 14px;
-  color: #333;
 }
 
-.cardActions {
-  display: flex;
-  gap: 10px;
-}
-
-.viewDetails,
-.getInfo {
-  flex: 1;
-  padding: 10px 15px;
-  border: 1px solid #000;
-  border-radius: 4px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-}
-
-.viewDetails {
-  background: #000;
-  color: #fff;
-}
-
-.viewDetails:hover {
-  background: #333;
-}
-
-.getInfo {
-  background: #fff;
-  color: #000;
-}
-
-.getInfo:hover {
-  background: #f0f0f0;
-}
-
-/* Map View */
-.view-map .buildingsList {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.mapCard {
-  padding: 20px;
-  background: #f8f8f8;
-  border-radius: 8px;
-  border-left: 4px solid #000;
-}
-
-.mapCard h3 {
-  margin: 0 0 5px 0;
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: #000;
-}
-
-.mapCard p {
-  margin: 0 0 5px 0;
-  color: #666;
-  font-size: 14px;
-}
-
-.mapCard span {
-  color: #333;
-  font-size: 13px;
-}
-
-/* No Results */
-.noResults {
-  text-align: center;
-  padding: 60px 20px;
-}
-
-.errorMessage {
-  max-width: 500px;
-  margin: 0 auto;
-}
-
-.errorMessage h3 {
+.mapError h3 {
   font-size: 1.5rem;
   color: #000;
   margin-bottom: 10px;
 }
 
-.errorMessage p {
+.mapError p {
   color: #666;
   font-size: 14px;
   line-height: 1.6;
 }
 
+.closeMapBtn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Sidebar */
+.sidebar {
+  width: 400px;
+  background-color: #fff;
+  border-left: 1px solid #e0e0e0;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.neighborhoodGroup {
+  margin-bottom: 30px;
+}
+
+.neighborhoodTitle {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #000;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #000;
+}
+
+/* Property Cards */
+.propertyCard {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+  background: #fff;
+}
+
+.propertyCard:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.propertyImage {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.propertyImage img {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.propertyStatus {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #000;
+  color: #fff;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.propertyInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.propertyTitle {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #000;
+  margin: 0 0 5px 0;
+  line-height: 1.3;
+}
+
+.propertyAddress {
+  font-size: 13px;
+  color: #666;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.favoriteBtn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #999;
+  padding: 5px;
+  transition: color 0.3s ease;
+}
+
+.favoriteBtn:hover {
+  color: #ff6b6b;
+}
+
+.noResults {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
-  .filterHeader {
+  .contentLayout {
     flex-direction: column;
-    gap: 15px;
   }
 
-  .headerActions {
+  .mapSection {
+    height: 300px;
+  }
+
+  .sidebar {
     width: 100%;
-    justify-content: space-between;
+    height: auto;
+    border-left: none;
+    border-top: 1px solid #e0e0e0;
   }
 
-  .mobileMenuBtn {
-    display: block;
-  }
-
-  .filtersList {
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .searchFilter,
-  .selectFilter {
-    width: 100%;
-    min-width: auto;
-  }
-
-  .viewToggle {
-    width: 100%;
-  }
-
-  .subFiltersList {
+  .topBarContent {
     flex-direction: column;
     gap: 10px;
   }
 
-  .listHeader {
-    display: none;
+  .searchContainer,
+  .selectFilter {
+    width: 100%;
   }
 
-  .view-list .buildingItem {
-    display: block;
-    padding: 20px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    margin-bottom: 15px;
-  }
-
-  .buildingName {
-    margin-bottom: 10px;
-    font-size: 1.1rem;
-  }
-
-  .buildingAddress {
-    margin-bottom: 10px;
-  }
-
-  .view-grid .buildingsList {
-    grid-template-columns: 1fr;
-  }
-
-  .cardDetails {
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  .cardActions {
-    flex-direction: column;
+  .rightControls {
+    width: 100%;
+    justify-content: space-between;
+    margin-left: 0;
   }
 }
 
 @media (max-width: 480px) {
-  .pageTitle {
-    font-size: 2rem;
-  }
-
-  .mainWrapper {
-    padding: 0 15px;
-  }
-
-  .filtersContainer {
+  .sidebar {
     padding: 15px;
   }
 
-  .neighborhoodTitle {
-    font-size: 1.25rem;
+  .propertyCard {
+    padding: 10px;
+    gap: 10px;
   }
 
-  .cardContent {
-    padding: 15px;
+  .propertyImage img {
+    width: 60px;
+    height: 45px;
+  }
+
+  .propertyTitle {
+    font-size: 0.9rem;
+  }
+
+  .propertyAddress {
+    font-size: 12px;
   }
 }
