@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -11,6 +12,7 @@ const BrickellCondos = () => {
     priceMax: '',
     bedrooms: '',
     bathrooms: '',
+    condominiums: '',
     sortBy: 'price-desc'
   });
 
@@ -21,21 +23,63 @@ const BrickellCondos = () => {
   const fetchProperties = async () => {
     try {
       setLoading(true);
-      const queryParams = new URLSearchParams();
-
-      if (filters.priceMin) queryParams.append('priceMin', filters.priceMin);
-      if (filters.priceMax) queryParams.append('priceMax', filters.priceMax);
-      if (filters.bedrooms) queryParams.append('bedrooms', filters.bedrooms);
-      if (filters.bathrooms) queryParams.append('bathrooms', filters.bathrooms);
-      queryParams.append('sortBy', filters.sortBy);
-
-      const response = await fetch(`http://localhost:3001/api/properties?${queryParams.toString()}`);
+      const response = await fetch(`http://localhost:5000/api/brickell-condos-1m`);
       const data = await response.json();
-
-      if (data.success) {
-        setProperties(data.properties || []);
+      
+      if (Array.isArray(data)) {
+        // Apply filters to the data
+        let filteredData = data;
+        
+        // Price filters
+        if (filters.priceMin || filters.priceMax) {
+          filteredData = filteredData.filter(property => {
+            const price = parseInt(property.price.replace(/[$,]/g, ''));
+            const minPrice = filters.priceMin ? parseInt(filters.priceMin) : 0;
+            const maxPrice = filters.priceMax ? parseInt(filters.priceMax) : Infinity;
+            return price >= minPrice && price <= maxPrice;
+          });
+        }
+        
+        // Bedrooms filter
+        if (filters.bedrooms) {
+          filteredData = filteredData.filter(property => {
+            const beds = parseInt(property.beds) || 0;
+            return beds >= parseInt(filters.bedrooms);
+          });
+        }
+        
+        // Bathrooms filter
+        if (filters.bathrooms) {
+          filteredData = filteredData.filter(property => {
+            const baths = parseInt(property.baths) || 0;
+            return baths >= parseInt(filters.bathrooms);
+          });
+        }
+        
+        // Sort data
+        if (filters.sortBy === 'price-asc') {
+          filteredData.sort((a, b) => {
+            const priceA = parseInt(a.price.replace(/[$,]/g, ''));
+            const priceB = parseInt(b.price.replace(/[$,]/g, ''));
+            return priceA - priceB;
+          });
+        } else if (filters.sortBy === 'sqft-desc') {
+          filteredData.sort((a, b) => {
+            const sqftA = parseInt(a.sqft.replace(/,/g, '')) || 0;
+            const sqftB = parseInt(b.sqft.replace(/,/g, '')) || 0;
+            return sqftB - sqftA;
+          });
+        } else if (filters.sortBy === 'bedrooms-desc') {
+          filteredData.sort((a, b) => {
+            const bedsA = parseInt(a.beds) || 0;
+            const bedsB = parseInt(b.beds) || 0;
+            return bedsB - bedsA;
+          });
+        }
+        
+        setProperties(filteredData);
       } else {
-        console.error('API Error:', data.error);
+        console.error('API Error: Invalid data format');
         setProperties([]);
       }
     } catch (error) {
@@ -54,212 +98,187 @@ const BrickellCondos = () => {
     }));
   };
 
-  const formatPrice = (price) => {
-    if (!price) return 'Price Upon Request';
-    const numPrice = parseInt(price.replace(/[^0-9]/g, ''));
-    if (numPrice >= 1000000) {
-      return `$${(numPrice / 1000000).toFixed(1)}M`;
-    } else if (numPrice >= 1000) {
-      return `$${(numPrice / 1000).toFixed(0)}K`;
-    }
-    return `$${numPrice.toLocaleString()}`;
-  };
-
-  const formatSqFt = (sqft) => {
-    if (!sqft) return '';
-    return sqft.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
-
   return (
     <div>
       <Header />
       <div className={styles.brickellCondos}>
-      {/* Header Section */}
-      <div className={styles.headerSection}>
-        <div className={styles.container}>
-          <div className={styles.breadcrumb}>
-            <span>Home</span> / <span>Brickell Condos +1M</span>
+        {/* Breadcrumb */}
+        <div className={styles.breadcrumbSection}>
+          <div className={styles.container}>
+            <div className={styles.breadcrumb}>
+              <span>Home</span> / <span>Brickell Condos +1M</span>
+            </div>
           </div>
-          <h1 className={styles.pageTitle}>Brickell Condos Over $1 Million</h1>
-          <p className={styles.pageDescription}>
-            Discover luxury condominium living in the heart of Brickell. These exclusive properties 
-            offer world-class amenities, stunning city and water views, and prime location access.
-          </p>
         </div>
-      </div>
 
-      {/* Filters Section */}
-      <div className={styles.filtersSection}>
-        <div className={styles.container}>
-          <div className={styles.filtersWrapper}>
-            <div className={styles.filterGroup}>
-              <label>Price Range</label>
-              <div className={styles.priceInputs}>
+        {/* Filters Section */}
+        <div className={styles.filtersSection}>
+          <div className={styles.container}>
+            <div className={styles.filtersRow}>
+              <div className={styles.filterGroup}>
                 <select 
                   name="priceMin" 
                   value={filters.priceMin} 
                   onChange={handleFilterChange}
                   className={styles.filterSelect}
                 >
-                  <option value="">Min Price</option>
+                  <option value="">$1M - Any Price</option>
                   <option value="1000000">$1M+</option>
                   <option value="2000000">$2M+</option>
                   <option value="3000000">$3M+</option>
                   <option value="5000000">$5M+</option>
                 </select>
+              </div>
+
+              <div className={styles.filterGroup}>
                 <select 
-                  name="priceMax" 
-                  value={filters.priceMax} 
+                  name="bedrooms" 
+                  value={filters.bedrooms} 
                   onChange={handleFilterChange}
                   className={styles.filterSelect}
                 >
-                  <option value="">Max Price</option>
-                  <option value="2000000">$2M</option>
-                  <option value="3000000">$3M</option>
-                  <option value="5000000">$5M</option>
-                  <option value="10000000">$10M+</option>
+                  <option value="">Any Bed(s)</option>
+                  <option value="1">1+</option>
+                  <option value="2">2+</option>
+                  <option value="3">3+</option>
+                  <option value="4">4+</option>
                 </select>
               </div>
+
+              <div className={styles.filterGroup}>
+                <select 
+                  name="bathrooms" 
+                  value={filters.bathrooms} 
+                  onChange={handleFilterChange}
+                  className={styles.filterSelect}
+                >
+                  <option value="">Any Bath(s)</option>
+                  <option value="2">2+</option>
+                  <option value="3">3+</option>
+                  <option value="4">4+</option>
+                </select>
+              </div>
+
+              <div className={styles.filterGroup}>
+                <select 
+                  name="condominiums" 
+                  value={filters.condominiums} 
+                  onChange={handleFilterChange}
+                  className={styles.filterSelect}
+                >
+                  <option value="">Condominiums</option>
+                  <option value="luxury">Luxury</option>
+                  <option value="waterfront">Waterfront</option>
+                  <option value="penthouse">Penthouse</option>
+                </select>
+              </div>
+
+              <div className={styles.filterGroup}>
+                <select className={styles.filterSelect}>
+                  <option value="">More Filters</option>
+                  <option value="pool">Pool</option>
+                  <option value="gym">Gym</option>
+                  <option value="parking">Parking</option>
+                </select>
+              </div>
+
+              <button className={styles.saveSearchBtn}>
+                SAVE SEARCH
+              </button>
             </div>
 
-            <div className={styles.filterGroup}>
-              <label>Bedrooms</label>
-              <select 
-                name="bedrooms" 
-                value={filters.bedrooms} 
-                onChange={handleFilterChange}
-                className={styles.filterSelect}
-              >
-                <option value="">Any</option>
-                <option value="1">1+</option>
-                <option value="2">2+</option>
-                <option value="3">3+</option>
-                <option value="4">4+</option>
-              </select>
-            </div>
-
-            <div className={styles.filterGroup}>
-              <label>Bathrooms</label>
-              <select 
-                name="bathrooms" 
-                value={filters.bathrooms} 
-                onChange={handleFilterChange}
-                className={styles.filterSelect}
-              >
-                <option value="">Any</option>
-                <option value="2">2+</option>
-                <option value="3">3+</option>
-                <option value="4">4+</option>
-              </select>
-            </div>
-
-            <div className={styles.filterGroup}>
-              <label>Sort By</label>
-              <select 
-                name="sortBy" 
-                value={filters.sortBy} 
-                onChange={handleFilterChange}
-                className={styles.filterSelect}
-              >
-                <option value="price-desc">Price High to Low</option>
-                <option value="price-asc">Price Low to High</option>
-                <option value="sqft-desc">Largest First</option>
-                <option value="bedrooms-desc">Most Bedrooms</option>
-              </select>
+            <div className={styles.resultsBar}>
+              <div className={styles.resultsCount}>
+                Showing {properties.length} of 397 Properties
+              </div>
+              <div className={styles.sortControls}>
+                <select 
+                  name="sortBy" 
+                  value={filters.sortBy} 
+                  onChange={handleFilterChange}
+                  className={styles.sortSelect}
+                >
+                  <option value="price-desc">Highest Price</option>
+                  <option value="price-asc">Lowest Price</option>
+                  <option value="sqft-desc">Largest First</option>
+                  <option value="bedrooms-desc">Most Bedrooms</option>
+                </select>
+                <div className={styles.viewToggle}>
+                  <button className={`${styles.viewBtn} ${styles.active}`}>Grid</button>
+                  <button className={styles.viewBtn}>List</button>
+                  <button className={styles.viewBtn}>Map</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Results Section */}
-      <div className={styles.resultsSection}>
-        <div className={styles.container}>
-          <div className={styles.resultsHeader}>
-            <h2>
-              {loading ? 'Loading...' : `${properties.length} Properties Found`}
-            </h2>
-          </div>
-
-          {loading ? (
-            <div className={styles.loading}>
-              <div className={styles.spinner}></div>
-              <p>Loading luxury properties...</p>
-            </div>
-          ) : (
-            <div className={styles.propertiesGrid}>
-              {properties.length > 0 ? (
-                properties.map((property, index) => (
-                  <div key={property.listingID || index} className={styles.propertyCard}>
-                    <div className={styles.propertyImageContainer}>
-                      <img 
-                        src={`https://via.placeholder.com/400x300?text=Luxury+Condo`} 
-                        alt={`Property in ${property.cityName}`}
-                        className={styles.propertyImage}
-                      />
-                      <div className={styles.propertyBadge}>
-                        {property.propStatus || 'Active'}
-                      </div>
-                    </div>
-
-                    <div className={styles.propertyContent}>
-                      <div className={styles.propertyPrice}>
-                        {formatPrice(property.listPrice)}
+        {/* Properties Grid */}
+        <div className={styles.propertiesSection}>
+          <div className={styles.container}>
+            {loading ? (
+              <div className={styles.loading}>
+                <div className={styles.spinner}></div>
+                <p>Loading luxury properties...</p>
+              </div>
+            ) : (
+              <div className={styles.propertiesGrid}>
+                {properties.length > 0 ? (
+                  properties.map((property, index) => (
+                    <div key={property.id || index} className={styles.propertyCard}>
+                      <div className={styles.propertyImageContainer}>
+                        <img 
+                          src={property.image || `https://via.placeholder.com/400x300?text=Luxury+Condo`} 
+                          alt={`Property at ${property.address}`}
+                          className={styles.propertyImage}
+                        />
                       </div>
 
-                      <div className={styles.propertyDetails}>
-                        <div className={styles.propertySpecs}>
-                          <span className={styles.spec}>
-                            <strong>{property.bedrooms || 'N/A'}</strong> Beds
-                          </span>
-                          <span className={styles.spec}>
-                            <strong>{property.fullBaths || 'N/A'}</strong> Baths
-                          </span>
-                          <span className={styles.spec}>
-                            <strong>{formatSqFt(property.sqFt) || 'N/A'}</strong> SqFt
-                          </span>
+                      <div className={styles.propertyContent}>
+                        <div className={styles.propertyPrice}>
+                          {property.price}
+                        </div>
+
+                        <div className={styles.propertyDetails}>
+                          <div className={styles.propertySpecs}>
+                            <span className={styles.spec}>
+                              <strong>{property.beds || 'N/A'}</strong> Bed(s)
+                            </span>
+                            <span className={styles.spec}>
+                              <strong>{property.baths || 'N/A'}</strong> Bath(s)
+                            </span>
+                            <span className={styles.spec}>
+                              <strong>{property.sqft || 'N/A'}</strong> Sq.Ft.
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className={styles.propertyLocation}>
+                          <p>{property.address}</p>
+                          <p className={styles.propertyCity}>{property.city}</p>
+                        </div>
+
+                        <div className={styles.propertyActions}>
+                          <button className={styles.viewDetailsBtn}>
+                            View Details
+                          </button>
+                          <button className={styles.favoriteBtn}>
+                            ♡
+                          </button>
                         </div>
                       </div>
-
-                      <div className={styles.propertyLocation}>
-                        <p>{property.cityName || 'Brickell'}, {property.state || 'FL'}</p>
-                        <p className={styles.propertyCounty}>{property.countyName || 'Miami-Dade'}</p>
-                      </div>
-
-                      <div className={styles.propertyActions}>
-                        <button className={styles.viewDetailsBtn}>
-                          View Details
-                        </button>
-                        <button className={styles.favoriteBtn}>
-                          ♡
-                        </button>
-                      </div>
                     </div>
+                  ))
+                ) : (
+                  <div className={styles.noResults}>
+                    <h3>No Properties Found</h3>
+                    <p>Try adjusting your search criteria to see more results.</p>
                   </div>
-                ))
-              ) : (
-                <div className={styles.noResults}>
-                  <h3>No Properties Found</h3>
-                  <p>Try adjusting your search criteria to see more results.</p>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Call to Action Section */}
-      <div className={styles.ctaSection}>
-        <div className={styles.container}>
-          <div className={styles.ctaContent}>
-            <h2>Ready to Find Your Dream Home?</h2>
-            <p>Contact our luxury real estate specialists for personalized assistance</p>
-            <div className={styles.ctaButtons}>
-              <button className={styles.primaryBtn}>Schedule Viewing</button>
-              <button className={styles.secondaryBtn}>Get Market Report</button>
-            </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
-      </div>
       </div>
       <Footer />
     </div>

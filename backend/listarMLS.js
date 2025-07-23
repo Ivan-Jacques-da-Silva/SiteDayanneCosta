@@ -92,6 +92,6 @@ app.get('/api/brickell-condos-1m', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`✅ Servidor rodando em http://0.0.0.0:${PORT}`);
+app.listen(PORT, 'localhost', () => {
+  console.log(`✅ Servidor rodando em http://localhost:${PORT}`);
 });
