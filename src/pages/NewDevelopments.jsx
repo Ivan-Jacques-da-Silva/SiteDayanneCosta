@@ -5,266 +5,427 @@ import Footer from '../components/Footer';
 import styles from './NewDevelopments.module.css';
 
 const NewDevelopments = () => {
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedNeighborhood, setSelectedNeighborhood] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [viewMode, setViewMode] = useState('list');
-
-  // Sample data based on the original file
-  const ItemSearch = [
-    { 
-      title: "Rivage Bal Harbour", 
-      type_category_id: "2", 
-      neighborhood: "Bal Harbour", 
-      address: "10441 Collins Ave, Bal Harbour, FL 33154", 
-      units: "56", 
-      floors: "18", 
-      year: "2025",
-      status: "Private Exclusive",
-      image: "https://via.placeholder.com/150x100/333/FFFFFF?text=COMING+SOON"
-    },
-    { 
-      title: "9900 West", 
-      type_category_id: "2", 
-      neighborhood: "Bay Harbor", 
-      address: "9900 W Bay Harbor Dr, Bay Harbor Islands", 
-      units: "44", 
-      floors: "12", 
-      year: "2024",
-      status: "Private Exclusive",
-      image: "https://via.placeholder.com/150x100/333/FFFFFF?text=COMING+SOON"
-    },
-    { 
-      title: "Indian Creek Residences & Yacht Club", 
-      type_category_id: "2", 
-      neighborhood: "Bay Harbor", 
-      address: "8810 West Bay Harbor Dr, Bay Harbor Island", 
-      units: "32", 
-      floors: "10", 
-      year: "2025",
-      status: "Private Exclusive",
-      image: "https://via.placeholder.com/150x100/333/FFFFFF?text=COMING+SOON"
-    },
-    { 
-      title: "La Baia Bay Harbor", 
-      type_category_id: "2", 
-      neighborhood: "Bay Harbor", 
-      address: "9401 E. Bay Harbor Drive, Bay Harbor Island", 
-      units: "28", 
-      floors: "8", 
-      year: "2024",
-      status: "Private Exclusive",
-      image: "https://via.placeholder.com/150x100/333/FFFFFF?text=COMING+SOON"
-    },
-    { 
-      title: "La Baia North", 
-      type_category_id: "2", 
-      neighborhood: "Bay Harbor", 
-      address: "9451 East Bay Harbor Dr, Bay Harbor Island", 
-      units: "36", 
-      floors: "11", 
-      year: "2025",
-      status: "Private Exclusive",
-      image: "https://via.placeholder.com/150x100/333/FFFFFF?text=COMING+SOON"
-    },
-    { 
-      title: "La Maré", 
-      type_category_id: "2", 
-      neighborhood: "Bay Harbor", 
-      address: "9927, 9781 E Bay Harbor Dr, Bay Harbor Isla", 
-      units: "42", 
-      floors: "15", 
-      year: "2024",
-      status: "Private Exclusive",
-      image: "https://via.placeholder.com/150x100/333/FFFFFF?text=COMING+SOON"
-    },
-    { 
-      title: "Onda Residences", 
-      type_category_id: "2", 
-      neighborhood: "Bay Harbor", 
-      address: "1142 Stillwater Dr, Bay Harbor Islands, FL 33314", 
-      units: "24", 
-      floors: "6", 
-      year: "2025",
-      status: "Private Exclusive",
-      image: "https://via.placeholder.com/150x100/333/FFFFFF?text=COMING+SOON"
-    }
-  ];
-
-  const neighborhoods = [
-    { id: "1604", name: "Aventura" },
-    { id: "1605", name: "Bal Harbour" },
-    { id: "2983", name: "Bay Harbor" },
-    { id: "1631", name: "Brickell" },
-    { id: "3007", name: "Brickell Key" },
-    { id: "1606", name: "Coconut Grove" },
-    { id: "1607", name: "Coral Gables" },
-    { id: "3008", name: "Downtown Miami" },
-    { id: "1633", name: "Edgewater" },
-    { id: "2987", name: "Fisher Island" },
-    { id: "5053", name: "Fort Lauderdale" },
-    { id: "2990", name: "Hallandale" },
-    { id: "2995", name: "Hollywood" },
-    { id: "1609", name: "Key Biscayne" },
-    { id: "3003", name: "Miami" },
-    { id: "1637", name: "Miami Beach" },
-    { id: "3006", name: "Miami River" },
-    { id: "3001", name: "Midtown Miami" },
-    { id: "7283", name: "North Miami" },
-    { id: "2997", name: "Sunny Isles" },
-    { id: "2986", name: "Sunrise" },
-    { id: "2992", name: "Surfside" }
-  ];
-
-  const filteredBuildings = ItemSearch.filter(building => {
-    const matchesCategory = selectedCategory === 'all' || building.type_category_id === selectedCategory;
-    const matchesNeighborhood = selectedNeighborhood === 'all' || building.neighborhood === neighborhoods.find(n => n.id === selectedNeighborhood)?.name;
-    const matchesSearch = building.title.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesNeighborhood && matchesSearch;
+  const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [viewMode, setViewMode] = useState('grid'); // Default view mode is grid
+  const [filters, setFilters] = useState({
+    priceRange: [0, 50000000], // Initial price range
+    cidade: '',
+    bairro: '',
+    ano: '',
+    sortBy: 'price-desc'
   });
 
-  const groupedByNeighborhood = filteredBuildings.reduce((acc, building) => {
-    if (!acc[building.neighborhood]) {
-      acc[building.neighborhood] = [];
+  useEffect(() => {
+    fetchProperties();
+  }, [filters]);
+
+  const fetchProperties = async () => {
+    try {
+      setLoading(true);
+      
+      // Build query parameters
+      const queryParams = new URLSearchParams();
+      if (filters.priceRange[0] > 0) queryParams.append('min', filters.priceRange[0]);
+      if (filters.cidade) queryParams.append('cidade', filters.cidade);
+      if (filters.bairro) queryParams.append('bairro', filters.bairro);
+      if (filters.ano) queryParams.append('ano', filters.ano);
+
+      const response = await fetch(`http://localhost:5000/api/new-developments-dinamico?${queryParams}`);
+      const data = await response.json();
+
+      if (Array.isArray(data)) {
+        // Apply additional filters to the data
+        let filteredData = data;
+
+        // Price filters
+        filteredData = filteredData.filter(property => {
+          const price = parseInt(property.price.replace(/[$,]/g, ''));
+          return price >= filters.priceRange[0] && price <= filters.priceRange[1];
+        });
+
+        // Sort data
+        if (filters.sortBy === 'price-asc') {
+          filteredData.sort((a, b) => {
+            const priceA = parseInt(a.price.replace(/[$,]/g, ''));
+            const priceB = parseInt(b.price.replace(/[$,]/g, ''));
+            return priceA - priceB;
+          });
+        } else if (filters.sortBy === 'sqft-desc') {
+          filteredData.sort((a, b) => {
+            const sqftA = parseInt(a.sqft.replace(/,/g, '')) || 0;
+            const sqftB = parseInt(b.sqft.replace(/,/g, '')) || 0;
+            return sqftB - sqftA;
+          });
+        } else if (filters.sortBy === 'year-desc') {
+          filteredData.sort((a, b) => {
+            const yearA = parseInt(a.yearBuilt) || 0;
+            const yearB = parseInt(b.yearBuilt) || 0;
+            return yearB - yearA;
+          });
+        }
+
+        setProperties(filteredData);
+      } else {
+        console.error('API Error: Invalid data format');
+        setProperties([]);
+      }
+    } catch (error) {
+      console.error('Error fetching properties:', error);
+      setProperties([]);
+    } finally {
+      setLoading(false);
     }
-    acc[building.neighborhood].push(building);
-    return acc;
-  }, {});
+  };
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handlePriceRangeChange = (e) => {
+    const { name, value } = e.target;
+    const newPriceRange = [...filters.priceRange];
+    if (name === 'priceMin') {
+      newPriceRange[0] = parseInt(value);
+    } else if (name === 'priceMax') {
+      newPriceRange[1] = parseInt(value);
+    }
+    setFilters(prev => ({
+      ...prev,
+      priceRange: newPriceRange
+    }));
+  };
+
+  // Function to format price with commas and $ sign
+  const formatPrice = (price) => {
+    return '$' + price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
 
   return (
-    <div className={styles.newDevelopments}>
+    <div>
       <Header />
-
-      <main className={styles.mainContent}>
-        <div className={styles.breadcrumb}>
-          <div className={styles.breadcrumbContent}>
-            <ol>
-              <li><a href="/" title="Home">Home</a></li>
-              <li>New Developments</li>
-            </ol>
+      <div className={styles.newDevelopments}>
+        {/* Breadcrumb */}
+        <div className={styles.breadcrumbSection}>
+          <div className={styles.container}>
+            <div className={styles.breadcrumb}>
+              <span>Home</span> / <span>New Developments</span>
+            </div>
           </div>
         </div>
 
-        <div className={styles.contentBlock}>
-          <h1 className={styles.titleBlock}>New Developments</h1>
-        </div>
-
-        {/* Filter Bar */}
-        <div className={styles.filterBar}>
-          <div className={styles.filterContent}>
-            <ul className={styles.filters}>
-              <li className={styles.miniSearch}>
-                <form className={styles.searchForm}>
+        {/* Filters Section */}
+        <div className={styles.filtersSection}>
+          <div className={styles.container}>
+            <div className={styles.filtersRow}>
+              
+              <div className={styles.priceRangeGroup}>
+                <label className={styles.priceRangeLabel}>
+                  Price Range: {formatPrice(filters.priceRange[0])} - {formatPrice(filters.priceRange[1])}
+                </label>
+                <div className={styles.rangeSliders}>
                   <input
-                    className={styles.searchBuilding}
-                    placeholder="Search Condos"
-                    type="search"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    type="range"
+                    name="priceMin"
+                    min="0"
+                    max="50000000"
+                    step="100000"
+                    value={filters.priceRange[0]}
+                    onChange={handlePriceRangeChange}
+                    className={styles.rangeSlider}
                   />
-                  <button type="submit" className={styles.searchSubmit}>
-                    <span className={styles.searchIcon}>🔍</span>
-                  </button>
-                </form>
-              </li>
+                  <input
+                    type="range"
+                    name="priceMax"
+                    min="0"
+                    max="50000000"
+                    step="100000"
+                    value={filters.priceRange[1]}
+                    onChange={handlePriceRangeChange}
+                    className={styles.rangeSlider}
+                  />
+                </div>
+              </div>
 
-              <li className={styles.filterItem}>
+              <div className={styles.filterGroup}>
                 <select 
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className={styles.selectFilter}
+                  name="cidade" 
+                  value={filters.cidade} 
+                  onChange={handleFilterChange}
+                  className={styles.filterSelect}
                 >
-                  <option value="">Condos by Name</option>
-                  {ItemSearch.map((item, index) => (
-                    <option key={index} value={item.title}>{item.title}</option>
-                  ))}
+                  <option value="">Any City</option>
+                  <option value="miami">Miami</option>
+                  <option value="aventura">Aventura</option>
+                  <option value="bal harbour">Bal Harbour</option>
+                  <option value="brickell">Brickell</option>
+                  <option value="coconut grove">Coconut Grove</option>
+                  <option value="coral gables">Coral Gables</option>
+                  <option value="downtown">Downtown</option>
+                  <option value="sunny isles">Sunny Isles</option>
                 </select>
-              </li>
+              </div>
 
-              <li className={styles.filterItem}>
+              <div className={styles.filterGroup}>
                 <select 
-                  value={selectedNeighborhood}
-                  onChange={(e) => setSelectedNeighborhood(e.target.value)}
-                  className={styles.selectFilter}
+                  name="bairro" 
+                  value={filters.bairro} 
+                  onChange={handleFilterChange}
+                  className={styles.filterSelect}
                 >
-                  <option value="all">All Neighborhoods</option>
-                  {neighborhoods.map(neighborhood => (
-                    <option key={neighborhood.id} value={neighborhood.id}>
-                      {neighborhood.name}
-                    </option>
-                  ))}
+                  <option value="">Any Neighborhood</option>
+                  <option value="brickell">Brickell</option>
+                  <option value="bay harbor">Bay Harbor</option>
+                  <option value="edgewater">Edgewater</option>
+                  <option value="midtown">Midtown</option>
+                  <option value="wynwood">Wynwood</option>
                 </select>
-              </li>
+              </div>
 
-              <li className={styles.viewModeButtons}>
+              <div className={styles.filterGroup}>
+                <select 
+                  name="ano" 
+                  value={filters.ano} 
+                  onChange={handleFilterChange}
+                  className={styles.filterSelect}
+                >
+                  <option value="">Any Year</option>
+                  <option value="2020">2020+</option>
+                  <option value="2021">2021+</option>
+                  <option value="2022">2022+</option>
+                  <option value="2023">2023+</option>
+                  <option value="2024">2024+</option>
+                  <option value="2025">2025+</option>
+                </select>
+              </div>
+
+              <button className={styles.saveSearchBtn}>
+                SAVE SEARCH
+              </button>
+            </div>
+
+            <div className={styles.resultsBar}>
+              <div className={styles.resultsCount}>
+                Showing {properties.length} Properties
+              </div>
+              <div className={styles.sortControls}>
+                <div className={styles.sortGroup}>
+                <select 
+                  name="sortBy" 
+                  value={filters.sortBy} 
+                  onChange={handleFilterChange}
+                  className={styles.sortSelect}
+                >
+                  <option value="price-desc">Highest Price</option>
+                  <option value="price-asc">Lowest Price</option>
+                  <option value="sqft-desc">Largest First</option>
+                  <option value="year-desc">Newest First</option>
+                </select>
+              </div>
+
+              <div className={styles.viewToggle}>
                 <button 
-                  className={`${styles.viewButton} ${viewMode === 'grid' ? styles.active : ''}`}
+                  className={`${styles.viewBtn} ${viewMode === 'grid' ? styles.active : ''}`}
                   onClick={() => setViewMode('grid')}
                 >
                   Grid
                 </button>
                 <button 
-                  className={`${styles.viewButton} ${viewMode === 'list' ? styles.active : ''}`}
+                  className={`${styles.viewBtn} ${viewMode === 'list' ? styles.active : ''}`}
                   onClick={() => setViewMode('list')}
                 >
                   List
                 </button>
                 <button 
-                  className={`${styles.viewButton} ${viewMode === 'map' ? styles.active : ''}`}
+                  className={`${styles.viewBtn} ${viewMode === 'map' ? styles.active : ''}`}
                   onClick={() => setViewMode('map')}
                 >
                   Map
                 </button>
-              </li>
-            </ul>
+              </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Main Layout Container */}
-        <div className={styles.wrapPageIdx}>
-          <div className={styles.contentFilters}>
-            {/* Map Section */}
-            <div className={styles.mapContainer}>
-              <div className={styles.mapError}>
-                <div className={styles.errorIcon}>⚠️</div>
-                <h3>Ops! Algo deu errado.</h3>
-                <p>Esta página não carregou o Google Maps corretamente. Consulte o console JavaScript para ver detalhes técnicos.</p>
+        {/* Properties Grid */}
+        <div className={styles.propertiesSection}>
+          <div className={styles.container}>
+            {loading ? (
+              <div className={styles.loading}>
+                <div className={styles.spinner}></div>
+                <p>Loading new developments...</p>
               </div>
-            </div>
+            ) : (
+              <>
+                {viewMode === 'grid' && (
+                  <div className={styles.propertiesGrid}>
+                    {properties.length > 0 ? (
+                      properties.map((property, index) => (
+                        <div key={property.id || index} className={styles.propertyCard}>
+                          <div className={styles.propertyImageContainer}>
+                            <img 
+                              src={property.image || `https://via.placeholder.com/400x300?text=New+Development`} 
+                              alt={`Property at ${property.address}`}
+                              className={styles.propertyImage}
+                            />
+                          </div>
+                          <div className={styles.propertyContent}>
+                            <div className={styles.propertyPrice}>
+                              {property.price}
+                            </div>
 
-            {/* Properties List */}
-            <div className={styles.propertiesList}>
-              {Object.entries(groupedByNeighborhood).map(([neighborhood, buildings]) => (
-                <div key={neighborhood} className={styles.neighborhoodSection}>
-                  <h2 className={styles.neighborhoodTitle}>{neighborhood}</h2>
+                            <div className={styles.propertyDetails}>
+                              <div className={styles.propertySpecs}>
+                                <span className={styles.spec}>
+                                  <strong>{property.beds || 'N/A'}</strong> Bed(s)
+                                </span>
+                                <span className={styles.spec}>
+                                  <strong>{property.baths || 'N/A'}</strong> Bath(s)
+                                </span>
+                                <span className={styles.spec}>
+                                  <strong>{property.sqft || 'N/A'}</strong> Sq.Ft.
+                                </span>
+                              </div>
+                              {property.yearBuilt && (
+                                <div className={styles.yearBuilt}>
+                                  Built: {property.yearBuilt}
+                                </div>
+                              )}
+                            </div>
 
-                  {buildings.map((building, index) => (
-                    <div key={index} className={styles.propertyCard}>
-                      <div className={styles.propertyContent}>
-                        <div className={styles.propertyImageContainer}>
-                          <div className={styles.propertyImage}></div>
+                            <div className={styles.propertyLocation}>
+                              <p>{property.address}</p>
+                              <p className={styles.propertyCity}>{property.city}</p>
+                            </div>
+
+                            <div className={styles.propertyActions}>
+                              <button className={styles.viewDetailsBtn}>
+                                View Details
+                              </button>
+                              <button className={styles.favoriteBtn}>
+                                ♡
+                              </button>
+                            </div>
+                          </div>
                         </div>
+                      ))
+                    ) : (
+                      <div className={styles.noResults}>
+                        <h3>No Properties Found</h3>
+                        <p>Try adjusting your search criteria to see more results.</p>
+                      </div>
+                    )}
+                  </div>
+                )}
 
-                        <div className={styles.propertyInfo}>
-                          <h3 className={styles.propertyTitle}>{building.title}</h3>
-                          <p className={styles.propertyAddress}>{building.address}</p>
+                {viewMode === 'list' && (
+                  <div className={styles.propertiesList}>
+                    {properties.length > 0 ? (
+                      <table className={styles.propertiesTable}>
+                        <thead>
+                          <tr>
+                            <th>Address</th>
+                            <th>Price</th>
+                            <th>% / $</th>
+                            <th>Beds</th>
+                            <th>Baths</th>
+                            <th>Living Size</th>
+                            <th>Price / Sq Ft.</th>
+                            <th>Development / Subdivision</th>
+                            <th>Year Built</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {properties.map((property, index) => (
+                            <tr key={property.id || index} className={styles.propertyRow}>
+                              <td>{property.address}</td>
+                              <td>{property.price}</td>
+                              <td>0</td>
+                              <td>{property.beds || 'N/A'}</td>
+                              <td>{property.baths || 'N/A'}</td>
+                              <td>{property.sqft || 'N/A'}</td>
+                              <td>{property.pricePerSqft || 'N/A'}</td>
+                              <td>{property.development || 'N/A'}</td>
+                              <td>{property.yearBuilt || 'N/A'}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    ) : (
+                      <div className={styles.noResults}>
+                        <h3>No Properties Found</h3>
+                        <p>Try adjusting your search criteria to see more results.</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {viewMode === 'map' && (
+                  <div className={styles.mapView}>
+                    <div className={styles.mapPropertiesList}>
+                      <div className={styles.propertiesListHeader}>
+                        <h3>Properties ({properties.length})</h3>
+                      </div>
+                      <div className={styles.mapPropertiesScroll}>
+                        {properties.length > 0 ? (
+                          properties.map((property, index) => (
+                            <div key={property.id || index} className={styles.mapPropertyCard}>
+                              <div className={styles.mapPropertyImage}>
+                                <img 
+                                  src={property.image || `https://via.placeholder.com/400x300?text=New+Development`}
+                                  alt={property.address}
+                                />
+                              </div>
+                              <div className={styles.mapPropertyContent}>
+                                <div className={styles.mapPropertyPrice}>
+                                  {property.price}
+                                </div>
+                                <div className={styles.mapPropertySpecs}>
+                                  {property.beds} beds • {property.baths} baths • {property.sqft} Sq.Ft.
+                                </div>
+                                <div className={styles.mapPropertyAddress}>
+                                  {property.address}
+                                </div>
+                                <div className={styles.mapPropertyCity}>
+                                  {property.city}
+                                </div>
+                                {property.yearBuilt && (
+                                  <div className={styles.mapPropertyYear}>
+                                    Built: {property.yearBuilt}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <div className={styles.noResults}>
+                            <h3>No Properties Found</h3>
+                            <p>Try adjusting your search criteria to see more results.</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className={styles.mapContainer}>
+                      <div className={styles.mapPlaceholder}>
+                        <div className={styles.mapError}>
+                          <div className={styles.errorIcon}>🗺️</div>
+                          <h3>Map View</h3>
+                          <p>Interactive map with property locations and markers will be displayed here.</p>
                         </div>
                       </div>
                     </div>
-                  ))}
-                </div>
-              ))}
-
-              {filteredBuildings.length === 0 && (
-                <div className={styles.noResults}>
-                  <p>Nenhum resultado encontrado para os filtros selecionados.</p>
-                </div>
-              )}
-            </div>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </div>
-      </main>
-
+      </div>
       <Footer />
     </div>
   );
