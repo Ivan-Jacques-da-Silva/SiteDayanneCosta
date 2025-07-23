@@ -449,14 +449,14 @@
   position: relative;
 }
 
-.ipMenuItemHasChildren:hover .ipSubmenu,
+.ipMenuItemHasChildren:hover > .ipSubmenu,
 .ipSubmenu:hover {
   display: block;
 }
 
 /* Mobile Dropdown Behavior */
 @media (max-width: 991.98px) {
-  .ipMenuItemHasChildren:hover .ipSubmenu {
+  .ipMenuItemHasChildren:hover > .ipSubmenu {
     display: none;
   }
 }
@@ -477,6 +477,23 @@
   z-index: 1000;
 }
 
+/* Nested submenu (Neighborhoods submenu) */
+.ipMenuItemHasChildren .ipMenuItemHasChildren {
+  position: relative;
+}
+
+.ipMenuItemHasChildren .ipMenuItemHasChildren:hover > .ipSubmenu {
+  display: block;
+}
+
+.ipMenuItemHasChildren .ipSubmenu .ipSubmenu {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  margin-top: 0;
+  margin-left: 0.5rem;
+}
+
 .ipSubmenu::before {
   content: '';
   position: absolute;
@@ -492,11 +509,21 @@
   padding: 0.6rem 1.5rem;
   font-size: 0.9rem;
   white-space: nowrap;
+  position: relative;
 }
 
 .ipSubmenu .ipMenuLink:hover {
   background-color: #f8f9fa;
   color: #000 !important;
+}
+
+/* Arrow indicator for nested menus */
+.ipMenuItemHasChildren .ipSubmenu .ipMenuItemHasChildren > .ipMenuLink::after {
+  content: '▶';
+  position: absolute;
+  right: 1rem;
+  font-size: 0.7rem;
+  color: #666;
 }
 
 /* Mobile Menu Button */
