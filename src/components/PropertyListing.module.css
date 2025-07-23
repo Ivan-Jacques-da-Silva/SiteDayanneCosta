@@ -1,6 +1,7 @@
 
 /* Base styles - reusing the existing BrickellCondos styles */
 .propertyListing {
+  margin-top: 100px; /* Espaçamento para não ficar por baixo do menu fixo */
   min-height: 100vh;
   background-color: #f8f9fa;
 }
