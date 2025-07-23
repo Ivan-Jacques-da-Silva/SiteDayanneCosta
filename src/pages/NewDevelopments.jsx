@@ -63,6 +63,12 @@ const NewDevelopments = () => {
             const yearB = parseInt(b.yearBuilt) || 0;
             return yearB - yearA;
           });
+        } else if (filters.sortBy === 'bedrooms-desc') {
+          filteredData.sort((a, b) => {
+            const bedsA = parseInt(a.beds) || 0;
+            const bedsB = parseInt(b.beds) || 0;
+            return bedsB - bedsA;
+          });
         }
 
         setProperties(filteredData);
@@ -203,6 +209,15 @@ const NewDevelopments = () => {
                 </select>
               </div>
 
+              <div className={styles.filterGroup}>
+                <select className={styles.filterSelect}>
+                  <option value="">More Filters</option>
+                  <option value="pool">Pool</option>
+                  <option value="gym">Gym</option>
+                  <option value="parking">Parking</option>
+                </select>
+              </div>
+
               <button className={styles.saveSearchBtn}>
                 SAVE SEARCH
               </button>
@@ -224,6 +239,7 @@ const NewDevelopments = () => {
                   <option value="price-asc">Lowest Price</option>
                   <option value="sqft-desc">Largest First</option>
                   <option value="year-desc">Newest First</option>
+                  <option value="bedrooms-desc">Most Bedrooms</option>
                 </select>
               </div>
 
