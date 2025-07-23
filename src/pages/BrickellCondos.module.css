@@ -131,6 +131,73 @@
   gap: 15px;
 }
 
+/* Price Range Slider */
+.priceRangeGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 200px;
+}
+
+.priceRangeLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.rangeSliders {
+  position: relative;
+  height: 20px;
+}
+
+.rangeSlider {
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  background: transparent;
+  outline: none;
+  -webkit-appearance: none;
+  pointer-events: none;
+}
+
+.rangeSlider::-webkit-slider-track {
+  height: 4px;
+  background: #ddd;
+  border-radius: 2px;
+}
+
+.rangeSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #000;
+  cursor: pointer;
+  pointer-events: auto;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.rangeSlider::-moz-range-track {
+  height: 4px;
+  background: #ddd;
+  border-radius: 2px;
+  border: none;
+}
+
+.rangeSlider::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #000;
+  cursor: pointer;
+  pointer-events: auto;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
 .sortSelect {
   padding: 8px 12px;
   border: 1px solid #ddd;
@@ -205,6 +272,177 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 20px;
+}
+
+/* List View */
+.propertiesList {
+  width: 100%;
+}
+
+.propertiesTable {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+}
+
+.propertiesTable th {
+  background-color: #f8f8f8;
+  padding: 12px 8px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 1px solid #e0e0e0;
+  border-right: 1px solid #e0e0e0;
+}
+
+.propertiesTable th:last-child {
+  border-right: none;
+}
+
+.propertyRow {
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s ease;
+}
+
+.propertyRow:hover {
+  background-color: #f8f8f8;
+}
+
+.propertyRow td {
+  padding: 12px 8px;
+  font-size: 13px;
+  color: #333;
+  border-right: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+.propertyRow td:last-child {
+  border-right: none;
+}
+
+/* Map View */
+.mapView {
+  display: flex;
+  height: 600px;
+  border: 1px solid #e0e0e0;
+}
+
+.mapPropertiesList {
+  width: 400px;
+  background-color: #fff;
+  border-right: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+}
+
+.propertiesListHeader {
+  padding: 15px 20px;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #f8f8f8;
+}
+
+.propertiesListHeader h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.mapPropertiesScroll {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.mapPropertyCard {
+  display: flex;
+  padding: 15px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.mapPropertyCard:hover {
+  background-color: #f8f8f8;
+}
+
+.mapPropertyImage {
+  flex-shrink: 0;
+  margin-right: 12px;
+}
+
+.mapPropertyImage img {
+  width: 60px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.mapPropertyContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.mapPropertyPrice {
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 4px;
+}
+
+.mapPropertySpecs {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.mapPropertyAddress {
+  font-size: 13px;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.mapPropertyCity {
+  font-size: 12px;
+  color: #666;
+}
+
+.mapContainer {
+  flex: 1;
+  background-color: #f5f5f5;
+  position: relative;
+}
+
+.mapPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mapError {
+  text-align: center;
+  max-width: 300px;
+}
+
+.errorIcon {
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+.mapError h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.mapError p {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 @media screen and (min-width: 768px) {
@@ -367,6 +605,37 @@
 }
 
 /* Responsive Design */
+@media screen and (max-width: 768px) {
+  .mapView {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .mapPropertiesList {
+    width: 100%;
+    max-height: 300px;
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .mapContainer {
+    height: 400px;
+  }
+
+  .propertiesTable {
+    font-size: 11px;
+  }
+
+  .propertiesTable th,
+  .propertyRow td {
+    padding: 8px 4px;
+  }
+
+  .priceRangeGroup {
+    min-width: 150px;
+  }
+}
+
 @media screen and (max-width: 480px) {
   .container {
     padding: 0 10px;
@@ -389,7 +658,23 @@
     width: 100%;
   }
 
+  .priceRangeGroup {
+    width: 100%;
+    min-width: auto;
+  }
+
   .saveSearchBtn {
     width: 100%;
+  }
+
+  .viewToggle {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .propertiesTable {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
   }
 }
