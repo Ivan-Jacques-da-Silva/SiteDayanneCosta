@@ -238,6 +238,12 @@ app.get("/api/single-family-homes", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`✅ Servidor rodando em http://0.0.0.0:${PORT}`);
+// Uso no servidor
+// app.listen(PORT, () => {
+//   console.log(`✅ Servidor rodando em http://0.0.0.0:${PORT}`);
+// });
+
+// Uso maquina local
+app.listen(PORT, 'localhost', () => {
+  console.log(`✅ Servidor rodando em http://localhost:${PORT}`);
 });
