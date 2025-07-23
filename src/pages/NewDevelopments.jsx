@@ -8,6 +8,8 @@ const NewDevelopments = () => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState('grid'); // Default view mode is grid
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(20);
   const [filters, setFilters] = useState({
     priceRange: [0, 50000000], // Initial price range
     cidade: '',
@@ -90,6 +92,7 @@ const NewDevelopments = () => {
       ...prev,
       [name]: value
     }));
+    setCurrentPage(1); // Reset to first page when filters change
   };
 
   const handlePriceRangeChange = (e) => {
@@ -104,11 +107,86 @@ const NewDevelopments = () => {
       ...prev,
       priceRange: newPriceRange
     }));
+    setCurrentPage(1); // Reset to first page when filters change
   };
 
   // Function to format price with commas and $ sign
   const formatPrice = (price) => {
     return '$' + price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
+  // Pagination calculations
+  const totalPages = Math.ceil(properties.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentProperties = properties.slice(startIndex, endIndex);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const renderPagination = () => {
+    if (totalPages <= 1) return null;
+
+    const pages = [];
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    // Previous button
+    if (currentPage > 1) {
+      pages.push(
+        <button
+          key="prev"
+          onClick={() => handlePageChange(currentPage - 1)}
+          className={styles.paginationBtn}
+        >
+          ‹
+        </button>
+      );
+    }
+
+    // Page numbers
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(
+        <button
+          key={i}
+          onClick={() => handlePageChange(i)}
+          className={`${styles.paginationBtn} ${i === currentPage ? styles.active : ''}`}
+        >
+          {i}
+        </button>
+      );
+    }
+
+    // Next button
+    if (currentPage < totalPages) {
+      pages.push(
+        <button
+          key="next"
+          onClick={() => handlePageChange(currentPage + 1)}
+          className={styles.paginationBtn}
+        >
+          ›
+        </button>
+      );
+    }
+
+    return (
+      <div className={styles.pagination}>
+        <div className={styles.paginationInfo}>
+          Showing {startIndex + 1}-{Math.min(endIndex, properties.length)} of {properties.length} properties
+        </div>
+        <div className={styles.paginationButtons}>
+          {pages}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -225,7 +303,7 @@ const NewDevelopments = () => {
 
             <div className={styles.resultsBar}>
               <div className={styles.resultsCount}>
-                Showing {properties.length} Properties
+                Showing {currentProperties.length} of {properties.length} Properties (Page {currentPage} of {totalPages})
               </div>
               <div className={styles.sortControls}>
                 <div className={styles.sortGroup}>
@@ -280,8 +358,8 @@ const NewDevelopments = () => {
               <>
                 {viewMode === 'grid' && (
                   <div className={styles.propertiesGrid}>
-                    {properties.length > 0 ? (
-                      properties.map((property, index) => (
+                    {currentProperties.length > 0 ? (
+                      currentProperties.map((property, index) => (
                         <div key={property.id || index} className={styles.propertyCard}>
                           <div className={styles.propertyImageContainer}>
                             <img 
@@ -341,7 +419,7 @@ const NewDevelopments = () => {
 
                 {viewMode === 'list' && (
                   <div className={styles.propertiesList}>
-                    {properties.length > 0 ? (
+                    {currentProperties.length > 0 ? (
                       <table className={styles.propertiesTable}>
                         <thead>
                           <tr>
@@ -357,7 +435,7 @@ const NewDevelopments = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {properties.map((property, index) => (
+                          {currentProperties.map((property, index) => (
                             <tr key={property.id || index} className={styles.propertyRow}>
                               <td>{property.address}</td>
                               <td>{property.price}</td>
@@ -388,8 +466,8 @@ const NewDevelopments = () => {
                         <h3>Properties ({properties.length})</h3>
                       </div>
                       <div className={styles.mapPropertiesScroll}>
-                        {properties.length > 0 ? (
-                          properties.map((property, index) => (
+                        {currentProperties.length > 0 ? (
+                          currentProperties.map((property, index) => (
                             <div key={property.id || index} className={styles.mapPropertyCard}>
                               <div className={styles.mapPropertyImage}>
                                 <img 
@@ -439,6 +517,7 @@ const NewDevelopments = () => {
                 )}
               </>
             )}
+            {renderPagination()}
           </div>
         </div>
       </div>
