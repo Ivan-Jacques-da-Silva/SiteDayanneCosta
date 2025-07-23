@@ -198,10 +198,35 @@ const Header = () => {
                             Luxury Condos
                           </Link>
                         </li>
-                        <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                          <Link to="/neighborhoods/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                            Neighborhoods
-                          </Link>
+                        <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
+                          <Link to="/neighborhoods/" className={`ip-menu-link ${styles.ipMenuLink}`}>Neighborhoods</Link>
+                          <ul className={`ip-submenu ${styles.ipSubmenu}`}>
+                            <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                              <Link to="/brickell/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                                Brickell
+                              </Link>
+                            </li>
+                            <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                              <Link to="/edgewater/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                                Edgewater
+                              </Link>
+                            </li>
+                            <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                              <Link to="/coconut-grove/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                                Coconut Grove
+                              </Link>
+                            </li>
+                            <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                              <Link to="/the-roads/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                                The Roads
+                              </Link>
+                            </li>
+                            <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                              <Link to="/neighborhoods/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                                View All
+                              </Link>
+                            </li>
+                          </ul>
                         </li>
                       </ul>
                     </li>
@@ -384,6 +409,46 @@ const Header = () => {
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                     <Link to="/about-team" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
                       About Team
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+
+              <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
+                <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
+                  <button 
+                    className={`ip-menu-link ${styles.ipMenuLink}`}
+                    style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer' }}
+                    onClick={() => toggleSubmenu('neighborhoods')}
+                  >
+                    <span style={{ flex: 1 }}>Neighborhoods</span>
+                    <span style={{ marginLeft: 'auto' }}>{openSubmenu === 'neighborhoods' ? '−' : '+'}</span>
+                  </button>
+                </div>
+                <ul className={`ip-submenu js-submenu ${styles.ipSubmenu} ${openSubmenu === 'neighborhoods' ? styles.open : ''}`}>
+                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                    <Link to="/brickell/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                      Brickell
+                    </Link>
+                  </li>
+                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                    <Link to="/edgewater/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                      Edgewater
+                    </Link>
+                  </li>
+                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                    <Link to="/coconut-grove/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                      Coconut Grove
+                    </Link>
+                  </li>
+                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                    <Link to="/the-roads/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                      The Roads
+                    </Link>
+                  </li>
+                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                    <Link to="/neighborhoods/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                      View All
                     </Link>
                   </li>
                 </ul>
