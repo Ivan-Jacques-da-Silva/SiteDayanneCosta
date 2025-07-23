@@ -172,6 +172,72 @@ app.get("/api/new-developments-dinamico", async (req, res) => {
 //   console.log(`✅ Servidor rodando em http://localhost:${PORT}`);
 // });
 
+app.get("/api/single-family-homes", async (req, res) => {
+  try {
+    const resposta = await axios.get(
+      "https://api.idxbroker.com/clients/featured",
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          accesskey: "E2zacX5HZjIrbp1SeiZ0i@",
+          outputtype: "json",
+          apiversion: "1.2",
+        },
+      },
+    );
+
+    const min = parseInt(req.query.min || 0);
+    const cidade = (req.query.cidade || "").toLowerCase();
+    const propertyType = (req.query.propertyType || "").toLowerCase();
+
+    const propriedades = Object.values(resposta.data)
+      .filter((property) => {
+        const preco = property.rntLsePrice || 0;
+        const city = property.cityName?.toLowerCase() || "";
+        const address = property.address?.toLowerCase() || "";
+        const propType = property.propType?.toLowerCase() || "";
+
+        return (
+          preco >= min &&
+          (cidade ? city.includes(cidade) : true) &&
+          // Filter for single family homes (assuming propType contains relevant info)
+          (propType.includes("single") || 
+           propType.includes("house") || 
+           propType.includes("residential") ||
+           !propType.includes("condo") && !propType.includes("apartment"))
+        );
+      })
+      .map((property) => ({
+        id: property.listingID,
+        price: `$${property.rntLsePrice?.toLocaleString()}`,
+        address: property.address,
+        city: `${property.cityName}, FL ${property.zipcode}`,
+        beds: property.bedrooms?.toString() || "0",
+        baths: property.totalBaths?.toString() || "0",
+        sqft: property.sqFt || "N/A",
+        status: property.propStatus || "Active",
+        image:
+          property.image?.["0"]?.url || "https://via.placeholder.com/400x300",
+        development: property.subdivision || "N/A",
+        pricePerSqft: property.sqFt
+          ? `$${Math.floor(property.rntLsePrice / parseInt(property.sqFt.replace(/,/g, "")))}`
+          : "N/A",
+        yearBuilt: property.yearBuilt || "N/A",
+        latitude: property.latitude,
+        longitude: property.longitude,
+        fullDetailsURL: property.fullDetailsURL,
+        propertyType: "Single Family Home"
+      }));
+
+    res.json(propriedades);
+  } catch (err) {
+    res.status(err.response?.status || 500).json({
+      erro: "Erro ao buscar single family homes",
+      detalhes: err.response?.data || err.message,
+    });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`✅ Servidor rodando em http://0.0.0.0:${PORT}`);
 });
