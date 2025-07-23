@@ -519,10 +519,10 @@
 
 /* Arrow indicator for nested menus */
 .ipMenuItemHasChildren .ipSubmenu .ipMenuItemHasChildren > .ipMenuLink::after {
-  content: '▶';
+  content: '>';
   position: absolute;
   right: 1rem;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   color: #666;
 }
 
