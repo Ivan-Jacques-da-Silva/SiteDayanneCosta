@@ -10,7 +10,7 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
     allowedHosts: [
-      "2a25d29e-9841-432d-8f70-105feb1f2158-00-r1vqbcxpkpka.janeway.replit.dev",
+      "b308088e-1fc8-4e0b-9176-8cd6ab4cc95d-00-2878jphr93pd5.janeway.replit.dev",
     ],
   },
   plugins: [react()],
