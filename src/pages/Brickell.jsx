@@ -1,15 +1,14 @@
-
 import React from 'react';
 import PropertyListing from '../components/PropertyListing';
 
 const Brickell = () => {
   const pageData = {
-    title: "Brickell Condos & Apartments",
+    title: "Brickell Properties",
     subtitle: "Discover luxury living in Miami's financial district",
-    description: "Brickell is Miami's vibrant financial and residential district, known for its stunning high-rise condominiums, world-class dining, and urban sophistication. Experience the best of city living with waterfront views and premium amenities.",
+    description: "Explore premium properties in Brickell, Miami's vibrant financial and cultural hub. From luxury condos with stunning bay views to modern penthouses, find your perfect home in this dynamic neighborhood.",
+    apiEndpoint: "http://localhost:5000/api/brickell",
     searchFilters: {
-      neighborhood: "Brickell",
-      propertyType: "Condo"
+      neighborhood: "Brickell"
     },
     heroImage: "/src/assets/img/slide1.jpeg"
   };

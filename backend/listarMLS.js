@@ -238,6 +238,301 @@ app.get("/api/single-family-homes", async (req, res) => {
   }
 });
 
+// API route for Brickell properties
+app.get("/api/brickell", async (req, res) => {
+  try {
+    const resposta = await axios.get(
+      "https://api.idxbroker.com/clients/featured",
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          accesskey: "E2zacX5HZjIrbp1SeiZ0i@",
+          outputtype: "json",
+          apiversion: "1.2",
+        },
+      },
+    );
+
+    const min = parseInt(req.query.min || 0);
+
+    const propriedades = Object.values(resposta.data)
+      .filter((property) => {
+        const preco = property.rntLsePrice || 0;
+        const city = property.cityName?.toLowerCase() || "";
+        const address = property.address?.toLowerCase() || "";
+
+        return (
+          preco >= min &&
+          (city.includes("miami") || city.includes("brickell") || 
+           address.includes("brickell") || address.includes("miami"))
+        );
+      })
+      .map((property) => ({
+        id: property.listingID,
+        price: `$${property.rntLsePrice?.toLocaleString()}`,
+        address: property.address,
+        city: `${property.cityName}, FL ${property.zipcode}`,
+        beds: property.bedrooms?.toString() || "0",
+        baths: property.totalBaths?.toString() || "0",
+        sqft: property.sqFt || "N/A",
+        status: property.propStatus || "Active",
+        image: property.image?.["0"]?.url || "https://via.placeholder.com/400x300",
+        development: property.subdivision || "N/A",
+        pricePerSqft: property.sqFt
+          ? `$${Math.floor(property.rntLsePrice / parseInt(property.sqFt.replace(/,/g, "")))}`
+          : "N/A",
+        yearBuilt: property.yearBuilt || "N/A",
+        latitude: property.latitude,
+        longitude: property.longitude,
+        fullDetailsURL: property.fullDetailsURL,
+        propertyType: property.propType || "N/A"
+      }));
+
+    res.json(propriedades);
+  } catch (err) {
+    res.status(err.response?.status || 500).json({
+      erro: "Erro ao buscar propriedades em Brickell",
+      detalhes: err.response?.data || err.message,
+    });
+  }
+});
+
+// API route for Edgewater properties
+app.get("/api/edgewater", async (req, res) => {
+  try {
+    const resposta = await axios.get(
+      "https://api.idxbroker.com/clients/featured",
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          accesskey: "E2zacX5HZjIrbp1SeiZ0i@",
+          outputtype: "json",
+          apiversion: "1.2",
+        },
+      },
+    );
+
+    const min = parseInt(req.query.min || 0);
+
+    const propriedades = Object.values(resposta.data)
+      .filter((property) => {
+        const preco = property.rntLsePrice || 0;
+        const city = property.cityName?.toLowerCase() || "";
+        const address = property.address?.toLowerCase() || "";
+
+        return (
+          preco >= min &&
+          (city.includes("edgewater") || address.includes("edgewater") ||
+           city.includes("miami") && address.includes("edgewater"))
+        );
+      })
+      .map((property) => ({
+        id: property.listingID,
+        price: `$${property.rntLsePrice?.toLocaleString()}`,
+        address: property.address,
+        city: `${property.cityName}, FL ${property.zipcode}`,
+        beds: property.bedrooms?.toString() || "0",
+        baths: property.totalBaths?.toString() || "0",
+        sqft: property.sqFt || "N/A",
+        status: property.propStatus || "Active",
+        image: property.image?.["0"]?.url || "https://via.placeholder.com/400x300",
+        development: property.subdivision || "N/A",
+        pricePerSqft: property.sqFt
+          ? `$${Math.floor(property.rntLsePrice / parseInt(property.sqFt.replace(/,/g, "")))}`
+          : "N/A",
+        yearBuilt: property.yearBuilt || "N/A",
+        latitude: property.latitude,
+        longitude: property.longitude,
+        fullDetailsURL: property.fullDetailsURL,
+        propertyType: property.propType || "N/A"
+      }));
+
+    res.json(propriedades);
+  } catch (err) {
+    res.status(err.response?.status || 500).json({
+      erro: "Erro ao buscar propriedades em Edgewater",
+      detalhes: err.response?.data || err.message,
+    });
+  }
+});
+
+// API route for Coconut Grove properties
+app.get("/api/coconut-grove", async (req, res) => {
+  try {
+    const resposta = await axios.get(
+      "https://api.idxbroker.com/clients/featured",
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          accesskey: "E2zacX5HZjIrbp1SeiZ0i@",
+          outputtype: "json",
+          apiversion: "1.2",
+        },
+      },
+    );
+
+    const min = parseInt(req.query.min || 0);
+
+    const propriedades = Object.values(resposta.data)
+      .filter((property) => {
+        const preco = property.rntLsePrice || 0;
+        const city = property.cityName?.toLowerCase() || "";
+        const address = property.address?.toLowerCase() || "";
+
+        return (
+          preco >= min &&
+          (city.includes("coconut grove") || address.includes("coconut grove") ||
+           city.includes("grove") || address.includes("grove"))
+        );
+      })
+      .map((property) => ({
+        id: property.listingID,
+        price: `$${property.rntLsePrice?.toLocaleString()}`,
+        address: property.address,
+        city: `${property.cityName}, FL ${property.zipcode}`,
+        beds: property.bedrooms?.toString() || "0",
+        baths: property.totalBaths?.toString() || "0",
+        sqft: property.sqFt || "N/A",
+        status: property.propStatus || "Active",
+        image: property.image?.["0"]?.url || "https://via.placeholder.com/400x300",
+        development: property.subdivision || "N/A",
+        pricePerSqft: property.sqFt
+          ? `$${Math.floor(property.rntLsePrice / parseInt(property.sqFt.replace(/,/g, "")))}`
+          : "N/A",
+        yearBuilt: property.yearBuilt || "N/A",
+        latitude: property.latitude,
+        longitude: property.longitude,
+        fullDetailsURL: property.fullDetailsURL,
+        propertyType: property.propType || "N/A"
+      }));
+
+    res.json(propriedades);
+  } catch (err) {
+    res.status(err.response?.status || 500).json({
+      erro: "Erro ao buscar propriedades em Coconut Grove",
+      detalhes: err.response?.data || err.message,
+    });
+  }
+});
+
+// API route for The Roads properties
+app.get("/api/the-roads", async (req, res) => {
+  try {
+    const resposta = await axios.get(
+      "https://api.idxbroker.com/clients/featured",
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          accesskey: "E2zacX5HZjIrbp1SeiZ0i@",
+          outputtype: "json",
+          apiversion: "1.2",
+        },
+      },
+    );
+
+    const min = parseInt(req.query.min || 0);
+
+    const propriedades = Object.values(resposta.data)
+      .filter((property) => {
+        const preco = property.rntLsePrice || 0;
+        const city = property.cityName?.toLowerCase() || "";
+        const address = property.address?.toLowerCase() || "";
+
+        return (
+          preco >= min &&
+          (city.includes("the roads") || address.includes("the roads") ||
+           city.includes("roads") || address.includes("roads") ||
+           city.includes("coral gables") || address.includes("coral gables"))
+        );
+      })
+      .map((property) => ({
+        id: property.listingID,
+        price: `$${property.rntLsePrice?.toLocaleString()}`,
+        address: property.address,
+        city: `${property.cityName}, FL ${property.zipcode}`,
+        beds: property.bedrooms?.toString() || "0",
+        baths: property.totalBaths?.toString() || "0",
+        sqft: property.sqFt || "N/A",
+        status: property.propStatus || "Active",
+        image: property.image?.["0"]?.url || "https://via.placeholder.com/400x300",
+        development: property.subdivision || "N/A",
+        pricePerSqft: property.sqFt
+          ? `$${Math.floor(property.rntLsePrice / parseInt(property.sqFt.replace(/,/g, "")))}`
+          : "N/A",
+        yearBuilt: property.yearBuilt || "N/A",
+        latitude: property.latitude,
+        longitude: property.longitude,
+        fullDetailsURL: property.fullDetailsURL,
+        propertyType: property.propType || "N/A"
+      }));
+
+    res.json(propriedades);
+  } catch (err) {
+    res.status(err.response?.status || 500).json({
+      erro: "Erro ao buscar propriedades em The Roads",
+      detalhes: err.response?.data || err.message,
+    });
+  }
+});
+
+// API route for Luxury Condos
+app.get("/api/luxury-condos", async (req, res) => {
+  try {
+    const resposta = await axios.get(
+      "https://api.idxbroker.com/clients/featured",
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          accesskey: "E2zacX5HZjIrbp1SeiZ0i@",
+          outputtype: "json",
+          apiversion: "1.2",
+        },
+      },
+    );
+
+    const min = parseInt(req.query.min || 1000000); // Default minimum for luxury condos
+
+    const propriedades = Object.values(resposta.data)
+      .filter((property) => {
+        const preco = property.rntLsePrice || 0;
+        const propType = property.propType?.toLowerCase() || "";
+
+        return (
+          preco >= min &&
+          (propType.includes("condo") || propType.includes("condominium") ||
+           propType.includes("apartment"))
+        );
+      })
+      .map((property) => ({
+        id: property.listingID,
+        price: `$${property.rntLsePrice?.toLocaleString()}`,
+        address: property.address,
+        city: `${property.cityName}, FL ${property.zipcode}`,
+        beds: property.bedrooms?.toString() || "0",
+        baths: property.totalBaths?.toString() || "0",
+        sqft: property.sqFt || "N/A",
+        status: property.propStatus || "Active",
+        image: property.image?.["0"]?.url || "https://via.placeholder.com/400x300",
+        development: property.subdivision || "N/A",
+        pricePerSqft: property.sqFt
+          ? `$${Math.floor(property.rntLsePrice / parseInt(property.sqFt.replace(/,/g, "")))}`
+          : "N/A",
+        yearBuilt: property.yearBuilt || "N/A",
+        latitude: property.latitude,
+        longitude: property.longitude,
+        fullDetailsURL: property.fullDetailsURL,
+        propertyType: "Luxury Condo"
+      }));
+
+    res.json(propriedades);
+  } catch (err) {
+    res.status(err.response?.status || 500).json({
+      erro: "Erro ao buscar luxury condos",
+      detalhes: err.response?.data || err.message,
+    });
+  }
+});
+
 // Uso no servidor
 // app.listen(PORT, () => {
 //   console.log(`✅ Servidor rodando em http://0.0.0.0:${PORT}`);

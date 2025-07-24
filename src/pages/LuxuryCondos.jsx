@@ -1,12 +1,12 @@
-
 import React from 'react';
 import PropertyListing from '../components/PropertyListing';
 
 const LuxuryCondos = () => {
   const pageData = {
     title: "Luxury Condos in Miami",
-    subtitle: "Experience elevated living with premium amenities",
-    description: "Discover Miami's most exclusive luxury condominiums featuring world-class amenities, stunning views, and sophisticated design. From Brickell to Miami Beach, find your perfect high-rise home.",
+    subtitle: "Experience the pinnacle of urban living",
+    description: "Discover Miami's most prestigious luxury condominiums. From penthouse suites with panoramic ocean views to sophisticated high-rise living with world-class amenities, find your perfect luxury home in the sky.",
+    apiEndpoint: "http://localhost:5000/api/luxury-condos",
     searchFilters: {
       propertyType: "Luxury Condo"
     },

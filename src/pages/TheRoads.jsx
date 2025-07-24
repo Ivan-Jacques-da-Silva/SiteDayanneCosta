@@ -1,17 +1,16 @@
-
 import React from 'react';
 import PropertyListing from '../components/PropertyListing';
 
 const TheRoads = () => {
   const pageData = {
     title: "The Roads Properties",
-    subtitle: "Exclusive residential enclave in the heart of Miami",
-    description: "The Roads is an exclusive gated community featuring tree-lined streets, historic Mediterranean Revival architecture, and some of Miami's most prestigious homes. This quiet residential neighborhood offers privacy and elegance.",
+    subtitle: "Exclusive residential enclave",
+    description: "Discover The Roads, an exclusive gated community offering privacy and luxury in the heart of Miami. Known for its tree-lined streets and elegant homes, this prestigious neighborhood provides the perfect blend of tranquility and urban access.",
+    apiEndpoint: "http://localhost:5000/api/the-roads",
     searchFilters: {
-      neighborhood: "The Roads",
-      propertyType: "Single Family Home"
+      neighborhood: "The Roads"
     },
-    heroImage: "/src/assets/img/luxury-condos.jpeg"
+    heroImage: "/src/assets/img/fundoImg.jpeg"
   };
 
   return <PropertyListing {...pageData} />;
