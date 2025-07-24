@@ -15,10 +15,7 @@ import ForgotPassword from '../pages/ForgotPassword';
 import BrickellCondos from '../pages/BrickellCondos';
 import BuySell from '../pages/BuySell';
 import NewDevelopments from '../pages/NewDevelopments';
-import Brickell from '../pages/Brickell';
-import Edgewater from '../pages/Edgewater';
-import CoconutGrove from '../pages/CoconutGrove';
-import TheRoads from '../pages/TheRoads';
+import Neighborhood from '../pages/Neighborhood';
 import SingleFamilyHomes from '../pages/SingleFamilyHomes';
 import LuxuryCondos from '../pages/LuxuryCondos';
 import Neighborhoods from '../pages/Neighborhoods';
@@ -45,10 +42,7 @@ const AppRoutes = () => {
       <Route path="/single-family-homes/" element={<SingleFamilyHomes />} />
       <Route path="/luxury-condos/" element={<LuxuryCondos />} />
       <Route path="/neighborhoods/" element={<Neighborhoods />} />
-      <Route path="/brickell/" element={<Brickell />} />
-      <Route path="/edgewater/" element={<Edgewater />} />
-      <Route path="/coconut-grove/" element={<CoconutGrove />} />
-      <Route path="/the-roads/" element={<TheRoads />} />
+      <Route path="/:neighborhoodSlug/" element={<Neighborhood />} />
       <Route path="/buy-sell" element={<BuySell />} />
     </Routes>
   );
