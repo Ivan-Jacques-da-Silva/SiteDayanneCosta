@@ -13,8 +13,15 @@ import Login from '../pages/Login';
 import Register from '../pages/Register';
 import ForgotPassword from '../pages/ForgotPassword';
 import BrickellCondos from '../pages/BrickellCondos';
-import BuySell from '../pages/BuySell'; // Import the BuySell component
-import NewDevelopments from '../pages/NewDevelopments'; //Import NewDevelopments
+import BuySell from '../pages/BuySell';
+import NewDevelopments from '../pages/NewDevelopments';
+import Brickell from '../pages/Brickell';
+import Edgewater from '../pages/Edgewater';
+import CoconutGrove from '../pages/CoconutGrove';
+import TheRoads from '../pages/TheRoads';
+import SingleFamilyHomes from '../pages/SingleFamilyHomes';
+import LuxuryCondos from '../pages/LuxuryCondos';
+import Neighborhoods from '../pages/Neighborhoods';
 
 const AppRoutes = () => {
   return (
@@ -33,10 +40,15 @@ const AppRoutes = () => {
       <Route path="/compass-concierge" element={<CompassConcierge />} />
       <Route path="/private-exclusive" element={<PrivateExclusive />} />
       <Route path="/new-developments" element={<NewDevelopments />} />
+      <Route path="/new-developments/" element={<NewDevelopments />} />
       <Route path="/brickell-condos-1m" element={<BrickellCondos />} />
-      <Route path="/single-family-homes/" element={<Search />} />
-      <Route path="/luxury-condos/" element={<Search />} />
-      <Route path="/neighborhoods/" element={<Search />} />
+      <Route path="/single-family-homes/" element={<SingleFamilyHomes />} />
+      <Route path="/luxury-condos/" element={<LuxuryCondos />} />
+      <Route path="/neighborhoods/" element={<Neighborhoods />} />
+      <Route path="/brickell/" element={<Brickell />} />
+      <Route path="/edgewater/" element={<Edgewater />} />
+      <Route path="/coconut-grove/" element={<CoconutGrove />} />
+      <Route path="/the-roads/" element={<TheRoads />} />
       <Route path="/buy-sell" element={<BuySell />} />
     </Routes>
   );
