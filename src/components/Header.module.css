@@ -450,14 +450,27 @@
 }
 
 .ipMenuItemHasChildren:hover > .ipSubmenu,
-.ipSubmenu:hover {
+.ipSubmenu:hover,
+.ipMenuItemHasChildren:focus-within > .ipSubmenu {
   display: block;
 }
 
 /* Mobile Dropdown Behavior */
 @media (max-width: 991.98px) {
   .ipMenuItemHasChildren:hover > .ipSubmenu {
-    display: none;
+    display: none !important;
+  }
+  
+  /* Enable touch-friendly mobile dropdowns */
+  .ipMenuItemHasChildren:active > .ipSubmenu,
+  .ipMenuItemHasChildren.mobile-open > .ipSubmenu {
+    display: block !important;
+    position: static;
+    box-shadow: none;
+    background-color: #f8f9fa;
+    border-radius: 0;
+    margin: 0;
+    padding: 0;
   }
 }
 
@@ -470,11 +483,19 @@
   border-radius: 8px;
   box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
   padding: 0.5rem 0;
-  margin-top: 0.25rem;
+  margin-top: 0;
   min-width: 200px;
   display: none;
   list-style: none;
-  z-index: 1000;
+  z-index: 1050;
+  pointer-events: auto;
+}
+
+/* Prevent menu from closing during animations */
+.ipMenuItemHasChildren:hover > .ipSubmenu,
+.ipSubmenu:hover,
+.ipMenuItemHasChildren:focus-within > .ipSubmenu {
+  display: block !important;
 }
 
 /* Nested submenu (Neighborhoods submenu) */
@@ -482,8 +503,10 @@
   position: relative;
 }
 
-.ipMenuItemHasChildren .ipMenuItemHasChildren:hover > .ipSubmenu {
-  display: block;
+.ipMenuItemHasChildren .ipMenuItemHasChildren:hover > .ipSubmenu,
+.ipMenuItemHasChildren .ipSubmenu:hover,
+.ipMenuItemHasChildren .ipMenuItemHasChildren:focus-within > .ipSubmenu {
+  display: block !important;
 }
 
 .ipMenuItemHasChildren .ipSubmenu .ipSubmenu {
@@ -491,17 +514,19 @@
   top: 0;
   left: 100%;
   margin-top: 0;
-  margin-left: 0.5rem;
+  margin-left: 0.25rem;
+  z-index: 1051;
 }
 
 .ipSubmenu::before {
   content: '';
   position: absolute;
-  top: -0.25rem;
+  top: -0.1rem;
   left: 0;
   right: 0;
-  height: 0.25rem;
+  height: 0.1rem;
   background: transparent;
+  pointer-events: auto;
 }
 
 .ipSubmenu .ipMenuLink {
@@ -670,6 +695,7 @@
   border-radius: 0;
   margin: 0;
   padding: 0;
+  z-index: auto;
 }
 
 .ipMobileMenu .ipSubmenu.open {
@@ -679,6 +705,17 @@
 .ipMobileMenu .ipSubmenu .ipMenuLink {
   padding-left: 2rem;
   font-size: 0.9rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* Nested mobile submenu styling */
+.ipMobileMenu .ipSubmenu .ipSubmenu {
+  background: #e9ecef;
+}
+
+.ipMobileMenu .ipSubmenu .ipSubmenu .ipMenuLink {
+  padding-left: 3rem;
+  font-size: 0.85rem;
 }
 
 .ipCta {
