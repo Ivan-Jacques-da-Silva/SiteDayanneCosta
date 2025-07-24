@@ -171,7 +171,13 @@ const Neighborhood = () => {
   return (
     <div>
       <Header />
-      <PropertyListing pageData={pageData} />
+      <PropertyListing 
+        apiEndpoint="/api/properties"
+        title={data.title}
+        breadcrumbPath={`Neighborhoods / ${neighborhoodName}`}
+        filters={pageData.searchParams}
+        placeholderImage="/src/assets/img/testesImagens.jpeg"
+      />
       <Footer />
     </div>
   );

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import styles from './PropertyListing.module.css';
 
 const PropertyListing = ({ 
-  apiEndpoint, 
-  title, 
-  breadcrumbPath, 
+  apiEndpoint = "/api/properties", 
+  title = "Properties", 
+  breadcrumbPath = "Properties", 
   filters: customFilters = {},
   placeholderImage = "https://via.placeholder.com/400x300?text=Property"
 }) => {
@@ -39,7 +39,19 @@ const PropertyListing = ({
       if (filters.priceRange[0] > 0) queryParams.append('min', filters.priceRange[0]);
 
       const url = queryParams.toString() ? `${apiEndpoint}?${queryParams}` : apiEndpoint;
+      
+      // Check if apiEndpoint is valid
+      if (!apiEndpoint || apiEndpoint === "/api/properties") {
+        // Use mock data for now since API endpoint doesn't exist
+        const mockData = [];
+        setProperties(mockData);
+        return;
+      }
+      
       const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
 
       if (Array.isArray(data)) {
@@ -347,7 +359,7 @@ const PropertyListing = ({
           {loading ? (
             <div className={styles.loading}>
               <div className={styles.spinner}></div>
-              <p>Loading {title?.toLowerCase()}...</p>
+              <p>Loading {title ? title.toLowerCase() : 'properties'}...</p>
             </div>
           ) : (
             <>

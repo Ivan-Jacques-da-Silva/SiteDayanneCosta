@@ -40,7 +40,13 @@ const Neighborhoods = () => {
   return (
     <div>
       <Header />
-      <PropertyListing pageData={pageData} />
+      <PropertyListing 
+        apiEndpoint="/api/properties"
+        title={pageData.title}
+        breadcrumbPath="Neighborhoods"
+        filters={pageData.searchParams}
+        placeholderImage="/src/assets/img/testesImagens.jpeg"
+      />
       <Footer />
     </div>
   );
