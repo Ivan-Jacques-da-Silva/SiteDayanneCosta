@@ -491,11 +491,13 @@
   pointer-events: auto;
 }
 
-/* Prevent menu from closing during animations */
+/* Prevent menu from closing during animations and transitions */
 .ipMenuItemHasChildren:hover > .ipSubmenu,
 .ipSubmenu:hover,
 .ipMenuItemHasChildren:focus-within > .ipSubmenu {
   display: block !important;
+  animation: none !important;
+  transition-delay: 0s !important;
 }
 
 /* Nested submenu (Neighborhoods submenu) */
@@ -507,6 +509,13 @@
 .ipMenuItemHasChildren .ipSubmenu:hover,
 .ipMenuItemHasChildren .ipMenuItemHasChildren:focus-within > .ipSubmenu {
   display: block !important;
+  animation: none !important;
+  transition-delay: 0s !important;
+}
+
+/* Ensure stable hover area */
+.ipMenuItemHasChildren .ipMenuItemHasChildren:hover::after {
+  display: block;
 }
 
 .ipMenuItemHasChildren .ipSubmenu .ipSubmenu {
@@ -514,19 +523,32 @@
   top: 0;
   left: 100%;
   margin-top: 0;
-  margin-left: 0.25rem;
+  margin-left: 0;
   z-index: 1051;
 }
 
 .ipSubmenu::before {
   content: '';
   position: absolute;
-  top: -0.1rem;
+  top: -0.25rem;
   left: 0;
   right: 0;
-  height: 0.1rem;
+  height: 0.25rem;
   background: transparent;
   pointer-events: auto;
+}
+
+/* Bridge area between parent and nested submenu */
+.ipMenuItemHasChildren .ipSubmenu .ipMenuItemHasChildren::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -0.25rem;
+  width: 0.25rem;
+  height: 100%;
+  background: transparent;
+  pointer-events: auto;
+  z-index: 1;
 }
 
 .ipSubmenu .ipMenuLink {
