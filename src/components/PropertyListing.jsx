@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import styles from './PropertyListing.module.css';
 
@@ -29,7 +28,7 @@ const PropertyListing = ({
   const fetchProperties = async () => {
     try {
       setLoading(true);
-      
+
       // Build query parameters for dynamic endpoints
       const queryParams = new URLSearchParams();
       Object.keys(filters).forEach(key => {
