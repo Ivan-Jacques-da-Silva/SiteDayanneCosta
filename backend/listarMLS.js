@@ -533,6 +533,98 @@ app.get("/api/luxury-condos", async (req, res) => {
   }
 });
 
+// Rotas específicas para as novas páginas
+app.get('/api/brickell', async (req, res) => {
+  try {
+    console.log('Fetching Brickell properties...');
+    // Assuming fetchMLSData is defined elsewhere and handles the actual data fetching
+    // For now, just returning a placeholder
+    const properties = [{ name: 'Brickell Property 1' }, { name: 'Brickell Property 2' }]; // Placeholder data
+    res.json(properties);
+  } catch (error) {
+    console.error('Error fetching Brickell properties:', error);
+    res.status(500).json({ error: 'Failed to fetch properties' });
+  }
+});
+
+app.get('/api/edgewater', async (req, res) => {
+  try {
+    console.log('Fetching Edgewater properties...');
+    // Assuming fetchMLSData is defined elsewhere and handles the actual data fetching
+    // For now, just returning a placeholder
+    const properties = [{ name: 'Edgewater Property 1' }, { name: 'Edgewater Property 2' }]; // Placeholder data
+    res.json(properties);
+  } catch (error) {
+    console.error('Error fetching Edgewater properties:', error);
+    res.status(500).json({ error: 'Failed to fetch properties' });
+  }
+});
+
+app.get('/api/coconut-grove', async (req, res) => {
+  try {
+    console.log('Fetching Coconut Grove properties...');
+    // Assuming fetchMLSData is defined elsewhere and handles the actual data fetching
+    // For now, just returning a placeholder
+    const properties = [{ name: 'Coconut Grove Property 1' }, { name: 'Coconut Grove Property 2' }]; // Placeholder data
+    res.json(properties);
+  } catch (error) {
+    console.error('Error fetching Coconut Grove properties:', error);
+    res.status(500).json({ error: 'Failed to fetch properties' });
+  }
+});
+
+app.get('/api/the-roads', async (req, res) => {
+  try {
+    console.log('Fetching The Roads properties...');
+    // Assuming fetchMLSData is defined elsewhere and handles the actual data fetching
+    // For now, just returning a placeholder
+    const properties = [{ name: 'The Roads Property 1' }, { name: 'The Roads Property 2' }]; // Placeholder data
+    res.json(properties);
+  } catch (error) {
+    console.error('Error fetching The Roads properties:', error);
+    res.status(500).json({ error: 'Failed to fetch properties' });
+  }
+});
+
+app.get('/api/single-family-homes', async (req, res) => {
+  try {
+    console.log('Fetching Single Family Homes...');
+    // Assuming fetchMLSData is defined elsewhere and handles the actual data fetching
+    // For now, just returning a placeholder
+    const properties = [{ name: 'Single Family Home 1' }, { name: 'Single Family Home 2' }]; // Placeholder data
+    res.json(properties);
+  } catch (error) {
+    console.error('Error fetching Single Family Homes:', error);
+    res.status(500).json({ error: 'Failed to fetch properties' });
+  }
+});
+
+app.get('/api/luxury-condos', async (req, res) => {
+  try {
+    console.log('Fetching Luxury Condos...');
+    // Assuming fetchMLSData is defined elsewhere and handles the actual data fetching
+    // For now, just returning a placeholder
+    const properties = [{ name: 'Luxury Condo 1' }, { name: 'Luxury Condo 2' }]; // Placeholder data
+    res.json(properties);
+  } catch (error) {
+    console.error('Error fetching Luxury Condos:', error);
+    res.status(500).json({ error: 'Failed to fetch properties' });
+  }
+});
+
+app.get('/api/neighborhoods', async (req, res) => {
+  try {
+    console.log('Fetching All Neighborhoods properties...');
+    // Assuming fetchMLSData is defined elsewhere and handles the actual data fetching
+    // For now, just returning a placeholder
+    const properties = [{ name: 'Neighborhood Property 1' }, { name: 'Neighborhood Property 2' }]; // Placeholder data
+    res.json(properties);
+  } catch (error) {
+    console.error('Error fetching Neighborhoods properties:', error);
+    res.status(500).json({ error: 'Failed to fetch properties' });
+  }
+});
+
 // Uso no servidor
 // app.listen(PORT, () => {
 //   console.log(`✅ Servidor rodando em http://0.0.0.0:${PORT}`);

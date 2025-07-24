@@ -1,19 +1,48 @@
+
 import React from 'react';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 import PropertyListing from '../components/PropertyListing';
 
 const SingleFamilyHomes = () => {
   const pageData = {
     title: "Single Family Homes in Miami",
-    subtitle: "Find your dream home in Miami's finest neighborhoods",
-    description: "Explore Miami's most desirable single family homes, from waterfront estates to historic properties. Discover spacious living, private pools, and the ultimate in luxury residential living.",
-    apiEndpoint: "http://localhost:5000/api/single-family-homes",
-    searchFilters: {
-      propertyType: "Single Family Home"
+    subtitle: "Discover Your Dream Home",
+    description: "Explore our exclusive collection of single family homes in Miami's most prestigious neighborhoods.",
+    searchParams: {
+      property_type: "Single Family Home",
+      city: "Miami",
+      state: "FL"
     },
-    heroImage: "/src/assets/img/waterfront-homes.jpeg"
+    heroImage: "/src/assets/img/waterfront-homes.jpeg",
+    sections: [
+      {
+        title: "Luxury Single Family Homes",
+        subtitle: "Premium Properties in Prime Locations",
+        content: "From waterfront estates to gated community homes, find the perfect single family residence that matches your lifestyle and investment goals."
+      },
+      {
+        title: "Why Choose Single Family Homes?",
+        subtitle: "Benefits of Homeownership",
+        features: [
+          "Complete privacy and independence",
+          "Your own yard and outdoor space",
+          "No HOA restrictions in many areas",
+          "Potential for customization and expansion",
+          "Strong investment potential",
+          "Family-friendly neighborhoods"
+        ]
+      }
+    ]
   };
 
-  return <PropertyListing {...pageData} />;
+  return (
+    <div>
+      <Header />
+      <PropertyListing pageData={pageData} />
+      <Footer />
+    </div>
+  );
 };
 
 export default SingleFamilyHomes;
