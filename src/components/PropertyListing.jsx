@@ -347,7 +347,7 @@ const PropertyListing = ({
           {loading ? (
             <div className={styles.loading}>
               <div className={styles.spinner}></div>
-              <p>Loading {title.toLowerCase()}...</p>
+              <p>Loading {title?.toLowerCase()}...</p>
             </div>
           ) : (
             <>

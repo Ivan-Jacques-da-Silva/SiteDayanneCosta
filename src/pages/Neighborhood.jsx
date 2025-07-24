@@ -8,6 +8,20 @@ import PropertyListing from '../components/PropertyListing';
 const Neighborhood = () => {
   const { neighborhoodSlug } = useParams();
 
+  // Validate parameters
+  if (!neighborhoodSlug) {
+    return (
+      <div>
+        <Header />
+        <div style={{ padding: '50px 20px', textAlign: 'center' }}>
+          <h2>Neighborhood not found</h2>
+          <p>Please select a valid neighborhood.</p>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
   // Configuration for each neighborhood
   const neighborhoodData = {
     'brickell': {
@@ -136,17 +150,21 @@ const Neighborhood = () => {
   };
 
   // Format neighborhood name for search params
-  const neighborhoodName = neighborhoodSlug
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
+  const neighborhoodName = neighborhoodSlug 
+    ? neighborhoodSlug
+        .split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
+    : '';
 
   const pageData = {
     ...data,
     searchParams: {
-      neighborhood: neighborhoodName,
+      neighborhood: neighborhoodName || '',
       city: "Miami",
-      state: "FL"
+      state: "FL",
+      slug: neighborhoodSlug || '',
+      type: 'neighborhood'
     }
   };
 
