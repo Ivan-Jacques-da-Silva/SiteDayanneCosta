@@ -13,7 +13,7 @@ const LuxuryCondos = () => {
       property_type: "Condo",
       city: "Miami",
       state: "FL",
-      min_price: 500000
+      min_price: 1000000
     },
     heroImage: "/src/assets/img/luxury-condos.jpeg",
     sections: [
@@ -42,7 +42,14 @@ const LuxuryCondos = () => {
   return (
     <div>
       <Header />
-      <PropertyListing pageData={pageData} />
+      <PropertyListing 
+        apiEndpoint="http://localhost:5000/api/luxury-condos"
+        title={pageData.title}
+        breadcrumbPath="Luxury Condos"
+        filters={{ min: '' }}
+        placeholderImage="/src/assets/img/luxury-condos.jpeg"
+        pageData={pageData}
+      />
       <Footer />
     </div>
   );

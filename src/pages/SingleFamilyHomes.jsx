@@ -39,7 +39,14 @@ const SingleFamilyHomes = () => {
   return (
     <div>
       <Header />
-      <PropertyListing pageData={pageData} />
+      <PropertyListing 
+        apiEndpoint="http://localhost:5000/api/single-family-homes"
+        title={pageData.title}
+        breadcrumbPath="Single Family Homes"
+        filters={{ cidade: '', min: '' }}
+        placeholderImage="/src/assets/img/waterfront-homes.jpeg"
+        pageData={pageData}
+      />
       <Footer />
     </div>
   );
