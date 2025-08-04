@@ -52,6 +52,16 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Logging
 app.use(morgan('combined'));
 
+// Custom request logging for debugging
+app.use((req, res, next) => {
+  console.log(`\n=== INCOMING REQUEST ===`);
+  console.log(`${req.method} ${req.url}`);
+  console.log('Headers:', JSON.stringify(req.headers, null, 2));
+  console.log('Body:', JSON.stringify(req.body, null, 2));
+  console.log(`========================\n`);
+  next();
+});
+
 // Serve static files
 app.use('/uploads', express.static('uploads'));
 
@@ -136,12 +146,12 @@ async function testConnection() {
   }
 }
 
-app.listen(PORT, () => {
+app.listen(PORT, 'localhost', () => {
   console.log(`🚀 Backend server running on http://localhost:${PORT}`);
-  console.log(`🚀 Server also available on http://0.0.0.0:${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV}`);
   console.log(`📅 Started at: ${new Date().toISOString()}`);
-  console.log(`🌐 Configured for development with localhost backend`);
+  console.log(`🌐 Configured for local development`);
+  console.log(`🔗 Frontend proxy: http://localhost:3000 -> http://localhost:${PORT}`);
   testConnection();
 });
 

@@ -2,13 +2,13 @@
 const corsConfig = {
   // Endereços permitidos para desenvolvimento e produção
   allowedOrigins: [
-    // Desenvolvimento local
+    // Desenvolvimento local (prioridade)
     'http://localhost:3000',
     'http://localhost:5173',
+    'http://localhost:5000',
     'http://127.0.0.1:3000',
     'http://127.0.0.1:5173',
-    'http://0.0.0.0:3000',
-    'http://0.0.0.0:5173',
+    'http://127.0.0.1:5000',
     
     // Replit development
     'https://*.replit.dev',

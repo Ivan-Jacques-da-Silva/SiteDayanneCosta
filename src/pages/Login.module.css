@@ -28,9 +28,9 @@
   background: white;
   border-radius: 12px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-  padding: 50px;
-  width: 100%;
-  max-width: 500px;
+  padding: 50px!important;
+  width: 500px;
+  max-width: 100%;
 }
 
 .loginHeader {

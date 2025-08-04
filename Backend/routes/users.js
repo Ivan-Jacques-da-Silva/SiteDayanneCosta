@@ -8,9 +8,18 @@ const prisma = new PrismaClient();
 
 // Login route
 router.post('/login', async (req, res) => {
+  // Add CORS headers explicitly for local development
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  
   console.log('=== LOGIN ATTEMPT ===');
-  console.log('Request body:', req.body);
-  console.log('Headers:', req.headers);
+  console.log('Timestamp:', new Date().toISOString());
+  console.log('Request method:', req.method);
+  console.log('Request URL:', req.url);
+  console.log('Request headers:', JSON.stringify(req.headers, null, 2));
+  console.log('Request body:', JSON.stringify(req.body, null, 2));
+  console.log('Request origin:', req.headers.origin);
+  console.log('Content-Type:', req.headers['content-type']);
   
   try {
     const { email, password } = req.body;
