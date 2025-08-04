@@ -72,13 +72,41 @@ const Register = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validateForm();
     
     if (Object.keys(newErrors).length === 0) {
-      // Aqui você implementaria a lógica de registro
-      console.log('Registration data:', formData);
+      try {
+        const response = await fetch('http://localhost:5000/api/users/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: `${formData.firstName} ${formData.lastName}`,
+            email: formData.email,
+            password: formData.password,
+            role: 'AGENT'
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // Save user data and token to localStorage
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+          
+          // Redirect to home page
+          window.location.href = '/';
+        } else {
+          setErrors({ general: data.error || 'Registration failed' });
+        }
+      } catch (error) {
+        console.error('Registration error:', error);
+        setErrors({ general: 'Connection error. Please try again.' });
+      }
     } else {
       setErrors(newErrors);
     }
@@ -98,6 +126,12 @@ const Register = () => {
               </div>
 
               <form onSubmit={handleSubmit} className={styles.registerForm}>
+                {errors.general && (
+                  <div className={styles.errorMessage}>
+                    {errors.general}
+                  </div>
+                )}
+                
                 <div className={styles.formRow}>
                   <div className={styles.formGroup}>
                     <label htmlFor="firstName" className={styles.label}>

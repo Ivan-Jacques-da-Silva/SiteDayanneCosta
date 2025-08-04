@@ -12,6 +12,7 @@ const Login = () => {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -21,10 +22,41 @@ const Login = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aqui você implementaria a lógica de login
-    console.log('Login data:', formData);
+    
+    try {
+      const response = await fetch('/api/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Save user data and token to localStorage
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        
+        // Redirect based on user role
+        if (data.user.role === 'ADMIN') {
+          window.location.href = '/admin';
+        } else {
+          window.location.href = '/';
+        }
+      } else {
+        setErrors({ general: data.message || 'Login failed' });
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setErrors({ general: 'Connection error. Please try again.' });
+    }
   };
 
   return (
@@ -41,6 +73,12 @@ const Login = () => {
               </div>
 
               <form onSubmit={handleSubmit} className={styles.loginForm}>
+                {errors.general && (
+                  <div className={styles.errorMessage}>
+                    {errors.general}
+                  </div>
+                )}
+                
                 <div className={styles.formGroup}>
                   <label htmlFor="email" className={styles.label}>
                     Email Address

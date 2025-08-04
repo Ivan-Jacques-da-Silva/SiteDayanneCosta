@@ -103,10 +103,32 @@ process.on('SIGINT', async () => {
   process.exit(0);
 });
 
+// Test database connection
+async function testConnection() {
+  try {
+    await prisma.$connect();
+    console.log('✅ Database connected successfully');
+
+    // Check if admin user exists
+    const adminUser = await prisma.user.findFirst({
+      where: { role: 'ADMIN' }
+    });
+
+    console.log('Admin user exists:', !!adminUser);
+    if (adminUser) {
+      console.log('Admin email:', adminUser.email);
+    }
+
+  } catch (error) {
+    console.error('❌ Database connection failed:', error);
+  }
+}
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on http://0.0.0.0:${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV}`);
   console.log(`📅 Started at: ${new Date().toISOString()}`);
+  testConnection();
 });
 
 module.exports = app;
