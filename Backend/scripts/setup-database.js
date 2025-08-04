@@ -3,6 +3,7 @@ const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcryptjs');
+const readline = require('readline');
 
 // Database configuration
 const DB_CONFIG = {
@@ -12,6 +13,20 @@ const DB_CONFIG = {
   username: 'postgres',
   password: 'admin'
 };
+
+// Interface para input do usuário
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+function askQuestion(question) {
+  return new Promise((resolve) => {
+    rl.question(question, (answer) => {
+      resolve(answer.toLowerCase().trim());
+    });
+  });
+}
 
 function executeCommand(command, description) {
   return new Promise((resolve, reject) => {
@@ -75,26 +90,104 @@ function getPsqlCommand() {
   return 'psql';
 }
 
-async function cleanupExisting() {
-  console.log('🧹 Cleaning up existing database...');
+async function checkDatabaseExists() {
+  console.log('🔍 Checking if database already exists...');
   
   const psql = getPsqlCommand();
+  const env = { ...process.env, PGPASSWORD: DB_CONFIG.password };
+  
+  return new Promise((resolve) => {
+    const checkCmd = `${psql} -h localhost -U postgres -lqt | cut -d \\| -f 1 | grep -qw ${DB_CONFIG.database}`;
+    exec(checkCmd, { env }, (error, stdout, stderr) => {
+      if (error) {
+        console.log('✅ Database does not exist yet');
+        resolve(false);
+      } else {
+        console.log('⚠️  Database already exists!');
+        resolve(true);
+      }
+    });
+  });
+}
+
+async function checkAdminUserExists() {
+  console.log('🔍 Checking if admin user already exists...');
   
   try {
-    const env = { ...process.env, PGPASSWORD: DB_CONFIG.password };
+    const { PrismaClient } = require('@prisma/client');
+    const prisma = new PrismaClient();
     
-    await new Promise((resolve, reject) => {
-      exec(`${psql} -h localhost -U postgres -c "DROP DATABASE IF EXISTS ${DB_CONFIG.database};"`, { env }, (error, stdout, stderr) => {
-        if (error && !error.message.includes('does not exist')) {
-          console.log('⚠️  Database drop had issues (normal if it didn\'t exist)');
-        }
-        resolve();
-      });
+    await prisma.$connect();
+    
+    const existingAdmin = await prisma.user.findFirst({
+      where: { 
+        OR: [
+          { email: 'admin@dayannecosta.com' },
+          { role: 'ADMIN' }
+        ]
+      }
     });
-
-    console.log('✅ Cleanup completed');
+    
+    await prisma.$disconnect();
+    
+    if (existingAdmin) {
+      console.log('⚠️  Admin user already exists!');
+      console.log(`   Email: ${existingAdmin.email}`);
+      console.log(`   Role: ${existingAdmin.role}`);
+      console.log(`   Created: ${existingAdmin.createdAt}`);
+      return true;
+    } else {
+      console.log('✅ No admin user found');
+      return false;
+    }
   } catch (error) {
-    console.log('⚠️  Cleanup had some issues (this is normal if nothing existed)');
+    console.log('✅ Unable to check admin user (database may not exist yet)');
+    return false;
+  }
+}
+
+async function cleanupExistingDatabase() {
+  console.log('🗑️  Dropping existing database...');
+  
+  const psql = getPsqlCommand();
+  const env = { ...process.env, PGPASSWORD: DB_CONFIG.password };
+  
+  return new Promise((resolve, reject) => {
+    exec(`${psql} -h localhost -U postgres -c "DROP DATABASE IF EXISTS ${DB_CONFIG.database};"`, { env }, (error, stdout, stderr) => {
+      if (error && !error.message.includes('does not exist')) {
+        console.error('❌ Error dropping database:', error.message);
+        reject(error);
+      } else {
+        console.log('✅ Database dropped successfully');
+        resolve();
+      }
+    });
+  });
+}
+
+async function cleanupExistingUsers() {
+  console.log('🗑️  Removing existing admin users...');
+  
+  try {
+    const { PrismaClient } = require('@prisma/client');
+    const prisma = new PrismaClient();
+    
+    await prisma.$connect();
+    
+    const deletedUsers = await prisma.user.deleteMany({
+      where: { 
+        OR: [
+          { email: 'admin@dayannecosta.com' },
+          { role: 'ADMIN' }
+        ]
+      }
+    });
+    
+    console.log(`✅ Removed ${deletedUsers.count} admin users`);
+    
+    await prisma.$disconnect();
+  } catch (error) {
+    console.log('⚠️  Could not cleanup users (this is normal if database doesn\'t exist)');
   }
 }
 
@@ -334,11 +427,58 @@ async function main() {
     // Check PostgreSQL installation
     await checkPostgreSQL();
 
-    // Cleanup existing setup
-    await cleanupExisting();
+    // Check if database already exists
+    const databaseExists = await checkDatabaseExists();
+    let shouldCleanupDatabase = false;
+    
+    if (databaseExists) {
+      console.log('\n⚠️  ATENÇÃO: O banco de dados já existe!');
+      console.log(`📊 Database: ${DB_CONFIG.database}`);
+      console.log('🗑️  Para configurar tudo do zero, o banco existente será removido.');
+      
+      const answer = await askQuestion('\n❓ Deseja remover o banco existente e reconfigurar tudo? (y/s para sim, qualquer outra tecla para não): ');
+      
+      if (answer === 'y' || answer === 's' || answer === 'yes' || answer === 'sim') {
+        shouldCleanupDatabase = true;
+        console.log('✅ Banco será removido e reconfigurado...\n');
+      } else {
+        console.log('❌ Operação cancelada. Banco existente mantido.');
+        rl.close();
+        return;
+      }
+    }
 
-    // Setup database
-    await setupDatabase();
+    // Check if admin user exists (only if database exists and we're not cleaning it)
+    let shouldCleanupUsers = false;
+    if (databaseExists && !shouldCleanupDatabase) {
+      const adminExists = await checkAdminUserExists();
+      
+      if (adminExists) {
+        console.log('\n⚠️  ATENÇÃO: Usuário admin já existe!');
+        console.log('🗑️  Para recriar o usuário admin, o existente será removido.');
+        
+        const answer = await askQuestion('\n❓ Deseja remover o usuário admin existente e recriar? (y/s para sim, qualquer outra tecla para não): ');
+        
+        if (answer === 'y' || answer === 's' || answer === 'yes' || answer === 'sim') {
+          shouldCleanupUsers = true;
+          console.log('✅ Usuário admin será removido e recriado...\n');
+        } else {
+          console.log('❌ Usuário admin existente mantido.');
+        }
+      }
+    }
+
+    // Cleanup if requested
+    if (shouldCleanupDatabase) {
+      await cleanupExistingDatabase();
+    } else if (shouldCleanupUsers) {
+      await cleanupExistingUsers();
+    }
+
+    // Setup database (only if it doesn't exist or was cleaned)
+    if (!databaseExists || shouldCleanupDatabase) {
+      await setupDatabase();
+    }
 
     // Test connection
     await testConnection();
@@ -349,20 +489,24 @@ async function main() {
     // Run Prisma commands
     await runPrismaCommands();
 
-    // Create admin user
-    await createAdminUser();
+    // Create admin user (only if doesn't exist or was cleaned)
+    if (!databaseExists || shouldCleanupDatabase || shouldCleanupUsers) {
+      await createAdminUser();
+    }
 
-    // Seed basic data
-    await seedBasicData();
+    // Seed basic data (only if database is new or was cleaned)
+    if (!databaseExists || shouldCleanupDatabase) {
+      await seedBasicData();
+    }
 
-    console.log('\n🎉 Complete database setup finished successfully!');
+    console.log('\n🎉 Database setup completed successfully!');
     console.log('\n📊 Database Configuration:');
     console.log(`   Database: ${DB_CONFIG.database}`);
     console.log(`   User: ${DB_CONFIG.username}`);
     console.log(`   Password: ${DB_CONFIG.password}`);
     console.log(`   Host: ${DB_CONFIG.host}`);
     console.log(`   Port: ${DB_CONFIG.port}`);
-    console.log('\n👤 Admin User Created:');
+    console.log('\n👤 Admin User:');
     console.log('   Email: admin@dayannecosta.com');
     console.log('   Password: admin123');
     console.log('\n🔐 All credentials stored in .env file');
@@ -375,6 +519,8 @@ async function main() {
     console.log('🔧 Make sure postgres user password is "admin"');
     console.log('🔧 If PostgreSQL is not installed, download it from: https://www.postgresql.org/download/');
     process.exit(1);
+  } finally {
+    rl.close();
   }
 }
 
