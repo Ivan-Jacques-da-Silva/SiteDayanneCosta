@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -33,6 +32,7 @@ import AdminContacts from '../pages/AdminContacts';
 import AdminProperties from '../pages/AdminProperties';
 import AdminCondominios from '../pages/AdminCondominios';
 import AdminUsuarios from '../pages/AdminUsuarios';
+import AdminPropertyForm from '../pages/AdminPropertyForm';
 
 // Components
 import PropertyDetail from './PropertyDetail';
@@ -58,21 +58,22 @@ const AppRoutes = () => {
         <Route path="/single-family-homes" element={<SingleFamilyHomes />} />
         <Route path="/compass-concierge" element={<CompassConcierge />} />
         <Route path="/private-exclusive" element={<PrivateExclusive />} />
-        
+
         {/* Property Detail */}
         <Route path="/property/:id" element={<PropertyDetail />} />
-        
+
         {/* Neighborhood Routes */}
         <Route path="/neighborhoods/brickell" element={<Brickell />} />
         <Route path="/neighborhoods/brickell-condos" element={<BrickellCondos />} />
         <Route path="/neighborhoods/coconut-grove" element={<CoconutGrove />} />
         <Route path="/neighborhoods/edgewater" element={<Edgewater />} />
         <Route path="/neighborhoods/the-roads" element={<TheRoads />} />
-        
+
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/contacts" element={<AdminContacts />} />
         <Route path="/admin/properties" element={<AdminProperties />} />
+        <Route path="/admin/properties/new" element={<AdminPropertyForm />} />
         <Route path="/admin/condominios" element={<AdminCondominios />} />
         <Route path="/admin/usuarios" element={<AdminUsuarios />} />
         <Route path="/admin/favoritos" element={<AdminDashboard />} /> {/* Placeholder */}
