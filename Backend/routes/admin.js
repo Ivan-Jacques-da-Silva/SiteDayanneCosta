@@ -147,4 +147,143 @@ router.get('/users', async (req, res) => {
   }
 });
 
+// GET /api/admin/properties - Get all properties with pagination
+router.get('/properties', async (req, res) => {
+  try {
+    const { page = 1, limit = 10, status } = req.query;
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    const where = status ? { status } : {};
+
+    const [properties, total] = await Promise.all([
+      prisma.property.findMany({
+        where,
+        include: {
+          user: {
+            select: { name: true, email: true }
+          },
+          images: {
+            select: { url: true, isPrimary: true }
+          },
+          _count: {
+            select: {
+              favorites: true
+            }
+          }
+        },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: parseInt(limit)
+      }),
+      prisma.property.count({ where })
+    ]);
+
+    res.json({
+      properties,
+      pagination: {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        total,
+        pages: Math.ceil(total / parseInt(limit))
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching properties:', error);
+    res.status(500).json({ error: 'Failed to fetch properties' });
+  }
+});
+
+// POST /api/admin/properties - Create new property
+router.post('/properties', async (req, res) => {
+  try {
+    const {
+      title,
+      description,
+      address,
+      city,
+      state,
+      zipCode,
+      propertyType,
+      price,
+      bedrooms,
+      bathrooms,
+      sqft,
+      userId
+    } = req.body;
+
+    const property = await prisma.property.create({
+      data: {
+        title,
+        description,
+        address,
+        city,
+        state,
+        zipCode,
+        propertyType,
+        price: parseFloat(price),
+        bedrooms: bedrooms ? parseInt(bedrooms) : null,
+        bathrooms: bathrooms ? parseFloat(bathrooms) : null,
+        sqft: sqft ? parseInt(sqft) : null,
+        userId: userId || req.user.userId,
+        country: 'USA'
+      },
+      include: {
+        user: {
+          select: { name: true, email: true }
+        }
+      }
+    });
+
+    res.status(201).json(property);
+  } catch (error) {
+    console.error('Error creating property:', error);
+    res.status(500).json({ error: 'Failed to create property' });
+  }
+});
+
+// PUT /api/admin/properties/:id - Update property
+router.put('/properties/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+
+    // Convert numeric fields
+    if (updateData.price) updateData.price = parseFloat(updateData.price);
+    if (updateData.bedrooms) updateData.bedrooms = parseInt(updateData.bedrooms);
+    if (updateData.bathrooms) updateData.bathrooms = parseFloat(updateData.bathrooms);
+    if (updateData.sqft) updateData.sqft = parseInt(updateData.sqft);
+
+    const property = await prisma.property.update({
+      where: { id },
+      data: updateData,
+      include: {
+        user: {
+          select: { name: true, email: true }
+        }
+      }
+    });
+
+    res.json(property);
+  } catch (error) {
+    console.error('Error updating property:', error);
+    res.status(400).json({ error: 'Failed to update property' });
+  }
+});
+
+// DELETE /api/admin/properties/:id - Delete property
+router.delete('/properties/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await prisma.property.delete({
+      where: { id }
+    });
+
+    res.json({ message: 'Property deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting property:', error);
+    res.status(400).json({ error: 'Failed to delete property' });
+  }
+});
+
 module.exports = router;

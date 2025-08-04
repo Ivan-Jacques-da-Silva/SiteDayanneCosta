@@ -10,6 +10,10 @@ const corsConfig = {
     'http://0.0.0.0:3000',
     'http://0.0.0.0:5173',
     
+    // Replit development
+    'https://*.replit.dev',
+    'https://*.replit.co',
+    
     // Produção
     'https://site.dayannecosta.com',
     'https://www.dayannecosta.com',
