@@ -150,7 +150,12 @@ const AdminCondominios = () => {
           formData[key].forEach((file, index) => {
             formDataToSend.append(`galleryImage_${index}`, file);
           });
-        } else {
+        } else if (key === 'categories' && Array.isArray(formData[key])) {
+            formData[key].forEach((category, index) => {
+                formDataToSend.append(`categories_${index}`, category);
+            });
+        }
+        else {
           formDataToSend.append(key, formData[key]);
         }
       });
@@ -158,9 +163,23 @@ const AdminCondominios = () => {
       if (editingCondominio) {
         // Update existing
         console.log('Updating condominio:', formData);
+        // Replace with actual API call for update
+        // const response = await fetch(`http://0.0.0.0:5000/api/properties/${editingCondominio.id}`, {
+        //   method: 'PUT',
+        //   headers: { 'Authorization': `Bearer ${token}` },
+        //   body: formDataToSend
+        // });
+        // if (!response.ok) throw new Error('Failed to update property');
       } else {
         // Create new
         console.log('Creating condominio:', formData);
+        // Replace with actual API call for create
+        // const response = await fetch('http://0.0.0.0:5000/api/properties', {
+        //   method: 'POST',
+        //   headers: { 'Authorization': `Bearer ${token}` },
+        //   body: formDataToSend
+        // });
+        // if (!response.ok) throw new Error('Failed to create property');
       }
 
       setShowForm(false);
@@ -176,6 +195,9 @@ const AdminCondominios = () => {
     const { name, value, type, checked, files } = e.target;
 
     if (type === 'checkbox') {
+      if (name === 'categories') { // This case is handled by specific category checkboxes below
+        return;
+      }
       setFormData(prev => ({ ...prev, [name]: checked }));
     } else if (type === 'file') {
       if (name === 'mainImage') {
@@ -186,6 +208,18 @@ const AdminCondominios = () => {
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
+  };
+
+  const handleCategoryChange = (e) => {
+    const { name, checked } = e.target;
+    setFormData(prev => {
+      const currentCategories = prev.categories || [];
+      if (checked) {
+        return { ...prev, categories: [...currentCategories, name] };
+      } else {
+        return { ...prev, categories: currentCategories.filter(cat => cat !== name) };
+      }
+    });
   };
 
   const resetForm = () => {
@@ -253,7 +287,13 @@ const AdminCondominios = () => {
     if (window.confirm('Are you sure you want to delete this condominium?')) {
       try {
         console.log('Deleting condominio:', id);
-        loadCondominios();
+        // Placeholder for actual delete logic
+        // const token = localStorage.getItem('token');
+        // await fetch(`http://0.0.0.0:5000/api/properties/${id}`, {
+        //   method: 'DELETE',
+        //   headers: { 'Authorization': `Bearer ${token}` }
+        // });
+        loadCondominios(); // Reload to reflect deletion
       } catch (error) {
         console.error('Error deleting condominio:', error);
       }
@@ -261,11 +301,17 @@ const AdminCondominios = () => {
   };
 
   const formatPrice = (price) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0
-    }).format(price);
+    if (price === undefined || price === null || price === '') return '';
+    try {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0
+      }).format(price);
+    } catch (e) {
+      console.error("Error formatting price:", price, e);
+      return price; // Return original value if formatting fails
+    }
   };
 
   if (loading) {
@@ -415,20 +461,7 @@ const AdminCondominios = () => {
                           type="checkbox"
                           name="newDevelopments"
                           checked={formData.categories?.includes('newDevelopments') || false}
-                          onChange={(e) => {
-                            const categories = formData.categories || [];
-                            if (e.target.checked) {
-                              setFormData(prev => ({ 
-                                ...prev, 
-                                categories: [...categories, 'newDevelopments'] 
-                              }));
-                            } else {
-                              setFormData(prev => ({ 
-                                ...prev, 
-                                categories: categories.filter(cat => cat !== 'newDevelopments') 
-                              }));
-                            }
-                          }}
+                          onChange={handleCategoryChange}
                         />
                         <span>New Developments</span>
                       </label>
@@ -438,20 +471,7 @@ const AdminCondominios = () => {
                           type="checkbox"
                           name="luxuryCondos"
                           checked={formData.categories?.includes('luxuryCondos') || false}
-                          onChange={(e) => {
-                            const categories = formData.categories || [];
-                            if (e.target.checked) {
-                              setFormData(prev => ({ 
-                                ...prev, 
-                                categories: [...categories, 'luxuryCondos'] 
-                              }));
-                            } else {
-                              setFormData(prev => ({ 
-                                ...prev, 
-                                categories: categories.filter(cat => cat !== 'luxuryCondos') 
-                              }));
-                            }
-                          }}
+                          onChange={handleCategoryChange}
                         />
                         <span>Luxury Condos</span>
                       </label>
@@ -461,20 +481,7 @@ const AdminCondominios = () => {
                           type="checkbox"
                           name="singleFamily"
                           checked={formData.categories?.includes('singleFamily') || false}
-                          onChange={(e) => {
-                            const categories = formData.categories || [];
-                            if (e.target.checked) {
-                              setFormData(prev => ({ 
-                                ...prev, 
-                                categories: [...categories, 'singleFamily'] 
-                              }));
-                            } else {
-                              setFormData(prev => ({ 
-                                ...prev, 
-                                categories: categories.filter(cat => cat !== 'singleFamily') 
-                              }));
-                            }
-                          }}
+                          onChange={handleCategoryChange}
                         />
                         <span>Single Family Homes</span>
                       </label>
@@ -484,20 +491,7 @@ const AdminCondominios = () => {
                           type="checkbox"
                           name="waterfront"
                           checked={formData.categories?.includes('waterfront') || false}
-                          onChange={(e) => {
-                            const categories = formData.categories || [];
-                            if (e.target.checked) {
-                              setFormData(prev => ({ 
-                                ...prev, 
-                                categories: [...categories, 'waterfront'] 
-                              }));
-                            } else {
-                              setFormData(prev => ({ 
-                                ...prev, 
-                                categories: categories.filter(cat => cat !== 'waterfront') 
-                              }));
-                            }
-                          }}
+                          onChange={handleCategoryChange}
                         />
                         <span>Waterfront Properties</span>
                       </label>
@@ -507,20 +501,7 @@ const AdminCondominios = () => {
                           type="checkbox"
                           name="golfCourse"
                           checked={formData.categories?.includes('golfCourse') || false}
-                          onChange={(e) => {
-                            const categories = formData.categories || [];
-                            if (e.target.checked) {
-                              setFormData(prev => ({ 
-                                ...prev, 
-                                categories: [...categories, 'golfCourse'] 
-                              }));
-                            } else {
-                              setFormData(prev => ({ 
-                                ...prev, 
-                                categories: categories.filter(cat => cat !== 'golfCourse') 
-                              }));
-                            }
-                          }}
+                          onChange={handleCategoryChange}
                         />
                         <span>Golf Course Properties</span>
                       </label>
@@ -530,20 +511,7 @@ const AdminCondominios = () => {
                           type="checkbox"
                           name="privateExclusive"
                           checked={formData.categories?.includes('privateExclusive') || false}
-                          onChange={(e) => {
-                            const categories = formData.categories || [];
-                            if (e.target.checked) {
-                              setFormData(prev => ({ 
-                                ...prev, 
-                                categories: [...categories, 'privateExclusive'] 
-                              }));
-                            } else {
-                              setFormData(prev => ({ 
-                                ...prev, 
-                                categories: categories.filter(cat => cat !== 'privateExclusive') 
-                              }));
-                            }
-                          }}
+                          onChange={handleCategoryChange}
                         />
                         <span>Private & Exclusive</span>
                       </label>

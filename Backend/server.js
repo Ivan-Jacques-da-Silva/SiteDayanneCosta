@@ -64,10 +64,10 @@ app.use(express.static('../dist'));
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
+  res.json({
+    status: 'OK',
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV 
+    environment: process.env.NODE_ENV
   });
 });
 
@@ -78,6 +78,7 @@ app.use('/api/contacts', contactRoutes);
 app.use('/api/favorites', favoriteRoutes);
 app.use('/api/amenities', amenityRoutes);
 app.use('/api/features', featureRoutes);
+app.use('/api/categories', require('./routes/categories'));
 app.use('/api/admin', adminRoutes);
 
 // Error handling middleware

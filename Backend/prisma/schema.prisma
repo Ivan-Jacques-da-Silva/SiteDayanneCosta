@@ -84,6 +84,7 @@ model Property {
   user            User        @relation(fields: [userId], references: [id])
   amenities       PropertyAmenity[]
   features        PropertyFeature[]
+  categories      PropertyCategory[]
   favorites       Favorite[]
 
   createdAt       DateTime    @default(now())
@@ -186,6 +187,36 @@ model PropertyFeature {
 
   @@unique([propertyId, featureId])
   @@map("property_features")
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  icon        String?
+  color       String   @default("#3b82f6")
+
+  properties  PropertyCategory[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("categories")
+}
+
+model PropertyCategory {
+  id          String   @id @default(cuid())
+
+  propertyId  String
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+
+  @@unique([propertyId, categoryId])
+  @@map("property_categories")
 }
 
 model Contact {
