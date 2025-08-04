@@ -7,7 +7,7 @@ const readline = require('readline');
 
 // Database configuration
 const DB_CONFIG = {
-  host: '0.0.0.0',
+  host: 'localhost',
   port: 5432,
   database: 'real_estate_db',
   username: 'postgres',
