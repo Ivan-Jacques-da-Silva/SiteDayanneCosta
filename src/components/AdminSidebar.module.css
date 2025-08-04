@@ -1,0 +1,170 @@
+
+.sidebar {
+  width: 280px;
+  height: 100vh;
+  background: #1a1d29;
+  color: white;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebarHeader {
+  padding: 24px 20px;
+  border-bottom: 1px solid #2a2d3a;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.logoIcon {
+  font-size: 24px;
+  margin-right: 12px;
+}
+
+.logoText {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+}
+
+.userAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+  margin-right: 12px;
+}
+
+.userDetails {
+  display: flex;
+  flex-direction: column;
+}
+
+.userName {
+  font-weight: 600;
+  font-size: 14px;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.userRole {
+  font-size: 12px;
+  color: #9ca3af;
+  text-transform: uppercase;
+}
+
+.navigation {
+  flex: 1;
+  padding: 20px 0;
+}
+
+.menuList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menuItem {
+  margin-bottom: 4px;
+}
+
+.menuLink {
+  display: flex;
+  align-items: center;
+  padding: 14px 20px;
+  color: #9ca3af;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+}
+
+.menuLink:hover {
+  background: #2a2d3a;
+  color: #fff;
+  text-decoration: none;
+}
+
+.menuLink.active {
+  background: #2563eb;
+  color: #fff;
+  border-left-color: #3b82f6;
+}
+
+.menuIcon {
+  font-size: 18px;
+  margin-right: 12px;
+  width: 20px;
+  text-align: center;
+}
+
+.menuLabel {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.sidebarFooter {
+  padding: 20px;
+  border-top: 1px solid #2a2d3a;
+}
+
+.backToSite {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  color: #9ca3af;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  margin-bottom: 8px;
+}
+
+.backToSite:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 14px;
+  transition: color 0.2s ease;
+  width: 100%;
+}
+
+.logoutBtn:hover {
+  color: #dc2626;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 260px;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+}
