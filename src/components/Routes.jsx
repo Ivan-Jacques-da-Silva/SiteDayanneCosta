@@ -74,8 +74,8 @@ const AppRoutes = () => {
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/contacts" element={<AdminContacts />} />
         <Route path="/admin/properties" element={<AdminProperties />} />
-        <Route path="/admin/properties/new" element={<AdminPropertyForm />} />
-        <Route path="/admin/condominios" element={<AdminCondominios />} />
+        <Route path="/admin/properties/new" element={<AdminPropertyForm />} /> 
+        <Route path="/admin/condominios" element={<AdminCondominios />} /> 
         <Route path="/admin/usuarios" element={<AdminUsuarios />} />
         <Route path="/admin/favoritos" element={<AdminFavoritos />} />
         <Route path="/admin/formularios" element={<AdminFormularios />} />
