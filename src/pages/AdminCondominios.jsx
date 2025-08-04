@@ -15,6 +15,7 @@ const AdminCondominios = () => {
     description: '',
     propertyType: 'CONDO',
     status: 'ACTIVE',
+    categories: [],
     
     // Address
     address: '',
@@ -110,7 +111,8 @@ const AdminCondominios = () => {
           waterfront: true,
           furnished: true,
           parkingSpaces: 1,
-          amenities: 'Elevators, Barbecue, Deck, Marina Access, Gym, 24-hour Valet, Security, Sauna, Tennis Court'
+          amenities: 'Elevators, Barbecue, Deck, Marina Access, Gym, 24-hour Valet, Security, Sauna, Tennis Court',
+          categories: ['luxuryCondos', 'waterfront']
         }
       ]);
     } catch (error) {
@@ -181,6 +183,7 @@ const AdminCondominios = () => {
       description: '',
       propertyType: 'CONDO',
       status: 'ACTIVE',
+      categories: [],
       address: '',
       city: '',
       state: '',
@@ -388,6 +391,152 @@ const AdminCondominios = () => {
                       <option value="SOLD">Sold</option>
                       <option value="OFF_MARKET">Off Market</option>
                     </select>
+                  </div>
+                </div>
+
+                <div className={styles.formRow}>
+                  <div className={styles.formGroup}>
+                    <label htmlFor="categories">Categories</label>
+                    <div className={styles.checkboxGrid}>
+                      <label className={styles.checkbox}>
+                        <input
+                          type="checkbox"
+                          name="newDevelopments"
+                          checked={formData.categories?.includes('newDevelopments') || false}
+                          onChange={(e) => {
+                            const categories = formData.categories || [];
+                            if (e.target.checked) {
+                              setFormData(prev => ({ 
+                                ...prev, 
+                                categories: [...categories, 'newDevelopments'] 
+                              }));
+                            } else {
+                              setFormData(prev => ({ 
+                                ...prev, 
+                                categories: categories.filter(cat => cat !== 'newDevelopments') 
+                              }));
+                            }
+                          }}
+                        />
+                        <span>New Developments</span>
+                      </label>
+
+                      <label className={styles.checkbox}>
+                        <input
+                          type="checkbox"
+                          name="luxuryCondos"
+                          checked={formData.categories?.includes('luxuryCondos') || false}
+                          onChange={(e) => {
+                            const categories = formData.categories || [];
+                            if (e.target.checked) {
+                              setFormData(prev => ({ 
+                                ...prev, 
+                                categories: [...categories, 'luxuryCondos'] 
+                              }));
+                            } else {
+                              setFormData(prev => ({ 
+                                ...prev, 
+                                categories: categories.filter(cat => cat !== 'luxuryCondos') 
+                              }));
+                            }
+                          }}
+                        />
+                        <span>Luxury Condos</span>
+                      </label>
+
+                      <label className={styles.checkbox}>
+                        <input
+                          type="checkbox"
+                          name="singleFamily"
+                          checked={formData.categories?.includes('singleFamily') || false}
+                          onChange={(e) => {
+                            const categories = formData.categories || [];
+                            if (e.target.checked) {
+                              setFormData(prev => ({ 
+                                ...prev, 
+                                categories: [...categories, 'singleFamily'] 
+                              }));
+                            } else {
+                              setFormData(prev => ({ 
+                                ...prev, 
+                                categories: categories.filter(cat => cat !== 'singleFamily') 
+                              }));
+                            }
+                          }}
+                        />
+                        <span>Single Family Homes</span>
+                      </label>
+
+                      <label className={styles.checkbox}>
+                        <input
+                          type="checkbox"
+                          name="waterfront"
+                          checked={formData.categories?.includes('waterfront') || false}
+                          onChange={(e) => {
+                            const categories = formData.categories || [];
+                            if (e.target.checked) {
+                              setFormData(prev => ({ 
+                                ...prev, 
+                                categories: [...categories, 'waterfront'] 
+                              }));
+                            } else {
+                              setFormData(prev => ({ 
+                                ...prev, 
+                                categories: categories.filter(cat => cat !== 'waterfront') 
+                              }));
+                            }
+                          }}
+                        />
+                        <span>Waterfront Properties</span>
+                      </label>
+
+                      <label className={styles.checkbox}>
+                        <input
+                          type="checkbox"
+                          name="golfCourse"
+                          checked={formData.categories?.includes('golfCourse') || false}
+                          onChange={(e) => {
+                            const categories = formData.categories || [];
+                            if (e.target.checked) {
+                              setFormData(prev => ({ 
+                                ...prev, 
+                                categories: [...categories, 'golfCourse'] 
+                              }));
+                            } else {
+                              setFormData(prev => ({ 
+                                ...prev, 
+                                categories: categories.filter(cat => cat !== 'golfCourse') 
+                              }));
+                            }
+                          }}
+                        />
+                        <span>Golf Course Properties</span>
+                      </label>
+
+                      <label className={styles.checkbox}>
+                        <input
+                          type="checkbox"
+                          name="privateExclusive"
+                          checked={formData.categories?.includes('privateExclusive') || false}
+                          onChange={(e) => {
+                            const categories = formData.categories || [];
+                            if (e.target.checked) {
+                              setFormData(prev => ({ 
+                                ...prev, 
+                                categories: [...categories, 'privateExclusive'] 
+                              }));
+                            } else {
+                              setFormData(prev => ({ 
+                                ...prev, 
+                                categories: categories.filter(cat => cat !== 'privateExclusive') 
+                              }));
+                            }
+                          }}
+                        />
+                        <span>Private & Exclusive</span>
+                      </label>
+                    </div>
+                    <small>Select property categories that apply to this listing</small>
                   </div>
                 </div>
 

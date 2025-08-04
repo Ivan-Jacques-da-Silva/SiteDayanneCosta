@@ -304,6 +304,23 @@ const PropertyListing = ({
               </div>
             )}
 
+            <div className={styles.filterGroup}>
+              <select 
+                name="category" 
+                value={filters.category || ''} 
+                onChange={handleFilterChange}
+                className={styles.filterSelect}
+              >
+                <option value="">All Categories</option>
+                <option value="newDevelopments">New Developments</option>
+                <option value="luxuryCondos">Luxury Condos</option>
+                <option value="singleFamily">Single Family Homes</option>
+                <option value="waterfront">Waterfront Properties</option>
+                <option value="golfCourse">Golf Course Properties</option>
+                <option value="privateExclusive">Private & Exclusive</option>
+              </select>
+            </div>
+
             <button className={styles.saveSearchBtn}>
               SAVE SEARCH
             </button>
