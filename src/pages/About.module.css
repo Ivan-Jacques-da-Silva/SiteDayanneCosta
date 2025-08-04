@@ -1,0 +1,153 @@
+
+.aboutPage {
+  min-height: 100vh;
+  background-color: #fff;
+}
+
+.aboutSection {
+  padding: 80px 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+.aboutContent {
+  padding-right: 3rem;
+  padding-left: 3rem;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: rgba(126, 126, 126, 1);
+  font-weight: 400;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.title {
+  font-size: 48px;
+  font-weight: 300;
+  color: #000;
+  margin-bottom: 2rem;
+  line-height: 1.2;
+}
+
+.title strong {
+  font-weight: 700;
+}
+
+.description {
+  margin-bottom: 3rem;
+}
+
+.description p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.buttonWrapper {
+  margin-top: 2rem;
+}
+
+.contactButton {
+  padding: 12px 30px;
+  font-size: 16px;
+  font-weight: 400;
+  border: 2px solid #000;
+  color: #000;
+  background: transparent;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.contactButton:hover {
+  background-color: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+.imageWrapper {
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  overflow: hidden;
+  margin-left: 0;
+  margin-right: -15px;
+}
+
+.profileImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Responsive */
+@media (max-width: 1199px) {
+  .aboutContent {
+    padding-right: 2rem;
+    padding-left: 2rem;
+  }
+  
+  .title {
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 991px) {
+  .aboutSection {
+    padding: 60px 0;
+  }
+  
+  .aboutContent {
+    padding-right: 2rem;
+    padding-left: 2rem;
+    margin-bottom: 3rem;
+  }
+  
+  .imageWrapper {
+    height: 60vh;
+    min-height: 400px;
+    width: 100vw;
+    margin-left: -15px;
+    margin-right: -15px;
+  }
+}
+
+@media (max-width: 767px) {
+  .title {
+    font-size: 32px;
+  }
+  
+  .subtitle {
+    font-size: 14px;
+  }
+  
+  .description p {
+    font-size: 15px;
+  }
+  
+  .imageWrapper {
+    height: 50vh;
+    min-height: 350px;
+  }
+}
+
+@media (max-width: 575px) {
+  .aboutSection {
+    padding: 40px 0;
+  }
+  
+  .title {
+    font-size: 28px;
+  }
+  
+  .contactButton {
+    padding: 10px 25px;
+    font-size: 14px;
+  }
+}

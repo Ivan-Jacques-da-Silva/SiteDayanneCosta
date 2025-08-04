@@ -1,0 +1,757 @@
+/* New Developments Page Styles */
+.newDevelopments {
+  font-family: "Open Sans", sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  margin-top: 80px;
+}
+
+.container {
+  width: 96%;
+  max-width: 1755px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Breadcrumb Section */
+.breadcrumbSection {
+  background-color: #f8f8f8;
+  padding: 15px 0;
+}
+
+.breadcrumb {
+  font-size: 14px;
+  color: #666;
+}
+
+.breadcrumb span:last-child {
+  color: #333;
+  font-weight: 600;
+}
+
+/* Filters Section */
+.filtersSection {
+  background-color: #fff;
+  padding: 20px 0;
+  border-bottom: 1px solid #eee;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.filtersRow {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+@media screen and (max-width: 1200px) {
+  .filtersRow {
+    flex-wrap: wrap;
+  }
+}
+
+.filterGroup {
+  flex: 1;
+  min-width: 150px;
+}
+
+@media screen and (max-width: 768px) {
+  .filterGroup {
+    min-width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+.filterSelect {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #fff;
+  color: #333;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 40px;
+}
+
+.filterSelect:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.saveSearchBtn {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+  white-space: nowrap;
+  min-width: 120px;
+}
+
+.saveSearchBtn:hover {
+  background-color: #333;
+}
+
+/* Results Bar */
+.resultsBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+@media screen and (max-width: 768px) {
+  .resultsBar {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+}
+
+.resultsCount {
+  font-size: 14px;
+  color: #666;
+}
+
+.sortControls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Price Range Slider */
+.priceRangeGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 200px;
+}
+
+.priceRangeLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.rangeSliders {
+  position: relative;
+  height: 20px;
+}
+
+.rangeSlider {
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  background: transparent;
+  outline: none;
+  -webkit-appearance: none;
+  pointer-events: none;
+}
+
+.rangeSlider::-webkit-slider-track {
+  height: 4px;
+  background: #ddd;
+  border-radius: 2px;
+}
+
+.rangeSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #000;
+  cursor: pointer;
+  pointer-events: auto;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.rangeSlider::-moz-range-track {
+  height: 4px;
+  background: #ddd;
+  border-radius: 2px;
+  border: none;
+}
+
+.rangeSlider::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #000;
+  cursor: pointer;
+  pointer-events: auto;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.sortSelect {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 13px;
+  background-color: #fff;
+  color: #333;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 12px;
+  padding-right: 30px;
+}
+
+.viewToggle {
+  display: flex;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.viewBtn {
+  padding: 8px 12px;
+  border: none;
+  background-color: #fff;
+  color: #666;
+  font-size: 12px;
+  cursor: pointer;
+  border-right: 1px solid #ddd;
+}
+
+.viewBtn:last-child {
+  border-right: none;
+}
+
+.viewBtn.active,
+.viewBtn:hover {
+  background-color: #f8f8f8;
+  color: #333;
+}
+
+/* Properties Section */
+.propertiesSection {
+  padding: 30px 0 60px;
+  background-color: #fff;
+}
+
+/* Loading State */
+.loading {
+  text-align: center;
+  padding: 80px 0;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #333;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Properties Grid */
+.propertiesGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+/* List View */
+.propertiesList {
+  width: 100%;
+}
+
+.propertiesTable {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+}
+
+.propertiesTable th {
+  background-color: #f8f8f8;
+  padding: 12px 8px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 1px solid #e0e0e0;
+  border-right: 1px solid #e0e0e0;
+}
+
+.propertiesTable th:last-child {
+  border-right: none;
+}
+
+.propertyRow {
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s ease;
+}
+
+.propertyRow:hover {
+  background-color: #f8f8f8;
+}
+
+.propertyRow td {
+  padding: 12px 8px;
+  font-size: 13px;
+  color: #333;
+  border-right: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+.propertyRow td:last-child {
+  border-right: none;
+}
+
+/* Map View */
+.mapView {
+  display: flex;
+  height: 600px;
+  border: 1px solid #e0e0e0;
+}
+
+.mapPropertiesList {
+  width: 400px;
+  background-color: #fff;
+  border-right: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+}
+
+.propertiesListHeader {
+  padding: 15px 20px;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #f8f8f8;
+}
+
+.propertiesListHeader h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.mapPropertiesScroll {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.mapPropertyCard {
+  display: flex;
+  padding: 15px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.mapPropertyCard:hover {
+  background-color: #f8f8f8;
+}
+
+.mapPropertyImage {
+  flex-shrink: 0;
+  margin-right: 12px;
+}
+
+.mapPropertyImage img {
+  width: 60px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.mapPropertyContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.mapPropertyPrice {
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 4px;
+}
+
+.mapPropertySpecs {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.mapPropertyAddress {
+  font-size: 13px;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.mapPropertyCity {
+  font-size: 12px;
+  color: #666;
+}
+
+.mapPropertyYear {
+  font-size: 12px;
+  color: #666;
+  margin-top: 2px;
+}
+
+.mapContainer {
+  flex: 1;
+  background-color: #f5f5f5;
+  position: relative;
+}
+
+.mapPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mapError {
+  text-align: center;
+  max-width: 300px;
+}
+
+.errorIcon {
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+.mapError h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.mapError p {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+@media screen and (min-width: 768px) {
+  .propertiesGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .propertiesGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (min-width: 1360px) {
+  .propertiesGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Property Card */
+.propertyCard {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.propertyCard:hover {
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  border-color: #000;
+  transform: translateY(-2px);
+}
+
+.propertyImageContainer {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background-color: #f0f0f0;
+}
+
+.propertyImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.propertyCard:hover .propertyImage {
+  transform: scale(1.05);
+}
+
+.propertyContent {
+  padding: 20px;
+}
+
+.propertyPrice {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 12px;
+}
+
+@media screen and (max-width: 767px) {
+  .propertyPrice {
+    font-size: 1.3rem;
+  }
+}
+
+.propertySpecs {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.spec {
+  font-size: 13px;
+  color: #666;
+}
+
+.spec strong {
+  color: #333;
+  font-weight: 600;
+}
+
+.yearBuilt {
+  font-size: 13px;
+  color: #666;
+  margin-top: 8px;
+}
+
+.propertyLocation {
+  margin-bottom: 15px;
+}
+
+.propertyLocation p {
+  font-size: 13px;
+  color: #333;
+  margin: 3px 0;
+}
+
+.propertyCity {
+  color: #666 !important;
+}
+
+.propertyActions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.viewDetailsBtn {
+  flex: 1;
+  background-color: #000;
+  color: #fff;
+  border: 1px solid #000;
+  padding: 10px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.viewDetailsBtn:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+.favoriteBtn {
+  width: 40px;
+  height: 40px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.favoriteBtn:hover {
+  background-color: #f0f0f0;
+  border-color: #000;
+}
+
+/* No Results */
+.noResults {
+  text-align: center;
+  padding: 80px 20px;
+  grid-column: 1 / -1;
+}
+
+.noResults h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.noResults p {
+  color: #666;
+  font-size: 1rem;
+}
+
+/* Pagination Styles */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 40px;
+  padding: 20px 0;
+  border-top: 1px solid #e0e0e0;
+}
+
+.paginationInfo {
+  font-size: 14px;
+  color: #666;
+}
+
+.paginationButtons {
+  display: flex;
+  gap: 5px;
+}
+
+.paginationBtn {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.paginationBtn:hover {
+  background-color: #f5f5f5;
+  border-color: #333;
+}
+
+.paginationBtn.active {
+  background-color: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+.paginationBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media screen and (max-width: 768px) {
+  .pagination {
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  .paginationButtons {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .paginationBtn {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .mapView {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .mapPropertiesList {
+    width: 100%;
+    max-height: 300px;
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .mapContainer {
+    height: 400px;
+  }
+
+  .propertiesTable {
+    font-size: 11px;
+  }
+
+  .propertiesTable th,
+  .propertyRow td {
+    padding: 8px 4px;
+  }
+
+  .priceRangeGroup {
+    min-width: 150px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .container {
+    padding: 0 10px;
+  }
+
+  .propertyContent {
+    padding: 15px;
+  }
+
+  .propertySpecs {
+    gap: 12px;
+  }
+
+  .filtersRow {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .filterGroup {
+    width: 100%;
+  }
+
+  .priceRangeGroup {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .saveSearchBtn {
+    width: 100%;
+  }
+
+  .viewToggle {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .propertiesTable {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}

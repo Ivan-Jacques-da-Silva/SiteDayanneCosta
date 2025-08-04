@@ -1,0 +1,82 @@
+.ctaSection {
+    background-color: #f8f9fa;
+  }
+  
+  .ctaBox {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .ctaBox:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+  
+  .ctaTitle {
+    font-weight: 700;
+    color: #2c3e50;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 1.5rem;
+  }
+  
+  .ctaText {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .ctaButton {
+    padding: 12px 30px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    min-width: 200px;
+    transition: all 0.3s ease;
+  }
+  
+  /* Efeito especial para o botão primário */
+  .btn-primary.ctaButton {
+    background-color: #e74c3c;
+    border-color: #e74c3c;
+  }
+  
+  .btn-primary.ctaButton:hover {
+    background-color: #c0392b;
+    border-color: #c0392b;
+  }
+  
+  /* Efeito especial para o botão outline */
+  .btn-outline-primary.ctaButton {
+    color: #e74c3c;
+    border-color: #e74c3c;
+  }
+  
+  .btn-outline-primary.ctaButton:hover {
+    color: white;
+    background-color: #e74c3c;
+  }
+  
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .ctaBox {
+      padding: 3rem 2rem !important;
+    }
+    
+    .ctaTitle {
+      font-size: 1.3rem;
+    }
+    
+    .ctaText {
+      font-size: 1rem;
+      max-width: 100%;
+    }
+  }

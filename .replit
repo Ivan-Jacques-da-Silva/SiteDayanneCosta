@@ -1,0 +1,37 @@
+modules = ["nodejs-20", "web"]
+run = "npm run dev"
+
+[nix]
+channel = "stable-25_05"
+
+[deployment]
+run = ["sh", "-c", "npm run dev"]
+
+[[ports]]
+localPort = 5173
+externalPort = 80
+
+[workflows]
+runButton = "Full Stack"
+
+[[workflows.workflow]]
+name = "Full Stack"
+author = 45349253
+mode = "parallel"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && node listarMLS.js"
+
+[[workflows.workflow]]
+name = "Backend Server"
+author = 45959812
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd Backend && npm run dev"

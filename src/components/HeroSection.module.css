@@ -1,0 +1,115 @@
+/* src/components/HeroSection.module.css */
+.hero {
+  min-height: 90vh;  /* Aumentei de 70vh para 90vh */
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;  /* Para garantir que nada ultrapasse os limites */
+}
+.heroTitle {
+  font-size: 3.5rem;
+  line-height: 1.2;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.heroSubtitle {
+  font-size: 2.5rem;
+  color: #ffd700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.heroButton {
+  border-radius: 25px;
+  border: none;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.heroButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.customTabs .nav-link {
+  color: #fff;
+  font-weight: 500;
+  border: none !important;
+  padding: 12px 24px;
+}
+
+.customTabs .nav-link.active {
+  color: #000;
+  background-color: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.searchForm {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.searchInput {
+  border-right: none;
+  border-radius: 4px 0 0 4px !important;
+}
+
+.searchInput:focus {
+  box-shadow: none;
+  border-color: #ced4da;
+}
+
+/* Responsividade */
+@media (max-width: 992px) {
+  .heroTitle {
+    font-size: 2.8rem;
+  }
+
+  .heroSubtitle {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: 60vh;
+    padding: 40px 0;
+  }
+
+  .heroTitle {
+    font-size: 2.2rem;
+    line-height: 1.3;
+  }
+
+  .heroSubtitle {
+    font-size: 1.6rem;
+    margin-top: 1rem !important;
+  }
+
+  .heroButton {
+    font-size: 1rem;
+    padding: 12px 20px !important;
+  }
+
+  .customTabs .nav-link {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 576px) {
+  .heroTitle {
+    font-size: 1.8rem;
+  }
+
+  .heroSubtitle {
+    font-size: 1.4rem;
+  }
+
+  .hero {
+    min-height: 50vh;
+  }
+}

@@ -1,0 +1,936 @@
+
+/* IP Theme Variables */
+.ip {
+  --ibc-heading-font-family: Raleway, sans-serif;
+  --ibc-heading-font-weight: 300;
+  --ibc-body-font-family: Raleway, sans-serif;
+  --ibc-body-font-weight: 400;
+  --ibc-button-font-family: Raleway, sans-serif;
+  --ibc-button-font-weight: 400;
+  --ibc-heading-color: #000;
+  --ibc-button-bg: rgba(255, 255, 255, 0);
+  --ibc-button-border-color: #000;
+  --ibc-button-color: #000;
+  --ibc-button-hover-bg: #000;
+  --ibc-button-hover-border-color: #000;
+  --ibc-button-hover-color: #fff;
+  --ibc--idx-primary-color: #000000ff;
+  --ibc--idx-secondary-color: #ffffff;
+  --ip-header-mobile-top-bg: #f3f4f4;
+  --ip-header-mobile-top-link-color: rgba(255, 255, 255, 1);
+  --ip-header-mobile-top-link-hover-color: rgba(255, 255, 255, 1);
+  --ip-header-bg: rgba(0, 0, 0, 1);
+  --ip-header-top-bg: rgba(255, 255, 255, 0);
+  --ip-header-top-link-color: rgba(248, 248, 248, 1);
+  --ip-header-top-link-hover-color: rgba(255, 255, 255, 1);
+  --ip-title-color: #000;
+  --ip-link-color: rgba(255, 255, 255, 1);
+  --ip-link-hover-color: rgba(255, 255, 255, 1);
+  --ip-menu-button-color: #000;
+  --ip-menu-button-hover-color: #000;
+  --ip-social-link-color: rgba(255, 255, 255, 1);
+  --ip-social-link-bg: rgba(0, 0, 0, 1);
+  --ip-social-link-border-color: #000;
+  --ip-social-link-border-radius: 12px;
+  --ip-social-link-hover-color: #000;
+  --ip-social-link-hover-bg: #fff;
+  --ip-social-link-hover-border-color: #000;
+  --ip-social-mobile-link-color: rgba(255, 255, 255, 1);
+  --ip-social-mobile-link-bg: rgba(0, 0, 0, 1);
+  --ip-social-mobile-link-border-color: #000;
+  --ip-social-mobile-link-hover-color: #000;
+  --ip-social-mobile-link-hover-bg: #fff;
+  --ip-social-mobile-link-hover-border-color: #000;
+  --ip-menu-mobile-bg: #fff;
+  --ip-menu-mobile-link-color: #000;
+  --ip-menu-mobile-link-border-color: #ccc;
+}
+
+/* Header Main */
+.ipHeader {
+  background-color: var(--ip-header-bg);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1020;
+  transition: all 0.3s ease;
+}
+
+/* Mobile Header Adjustments */
+@media (max-width: 991.98px) {
+  .ipHeader {
+    position: relative;
+    z-index: 1000;
+  }
+}
+
+.ipHeader.activeFixed {
+  background-color: #fff;
+}
+
+.ipHeaderWrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Header Top */
+.ipHeaderTop {
+  background-color: var(--ip-header-top-bg);
+  color: rgba(248, 248, 248, 1);
+  padding: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.activeFixed .ipHeaderTop {
+  color: #000;
+}
+
+/* Social Links */
+.ipSocial {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.ipSocialLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background-color: var(--ip-social-link-bg);
+  color: var(--ip-social-link-color);
+  border-radius: var(--ip-social-link-border-radius);
+  text-decoration: none;
+  font-size: 12px;
+  transition: all 0.3s ease;
+}
+
+.ipSocialLink:hover {
+  background-color: var(--ip-social-link-hover-bg);
+  color: var(--ip-social-link-hover-color);
+}
+
+.activeFixed .ipSocialLink {
+  background-color: transparent;
+  color: #000;
+}
+
+.activeFixed .ipSocialLink:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+/* Language Switcher */
+.languageSwitcher {
+  position: relative;
+}
+
+.languageButton {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: none;
+  border: none;
+  color: rgba(248, 248, 248, 1);
+  font-size: 12px;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 0;
+}
+
+.languageButton:hover {
+  color: rgba(255, 255, 255, 1);
+}
+
+.languageLabel {
+  margin-right: 0.25rem;
+}
+
+.flagIcon {
+  font-size: 12px;
+}
+
+.activeFixed .languageButton {
+  color: #000;
+}
+
+.activeFixed .languageButton:hover {
+  color: #000;
+  opacity: 0.8;
+}
+
+.languageSelect {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 0;
+  display: none;
+  min-width: 80px;
+  z-index: 1000;
+}
+
+.languageSwitcher:hover .languageSelect {
+  display: block;
+}
+
+.languageOption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  color: #000;
+  text-decoration: none;
+  font-size: 12px;
+  text-transform: uppercase;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.languageOption:hover {
+  background-color: #f8f9fa;
+  color: #000;
+  text-decoration: none;
+}
+
+.languageOption.active {
+  background-color: #e9ecef;
+}
+
+
+
+/* Contact Section */
+.ipContact {
+  display: flex;
+  margin: 0 1rem;
+}
+
+.ipContactIcon {
+  font-size: 14px;
+  margin-right: 0.5rem;
+}
+
+.ipContactWrap {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ipContactItem {
+  color: rgba(248, 248, 248, 1);
+  text-decoration: none;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ipContactItem:hover {
+  color: rgba(255, 255, 255, 1);
+  text-decoration: none;
+  opacity: 0.8;
+}
+
+.ipContactText {
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.ipContactValue {
+  font-weight: 400;
+}
+
+.activeFixed .ipContactItem {
+  color: #000 !important;
+}
+
+/* Login Section */
+.ipLogin {
+  display: flex;
+}
+
+.ipLoginWrap {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ipLoginItem {
+  list-style: none;
+}
+
+.ipLoginItem.register {
+  position: relative;
+  padding-left: 1rem;
+}
+
+.ipLoginItem.register::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 16px;
+  background-color: currentColor;
+}
+
+.ipLoginBtn {
+  background: none;
+  border: none;
+  color: rgba(248, 248, 248, 1);
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0;
+  text-decoration: none;
+}
+
+.ipLoginBtn:hover {
+  color: rgba(255, 255, 255, 1);
+  text-decoration: none;
+}
+
+.ipLoginIcon {
+  display: flex;
+  align-items: center;
+}
+
+.ipLoginText {
+  font-size: 12px;
+}
+
+.activeFixed .ipLoginBtn {
+  color: #000;
+}
+
+.activeFixed .ipLoginBtn:hover {
+  color: #000;
+  opacity: 0.8;
+}
+
+/* Header Bottom */
+.ipHeaderBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  gap: 2rem;
+}
+
+.activeFixed .ipHeaderBottom {
+  padding: 0.5rem 0;
+}
+
+/* Header Left - Logo Column */
+.ipHeaderLeft {
+  display: flex;
+  align-items: center;
+}
+
+/* Header Right - Navigation Column */
+.ipHeaderRight {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+/* Top Row - Social, Language, Contact, Login */
+.ipHeaderTopRow {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Bottom Row - Navigation Menu */
+.ipHeaderBottomRow {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* Logo */
+.ipHeaderLogo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-decoration: none;
+  position: relative;
+  z-index: 1025;
+}
+
+.ipHeaderLogoWrapper {
+  position: relative;
+  z-index: 1026;
+}
+
+.ipHeaderLogoImage {
+  height: 50px;
+  width: auto;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1027;
+}
+
+.ipHeaderLogoBroker {
+  height: 20px;
+  width: auto;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1027;
+}
+
+/* Navigation */
+.ipHeaderNavigation {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.ipMenuWrap {
+  display: flex;
+}
+
+.ipMenu {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 0;
+}
+
+.ipMenuItem {
+  position: relative;
+  list-style: none;
+}
+
+.ipMenuLink {
+  color: var(--ip-link-color);
+  font-weight: 400;
+  font-size: 14px;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: block;
+  cursor: pointer;
+}
+
+.ipMenuLink:hover {
+  color: var(--ip-link-hover-color);
+  text-decoration: none;
+  opacity: 0.8;
+}
+
+.activeFixed .ipMenuLink {
+  color: #000 !important;
+}
+
+.activeFixed .ipMenuLink:hover {
+  color: #000 !important;
+  opacity: 0.8;
+}
+
+/* Dropdown Menus */
+.ipMenuItemHasChildren {
+  position: relative;
+}
+
+.ipMenuItemHasChildren:hover > .ipSubmenu,
+.ipSubmenu:hover,
+.ipMenuItemHasChildren:focus-within > .ipSubmenu {
+  display: block;
+}
+
+/* Mobile Dropdown Behavior */
+@media (max-width: 991.98px) {
+  .ipMenuItemHasChildren:hover > .ipSubmenu {
+    display: none !important;
+  }
+  
+  /* Enable touch-friendly mobile dropdowns */
+  .ipMenuItemHasChildren:active > .ipSubmenu,
+  .ipMenuItemHasChildren.mobile-open > .ipSubmenu {
+    display: block !important;
+    position: static;
+    box-shadow: none;
+    background-color: #f8f9fa;
+    border-radius: 0;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.ipSubmenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+  padding: 0.5rem 0;
+  margin-top: 0;
+  min-width: 200px;
+  display: none;
+  list-style: none;
+  z-index: 1050;
+  pointer-events: auto;
+}
+
+/* Prevent menu from closing during animations and transitions */
+.ipMenuItemHasChildren:hover > .ipSubmenu,
+.ipSubmenu:hover,
+.ipMenuItemHasChildren:focus-within > .ipSubmenu {
+  display: block !important;
+  animation: none !important;
+  transition-delay: 0s !important;
+}
+
+/* Nested submenu (Neighborhoods submenu) */
+.ipMenuItemHasChildren .ipMenuItemHasChildren {
+  position: relative;
+}
+
+.ipMenuItemHasChildren .ipMenuItemHasChildren:hover > .ipSubmenu,
+.ipMenuItemHasChildren .ipSubmenu:hover,
+.ipMenuItemHasChildren .ipMenuItemHasChildren:focus-within > .ipSubmenu {
+  display: block !important;
+  animation: none !important;
+  transition-delay: 0s !important;
+}
+
+/* Ensure stable hover area */
+.ipMenuItemHasChildren .ipMenuItemHasChildren:hover::after {
+  display: block;
+}
+
+.ipMenuItemHasChildren .ipSubmenu .ipSubmenu {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  margin-top: 0;
+  margin-left: 0;
+  z-index: 1051;
+}
+
+.ipSubmenu::before {
+  content: '';
+  position: absolute;
+  top: -0.25rem;
+  left: 0;
+  right: 0;
+  height: 0.25rem;
+  background: transparent;
+  pointer-events: auto;
+}
+
+/* Bridge area between parent and nested submenu */
+.ipMenuItemHasChildren .ipSubmenu .ipMenuItemHasChildren::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -0.25rem;
+  width: 0.25rem;
+  height: 100%;
+  background: transparent;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+.ipSubmenu .ipMenuLink {
+  color: #333 !important;
+  padding: 0.6rem 1.5rem;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  position: relative;
+}
+
+.ipSubmenu .ipMenuLink:hover {
+  background-color: #f8f9fa;
+  color: #000 !important;
+}
+
+/* Arrow indicator for nested menus */
+.ipMenuItemHasChildren .ipSubmenu .ipMenuItemHasChildren > .ipMenuLink::after {
+  content: '>';
+  position: absolute;
+  right: 1rem;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+/* Mobile Menu Button */
+.ipMenuButton {
+  border: none;
+  background: none;
+  color: var(--ip-link-color);
+  cursor: pointer;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem;
+}
+
+.activeFixed .ipMenuButton {
+  color: #000;
+}
+
+.ipMenuButtonIcon {
+  display: flex;
+  flex-direction: column;
+  width: 20px;
+  height: 14px;
+  position: relative;
+}
+
+.ipMenuButtonIcon span,
+.ipMenuButtonIcon span::before,
+.ipMenuButtonIcon span::after {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: currentColor;
+  transition: all 0.3s ease;
+}
+
+.ipMenuButtonIcon span {
+  position: relative;
+  top: 6px;
+}
+
+.ipMenuButtonIcon span::before,
+.ipMenuButtonIcon span::after {
+  content: '';
+  position: absolute;
+  left: 0;
+}
+
+.ipMenuButtonIcon span::before {
+  top: -6px;
+}
+
+.ipMenuButtonIcon span::after {
+  top: 6px;
+}
+
+.ipMenuButtonText {
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+/* Mobile Menu */
+.ipMobileMenuWrap {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 320px;
+  height: 100vh;
+  background: var(--ip-menu-mobile-bg);
+  z-index: 1040;
+  transition: right 0.3s ease;
+  overflow-y: auto;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.ipMobileMenuWrap.show {
+  right: 0;
+}
+
+.ipMenuButtonClose {
+  border: none;
+  background: none;
+  color: var(--ip-menu-mobile-link-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem;
+  border-bottom: 1px solid var(--ip-menu-mobile-link-border-color);
+}
+
+.ipMobileMenu {
+  padding: 0;
+}
+
+.ipMobileMenu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ipMobileMenu .ipMenuItem {
+  border-bottom: 1px solid var(--ip-menu-mobile-link-border-color);
+}
+
+.ipMenuItemWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.ipMobileMenu .ipMenuLink {
+  color: var(--ip-menu-mobile-link-color);
+  padding: 1rem;
+  text-decoration: none;
+  display: block;
+  flex: 1;
+}
+
+.ipMobileMenu .ipMenuLink:hover {
+  background-color: #f8f9fa;
+  color: var(--ip-menu-mobile-link-color);
+  text-decoration: none;
+}
+
+.ipSubmenuToggle {
+  border: none;
+  background: none;
+  color: var(--ip-menu-mobile-link-color);
+  cursor: pointer;
+  padding: 1rem;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.ipMobileMenu .ipSubmenu {
+  position: static;
+  display: none;
+  background: #f8f9fa;
+  box-shadow: none;
+  border-radius: 0;
+  margin: 0;
+  padding: 0;
+  z-index: auto;
+}
+
+.ipMobileMenu .ipSubmenu.open {
+  display: block;
+}
+
+.ipMobileMenu .ipSubmenu .ipMenuLink {
+  padding-left: 2rem;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* Nested mobile submenu styling */
+.ipMobileMenu .ipSubmenu .ipSubmenu {
+  background: #e9ecef;
+}
+
+.ipMobileMenu .ipSubmenu .ipSubmenu .ipMenuLink {
+  padding-left: 3rem;
+  font-size: 0.85rem;
+}
+
+.ipCta {
+  padding: 1rem;
+}
+
+/* Mobile Menu Footer Section */
+.ipMobileMenuFooter {
+  margin-top: auto;
+  padding: 1rem;
+  border-top: 1px solid var(--ip-menu-mobile-link-border-color);
+}
+
+.ipMobileMenuFooter .ipSocial {
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.ipMobileMenuFooter .ipContactItem {
+  color: var(--ip-menu-mobile-link-color);
+  text-decoration: none;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  justify-content: center;
+}
+
+.ipMobileMenuFooter .ipLoginWrap {
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.ipMobileMenuFooter .ipLoginBtn {
+  color: var(--ip-menu-mobile-link-color);
+  background: none;
+  border: 1px solid var(--ip-menu-mobile-link-border-color);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  margin: 0 0.25rem;
+}
+
+/* Overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1030;
+  display: none;
+}
+
+.overlay.show {
+  display: block;
+}
+
+/* Responsive Design */
+@media (max-width: 991.98px) {
+  .ipHeaderBottom {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .ipHeaderLeft {
+    flex: 1;
+  }
+  
+  .ipHeaderRight {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .ipHeaderTopRow {
+    display: none;
+  }
+  
+  .ipHeaderBottomRow {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  /* Ocultar elementos no mobile - eles estarão no menu lateral */
+  .ipSocial,
+  .ipContact,
+  .ipLogin {
+    display: none;
+  }
+
+  .ipMenuWrap {
+    display: none;
+  }
+
+  .ipMenuButton {
+    display: flex;
+  }
+
+  /* Manter apenas o seletor de idioma visível */
+  .languageSwitcher {
+    display: block;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .ipHeaderTop {
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .ipHeaderBottom {
+    padding: 0.5rem 0;
+  }
+  
+  .ipHeaderLogoImage {
+    height: 45px;
+  }
+  
+  .ipHeaderLogoBroker {
+    height: 18px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .ipHeaderTop {
+    padding: 5px 0;
+  }
+  
+  .ipSocial {
+    gap: 0.25rem;
+  }
+  
+  .ipSocialLink {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+  
+  .ipLoginWrap {
+    gap: 0.5rem;
+  }
+  
+  .ipLoginBtn {
+    font-size: 10px;
+  }
+}
+
+/* Header Fixed Styles */
+.ipHeader.activeFixed {
+  background-color: #fff;
+}
+
+.ipHeader.activeFixed .ipMenuLink {
+  color: #000 !important;
+}
+
+.ipHeader.activeFixed .ipHeaderTop {
+  color: #000;
+}
+
+.ipHeader.activeFixed .ipLoginBtn {
+  color: #000;
+}
+
+
+
+@media (min-width: 1024px) {
+  .ipHeader.activeFixed .ipLoginItem.register:before {
+    background-color: #000;
+  }
+}
+
+.ipHeader.activeFixed .ipMenuButton {
+  color: #000;
+}
+
+/* Ensure proper z-index for logos when scrolled */
+.ipHeader.activeFixed .ipHeaderLogoImage,
+.ipHeader.activeFixed .ipHeaderLogoBroker {
+  z-index: 1027;
+}
+
+/* Add black filter to Compass logo when header is fixed */
+.ipHeader.activeFixed .ipHeaderLogoBroker {
+  filter: brightness(0);
+}
+
+/* Alternative class for black logo filter */
+.logoBlack {
+  filter: brightness(0) !important;
+}

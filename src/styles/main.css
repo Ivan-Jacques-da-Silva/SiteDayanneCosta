@@ -1,0 +1,67 @@
+/* Reset e estilos base */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+  }
+
+  .container {
+    width: 100%;
+    margin: 0;
+    padding: 0 20px;
+  }
+
+  /* Estilos do header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+  }
+
+  .logo {
+    font-weight: bold;
+    font-size: 24px;
+  }
+
+  .main-nav ul {
+    display: flex;
+    list-style: none;
+  }
+
+  .main-nav li {
+    margin: 0 15px;
+  }
+
+  /* Estilos das seções */
+  .hero {
+    background-color: #f8f8f8;
+    padding: 50px 0;
+    text-align: center;
+  }
+
+  .search-tabs {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+  }
+
+  .tab {
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+
+  .tab.active {
+    border-bottom: 2px solid #000;
+  }
+
+  .search-box input {
+    width: 60%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  /* Continue com os estilos para as outras seções */

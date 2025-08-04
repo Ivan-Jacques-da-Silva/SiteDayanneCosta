@@ -1,0 +1,114 @@
+.benMossSection {
+    background-color: #f5f7fa;
+  }
+
+  .imageWrapper {
+    height: 100vh;
+    min-height: 500px;
+    width: 100vw;
+    margin-left: -15px;
+    overflow: hidden;
+  }
+
+  .teamImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .textContent {
+    padding: 3rem 3rem 3rem 3rem;
+  }
+  
+  .teamCard {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+  }
+  
+  .sectionTitle {
+    font-weight: 700;
+    color: #2c3e50;
+    position: relative;
+    padding-bottom: 15px;
+  }
+  
+  .sectionTitle::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0;
+    width: 80px;
+    height: 3px;
+    background-color: #e74c3c;
+  }
+  
+  .strengthsList {
+    margin-top: 1.5rem;
+  }
+  
+  .strengthIcon {
+    color: #e74c3c;
+    margin-right: 10px;
+  }
+  
+  .teamContent p {
+    color: #555;
+    line-height: 1.8;
+    margin-bottom: 1.2rem;
+  }
+  
+  .readMoreButton {
+    padding: 12px 30px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border: none;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+  }
+  
+  .readMoreButton:hover {
+    background-color: #c0392b;
+    transform: translateY(-2px);
+  }
+  
+  /* Responsividade */
+  @media (max-width: 991px) {
+    .imageWrapper {
+      height: 60vh;
+      min-height: 400px;
+      width: 100vw;
+      margin-left: -15px;
+      margin-right: -15px;
+    }
+    
+    .textContent {
+      padding: 2rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .sectionTitle {
+      font-size: 1.8rem;
+    }
+    
+    .teamCard {
+      padding: 2rem;
+    }
+    
+    .strengthsList {
+      margin-bottom: 2rem;
+    }
+    
+    .imageWrapper {
+      height: 50vh;
+      min-height: 350px;
+    }
+    
+    .textContent {
+      padding: 1.5rem;
+    }
+  }

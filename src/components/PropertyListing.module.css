@@ -1,0 +1,672 @@
+
+/* Base styles - reusing the existing BrickellCondos styles */
+.propertyListing {
+  margin-top: 100px; /* Espaçamento para não ficar por baixo do menu fixo */
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Breadcrumb */
+.breadcrumbSection {
+  background-color: #fff;
+  padding: 15px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.breadcrumb {
+  font-size: 14px;
+  color: #666;
+}
+
+.breadcrumb span:last-child {
+  color: #333;
+  font-weight: 500;
+}
+
+/* Filters Section */
+.filtersSection {
+  background-color: #fff;
+  padding: 30px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.filtersRow {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.priceRangeGroup {
+  min-width: 200px;
+  flex: 1;
+}
+
+.priceRangeLabel {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.rangeSliders {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.rangeSlider {
+  flex: 1;
+  height: 6px;
+  background: #ddd;
+  outline: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.rangeSlider::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: #333;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.rangeSlider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: #333;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+.filterGroup {
+  min-width: 150px;
+}
+
+.filterSelect {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.filterSelect:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.saveSearchBtn {
+  padding: 12px 25px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.saveSearchBtn:hover {
+  background-color: #555;
+}
+
+/* Results Bar */
+.resultsBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.resultsCount {
+  font-size: 14px;
+  color: #666;
+}
+
+.sortControls {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.sortGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sortSelect {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.viewToggle {
+  display: flex;
+  gap: 5px;
+}
+
+.viewBtn {
+  padding: 8px 15px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  color: #666;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.viewBtn:first-child {
+  border-radius: 4px 0 0 4px;
+}
+
+.viewBtn:last-child {
+  border-radius: 0 4px 4px 0;
+}
+
+.viewBtn.active {
+  background-color: #333;
+  color: #fff;
+  border-color: #333;
+}
+
+.viewBtn:hover:not(.active) {
+  background-color: #f5f5f5;
+}
+
+/* Properties Section */
+.propertiesSection {
+  padding: 40px 0;
+}
+
+/* Loading */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #333;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Grid View */
+.propertiesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.propertyCard {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.propertyCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.propertyImageContainer {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.propertyImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.propertyCard:hover .propertyImage {
+  transform: scale(1.05);
+}
+
+.propertyContent {
+  padding: 20px;
+}
+
+.propertyPrice {
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.propertyDetails {
+  margin-bottom: 15px;
+}
+
+.propertySpecs {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.spec {
+  font-size: 14px;
+  color: #666;
+}
+
+.spec strong {
+  color: #333;
+  font-weight: 600;
+}
+
+.yearBuilt {
+  font-size: 12px;
+  color: #888;
+  font-style: italic;
+}
+
+.propertyLocation {
+  margin-bottom: 20px;
+}
+
+.propertyLocation p {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+  line-height: 1.4;
+}
+
+.propertyCity {
+  color: #666 !important;
+  font-size: 13px !important;
+}
+
+.propertyActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.viewDetailsBtn {
+  padding: 10px 20px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.viewDetailsBtn:hover {
+  background-color: #555;
+}
+
+.favoriteBtn {
+  padding: 10px;
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.favoriteBtn:hover {
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+}
+
+/* List View */
+.propertiesList {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  margin-bottom: 40px;
+}
+
+.propertiesTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.propertiesTable th {
+  background-color: #f8f9fa;
+  padding: 15px 10px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.propertyRow {
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s ease;
+}
+
+.propertyRow:hover {
+  background-color: #f8f9fa;
+}
+
+.propertyRow td {
+  padding: 15px 10px;
+  font-size: 13px;
+  color: #333;
+}
+
+/* Map View */
+.mapView {
+  display: flex;
+  height: 600px;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  margin-bottom: 40px;
+}
+
+.mapPropertiesList {
+  width: 400px;
+  border-right: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+}
+
+.propertiesListHeader {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.propertiesListHeader h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.mapPropertiesScroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.mapPropertyCard {
+  display: flex;
+  padding: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.mapPropertyCard:hover {
+  background-color: #f8f9fa;
+}
+
+.mapPropertyImage {
+  flex-shrink: 0;
+  margin-right: 12px;
+}
+
+.mapPropertyImage img {
+  width: 60px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.mapPropertyContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.mapPropertyPrice {
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 4px;
+}
+
+.mapPropertySpecs {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.mapPropertyAddress {
+  font-size: 13px;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.mapPropertyCity {
+  font-size: 12px;
+  color: #666;
+}
+
+.mapPropertyYear {
+  font-size: 11px;
+  color: #888;
+  font-style: italic;
+}
+
+.mapContainer {
+  flex: 1;
+  background-color: #f5f5f5;
+  position: relative;
+}
+
+.mapPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mapError {
+  text-align: center;
+  max-width: 300px;
+}
+
+.errorIcon {
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+.mapError h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.mapError p {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* No Results */
+.noResults {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.noResults h3 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.noResults p {
+  color: #666;
+  font-size: 16px;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 40px;
+  padding: 20px 0;
+  border-top: 1px solid #e0e0e0;
+}
+
+.paginationInfo {
+  font-size: 14px;
+  color: #666;
+}
+
+.paginationButtons {
+  display: flex;
+  gap: 5px;
+}
+
+.paginationBtn {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.paginationBtn:hover {
+  background-color: #f5f5f5;
+  border-color: #999;
+}
+
+.paginationBtn.active {
+  background-color: #333;
+  color: #fff;
+  border-color: #333;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .filtersRow {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .filterGroup,
+  .priceRangeGroup {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .resultsBar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .sortControls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .propertiesGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .mapView {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .mapPropertiesList {
+    width: 100%;
+    max-height: 300px;
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .mapContainer {
+    height: 400px;
+  }
+
+  .pagination {
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+
+  .paginationButtons {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .container {
+    padding: 0 10px;
+  }
+
+  .propertyContent {
+    padding: 15px;
+  }
+
+  .propertySpecs {
+    gap: 12px;
+  }
+
+  .saveSearchBtn {
+    width: 100%;
+  }
+
+  .viewToggle {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .propertiesTable {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}

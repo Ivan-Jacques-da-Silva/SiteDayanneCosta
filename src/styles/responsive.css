@@ -1,0 +1,102 @@
+
+/* Estilos responsivos globais */
+
+/* Container responsivo */
+@media (max-width: 576px) {
+  .container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+
+/* Botões responsivos */
+@media (max-width: 768px) {
+  .btn {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+  }
+  
+  .btn-lg {
+    font-size: 1rem;
+    padding: 0.6rem 1.2rem;
+  }
+}
+
+/* Tipografia responsiva */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+  
+  h2 {
+    font-size: 1.6rem;
+  }
+  
+  h3 {
+    font-size: 1.4rem;
+  }
+  
+  .display-1 {
+    font-size: 3rem;
+  }
+  
+  .display-2 {
+    font-size: 2.5rem;
+  }
+  
+  .display-3 {
+    font-size: 2rem;
+  }
+  
+  .display-4 {
+    font-size: 1.8rem;
+  }
+  
+  .display-5 {
+    font-size: 1.6rem;
+  }
+}
+
+/* Cards responsivos */
+@media (max-width: 576px) {
+  .card {
+    margin-bottom: 1rem;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+}
+
+/* Espaçamentos responsivos */
+@media (max-width: 768px) {
+  .py-5 {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+  
+  .my-5 {
+    margin-top: 2rem !important;
+    margin-bottom: 2rem !important;
+  }
+}
+
+/* Imagens responsivas */
+.img-responsive {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Ocultar elementos em mobile */
+@media (max-width: 767px) {
+  .d-mobile-none {
+    display: none !important;
+  }
+}
+
+/* Mostrar apenas em mobile */
+@media (min-width: 768px) {
+  .d-mobile-only {
+    display: none !important;
+  }
+}

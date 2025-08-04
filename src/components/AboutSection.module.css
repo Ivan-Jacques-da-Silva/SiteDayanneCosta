@@ -1,0 +1,71 @@
+.aboutSection {
+    background-color: #f8f9fa;
+  }
+  
+  .profileImage {
+    max-height: 500px;
+    object-fit: cover;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border: 5px solid white;
+  }
+  
+  .sectionTitle {
+    font-weight: 700;
+    color: #2c3e50;
+    position: relative;
+    padding-bottom: 15px;
+  }
+  
+  .sectionTitle::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 50px;
+    height: 3px;
+    background-color: #e74c3c;
+  }
+  
+  .aboutContent p {
+    margin-bottom: 1.2rem;
+    line-height: 1.8;
+    color: #555;
+  }
+  
+  .aboutContent .lead {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #2c3e50;
+  }
+  
+  .readMoreButton {
+    padding: 10px 25px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-width: 2px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+  }
+  
+  .readMoreButton:hover {
+    background-color: #e74c3c;
+    border-color: #e74c3c;
+    color: white;
+  }
+  
+  /* Responsividade */
+  @media (max-width: 992px) {
+    .profileImage {
+      max-height: 400px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .sectionTitle {
+      font-size: 1.8rem;
+    }
+    
+    .aboutContent .lead {
+      font-size: 1.1rem;
+    }
+  }

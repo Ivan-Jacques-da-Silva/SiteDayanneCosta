@@ -1,0 +1,171 @@
+
+.adminPage {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.mainContent {
+  padding: 120px 0 80px;
+  min-height: calc(100vh - 200px);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 18px;
+}
+
+.adminHeader {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.adminHeader h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 10px;
+  font-family: 'Raleway', sans-serif;
+}
+
+.adminHeader p {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  margin-bottom: 50px;
+}
+
+.statCard {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.statIcon {
+  font-size: 3rem;
+  margin-right: 20px;
+  opacity: 0.8;
+}
+
+.statContent h3 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #000;
+  margin: 0 0 5px 0;
+}
+
+.statContent p {
+  font-size: 1rem;
+  color: #666;
+  margin: 0;
+}
+
+.adminActions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 40px;
+}
+
+.actionGroup {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.actionGroup h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 10px;
+}
+
+.actionButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.actionBtn {
+  display: inline-block;
+  padding: 15px 25px;
+  background: #000;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 2px solid #000;
+}
+
+.actionBtn:hover {
+  background: white;
+  color: #000;
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .mainContent {
+    padding: 100px 0 60px;
+  }
+
+  .container {
+    padding: 0 15px;
+  }
+
+  .adminHeader h1 {
+    font-size: 2rem;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .statCard {
+    padding: 20px;
+  }
+
+  .statIcon {
+    font-size: 2.5rem;
+    margin-right: 15px;
+  }
+
+  .statContent h3 {
+    font-size: 2rem;
+  }
+
+  .adminActions {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .actionGroup {
+    padding: 20px;
+  }
+}

@@ -1,0 +1,316 @@
+
+.pageWrapper {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.mainContent {
+  width: 100%;
+}
+
+.section {
+  padding: 4rem 0;
+  width: 100%;
+}
+
+.grayBg {
+  background-color: #f8f9fa;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.textContent {
+  padding-right: 2rem;
+}
+
+.imageContent {
+  display: flex;
+  justify-content: center;
+}
+
+.sectionImage {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.title {
+  font-family: 'Raleway', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 300;
+  color: #000;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.description {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+.sectionTitle {
+  font-family: 'Raleway', sans-serif;
+  font-size: 2rem;
+  font-weight: 300;
+  color: #000;
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+.feature {
+  text-align: center;
+  padding: 2rem 1rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+}
+
+.featureTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 1rem;
+  letter-spacing: 1px;
+}
+
+.featureText {
+  font-size: 0.95rem;
+  color: #666;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.reasonsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.reasonsList li {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 0.8rem;
+  padding-left: 1.5rem;
+  position: relative;
+  line-height: 1.5;
+}
+
+.reasonsList li::before {
+  content: '•';
+  color: #000;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .container {
+    max-width: 100%;
+    padding: 0 30px;
+  }
+  
+  .contentGrid {
+    gap: 2.5rem;
+  }
+  
+  .featuresGrid {
+    gap: 1.8rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .section {
+    padding: 3rem 0;
+  }
+  
+  .container {
+    padding: 0 25px;
+  }
+  
+  .contentGrid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    text-align: center;
+  }
+
+  .textContent {
+    padding-right: 0;
+    order: 2;
+  }
+  
+  .imageContent {
+    order: 1;
+  }
+
+  .featuresGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .title {
+    font-size: 2.2rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.8rem;
+    margin-bottom: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 2.5rem 0;
+  }
+
+  .container {
+    padding: 0 20px;
+  }
+
+  .featuresGrid {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+
+  .feature {
+    padding: 1.8rem 1.2rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.6rem;
+    margin-bottom: 2rem;
+  }
+
+  .contentGrid {
+    gap: 1.8rem;
+  }
+  
+  .textContent {
+    text-align: left;
+  }
+}
+
+@media (max-width: 576px) {
+  .section {
+    padding: 2rem 0;
+  }
+  
+  .container {
+    padding: 0 15px;
+  }
+
+  .title {
+    font-size: 1.8rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .description {
+    font-size: 0.95rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .feature {
+    padding: 1.5rem 1rem;
+  }
+
+  .featureTitle {
+    font-size: 1rem;
+  }
+
+  .featureText {
+    font-size: 0.9rem;
+  }
+  
+  .reasonsList li {
+    font-size: 0.95rem;
+  }
+  
+  .contentGrid {
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 10px;
+  }
+  
+  .title {
+    font-size: 1.6rem;
+    line-height: 1.3;
+  }
+  
+  .sectionTitle {
+    font-size: 1.3rem;
+  }
+  
+  .feature {
+    padding: 1.2rem 0.8rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .title {
+    font-size: 1.4rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.2rem;
+  }
+  
+  .subtitle {
+    font-size: 0.95rem;
+  }
+  
+  .description {
+    font-size: 0.9rem;
+  }
+}

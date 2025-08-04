@@ -1,0 +1,281 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  role      UserRole @default(AGENT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  properties Property[]
+  contacts   Contact[]
+  favorites  Favorite[]
+
+  @@map("users")
+}
+
+model Property {
+  id          String  @id @default(cuid())
+  mlsId       String? @unique
+  title       String
+  description String?
+
+  // Address
+  address     String
+  city        String
+  state       String
+  zipCode     String
+  country     String  @default("USA")
+
+  // Property Details
+  propertyType     PropertyType
+  propertySubType  String?
+  status          PropertyStatus @default(ACTIVE)
+  price           Decimal
+  pricePerSqft    Decimal?
+
+  // Physical Details
+  bedrooms        Int?
+  bathrooms       Decimal?
+  halfBaths       Int?
+  sqft            Int?
+  lotSize         Decimal?
+  yearBuilt       Int?
+
+  // Features
+  garage          Int?
+  parking         Int?
+  pool            Boolean @default(false)
+  waterfront      Boolean @default(false)
+  furnished       Boolean @default(false)
+  petFriendly     Boolean @default(false)
+
+  // Location
+  latitude        Decimal?
+  longitude       Decimal?
+  neighborhood    String?
+  subdivision     String?
+
+  // Listing Details
+  listingDate     DateTime?
+  daysOnMarket    Int?
+  virtualTour     String?
+
+  // Media
+  images          PropertyImage[]
+  videos          PropertyVideo[]
+  documents       PropertyDocument[]
+
+  // Relations
+  userId          String
+  user            User        @relation(fields: [userId], references: [id])
+  amenities       PropertyAmenity[]
+  features        PropertyFeature[]
+  favorites       Favorite[]
+
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@map("properties")
+}
+
+model PropertyImage {
+  id          String   @id @default(cuid())
+  url         String
+  caption     String?
+  isPrimary   Boolean  @default(false)
+  order       Int      @default(0)
+
+  propertyId  String
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+
+  @@map("property_images")
+}
+
+model PropertyVideo {
+  id          String   @id @default(cuid())
+  url         String
+  title       String?
+  type        VideoType @default(TOUR)
+
+  propertyId  String
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+
+  @@map("property_videos")
+}
+
+model PropertyDocument {
+  id          String   @id @default(cuid())
+  name        String
+  url         String
+  type        DocumentType
+  size        Int?
+
+  propertyId  String
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+
+  @@map("property_documents")
+}
+
+model Amenity {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  category    String
+  icon        String?
+
+  properties  PropertyAmenity[]
+
+  createdAt   DateTime @default(now())
+
+  @@map("amenities")
+}
+
+model PropertyAmenity {
+  id          String   @id @default(cuid())
+
+  propertyId  String
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  amenityId   String
+  amenity     Amenity  @relation(fields: [amenityId], references: [id], onDelete: Cascade)
+
+  @@unique([propertyId, amenityId])
+  @@map("property_amenities")
+}
+
+model Feature {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  category    String
+
+  properties  PropertyFeature[]
+
+  createdAt   DateTime @default(now())
+
+  @@map("features")
+}
+
+model PropertyFeature {
+  id          String   @id @default(cuid())
+  value       String?
+
+  propertyId  String
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  featureId   String
+  feature     Feature  @relation(fields: [featureId], references: [id], onDelete: Cascade)
+
+  @@unique([propertyId, featureId])
+  @@map("property_features")
+}
+
+model Contact {
+  id          String      @id @default(cuid())
+  name        String
+  email       String
+  phone       String?
+  message     String?
+  type        ContactType @default(INQUIRY)
+  status      ContactStatus @default(NEW)
+
+  propertyId  String?
+  userId      String?
+  user        User?       @relation(fields: [userId], references: [id])
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@map("contacts")
+}
+
+model Favorite {
+  id          String   @id @default(cuid())
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  propertyId  String
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+
+  @@unique([userId, propertyId])
+  @@map("favorites")
+}
+
+// Enums
+enum UserRole {
+  ADMIN
+  AGENT
+  CLIENT
+}
+
+enum PropertyType {
+  CONDO
+  SINGLE_FAMILY
+  TOWNHOUSE
+  MULTI_FAMILY
+  LAND
+  COMMERCIAL
+  LUXURY_CONDO
+  NEW_DEVELOPMENT
+}
+
+enum PropertyStatus {
+  ACTIVE
+  PENDING
+  SOLD
+  OFF_MARKET
+  COMING_SOON
+  EXPIRED
+}
+
+enum VideoType {
+  TOUR
+  DRONE
+  WALKTHROUGH
+  NEIGHBORHOOD
+}
+
+enum DocumentType {
+  FLOORPLAN
+  BROCHURE
+  DISCLOSURE
+  HOA_DOCS
+  FINANCIAL
+  OTHER
+}
+
+enum ContactType {
+  INQUIRY
+  SHOWING_REQUEST
+  OFFER
+  GENERAL
+}
+
+enum ContactStatus {
+  NEW
+  CONTACTED
+  SCHEDULED
+  COMPLETED
+  CLOSED
+}
