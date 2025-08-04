@@ -70,7 +70,7 @@ const AppRoutes = () => {
         <Route path="/neighborhoods/edgewater" element={<Edgewater />} />
         <Route path="/neighborhoods/the-roads" element={<TheRoads />} />
 
-        {/* Admin Routes */}
+        {/* Admin Routes */} 
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/contacts" element={<AdminContacts />} />
         <Route path="/admin/properties" element={<AdminProperties />} />
@@ -78,7 +78,7 @@ const AppRoutes = () => {
         <Route path="/admin/condominios" element={<AdminCondominios />} /> 
         <Route path="/admin/usuarios" element={<AdminUsuarios />} />
         <Route path="/admin/favoritos" element={<AdminFavoritos />} />
-        <Route path="/admin/formularios" element={<AdminFormularios />} />
+        <Route path="/admin/formularios" element={<AdminFormularios />} /> 
       </Routes>
   );
 };
