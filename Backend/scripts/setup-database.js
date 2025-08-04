@@ -97,14 +97,21 @@ async function checkDatabaseExists() {
   const env = { ...process.env, PGPASSWORD: DB_CONFIG.password };
   
   return new Promise((resolve) => {
-    const checkCmd = `${psql} -h localhost -U postgres -lqt | cut -d \\| -f 1 | grep -qw ${DB_CONFIG.database}`;
+    const checkCmd = `${psql} -h ${DB_CONFIG.host} -U ${DB_CONFIG.username} -lqt`;
     exec(checkCmd, { env }, (error, stdout, stderr) => {
       if (error) {
-        console.log('✅ Database does not exist yet');
+        console.log('✅ Database connection failed, assuming database does not exist');
         resolve(false);
       } else {
-        console.log('⚠️  Database already exists!');
-        resolve(true);
+        const databases = stdout.toLowerCase();
+        const exists = databases.includes(DB_CONFIG.database.toLowerCase());
+        if (exists) {
+          console.log('⚠️  Database already exists!');
+          console.log(`📊 Database: ${DB_CONFIG.database}`);
+        } else {
+          console.log('✅ Database does not exist yet');
+        }
+        resolve(exists);
       }
     });
   });
@@ -132,16 +139,16 @@ async function checkAdminUserExists() {
     
     if (existingAdmin) {
       console.log('⚠️  Admin user already exists!');
-      console.log(`   Email: ${existingAdmin.email}`);
-      console.log(`   Role: ${existingAdmin.role}`);
-      console.log(`   Created: ${existingAdmin.createdAt}`);
+      console.log(`   📧 Email: ${existingAdmin.email}`);
+      console.log(`   👑 Role: ${existingAdmin.role}`);
+      console.log(`   📅 Created: ${existingAdmin.createdAt}`);
       return true;
     } else {
       console.log('✅ No admin user found');
       return false;
     }
   } catch (error) {
-    console.log('✅ Unable to check admin user (database may not exist yet)');
+    console.log('✅ Unable to check admin user (database may not exist or no tables created yet)');
     return false;
   }
 }
@@ -153,14 +160,22 @@ async function cleanupExistingDatabase() {
   const env = { ...process.env, PGPASSWORD: DB_CONFIG.password };
   
   return new Promise((resolve, reject) => {
-    exec(`${psql} -h localhost -U postgres -c "DROP DATABASE IF EXISTS ${DB_CONFIG.database};"`, { env }, (error, stdout, stderr) => {
-      if (error && !error.message.includes('does not exist')) {
-        console.error('❌ Error dropping database:', error.message);
-        reject(error);
-      } else {
-        console.log('✅ Database dropped successfully');
-        resolve();
-      }
+    // Terminate existing connections first
+    const terminateCmd = `${psql} -h ${DB_CONFIG.host} -U ${DB_CONFIG.username} -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '${DB_CONFIG.database}' AND pid <> pg_backend_pid();"`;
+    
+    exec(terminateCmd, { env }, (error, stdout, stderr) => {
+      // Continue even if terminate fails
+      const dropCmd = `${psql} -h ${DB_CONFIG.host} -U ${DB_CONFIG.username} -c "DROP DATABASE IF EXISTS ${DB_CONFIG.database};"`;
+      
+      exec(dropCmd, { env }, (error, stdout, stderr) => {
+        if (error && !error.message.includes('does not exist')) {
+          console.error('❌ Error dropping database:', error.message);
+          reject(error);
+        } else {
+          console.log('✅ Database dropped successfully');
+          resolve();
+        }
+      });
     });
   });
 }
@@ -199,7 +214,7 @@ async function setupDatabase() {
   
   try {
     await new Promise((resolve, reject) => {
-      const createDbCmd = `${psql} -h localhost -U postgres -c "CREATE DATABASE ${DB_CONFIG.database};"`;
+      const createDbCmd = `${psql} -h ${DB_CONFIG.host} -U ${DB_CONFIG.username} -c "CREATE DATABASE ${DB_CONFIG.database};"`;
       exec(createDbCmd, { env }, (error, stdout, stderr) => {
         if (error && !error.message.includes('already exists')) {
           reject(error);
@@ -245,7 +260,7 @@ async function updateEnvFile() {
   console.log('📝 Updating .env file...');
 
   const envPath = path.join(__dirname, '..', '.env');
-  const databaseUrl = `postgresql://${DB_CONFIG.username}:${DB_CONFIG.password}@localhost:${DB_CONFIG.port}/${DB_CONFIG.database}`;
+  const databaseUrl = `postgresql://${DB_CONFIG.username}:${DB_CONFIG.password}@${DB_CONFIG.host}:${DB_CONFIG.port}/${DB_CONFIG.database}`;
 
   const envContent = `# Database Configuration - PostgreSQL Only
 DATABASE_URL="${databaseUrl}"
@@ -258,7 +273,7 @@ PORT=5000
 NODE_ENV=development
 
 # PostgreSQL Database Details
-DB_HOST=localhost
+DB_HOST=${DB_CONFIG.host}
 DB_PORT=${DB_CONFIG.port}
 DB_NAME=${DB_CONFIG.database}
 DB_USER=${DB_CONFIG.username}
