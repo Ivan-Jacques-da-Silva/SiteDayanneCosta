@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styles from './AdminSidebar.module.css';
@@ -17,23 +16,23 @@ const AdminSidebar = ({ user }) => {
     },
     ...(isAdmin ? [
       {
-        label: 'Condomínios',
+        label: 'Condominiums',
         path: '/admin/condominios',
         icon: '🏢'
       },
       {
-        label: 'Usuários',
+        label: 'Users',
         path: '/admin/usuarios',
         icon: '👥'
       }
     ] : []),
     {
-      label: 'Favoritos',
+      label: 'Favorites',
       path: '/admin/favoritos',
       icon: '❤️'
     },
     {
-      label: 'Formulários',
+      label: 'Forms',
       path: '/admin/formularios',
       icon: '📝'
     }
@@ -85,9 +84,9 @@ const AdminSidebar = ({ user }) => {
       <div className={styles.sidebarFooter}>
         <Link to="/" className={styles.backToSite}>
           <span className={styles.menuIcon}>🌐</span>
-          <span>Voltar ao Site</span>
+          <span>Back to Site</span>
         </Link>
-        <button 
+        <button
           className={styles.logoutBtn}
           onClick={() => {
             localStorage.removeItem('token');
@@ -96,7 +95,7 @@ const AdminSidebar = ({ user }) => {
           }}
         >
           <span className={styles.menuIcon}>🚪</span>
-          <span>Sair</span>
+          <span>Logout</span>
         </button>
       </div>
     </div>

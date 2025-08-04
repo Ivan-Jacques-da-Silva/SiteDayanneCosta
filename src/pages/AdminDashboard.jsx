@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import AdminLayout from '../components/AdminLayout';
 import styles from './AdminDashboard.module.css';
@@ -54,7 +53,7 @@ const AdminDashboard = () => {
   if (loading) {
     return (
       <AdminLayout>
-        <div className={styles.loading}>Carregando dashboard...</div>
+        <div className={styles.loading}>Loading dashboard...</div>
       </AdminLayout>
     );
   }
@@ -63,8 +62,8 @@ const AdminDashboard = () => {
     <AdminLayout>
       <div className={styles.dashboard}>
         <div className={styles.dashboardHeader}>
-          <h1>Dashboard</h1>
-          <p>Visão geral do sistema</p>
+          <h1>Administrative Dashboard</h1>
+          <p>Overview of the system</p>
         </div>
 
         <div className={styles.statsGrid}>
@@ -73,11 +72,11 @@ const AdminDashboard = () => {
               <div className={styles.statIcon} style={{background: '#3b82f6'}}>🏠</div>
               <div className={styles.statValue}>
                 <span className={styles.number}>{dashboardData?.totalProperties || 0}</span>
-                <span className={styles.label}>Total de Imóveis</span>
+                <span className={styles.label}>Total Properties</span>
               </div>
             </div>
             <div className={styles.statFooter}>
-              <span className={styles.active}>{dashboardData?.activeProperties || 0} ativos</span>
+              <span className={styles.active}>{dashboardData?.activeProperties || 0} active</span>
             </div>
           </div>
 
@@ -86,11 +85,11 @@ const AdminDashboard = () => {
               <div className={styles.statIcon} style={{background: '#10b981'}}>📝</div>
               <div className={styles.statValue}>
                 <span className={styles.number}>{dashboardData?.totalContacts || 0}</span>
-                <span className={styles.label}>Formulários</span>
+                <span className={styles.label}>Forms</span>
               </div>
             </div>
             <div className={styles.statFooter}>
-              <span className={styles.new}>{dashboardData?.newContacts || 0} novos</span>
+              <span className={styles.new}>{dashboardData?.newContacts || 0} new</span>
             </div>
           </div>
 
@@ -99,11 +98,11 @@ const AdminDashboard = () => {
               <div className={styles.statIcon} style={{background: '#f59e0b'}}>❤️</div>
               <div className={styles.statValue}>
                 <span className={styles.number}>{dashboardData?.totalFavorites || 0}</span>
-                <span className={styles.label}>Favoritos</span>
+                <span className={styles.label}>Favorites</span>
               </div>
             </div>
             <div className={styles.statFooter}>
-              <span className={styles.growth}>+12% este mês</span>
+              <span className={styles.growth}>+12% this month</span>
             </div>
           </div>
 
@@ -112,11 +111,11 @@ const AdminDashboard = () => {
               <div className={styles.statIcon} style={{background: '#8b5cf6'}}>👥</div>
               <div className={styles.statValue}>
                 <span className={styles.number}>{dashboardData?.totalUsers || 0}</span>
-                <span className={styles.label}>Usuários</span>
+                <span className={styles.label}>Users</span>
               </div>
             </div>
             <div className={styles.statFooter}>
-              <span className={styles.growth}>+5 esta semana</span>
+              <span className={styles.growth}>+5 this week</span>
             </div>
           </div>
         </div>
@@ -124,30 +123,30 @@ const AdminDashboard = () => {
         <div className={styles.chartsGrid}>
           <div className={styles.chartCard}>
             <div className={styles.chartHeader}>
-              <h3>Atividade Recente</h3>
-              <span className={styles.chartPeriod}>Últimos 7 dias</span>
+              <h3>Recent Activity</h3>
+              <span className={styles.chartPeriod}>Last 7 days</span>
             </div>
             <div className={styles.chartContent}>
               <div className={styles.activityList}>
                 <div className={styles.activityItem}>
                   <div className={styles.activityIcon}>📝</div>
                   <div className={styles.activityContent}>
-                    <span className={styles.activityText}>Novo formulário de contato</span>
-                    <span className={styles.activityTime}>2 horas atrás</span>
+                    <span className={styles.activityText}>New contact form submission</span>
+                    <span className={styles.activityTime}>2 hours ago</span>
                   </div>
                 </div>
                 <div className={styles.activityItem}>
                   <div className={styles.activityIcon}>🏠</div>
                   <div className={styles.activityContent}>
-                    <span className={styles.activityText}>Imóvel adicionado aos favoritos</span>
-                    <span className={styles.activityTime}>5 horas atrás</span>
+                    <span className={styles.activityText}>Property added to favorites</span>
+                    <span className={styles.activityTime}>5 hours ago</span>
                   </div>
                 </div>
                 <div className={styles.activityItem}>
                   <div className={styles.activityIcon}>👤</div>
                   <div className={styles.activityContent}>
-                    <span className={styles.activityText}>Novo usuário cadastrado</span>
-                    <span className={styles.activityTime}>1 dia atrás</span>
+                    <span className={styles.activityText}>New user registered</span>
+                    <span className={styles.activityTime}>1 day ago</span>
                   </div>
                 </div>
               </div>
@@ -156,24 +155,24 @@ const AdminDashboard = () => {
 
           <div className={styles.chartCard}>
             <div className={styles.chartHeader}>
-              <h3>Imóveis por Status</h3>
-              <span className={styles.chartPeriod}>Atual</span>
+              <h3>Properties by Status</h3>
+              <span className={styles.chartPeriod}>Current</span>
             </div>
             <div className={styles.chartContent}>
               <div className={styles.statusList}>
                 <div className={styles.statusItem}>
                   <div className={styles.statusIndicator} style={{background: '#10b981'}}></div>
-                  <span className={styles.statusLabel}>Ativos</span>
+                  <span className={styles.statusLabel}>Active</span>
                   <span className={styles.statusValue}>{dashboardData?.activeProperties || 0}</span>
                 </div>
                 <div className={styles.statusItem}>
                   <div className={styles.statusIndicator} style={{background: '#f59e0b'}}></div>
-                  <span className={styles.statusLabel}>Pendentes</span>
+                  <span className={styles.statusLabel}>Pending</span>
                   <span className={styles.statusValue}>8</span>
                 </div>
                 <div className={styles.statusItem}>
                   <div className={styles.statusIndicator} style={{background: '#ef4444'}}></div>
-                  <span className={styles.statusLabel}>Inativos</span>
+                  <span className={styles.statusLabel}>Inactive</span>
                   <span className={styles.statusValue}>5</span>
                 </div>
               </div>

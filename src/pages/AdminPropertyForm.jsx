@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { propertyExampleData, convertToApiFormat } from '../data/propertyExample';
 import styles from './AdminPropertyForm.module.css';
@@ -22,9 +21,9 @@ const AdminPropertyForm = () => {
     try {
       const token = localStorage.getItem('token');
       const userData = JSON.parse(localStorage.getItem('user'));
-      
+
       const apiData = convertToApiFormat(formData, userData.id);
-      
+
       const response = await fetch('http://0.0.0.0:5000/api/properties', {
         method: 'POST',
         headers: {
@@ -35,14 +34,14 @@ const AdminPropertyForm = () => {
       });
 
       if (response.ok) {
-        alert('Propriedade cadastrada com sucesso!');
+        alert('Property added successfully!');
         // Redirecionar ou limpar formulário
       } else {
-        alert('Erro ao cadastrar propriedade');
+        alert('Error adding property');
       }
     } catch (error) {
-      console.error('Erro:', error);
-      alert('Erro ao cadastrar propriedade');
+      console.error('Error:', error);
+      alert('Error adding property');
     } finally {
       setLoading(false);
     }
@@ -55,21 +54,21 @@ const AdminPropertyForm = () => {
   return (
     <div className={styles.formContainer}>
       <div className={styles.header}>
-        <h1>Cadastrar Nova Propriedade</h1>
+        <h1>Add New Property</h1>
         <button 
           type="button" 
           onClick={loadExampleData}
           className={styles.exampleButton}
         >
-          Carregar Dados de Exemplo (Brickell)
+          Load Example Data (Brickell)
         </button>
       </div>
 
       <form onSubmit={handleSubmit} className={styles.form}>
         {/* Informações Básicas */}
         <section className={styles.section}>
-          <h2>Informações Básicas</h2>
-          
+          <h2>Basic Information</h2>
+
           <div className={styles.formGroup}>
             <label htmlFor="mlsId">MLS ID</label>
             <input
@@ -82,7 +81,7 @@ const AdminPropertyForm = () => {
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="title">Título</label>
+            <label htmlFor="title">Title</label>
             <input
               type="text"
               id="title"
@@ -94,7 +93,7 @@ const AdminPropertyForm = () => {
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="description">Descrição</label>
+            <label htmlFor="description">Description</label>
             <textarea
               id="description"
               name="description"
@@ -107,11 +106,11 @@ const AdminPropertyForm = () => {
 
         {/* Endereço */}
         <section className={styles.section}>
-          <h2>Endereço</h2>
-          
+          <h2>Address</h2>
+
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
-              <label htmlFor="address">Endereço</label>
+              <label htmlFor="address">Street Address</label>
               <input
                 type="text"
                 id="address"
@@ -123,7 +122,7 @@ const AdminPropertyForm = () => {
             </div>
 
             <div className={styles.formGroup}>
-              <label htmlFor="city">Cidade</label>
+              <label htmlFor="city">City</label>
               <input
                 type="text"
                 id="city"
@@ -137,7 +136,7 @@ const AdminPropertyForm = () => {
 
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
-              <label htmlFor="state">Estado</label>
+              <label htmlFor="state">State</label>
               <input
                 type="text"
                 id="state"
@@ -149,7 +148,7 @@ const AdminPropertyForm = () => {
             </div>
 
             <div className={styles.formGroup}>
-              <label htmlFor="zipCode">CEP</label>
+              <label htmlFor="zipCode">Zip Code</label>
               <input
                 type="text"
                 id="zipCode"
@@ -163,7 +162,7 @@ const AdminPropertyForm = () => {
 
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
-              <label htmlFor="neighborhood">Bairro</label>
+              <label htmlFor="neighborhood">Neighborhood</label>
               <input
                 type="text"
                 id="neighborhood"
@@ -177,11 +176,11 @@ const AdminPropertyForm = () => {
 
         {/* Detalhes da Propriedade */}
         <section className={styles.section}>
-          <h2>Detalhes da Propriedade</h2>
-          
+          <h2>Property Details</h2>
+
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
-              <label htmlFor="propertyType">Tipo</label>
+              <label htmlFor="propertyType">Type</label>
               <select
                 id="propertyType"
                 name="propertyType"
@@ -189,12 +188,12 @@ const AdminPropertyForm = () => {
                 onChange={handleInputChange}
                 required
               >
-                <option value="">Selecione</option>
-                <option value="CONDO">Condomínio</option>
-                <option value="SINGLE_FAMILY">Casa Individual</option>
+                <option value="">Select</option>
+                <option value="CONDO">Condo</option>
+                <option value="SINGLE_FAMILY">Single Family</option>
                 <option value="TOWNHOUSE">Townhouse</option>
-                <option value="LUXURY_CONDO">Condomínio de Luxo</option>
-                <option value="NEW_DEVELOPMENT">Novo Desenvolvimento</option>
+                <option value="LUXURY_CONDO">Luxury Condo</option>
+                <option value="NEW_DEVELOPMENT">New Development</option>
               </select>
             </div>
 
@@ -207,17 +206,17 @@ const AdminPropertyForm = () => {
                 onChange={handleInputChange}
                 required
               >
-                <option value="ACTIVE">Ativo</option>
-                <option value="PENDING">Pendente</option>
-                <option value="SOLD">Vendido</option>
-                <option value="OFF_MARKET">Fora do Mercado</option>
+                <option value="ACTIVE">Active</option>
+                <option value="PENDING">Pending</option>
+                <option value="SOLD">Sold</option>
+                <option value="OFF_MARKET">Off Market</option>
               </select>
             </div>
           </div>
 
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
-              <label htmlFor="price">Preço ($)</label>
+              <label htmlFor="price">Price ($)</label>
               <input
                 type="number"
                 id="price"
@@ -229,7 +228,7 @@ const AdminPropertyForm = () => {
             </div>
 
             <div className={styles.formGroup}>
-              <label htmlFor="pricePerSqft">Preço por Sq.Ft ($)</label>
+              <label htmlFor="pricePerSqft">Price per Sq.Ft ($)</label>
               <input
                 type="number"
                 id="pricePerSqft"
@@ -242,7 +241,7 @@ const AdminPropertyForm = () => {
 
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
-              <label htmlFor="bedrooms">Quartos</label>
+              <label htmlFor="bedrooms">Bedrooms</label>
               <input
                 type="number"
                 id="bedrooms"
@@ -253,7 +252,7 @@ const AdminPropertyForm = () => {
             </div>
 
             <div className={styles.formGroup}>
-              <label htmlFor="bathrooms">Banheiros</label>
+              <label htmlFor="bathrooms">Bathrooms</label>
               <input
                 type="number"
                 step="0.5"
@@ -265,7 +264,7 @@ const AdminPropertyForm = () => {
             </div>
 
             <div className={styles.formGroup}>
-              <label htmlFor="sqft">Área (Sq.Ft)</label>
+              <label htmlFor="sqft">Area (Sq.Ft)</label>
               <input
                 type="number"
                 id="sqft"
@@ -279,8 +278,8 @@ const AdminPropertyForm = () => {
 
         {/* Características */}
         <section className={styles.section}>
-          <h2>Características</h2>
-          
+          <h2>Features</h2>
+
           <div className={styles.checkboxGrid}>
             <label className={styles.checkbox}>
               <input
@@ -289,7 +288,7 @@ const AdminPropertyForm = () => {
                 checked={formData.pool || false}
                 onChange={handleInputChange}
               />
-              Piscina
+              Pool
             </label>
 
             <label className={styles.checkbox}>
@@ -299,7 +298,7 @@ const AdminPropertyForm = () => {
                 checked={formData.waterfront || false}
                 onChange={handleInputChange}
               />
-              Vista para Água
+              Waterfront
             </label>
 
             <label className={styles.checkbox}>
@@ -309,7 +308,7 @@ const AdminPropertyForm = () => {
                 checked={formData.furnished || false}
                 onChange={handleInputChange}
               />
-              Mobiliado
+              Furnished
             </label>
 
             <label className={styles.checkbox}>
@@ -326,8 +325,8 @@ const AdminPropertyForm = () => {
 
         {/* Coordenadas */}
         <section className={styles.section}>
-          <h2>Localização (GPS)</h2>
-          
+          <h2>Location (GPS)</h2>
+
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
               <label htmlFor="latitude">Latitude</label>
@@ -357,10 +356,10 @@ const AdminPropertyForm = () => {
 
         {/* Tour Virtual */}
         <section className={styles.section}>
-          <h2>Mídia</h2>
-          
+          <h2>Media</h2>
+
           <div className={styles.formGroup}>
-            <label htmlFor="virtualTour">Tour Virtual (URL)</label>
+            <label htmlFor="virtualTour">Virtual Tour (URL)</label>
             <input
               type="url"
               id="virtualTour"
@@ -373,7 +372,7 @@ const AdminPropertyForm = () => {
 
         {/* Amenidades (Preview) */}
         <section className={styles.section}>
-          <h2>Amenidades (Exemplo)</h2>
+          <h2>Amenities (Example)</h2>
           <div className={styles.amenitiesList}>
             {formData.amenities?.map((amenity, index) => (
               <span key={index} className={styles.amenityTag}>
@@ -389,7 +388,7 @@ const AdminPropertyForm = () => {
             className={styles.submitButton}
             disabled={loading}
           >
-            {loading ? 'Cadastrando...' : 'Cadastrar Propriedade'}
+            {loading ? 'Adding Property...' : 'Add Property'}
           </button>
         </div>
       </form>

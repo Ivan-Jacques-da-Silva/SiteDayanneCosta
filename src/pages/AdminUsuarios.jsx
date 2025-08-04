@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import AdminLayout from '../components/AdminLayout';
 import styles from './AdminUsuarios.module.css';
@@ -7,7 +6,7 @@ const AdminUsuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [editingUser, setEditingUser] = useState(null);
+  const [editingUser, setEditingUser] = null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [filter, setFilter] = useState('');
@@ -82,7 +81,7 @@ const AdminUsuarios = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      
+
       if (editingUser) {
         // Update existing user
         const response = await fetch(`http://0.0.0.0:5000/api/admin/users/${editingUser.id}`, {
@@ -104,7 +103,7 @@ const AdminUsuarios = () => {
           body: JSON.stringify(formData)
         });
       }
-      
+
       setShowForm(false);
       setEditingUser(null);
       resetForm();
@@ -135,7 +134,7 @@ const AdminUsuarios = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Tem certeza que deseja excluir este usuário?')) {
+    if (window.confirm('Are you sure you want to delete this user?')) {
       try {
         const token = localStorage.getItem('token');
         await fetch(`http://0.0.0.0:5000/api/admin/users/${id}`, {
@@ -152,7 +151,7 @@ const AdminUsuarios = () => {
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('pt-BR', {
+    return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
@@ -170,9 +169,9 @@ const AdminUsuarios = () => {
 
   const getRoleLabel = (role) => {
     switch (role) {
-      case 'ADMIN': return 'Administrador';
-      case 'AGENT': return 'Corretor';
-      case 'USER': return 'Usuário';
+      case 'ADMIN': return 'Administrator';
+      case 'AGENT': return 'Broker';
+      case 'USER': return 'User';
       default: return role;
     }
   };
@@ -180,7 +179,7 @@ const AdminUsuarios = () => {
   if (loading) {
     return (
       <AdminLayout>
-        <div className={styles.loading}>Carregando usuários...</div>
+        <div className={styles.loading}>Loading users...</div>
       </AdminLayout>
     );
   }
@@ -190,8 +189,8 @@ const AdminUsuarios = () => {
       <div className={styles.usuariosPage}>
         <div className={styles.pageHeader}>
           <div>
-            <h1>Gerenciar Usuários</h1>
-            <p>Visualize e gerencie todos os usuários do sistema</p>
+            <h1>Manage Users</h1>
+            <p>View and manage all system users</p>
           </div>
           <button 
             className={styles.addBtn}
@@ -201,7 +200,7 @@ const AdminUsuarios = () => {
               setShowForm(true);
             }}
           >
-            <span>+</span> Novo Usuário
+            <span>+</span> Add New User
           </button>
         </div>
 
@@ -211,10 +210,10 @@ const AdminUsuarios = () => {
             onChange={(e) => setFilter(e.target.value)}
             className={styles.filterSelect}
           >
-            <option value="">Todos os Perfis</option>
-            <option value="USER">Usuários</option>
-            <option value="AGENT">Corretores</option>
-            <option value="ADMIN">Administradores</option>
+            <option value="">All Users</option>
+            <option value="USER">Users</option>
+            <option value="AGENT">Brokers</option>
+            <option value="ADMIN">Administrators</option>
           </select>
         </div>
 
@@ -222,7 +221,7 @@ const AdminUsuarios = () => {
           <div className={styles.formModal}>
             <div className={styles.formContainer}>
               <div className={styles.formHeader}>
-                <h2>{editingUser ? 'Editar Usuário' : 'Novo Usuário'}</h2>
+                <h2>{editingUser ? 'Edit User' : 'New User'}</h2>
                 <button 
                   className={styles.closeBtn}
                   onClick={() => setShowForm(false)}
@@ -230,10 +229,10 @@ const AdminUsuarios = () => {
                   ×
                 </button>
               </div>
-              
+
               <form onSubmit={handleSubmit} className={styles.form}>
                 <div className={styles.formGroup}>
-                  <label>Nome Completo</label>
+                  <label>Full Name</label>
                   <input
                     type="text"
                     value={formData.name}
@@ -253,7 +252,7 @@ const AdminUsuarios = () => {
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label>Senha {editingUser && '(deixe em branco para manter a atual)'}</label>
+                  <label>Password {editingUser && '(leave blank to keep current)'}</label>
                   <input
                     type="password"
                     value={formData.password}
@@ -263,23 +262,23 @@ const AdminUsuarios = () => {
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label>Perfil</label>
+                  <label>Role</label>
                   <select
                     value={formData.role}
                     onChange={(e) => setFormData({...formData, role: e.target.value})}
                   >
-                    <option value="USER">Usuário</option>
-                    <option value="AGENT">Corretor</option>
-                    <option value="ADMIN">Administrador</option>
+                    <option value="USER">User</option>
+                    <option value="AGENT">Broker</option>
+                    <option value="ADMIN">Administrator</option>
                   </select>
                 </div>
 
                 <div className={styles.formActions}>
                   <button type="button" onClick={() => setShowForm(false)} className={styles.cancelBtn}>
-                    Cancelar
+                    Cancel
                   </button>
                   <button type="submit" className={styles.submitBtn}>
-                    {editingUser ? 'Atualizar' : 'Cadastrar'}
+                    {editingUser ? 'Update' : 'Create'}
                   </button>
                 </div>
               </form>
@@ -289,11 +288,11 @@ const AdminUsuarios = () => {
 
         <div className={styles.usuariosTable}>
           <div className={styles.tableHeader}>
-            <div className={styles.headerCell}>Usuário</div>
-            <div className={styles.headerCell}>Perfil</div>
-            <div className={styles.headerCell}>Estatísticas</div>
-            <div className={styles.headerCell}>Data de Cadastro</div>
-            <div className={styles.headerCell}>Ações</div>
+            <div className={styles.headerCell}>User</div>
+            <div className={styles.headerCell}>Role</div>
+            <div className={styles.headerCell}>Statistics</div>
+            <div className={styles.headerCell}>Registration Date</div>
+            <div className={styles.headerCell}>Actions</div>
           </div>
 
           {usuarios.map((usuario) => (
@@ -320,15 +319,15 @@ const AdminUsuarios = () => {
               <div className={styles.statsCell}>
                 <div className={styles.statItem}>
                   <span className={styles.statValue}>{usuario._count?.properties || 0}</span>
-                  <span className={styles.statLabel}>Imóveis</span>
+                  <span className={styles.statLabel}>Properties</span>
                 </div>
                 <div className={styles.statItem}>
                   <span className={styles.statValue}>{usuario._count?.favorites || 0}</span>
-                  <span className={styles.statLabel}>Favoritos</span>
+                  <span className={styles.statLabel}>Favorites</span>
                 </div>
                 <div className={styles.statItem}>
                   <span className={styles.statValue}>{usuario._count?.contacts || 0}</span>
-                  <span className={styles.statLabel}>Contatos</span>
+                  <span className={styles.statLabel}>Contacts</span>
                 </div>
               </div>
 
@@ -355,19 +354,19 @@ const AdminUsuarios = () => {
               disabled={currentPage === 1}
               className={styles.paginationBtn}
             >
-              Anterior
+              Previous
             </button>
-            
+
             <span className={styles.pageInfo}>
-              Página {currentPage} de {totalPages}
+              Page {currentPage} of {totalPages}
             </span>
-            
+
             <button
               onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
               className={styles.paginationBtn}
             >
-              Próxima
+              Next
             </button>
           </div>
         )}

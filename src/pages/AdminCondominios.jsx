@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import AdminLayout from '../components/AdminLayout';
 import styles from './AdminCondominios.module.css';
@@ -68,7 +67,7 @@ const AdminCondominios = () => {
         // Create new
         console.log('Creating condominio:', formData);
       }
-      
+
       setShowForm(false);
       setEditingCondominio(null);
       resetForm();
@@ -97,7 +96,7 @@ const AdminCondominios = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Tem certeza que deseja excluir este condomínio?')) {
+    if (window.confirm('Are you sure you want to delete this condominium?')) {
       try {
         console.log('Deleting condominio:', id);
         loadCondominios();
@@ -110,7 +109,7 @@ const AdminCondominios = () => {
   if (loading) {
     return (
       <AdminLayout>
-        <div className={styles.loading}>Carregando condomínios...</div>
+        <div className={styles.loading}>Loading condominiums...</div>
       </AdminLayout>
     );
   }
@@ -120,8 +119,8 @@ const AdminCondominios = () => {
       <div className={styles.condominiosPage}>
         <div className={styles.pageHeader}>
           <div>
-            <h1>Gerenciar Condomínios</h1>
-            <p>Cadastre e gerencie os condomínios disponíveis</p>
+            <h1>Manage Condominiums</h1>
+            <p>Register and manage available condominiums</p>
           </div>
           <button 
             className={styles.addBtn}
@@ -131,7 +130,7 @@ const AdminCondominios = () => {
               setShowForm(true);
             }}
           >
-            <span>+</span> Novo Condomínio
+            <span>+</span> Add New Condominium
           </button>
         </div>
 
@@ -139,7 +138,7 @@ const AdminCondominios = () => {
           <div className={styles.formModal}>
             <div className={styles.formContainer}>
               <div className={styles.formHeader}>
-                <h2>{editingCondominio ? 'Editar Condomínio' : 'Novo Condomínio'}</h2>
+                <h2>{editingCondominio ? 'Edit Condominium' : 'New Condominium'}</h2>
                 <button 
                   className={styles.closeBtn}
                   onClick={() => setShowForm(false)}
@@ -147,11 +146,11 @@ const AdminCondominios = () => {
                   ×
                 </button>
               </div>
-              
+
               <form onSubmit={handleSubmit} className={styles.form}>
                 <div className={styles.formGrid}>
                   <div className={styles.formGroup}>
-                    <label>Nome do Condomínio</label>
+                    <label>Condominium Name</label>
                     <input
                       type="text"
                       value={formData.nome}
@@ -161,7 +160,7 @@ const AdminCondominios = () => {
                   </div>
 
                   <div className={styles.formGroup}>
-                    <label>Endereço</label>
+                    <label>Address</label>
                     <input
                       type="text"
                       value={formData.endereco}
@@ -171,7 +170,7 @@ const AdminCondominios = () => {
                   </div>
 
                   <div className={styles.formGroup}>
-                    <label>Cidade</label>
+                    <label>City</label>
                     <input
                       type="text"
                       value={formData.cidade}
@@ -181,7 +180,7 @@ const AdminCondominios = () => {
                   </div>
 
                   <div className={styles.formGroup}>
-                    <label>Estado</label>
+                    <label>State</label>
                     <input
                       type="text"
                       value={formData.estado}
@@ -196,14 +195,14 @@ const AdminCondominios = () => {
                       value={formData.status}
                       onChange={(e) => setFormData({...formData, status: e.target.value})}
                     >
-                      <option value="ATIVO">Ativo</option>
-                      <option value="INATIVO">Inativo</option>
+                      <option value="ATIVO">Active</option>
+                      <option value="INATIVO">Inactive</option>
                     </select>
                   </div>
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label>Descrição</label>
+                  <label>Description</label>
                   <textarea
                     value={formData.descricao}
                     onChange={(e) => setFormData({...formData, descricao: e.target.value})}
@@ -212,21 +211,21 @@ const AdminCondominios = () => {
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label>Amenidades</label>
+                  <label>Amenities</label>
                   <textarea
                     value={formData.amenidades}
                     onChange={(e) => setFormData({...formData, amenidades: e.target.value})}
                     rows="2"
-                    placeholder="Piscina, Academia, Salão de festas..."
+                    placeholder="Pool, Gym, Party Room..."
                   />
                 </div>
 
                 <div className={styles.formActions}>
                   <button type="button" onClick={() => setShowForm(false)} className={styles.cancelBtn}>
-                    Cancelar
+                    Cancel
                   </button>
                   <button type="submit" className={styles.submitBtn}>
-                    {editingCondominio ? 'Atualizar' : 'Cadastrar'}
+                    {editingCondominio ? 'Update' : 'Register'}
                   </button>
                 </div>
               </form>
@@ -244,7 +243,7 @@ const AdminCondominios = () => {
                 </div>
                 <div className={styles.cardActions}>
                   <span className={`${styles.status} ${styles[condominio.status.toLowerCase()]}`}>
-                    {condominio.status}
+                    {condominio.status === 'ATIVO' ? 'Active' : 'Inactive'}
                   </span>
                   <button onClick={() => handleEdit(condominio)} className={styles.editBtn}>
                     ✏️
@@ -258,11 +257,11 @@ const AdminCondominios = () => {
               <div className={styles.cardContent}>
                 <p className={styles.descricao}>{condominio.descricao}</p>
                 <div className={styles.amenidades}>
-                  <strong>Amenidades:</strong> {condominio.amenidades}
+                  <strong>Amenities:</strong> {condominio.amenidades}
                 </div>
                 <div className={styles.unidades}>
                   <span className={styles.unidadeInfo}>
-                    <strong>{condominio.unidadesDisponiveis}</strong> disponíveis de <strong>{condominio.totalUnidades}</strong> unidades
+                    <strong>{condominio.unidadesDisponiveis}</strong> available of <strong>{condominio.totalUnidades}</strong> units
                   </span>
                 </div>
               </div>
