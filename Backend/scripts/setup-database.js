@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs');
 
 // Database configuration
 const DB_CONFIG = {
-  host: 'localhost',
+  host: '0.0.0.0',
   port: 5432,
   database: 'real_estate_db',
   username: 'postgres',
@@ -152,9 +152,9 @@ async function updateEnvFile() {
   console.log('📝 Updating .env file...');
 
   const envPath = path.join(__dirname, '..', '.env');
-  const databaseUrl = `postgresql://${DB_CONFIG.username}:${DB_CONFIG.password}@${DB_CONFIG.host}:${DB_CONFIG.port}/${DB_CONFIG.database}`;
+  const databaseUrl = `postgresql://${DB_CONFIG.username}:${DB_CONFIG.password}@localhost:${DB_CONFIG.port}/${DB_CONFIG.database}`;
 
-  const envContent = `# Database Configuration - PostgreSQL
+  const envContent = `# Database Configuration - PostgreSQL Only
 DATABASE_URL="${databaseUrl}"
 
 # JWT Configuration
@@ -164,8 +164,8 @@ JWT_SECRET="RealEstateJWT2024SecretKey!@#$%^&*()"
 PORT=5000
 NODE_ENV=development
 
-# Database Details
-DB_HOST=${DB_CONFIG.host}
+# PostgreSQL Database Details
+DB_HOST=localhost
 DB_PORT=${DB_CONFIG.port}
 DB_NAME=${DB_CONFIG.database}
 DB_USER=${DB_CONFIG.username}
