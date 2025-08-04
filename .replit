@@ -25,7 +25,7 @@ args = "npm run dev"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd backend && node listarMLS.js"
+args = "cd Backend && npm run dev"
 
 [[workflows.workflow]]
 name = "Backend Server"
