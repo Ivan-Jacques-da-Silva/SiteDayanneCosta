@@ -8,13 +8,13 @@ const AdminCondominios = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingCondominio, setEditingCondominio] = useState(null);
   const [formData, setFormData] = useState({
-    nome: '',
-    endereco: '',
-    cidade: '',
-    estado: '',
-    descricao: '',
-    amenidades: '',
-    status: 'ATIVO'
+    name: '',
+    address: '',
+    city: '',
+    state: '',
+    description: '',
+    amenities: '',
+    status: 'ACTIVE'
   });
 
   useEffect(() => {
@@ -27,27 +27,27 @@ const AdminCondominios = () => {
       setCondominios([
         {
           id: 1,
-          nome: 'Residencial Sunset',
-          endereco: 'Rua das Flores, 123',
-          cidade: 'Miami',
-          estado: 'FL',
-          descricao: 'Condomínio de luxo com vista para o mar',
-          amenidades: 'Piscina, Academia, Salão de festas',
-          status: 'ATIVO',
-          totalUnidades: 45,
-          unidadesDisponiveis: 12
+          name: 'Residencial Sunset',
+          address: 'Rua das Flores, 123',
+          city: 'Miami',
+          state: 'FL',
+          description: 'Luxury condominium with ocean view',
+          amenities: 'Pool, Gym, Party Room',
+          status: 'ACTIVE',
+          totalUnits: 45,
+          availableUnits: 12
         },
         {
           id: 2,
-          nome: 'Torre Brickell',
-          endereco: 'Brickell Avenue, 456',
-          cidade: 'Miami',
-          estado: 'FL',
-          descricao: 'Apartamentos modernos no coração de Brickell',
-          amenidades: 'Rooftop, Spa, Concierge',
-          status: 'ATIVO',
-          totalUnidades: 120,
-          unidadesDisponiveis: 8
+          name: 'Torre Brickell',
+          address: 'Brickell Avenue, 456',
+          city: 'Miami',
+          state: 'FL',
+          description: 'Modern apartments in the heart of Brickell',
+          amenities: 'Rooftop, Spa, Concierge',
+          status: 'ACTIVE',
+          totalUnits: 120,
+          availableUnits: 8
         }
       ]);
     } catch (error) {
@@ -79,13 +79,13 @@ const AdminCondominios = () => {
 
   const resetForm = () => {
     setFormData({
-      nome: '',
-      endereco: '',
-      cidade: '',
-      estado: '',
-      descricao: '',
-      amenidades: '',
-      status: 'ATIVO'
+      name: '',
+      address: '',
+      city: '',
+      state: '',
+      description: '',
+      amenities: '',
+      status: 'ACTIVE'
     });
   };
 
@@ -153,8 +153,8 @@ const AdminCondominios = () => {
                     <label>Condominium Name</label>
                     <input
                       type="text"
-                      value={formData.nome}
-                      onChange={(e) => setFormData({...formData, nome: e.target.value})}
+                      value={formData.name}
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
                       required
                     />
                   </div>
@@ -163,8 +163,8 @@ const AdminCondominios = () => {
                     <label>Address</label>
                     <input
                       type="text"
-                      value={formData.endereco}
-                      onChange={(e) => setFormData({...formData, endereco: e.target.value})}
+                      value={formData.address}
+                      onChange={(e) => setFormData({...formData, address: e.target.value})}
                       required
                     />
                   </div>
@@ -173,8 +173,8 @@ const AdminCondominios = () => {
                     <label>City</label>
                     <input
                       type="text"
-                      value={formData.cidade}
-                      onChange={(e) => setFormData({...formData, cidade: e.target.value})}
+                      value={formData.city}
+                      onChange={(e) => setFormData({...formData, city: e.target.value})}
                       required
                     />
                   </div>
@@ -183,8 +183,8 @@ const AdminCondominios = () => {
                     <label>State</label>
                     <input
                       type="text"
-                      value={formData.estado}
-                      onChange={(e) => setFormData({...formData, estado: e.target.value})}
+                      value={formData.state}
+                      onChange={(e) => setFormData({...formData, state: e.target.value})}
                       required
                     />
                   </div>
@@ -195,8 +195,8 @@ const AdminCondominios = () => {
                       value={formData.status}
                       onChange={(e) => setFormData({...formData, status: e.target.value})}
                     >
-                      <option value="ATIVO">Active</option>
-                      <option value="INATIVO">Inactive</option>
+                      <option value="ACTIVE">Active</option>
+                      <option value="INACTIVE">Inactive</option>
                     </select>
                   </div>
                 </div>
@@ -204,8 +204,8 @@ const AdminCondominios = () => {
                 <div className={styles.formGroup}>
                   <label>Description</label>
                   <textarea
-                    value={formData.descricao}
-                    onChange={(e) => setFormData({...formData, descricao: e.target.value})}
+                    value={formData.description}
+                    onChange={(e) => setFormData({...formData, description: e.target.value})}
                     rows="3"
                   />
                 </div>
@@ -213,8 +213,8 @@ const AdminCondominios = () => {
                 <div className={styles.formGroup}>
                   <label>Amenities</label>
                   <textarea
-                    value={formData.amenidades}
-                    onChange={(e) => setFormData({...formData, amenidades: e.target.value})}
+                    value={formData.amenities}
+                    onChange={(e) => setFormData({...formData, amenities: e.target.value})}
                     rows="2"
                     placeholder="Pool, Gym, Party Room..."
                   />
@@ -238,30 +238,30 @@ const AdminCondominios = () => {
             <div key={condominio.id} className={styles.condominioCard}>
               <div className={styles.cardHeader}>
                 <div>
-                  <h3>{condominio.nome}</h3>
-                  <p className={styles.endereco}>{condominio.endereco}, {condominio.cidade} - {condominio.estado}</p>
+                  <h3>{condominio.name}</h3>
+                  <p className={styles.endereco}>{condominio.address}, {condominio.city} - {condominio.state}</p>
                 </div>
                 <div className={styles.cardActions}>
                   <span className={`${styles.status} ${styles[condominio.status.toLowerCase()]}`}>
-                    {condominio.status === 'ATIVO' ? 'Active' : 'Inactive'}
+                    {condominio.status === 'ACTIVE' ? 'Active' : 'Inactive'}
                   </span>
                   <button onClick={() => handleEdit(condominio)} className={styles.editBtn}>
-                    ✏️
+                    <i className="fas fa-edit"></i>
                   </button>
                   <button onClick={() => handleDelete(condominio.id)} className={styles.deleteBtn}>
-                    🗑️
+                    <i className="fas fa-trash"></i>
                   </button>
                 </div>
               </div>
 
               <div className={styles.cardContent}>
-                <p className={styles.descricao}>{condominio.descricao}</p>
+                <p className={styles.descricao}>{condominio.description}</p>
                 <div className={styles.amenidades}>
-                  <strong>Amenities:</strong> {condominio.amenidades}
+                  <strong>Amenities:</strong> {condominio.amenities}
                 </div>
                 <div className={styles.unidades}>
                   <span className={styles.unidadeInfo}>
-                    <strong>{condominio.unidadesDisponiveis}</strong> available of <strong>{condominio.totalUnidades}</strong> units
+                    <strong>{condominio.availableUnits}</strong> available of <strong>{condominio.totalUnits}</strong> units
                   </span>
                 </div>
               </div>

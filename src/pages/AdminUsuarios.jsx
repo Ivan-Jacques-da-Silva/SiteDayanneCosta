@@ -6,7 +6,7 @@ const AdminUsuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [editingUser, setEditingUser] = null);
+  const [editingUser, setEditingUser] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [filter, setFilter] = useState('');
@@ -337,10 +337,10 @@ const AdminUsuarios = () => {
 
               <div className={styles.actionsCell}>
                 <button onClick={() => handleEdit(usuario)} className={styles.editBtn}>
-                  ✏️
+                  <i className="fas fa-edit"></i>
                 </button>
                 <button onClick={() => handleDelete(usuario.id)} className={styles.deleteBtn}>
-                  🗑️
+                  <i className="fas fa-trash"></i>
                 </button>
               </div>
             </div>

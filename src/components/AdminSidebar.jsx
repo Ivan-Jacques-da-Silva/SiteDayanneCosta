@@ -11,30 +11,30 @@ const AdminSidebar = ({ user }) => {
     {
       label: 'Dashboard',
       path: '/admin',
-      icon: '📊',
+      icon: 'fas fa-chart-bar',
       exact: true
     },
     ...(isAdmin ? [
       {
         label: 'Condominiums',
         path: '/admin/condominios',
-        icon: '🏢'
+        icon: 'fas fa-building'
       },
       {
         label: 'Users',
         path: '/admin/usuarios',
-        icon: '👥'
+        icon: 'fas fa-users'
       }
     ] : []),
     {
       label: 'Favorites',
       path: '/admin/favoritos',
-      icon: '❤️'
+      icon: 'fas fa-heart'
     },
     {
       label: 'Forms',
       path: '/admin/formularios',
-      icon: '📝'
+      icon: 'fas fa-file-alt'
     }
   ];
 
@@ -49,7 +49,7 @@ const AdminSidebar = ({ user }) => {
     <div className={styles.sidebar}>
       <div className={styles.sidebarHeader}>
         <div className={styles.logo}>
-          <span className={styles.logoIcon}>🏠</span>
+          <span className={styles.logoIcon}><i className="fas fa-home"></i></span>
           <span className={styles.logoText}>Admin Panel</span>
         </div>
         <div className={styles.userInfo}>
@@ -73,7 +73,7 @@ const AdminSidebar = ({ user }) => {
                   isActiveRoute(item.path, item.exact) ? styles.active : ''
                 }`}
               >
-                <span className={styles.menuIcon}>{item.icon}</span>
+                <span className={styles.menuIcon}><i className={item.icon}></i></span>
                 <span className={styles.menuLabel}>{item.label}</span>
               </Link>
             </li>
@@ -83,7 +83,7 @@ const AdminSidebar = ({ user }) => {
 
       <div className={styles.sidebarFooter}>
         <Link to="/" className={styles.backToSite}>
-          <span className={styles.menuIcon}>🌐</span>
+          <span className={styles.menuIcon}><i className="fas fa-globe"></i></span>
           <span>Back to Site</span>
         </Link>
         <button
@@ -94,7 +94,7 @@ const AdminSidebar = ({ user }) => {
             window.location.href = '/login';
           }}
         >
-          <span className={styles.menuIcon}>🚪</span>
+          <span className={styles.menuIcon}><i className="fas fa-sign-out-alt"></i></span>
           <span>Logout</span>
         </button>
       </div>

@@ -69,7 +69,7 @@ const AdminDashboard = () => {
         <div className={styles.statsGrid}>
           <div className={styles.statCard}>
             <div className={styles.statHeader}>
-              <div className={styles.statIcon} style={{background: '#3b82f6'}}>🏠</div>
+              <div className={styles.statIcon} style={{background: '#3b82f6'}}><i className="fas fa-home"></i></div>
               <div className={styles.statValue}>
                 <span className={styles.number}>{dashboardData?.totalProperties || 0}</span>
                 <span className={styles.label}>Total Properties</span>
@@ -82,7 +82,7 @@ const AdminDashboard = () => {
 
           <div className={styles.statCard}>
             <div className={styles.statHeader}>
-              <div className={styles.statIcon} style={{background: '#10b981'}}>📝</div>
+              <div className={styles.statIcon} style={{background: '#10b981'}}><i className="fas fa-file-alt"></i></div>
               <div className={styles.statValue}>
                 <span className={styles.number}>{dashboardData?.totalContacts || 0}</span>
                 <span className={styles.label}>Forms</span>
@@ -95,7 +95,7 @@ const AdminDashboard = () => {
 
           <div className={styles.statCard}>
             <div className={styles.statHeader}>
-              <div className={styles.statIcon} style={{background: '#f59e0b'}}>❤️</div>
+              <div className={styles.statIcon} style={{background: '#f59e0b'}}><i className="fas fa-heart"></i></div>
               <div className={styles.statValue}>
                 <span className={styles.number}>{dashboardData?.totalFavorites || 0}</span>
                 <span className={styles.label}>Favorites</span>
@@ -108,7 +108,7 @@ const AdminDashboard = () => {
 
           <div className={styles.statCard}>
             <div className={styles.statHeader}>
-              <div className={styles.statIcon} style={{background: '#8b5cf6'}}>👥</div>
+              <div className={styles.statIcon} style={{background: '#8b5cf6'}}><i className="fas fa-users"></i></div>
               <div className={styles.statValue}>
                 <span className={styles.number}>{dashboardData?.totalUsers || 0}</span>
                 <span className={styles.label}>Users</span>
@@ -129,21 +129,21 @@ const AdminDashboard = () => {
             <div className={styles.chartContent}>
               <div className={styles.activityList}>
                 <div className={styles.activityItem}>
-                  <div className={styles.activityIcon}>📝</div>
+                  <div className={styles.activityIcon}><i className="fas fa-file-alt"></i></div>
                   <div className={styles.activityContent}>
                     <span className={styles.activityText}>New contact form submission</span>
                     <span className={styles.activityTime}>2 hours ago</span>
                   </div>
                 </div>
                 <div className={styles.activityItem}>
-                  <div className={styles.activityIcon}>🏠</div>
+                  <div className={styles.activityIcon}><i className="fas fa-home"></i></div>
                   <div className={styles.activityContent}>
                     <span className={styles.activityText}>Property added to favorites</span>
                     <span className={styles.activityTime}>5 hours ago</span>
                   </div>
                 </div>
                 <div className={styles.activityItem}>
-                  <div className={styles.activityIcon}>👤</div>
+                  <div className={styles.activityIcon}><i className="fas fa-user"></i></div>
                   <div className={styles.activityContent}>
                     <span className={styles.activityText}>New user registered</span>
                     <span className={styles.activityTime}>1 day ago</span>
