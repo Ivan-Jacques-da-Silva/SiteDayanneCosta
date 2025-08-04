@@ -37,25 +37,31 @@ const Login = () => {
         })
       });
 
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
 
-      if (response.ok) {
-        // Save user data and token to localStorage
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        
-        // Redirect based on user role
-        if (data.user.role === 'ADMIN') {
-          window.location.href = '/admin';
-        } else {
-          window.location.href = '/';
-        }
+      // Save user data and token to localStorage
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      
+      // Redirect based on user role
+      if (data.user.role === 'ADMIN') {
+        window.location.href = '/admin';
       } else {
-        setErrors({ general: data.message || 'Login failed' });
+        window.location.href = '/';
       }
     } catch (error) {
       console.error('Login error:', error);
-      setErrors({ general: 'Connection error. Please try again.' });
+      if (error.message.includes('HTTP error! status: 401')) {
+        setErrors({ general: 'Invalid email or password' });
+      } else if (error.message.includes('HTTP error! status: 500')) {
+        setErrors({ general: 'Server error. Please try again later.' });
+      } else {
+        setErrors({ general: 'Connection error. Please try again.' });
+      }
     }
   };
 

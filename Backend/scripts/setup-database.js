@@ -2,17 +2,16 @@
 const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const bcrypt = require('bcryptjs');
 
 // Database configuration
 const DB_CONFIG = {
   host: 'localhost',
   port: 5432,
   database: 'real_estate_db',
-  username: 'estate_admin',
-  password: 'RealEstate2024!@#'
+  username: 'postgres',
+  password: 'admin'
 };
-
-const POSTGRES_PASSWORD = 'admin';
 
 function executeCommand(command, description) {
   return new Promise((resolve, reject) => {
@@ -38,14 +37,12 @@ async function checkPostgreSQL() {
   console.log('🔍 Checking PostgreSQL installation...');
   
   try {
-    // Try to check if PostgreSQL is installed on Windows
     await executeCommand('psql --version', 'Checking PostgreSQL version');
     console.log('✅ PostgreSQL is installed');
     return true;
   } catch (error) {
     console.log('❌ PostgreSQL not found in PATH');
     
-    // Try common PostgreSQL installation paths on Windows
     const commonPaths = [
       'C:\\Program Files\\PostgreSQL\\16\\bin\\psql.exe',
       'C:\\Program Files\\PostgreSQL\\15\\bin\\psql.exe',
@@ -79,29 +76,17 @@ function getPsqlCommand() {
 }
 
 async function cleanupExisting() {
-  console.log('🧹 Cleaning up existing database and user...');
+  console.log('🧹 Cleaning up existing database...');
   
   const psql = getPsqlCommand();
   
   try {
-    // Set PGPASSWORD environment variable for authentication
-    const env = { ...process.env, PGPASSWORD: POSTGRES_PASSWORD };
+    const env = { ...process.env, PGPASSWORD: DB_CONFIG.password };
     
-    // Drop database if exists
     await new Promise((resolve, reject) => {
       exec(`${psql} -h localhost -U postgres -c "DROP DATABASE IF EXISTS ${DB_CONFIG.database};"`, { env }, (error, stdout, stderr) => {
         if (error && !error.message.includes('does not exist')) {
           console.log('⚠️  Database drop had issues (normal if it didn\'t exist)');
-        }
-        resolve();
-      });
-    });
-
-    // Drop user if exists
-    await new Promise((resolve, reject) => {
-      exec(`${psql} -h localhost -U postgres -c "DROP USER IF EXISTS ${DB_CONFIG.username};"`, { env }, (error, stdout, stderr) => {
-        if (error && !error.message.includes('does not exist')) {
-          console.log('⚠️  User drop had issues (normal if it didn\'t exist)');
         }
         resolve();
       });
@@ -114,28 +99,14 @@ async function cleanupExisting() {
 }
 
 async function setupDatabase() {
-  console.log('🔧 Setting up database and user...');
+  console.log('🔧 Setting up database...');
   
   const psql = getPsqlCommand();
-  const env = { ...process.env, PGPASSWORD: POSTGRES_PASSWORD };
+  const env = { ...process.env, PGPASSWORD: DB_CONFIG.password };
   
   try {
-    // Create user with all possible permissions
     await new Promise((resolve, reject) => {
-      const createUserCmd = `${psql} -h localhost -U postgres -c "CREATE USER ${DB_CONFIG.username} WITH PASSWORD '${DB_CONFIG.password}' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN REPLICATION BYPASSRLS;"`;
-      exec(createUserCmd, { env }, (error, stdout, stderr) => {
-        if (error && !error.message.includes('already exists')) {
-          reject(error);
-          return;
-        }
-        console.log('✅ User created with full permissions');
-        resolve();
-      });
-    });
-
-    // Create database
-    await new Promise((resolve, reject) => {
-      const createDbCmd = `${psql} -h localhost -U postgres -c "CREATE DATABASE ${DB_CONFIG.database} OWNER ${DB_CONFIG.username};"`;
+      const createDbCmd = `${psql} -h localhost -U postgres -c "CREATE DATABASE ${DB_CONFIG.database};"`;
       exec(createDbCmd, { env }, (error, stdout, stderr) => {
         if (error && !error.message.includes('already exists')) {
           reject(error);
@@ -146,59 +117,7 @@ async function setupDatabase() {
       });
     });
 
-    // Grant all privileges on database
-    await new Promise((resolve, reject) => {
-      const grantCmd = `${psql} -h localhost -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE ${DB_CONFIG.database} TO ${DB_CONFIG.username};"`;
-      exec(grantCmd, { env }, (error, stdout, stderr) => {
-        if (error) {
-          reject(error);
-          return;
-        }
-        console.log('✅ Database privileges granted');
-        resolve();
-      });
-    });
-
-    // Grant schema privileges
-    await new Promise((resolve, reject) => {
-      const grantSchemaCmd = `${psql} -h localhost -U postgres -d ${DB_CONFIG.database} -c "GRANT ALL ON SCHEMA public TO ${DB_CONFIG.username};"`;
-      exec(grantSchemaCmd, { env }, (error, stdout, stderr) => {
-        if (error) {
-          console.log('⚠️  Schema privileges warning (normal for new database)');
-        } else {
-          console.log('✅ Schema privileges granted');
-        }
-        resolve();
-      });
-    });
-
-    // Grant sequence privileges
-    await new Promise((resolve, reject) => {
-      const grantSeqCmd = `${psql} -h localhost -U postgres -d ${DB_CONFIG.database} -c "GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO ${DB_CONFIG.username};"`;
-      exec(grantSeqCmd, { env }, (error, stdout, stderr) => {
-        if (error) {
-          console.log('⚠️  Sequence privileges warning (normal for new database)');
-        } else {
-          console.log('✅ Sequence privileges granted');
-        }
-        resolve();
-      });
-    });
-
-    // Grant table privileges  
-    await new Promise((resolve, reject) => {
-      const grantTableCmd = `${psql} -h localhost -U postgres -d ${DB_CONFIG.database} -c "GRANT ALL ON ALL TABLES IN SCHEMA public TO ${DB_CONFIG.username};"`;
-      exec(grantTableCmd, { env }, (error, stdout, stderr) => {
-        if (error) {
-          console.log('⚠️  Table privileges warning (normal for new database)');
-        } else {
-          console.log('✅ Table privileges granted');
-        }
-        resolve();
-      });
-    });
-
-    console.log('✅ Database and user setup completed');
+    console.log('✅ Database setup completed');
   } catch (error) {
     console.error('❌ Failed to setup database:', error.message);
     throw error;
@@ -233,18 +152,16 @@ async function updateEnvFile() {
   console.log('📝 Updating .env file...');
 
   const envPath = path.join(__dirname, '..', '.env');
-  // Escape special characters in password for URL
-  const escapedPassword = encodeURIComponent(DB_CONFIG.password);
-  const databaseUrl = `postgresql://${DB_CONFIG.username}:${escapedPassword}@${DB_CONFIG.host}:${DB_CONFIG.port}/${DB_CONFIG.database}`;
+  const databaseUrl = `postgresql://${DB_CONFIG.username}:${DB_CONFIG.password}@${DB_CONFIG.host}:${DB_CONFIG.port}/${DB_CONFIG.database}`;
 
-  const envContent = `# Database Configuration
+  const envContent = `# Database Configuration - PostgreSQL
 DATABASE_URL="${databaseUrl}"
 
 # JWT Configuration
-JWT_SECRET="RealEstateJWT2024SecretKey!@#$%"
+JWT_SECRET="RealEstateJWT2024SecretKey!@#$%^&*()"
 
 # Server Configuration
-PORT=3001
+PORT=5000
 NODE_ENV=development
 
 # Database Details
@@ -253,6 +170,10 @@ DB_PORT=${DB_CONFIG.port}
 DB_NAME=${DB_CONFIG.database}
 DB_USER=${DB_CONFIG.username}
 DB_PASSWORD=${DB_CONFIG.password}
+
+# Upload Configuration
+UPLOAD_PATH=uploads/
+MAX_FILE_SIZE=10485760
 `;
 
   try {
@@ -271,9 +192,11 @@ async function runPrismaCommands() {
   try {
     const backendPath = path.join(__dirname, '..');
 
-    await executeCommand(`cd /d "${backendPath}" && npx prisma generate`, 'Generating Prisma client');
-    await executeCommand(`cd /d "${backendPath}" && npx prisma db push`, 'Pushing database schema');
-    await executeCommand(`cd /d "${backendPath}" && npm run prisma:seed`, 'Seeding database');
+    // Generate Prisma client
+    await executeCommand(`cd "${backendPath}" && npx prisma generate`, 'Generating Prisma client');
+    
+    // Push database schema
+    await executeCommand(`cd "${backendPath}" && npx prisma db push`, 'Pushing database schema');
 
     console.log('✅ Prisma setup completed');
   } catch (error) {
@@ -282,8 +205,130 @@ async function runPrismaCommands() {
   }
 }
 
+async function createAdminUser() {
+  console.log('👤 Creating admin user...');
+
+  try {
+    // Import Prisma Client dynamically after generation
+    const { PrismaClient } = require('@prisma/client');
+    const prisma = new PrismaClient();
+
+    // Test database connection
+    await prisma.$connect();
+    console.log('✅ Database connection established for admin creation');
+
+    // Delete existing admin users
+    const deletedUsers = await prisma.user.deleteMany({
+      where: { 
+        OR: [
+          { email: 'admin@dayannecosta.com' },
+          { role: 'ADMIN' }
+        ]
+      }
+    });
+
+    console.log(`🗑️ Deleted ${deletedUsers.count} existing admin users`);
+
+    // Hash the password
+    console.log('🔐 Hashing password...');
+    const hashedPassword = await bcrypt.hash('admin123', 12);
+    console.log('✅ Password hashed successfully');
+
+    // Create admin user
+    const admin = await prisma.user.create({
+      data: {
+        name: 'Administrator',
+        email: 'admin@dayannecosta.com',
+        password: hashedPassword,
+        role: 'ADMIN'
+      }
+    });
+
+    console.log('✅ Admin user created successfully!');
+    console.log('📧 Email: admin@dayannecosta.com');
+    console.log('🔑 Password: admin123');
+    console.log('👑 Role: ADMIN');
+    console.log('🆔 User ID:', admin.id);
+
+    // Verify the user was created
+    const verifyUser = await prisma.user.findUnique({
+      where: { email: 'admin@dayannecosta.com' }
+    });
+
+    console.log('🔍 Verification - User exists:', !!verifyUser);
+    console.log('🔍 Verification - Role:', verifyUser?.role);
+
+    await prisma.$disconnect();
+    console.log('🔌 Database connection closed');
+
+  } catch (error) {
+    console.error('❌ Error creating admin user:', error.message);
+    throw error;
+  }
+}
+
+async function seedBasicData() {
+  console.log('🌱 Seeding basic data...');
+
+  try {
+    const { PrismaClient } = require('@prisma/client');
+    const prisma = new PrismaClient();
+
+    await prisma.$connect();
+
+    // Create basic amenities
+    const amenities = [
+      { name: 'Swimming Pool', category: 'Recreation', icon: '🏊' },
+      { name: 'Fitness Center', category: 'Recreation', icon: '🏋️' },
+      { name: 'Concierge', category: 'Service', icon: '🛎️' },
+      { name: 'Valet Parking', category: 'Parking', icon: '🚗' },
+      { name: 'Spa', category: 'Wellness', icon: '🧘' },
+      { name: 'Tennis Court', category: 'Recreation', icon: '🎾' },
+      { name: 'Business Center', category: 'Business', icon: '💼' },
+      { name: 'Rooftop Deck', category: 'Outdoor', icon: '🏢' }
+    ];
+
+    for (const amenity of amenities) {
+      await prisma.amenity.upsert({
+        where: { name: amenity.name },
+        update: {},
+        create: amenity
+      });
+    }
+
+    // Create basic features
+    const features = [
+      { name: 'Marble Floors', category: 'Flooring' },
+      { name: 'Hardwood Floors', category: 'Flooring' },
+      { name: 'Granite Countertops', category: 'Kitchen' },
+      { name: 'Stainless Steel Appliances', category: 'Kitchen' },
+      { name: 'Walk-in Closet', category: 'Bedroom' },
+      { name: 'Master Suite', category: 'Bedroom' },
+      { name: 'En-suite Bathroom', category: 'Bathroom' },
+      { name: 'Floor-to-Ceiling Windows', category: 'Windows' },
+      { name: 'Private Balcony', category: 'Outdoor' },
+      { name: 'Central Air Conditioning', category: 'HVAC' }
+    ];
+
+    for (const feature of features) {
+      await prisma.feature.upsert({
+        where: { name: feature.name },
+        update: {},
+        create: feature
+      });
+    }
+
+    console.log('✅ Basic data seeded successfully');
+    await prisma.$disconnect();
+
+  } catch (error) {
+    console.error('❌ Error seeding data:', error.message);
+    throw error;
+  }
+}
+
 async function main() {
-  console.log('🚀 Starting Real Estate Database Setup for Windows...\n');
+  console.log('🚀 Starting Complete Real Estate Database Setup...\n');
 
   try {
     // Check PostgreSQL installation
@@ -292,7 +337,7 @@ async function main() {
     // Cleanup existing setup
     await cleanupExisting();
 
-    // Setup database and user
+    // Setup database
     await setupDatabase();
 
     // Test connection
@@ -304,20 +349,31 @@ async function main() {
     // Run Prisma commands
     await runPrismaCommands();
 
-    console.log('\n🎉 Database setup completed successfully!');
+    // Create admin user
+    await createAdminUser();
+
+    // Seed basic data
+    await seedBasicData();
+
+    console.log('\n🎉 Complete database setup finished successfully!');
     console.log('\n📊 Database Configuration:');
     console.log(`   Database: ${DB_CONFIG.database}`);
     console.log(`   User: ${DB_CONFIG.username}`);
     console.log(`   Password: ${DB_CONFIG.password}`);
     console.log(`   Host: ${DB_CONFIG.host}`);
     console.log(`   Port: ${DB_CONFIG.port}`);
+    console.log('\n👤 Admin User Created:');
+    console.log('   Email: admin@dayannecosta.com');
+    console.log('   Password: admin123');
     console.log('\n🔐 All credentials stored in .env file');
     console.log('\n▶️  You can now start the backend server with: npm run dev');
+    console.log('🌐 Frontend login: Use the admin credentials above');
 
   } catch (error) {
     console.error('\n💥 Setup failed:', error.message);
-    console.log('\n🔧 Please ensure PostgreSQL is installed and the postgres user password is "admin"');
-    console.log('🔧 If PostgreSQL is not installed, download it from: https://www.postgresql.org/download/windows/');
+    console.log('\n🔧 Please ensure PostgreSQL is installed and running');
+    console.log('🔧 Make sure postgres user password is "admin"');
+    console.log('🔧 If PostgreSQL is not installed, download it from: https://www.postgresql.org/download/');
     process.exit(1);
   }
 }
