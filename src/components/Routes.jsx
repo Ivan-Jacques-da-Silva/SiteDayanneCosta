@@ -32,6 +32,8 @@ import AdminContacts from '../pages/AdminContacts';
 import AdminProperties from '../pages/AdminProperties';
 import AdminCondominios from '../pages/AdminCondominios';
 import AdminUsuarios from '../pages/AdminUsuarios';
+import AdminFavoritos from '../pages/AdminFavoritos';
+import AdminFormularios from '../pages/AdminFormularios';
 import AdminPropertyForm from '../pages/AdminPropertyForm';
 
 // Components
@@ -75,8 +77,8 @@ const AppRoutes = () => {
         <Route path="/admin/properties/new" element={<AdminPropertyForm />} />
         <Route path="/admin/condominios" element={<AdminCondominios />} />
         <Route path="/admin/usuarios" element={<AdminUsuarios />} />
-        <Route path="/admin/favoritos" element={<AdminDashboard />} /> {/* Placeholder */}
-        <Route path="/admin/formularios" element={<AdminContacts />} /> {/* Use existing contacts page */}
+        <Route path="/admin/favoritos" element={<AdminFavoritos />} />
+        <Route path="/admin/formularios" element={<AdminFormularios />} />
       </Routes>
   );
 };
