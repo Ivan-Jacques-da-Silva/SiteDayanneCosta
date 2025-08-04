@@ -71,7 +71,7 @@ const AdminUsuarios = () => {
         ]);
       }
     } catch (error) {
-      console.error('Error loading usuarios:', error);
+      console.error('Error loading users:', error);
     } finally {
       setLoading(false);
     }

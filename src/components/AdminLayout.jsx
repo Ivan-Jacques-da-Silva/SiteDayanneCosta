@@ -20,7 +20,6 @@ const AdminLayout = ({ children }) => {
       const parsedUser = JSON.parse(userData);
       setUser(parsedUser);
     } catch (error) {
-      console.error('Error parsing user data:', error);
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       window.location.href = '/login';

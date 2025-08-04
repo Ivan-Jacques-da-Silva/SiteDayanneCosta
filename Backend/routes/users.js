@@ -8,65 +8,28 @@ const prisma = new PrismaClient();
 
 // Login route
 router.post('/login', async (req, res) => {
-  // Add CORS headers explicitly for local development
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  
-  console.log('=== LOGIN ATTEMPT ===');
-  console.log('Timestamp:', new Date().toISOString());
-  console.log('Request method:', req.method);
-  console.log('Request URL:', req.url);
-  console.log('Request headers:', JSON.stringify(req.headers, null, 2));
-  console.log('Request body:', JSON.stringify(req.body, null, 2));
-  console.log('Request origin:', req.headers.origin);
-  console.log('Content-Type:', req.headers['content-type']);
-  
   try {
     const { email, password } = req.body;
 
-    console.log('Extracted email:', email);
-    console.log('Password provided:', !!password);
-
     if (!email || !password) {
-      console.log('Missing email or password');
       return res.status(400).json({ message: 'Email and password are required' });
     }
 
-    console.log('Searching for user with email:', email);
-    
     // Find user by email
     const user = await prisma.user.findUnique({
       where: { email }
     });
 
-    console.log('User found:', !!user);
-    if (user) {
-      console.log('User details:', {
-        id: user.id,
-        email: user.email,
-        role: user.role,
-        hasPassword: !!user.password
-      });
-    }
-
     if (!user) {
-      console.log('No user found with email:', email);
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
-    console.log('Comparing passwords...');
     // Check password
     const isValidPassword = await bcrypt.compare(password, user.password);
-    console.log('Password comparison result:', isValidPassword);
     
     if (!isValidPassword) {
-      console.log('Password comparison failed');
-      console.log('Expected password hash:', user.password);
-      console.log('Provided password:', password);
       return res.status(401).json({ message: 'Invalid email or password' });
     }
-
-    console.log('Login successful! Generating token...');
     
     // Generate JWT token
     const token = jwt.sign(
@@ -74,9 +37,6 @@ router.post('/login', async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: '24h' }
     );
-
-    console.log('Token generated successfully');
-    console.log('Sending response with user data...');
 
     // Send success response
     res.json({
@@ -90,11 +50,9 @@ router.post('/login', async (req, res) => {
       }
     });
 
-    console.log('=== LOGIN SUCCESS ===');
+    console.log(`Login successful for user: ${email}`);
   } catch (error) {
-    console.error('=== LOGIN ERROR ===');
-    console.error('Error details:', error);
-    console.error('Error stack:', error.stack);
+    console.error('Login error:', error.message);
     res.status(500).json({ message: 'Internal server error' });
   }
 });

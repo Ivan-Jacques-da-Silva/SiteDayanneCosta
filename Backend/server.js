@@ -50,17 +50,11 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Logging
-app.use(morgan('combined'));
-
-// Custom request logging for debugging
-app.use((req, res, next) => {
-  console.log(`\n=== INCOMING REQUEST ===`);
-  console.log(`${req.method} ${req.url}`);
-  console.log('Headers:', JSON.stringify(req.headers, null, 2));
-  console.log('Body:', JSON.stringify(req.body, null, 2));
-  console.log(`========================\n`);
-  next();
-});
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+} else {
+  app.use(morgan('combined'));
+}
 
 // Serve static files
 app.use('/uploads', express.static('uploads'));
@@ -130,28 +124,14 @@ async function testConnection() {
   try {
     await prisma.$connect();
     console.log('✅ Database connected successfully');
-
-    // Check if admin user exists
-    const adminUser = await prisma.user.findFirst({
-      where: { role: 'ADMIN' }
-    });
-
-    console.log('Admin user exists:', !!adminUser);
-    if (adminUser) {
-      console.log('Admin email:', adminUser.email);
-    }
-
   } catch (error) {
-    console.error('❌ Database connection failed:', error);
+    console.error('❌ Database connection failed:', error.message);
   }
 }
 
-app.listen(PORT, 'localhost', () => {
-  console.log(`🚀 Backend server running on http://localhost:${PORT}`);
-  console.log(`📊 Environment: ${process.env.NODE_ENV}`);
-  console.log(`📅 Started at: ${new Date().toISOString()}`);
-  console.log(`🌐 Configured for local development`);
-  console.log(`🔗 Frontend proxy: http://localhost:3000 -> http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Backend server running on port ${PORT}`);
+  console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
   testConnection();
 });
 

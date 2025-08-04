@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import AdminLayout from '../components/AdminLayout';
 import styles from './AdminCondominios.module.css';
@@ -16,7 +15,7 @@ const AdminCondominios = () => {
     propertyType: 'CONDO',
     status: 'ACTIVE',
     categories: [],
-    
+
     // Address
     address: '',
     city: '',
@@ -24,7 +23,7 @@ const AdminCondominios = () => {
     zipCode: '',
     neighborhood: '',
     subdivision: '',
-    
+
     // Property Details
     price: '',
     pricePerSqft: '',
@@ -36,7 +35,7 @@ const AdminCondominios = () => {
     yearBuilt: '',
     daysOnMarket: '',
     dateListed: '',
-    
+
     // Features
     furnished: false,
     waterfront: false,
@@ -45,35 +44,35 @@ const AdminCondominios = () => {
     parking: false,
     parkingSpaces: '',
     parkingDescription: '',
-    
+
     // Interior Features
     interiorFeatures: '',
-    
+
     // Exterior Features
     exteriorFeatures: '',
-    
+
     // Property Financial
     hoaFees: '',
     taxAmount: '',
     taxYear: '',
-    
+
     // Location
     latitude: '',
     longitude: '',
-    
+
     // Media
     mainImage: null,
     galleryImages: [],
     virtualTour: '',
-    
+
     // Amenities
     amenities: '',
-    
+
     // Listing Information
     listingCourtesy: '',
     listingAgent: '',
     listingOffice: '',
-    
+
     // Additional Details
     shortSale: 'Regular Sale',
     newConstruction: false,
@@ -87,36 +86,49 @@ const AdminCondominios = () => {
 
   const loadCondominios = async () => {
     try {
-      // Mock data for now - replace with API call
-      setCondominios([
-        {
-          id: 1,
-          title: 'Luxury Brickell Condo',
-          address: '2101 Brickell Ave #905',
-          city: 'Miami',
-          state: 'FL',
-          zipCode: '33129',
-          price: 495000,
-          bedrooms: 1,
-          bathrooms: 1,
-          sqft: 869,
-          status: 'ACTIVE',
-          mlsId: 'A11700727',
-          description: 'Experience spectacular bay views from this luxurious 1-bedroom, 1-bathroom condo...',
-          yearBuilt: 2004,
-          subdivision: 'Skyline Condo',
-          hoaFees: 1001,
-          taxAmount: 6186,
-          taxYear: 2024,
-          waterfront: true,
-          furnished: true,
-          parkingSpaces: 1,
-          amenities: 'Elevators, Barbecue, Deck, Marina Access, Gym, 24-hour Valet, Security, Sauna, Tennis Court',
-          categories: ['luxuryCondos', 'waterfront']
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://0.0.0.0:5000/api/properties', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
-      ]);
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setCondominios(data);
+      } else {
+        // Mock data for development
+        setCondominios([
+          {
+            id: 1,
+            title: 'Luxury Brickell Condo',
+            address: '2101 Brickell Ave #905',
+            city: 'Miami',
+            state: 'FL',
+            zipCode: '33129',
+            price: 495000,
+            bedrooms: 1,
+            bathrooms: 1,
+            sqft: 869,
+            status: 'ACTIVE',
+            mlsId: 'A11700727',
+            description: 'Experience spectacular bay views from this luxurious 1-bedroom, 1-bathroom condo...',
+            yearBuilt: 2004,
+            subdivision: 'Skyline Condo',
+            hoaFees: 1001,
+            taxAmount: 6186,
+            taxYear: 2024,
+            waterfront: true,
+            furnished: true,
+            parkingSpaces: 1,
+            amenities: 'Elevators, Barbecue, Deck, Marina Access, Gym, 24-hour Valet, Security, Sauna, Tennis Court',
+            categories: ['luxuryCondos', 'waterfront']
+          }
+        ]);
+      }
     } catch (error) {
-      console.error('Error loading condominios:', error);
+      console.error('Error loading properties:', error);
     } finally {
       setLoading(false);
     }
@@ -126,10 +138,10 @@ const AdminCondominios = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      
+
       // Create FormData for file uploads
       const formDataToSend = new FormData();
-      
+
       // Append all form fields
       Object.keys(formData).forEach(key => {
         if (key === 'mainImage' && formData[key]) {
@@ -162,7 +174,7 @@ const AdminCondominios = () => {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked, files } = e.target;
-    
+
     if (type === 'checkbox') {
       setFormData(prev => ({ ...prev, [name]: checked }));
     } else if (type === 'file') {
@@ -346,7 +358,7 @@ const AdminCondominios = () => {
               {/* Basic Information Section */}
               <section className={styles.formSection}>
                 <h2><i className="fas fa-info-circle"></i> Basic Information</h2>
-                
+
                 <div className={styles.formRow}>
                   <div className={styles.formGroup}>
                     <label htmlFor="mlsId">MLS ID</label>
@@ -569,7 +581,7 @@ const AdminCondominios = () => {
               {/* Address Section */}
               <section className={styles.formSection}>
                 <h2><i className="fas fa-map-marker-alt"></i> Address & Location</h2>
-                
+
                 <div className={styles.formRow}>
                   <div className={styles.formGroup}>
                     <label htmlFor="address">Street Address</label>
@@ -684,7 +696,7 @@ const AdminCondominios = () => {
               {/* Property Details Section */}
               <section className={styles.formSection}>
                 <h2><i className="fas fa-home"></i> Property Details</h2>
-                
+
                 <div className={styles.formRow}>
                   <div className={styles.formGroup}>
                     <label htmlFor="price">Price ($)</label>
@@ -818,7 +830,7 @@ const AdminCondominios = () => {
               {/* Features Section */}
               <section className={styles.formSection}>
                 <h2><i className="fas fa-star"></i> Property Features</h2>
-                
+
                 <div className={styles.checkboxGrid}>
                   <label className={styles.checkbox}>
                     <input
@@ -947,7 +959,7 @@ const AdminCondominios = () => {
               {/* Financial Information */}
               <section className={styles.formSection}>
                 <h2><i className="fas fa-dollar-sign"></i> Financial Information</h2>
-                
+
                 <div className={styles.formRow}>
                   <div className={styles.formGroup}>
                     <label htmlFor="hoaFees">HOA Fees ($)</label>
@@ -1005,7 +1017,7 @@ const AdminCondominios = () => {
               {/* Media Section */}
               <section className={styles.formSection}>
                 <h2><i className="fas fa-camera"></i> Media & Images</h2>
-                
+
                 <div className={styles.formGroup}>
                   <label htmlFor="mainImage">Main Property Image</label>
                   <input
@@ -1049,7 +1061,7 @@ const AdminCondominios = () => {
               {/* Amenities Section */}
               <section className={styles.formSection}>
                 <h2><i className="fas fa-swimming-pool"></i> Amenities</h2>
-                
+
                 <div className={styles.formGroup}>
                   <label htmlFor="amenities">Building Amenities</label>
                   <textarea
@@ -1067,7 +1079,7 @@ const AdminCondominios = () => {
               {/* Listing Information */}
               <section className={styles.formSection}>
                 <h2><i className="fas fa-user-tie"></i> Listing Information</h2>
-                
+
                 <div className={styles.formRow}>
                   <div className={styles.formGroup}>
                     <label htmlFor="listingAgent">Listing Agent</label>
