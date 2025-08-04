@@ -37,7 +37,7 @@ const CategoryFilter = ({ onCategorySelect, selectedCategories = [] }) => {
       ? selectedCategories.filter(id => id !== categoryId)
       : [...selectedCategories, categoryId];
     
-    onCategorySelect(updatedCategories);
+    onCategorySelect(updatedCategories); 
   };
 
   return (
