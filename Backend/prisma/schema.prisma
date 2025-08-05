@@ -28,226 +28,227 @@ model User {
 }
 
 model Property {
-  id          String  @id @default(cuid())
-  mlsId       String? @unique
-  title       String
-  description String?
-
-  // Address
-  address     String
-  city        String
-  state       String
-  zipCode     String
-  country     String  @default("USA")
-
-  // Property Details
-  propertyType     PropertyType
-  propertySubType  String?
-  status          PropertyStatus @default(ACTIVE)
-  price           Decimal
-  pricePerSqft    Decimal?
-
-  // Physical Details
-  bedrooms        Int?
-  bathrooms       Decimal?
-  halfBaths       Int?
-  sqft            Int?
-  lotSize         Decimal?
-  yearBuilt       Int?
-
-  // Features
-  garage          Int?
-  parking         Int?
-  pool            Boolean @default(false)
-  waterfront      Boolean @default(false)
-  furnished       Boolean @default(false)
-  petFriendly     Boolean @default(false)
-
-  // Location
-  latitude        Decimal?
-  longitude       Decimal?
-  neighborhood    String?
-  subdivision     String?
-
-  // Listing Details
-  listingDate     DateTime?
-  daysOnMarket    Int?
-  virtualTour     String?
-
-  // Media
-  images          PropertyImage[]
-  videos          PropertyVideo[]
-  documents       PropertyDocument[]
-
-  // Relations
-  userId          String
-  user            User        @relation(fields: [userId], references: [id])
-  amenities       PropertyAmenity[]
-  features        PropertyFeature[]
-  categories      PropertyCategory[]
-  favorites       Favorite[]
-
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  id                    String             @id @default(cuid())
+  mlsId                 String?
+  title                 String
+  description           String?
+  address               String
+  city                  String
+  state                 String
+  zipCode               String
+  country               String             @default("USA")
+  neighborhood          String?
+  subdivision           String?
+  propertyType          String
+  propertySubType       String?
+  status                String             @default("ACTIVE")
+  price                 Float?
+  pricePerSqft          Float?
+  bedrooms              Int?
+  bathrooms             Float?
+  halfBaths             Int?
+  sqft                  Int?
+  adjustedSqft          Int?
+  lotSize               Float?
+  yearBuilt             Int?
+  garage                Int?
+  parking               Int?
+  parkingSpaces         Int?
+  parkingDescription    String?
+  pool                  Boolean            @default(false)
+  waterfront            Boolean            @default(false)
+  waterfrontDescription String?
+  furnished             Boolean            @default(false)
+  petFriendly           Boolean            @default(false)
+  newConstruction       Boolean            @default(false)
+  latitude              Float?
+  longitude             Float?
+  listingDate           DateTime?
+  daysOnMarket          Int?
+  virtualTour           String?
+  amenities             String?
+  interiorFeatures      String?
+  exteriorFeatures      String?
+  hoaFees               Float?
+  taxAmount             Float?
+  taxYear               Int?
+  listingCourtesy       String?
+  listingAgent          String?
+  listingOffice         String?
+  shortSale             String             @default("Regular Sale")
+  images                PropertyImage[]
+  videos                PropertyVideo[]
+  documents             PropertyDocument[]
+  propertyAmenities     PropertyAmenity[]
+  features              PropertyFeature[]
+  favorites             Favorite[]
+  contacts              Contact[]
+  categories            PropertyCategory[]
+  userId                String
+  user                  User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
 
   @@map("properties")
 }
 
 model PropertyImage {
-  id          String   @id @default(cuid())
-  url         String
-  caption     String?
-  isPrimary   Boolean  @default(false)
-  order       Int      @default(0)
+  id        String  @id @default(cuid())
+  url       String
+  caption   String?
+  isPrimary Boolean @default(false)
+  order     Int     @default(0)
 
-  propertyId  String
-  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 
-  createdAt   DateTime @default(now())
+  createdAt DateTime @default(now())
 
   @@map("property_images")
 }
 
 model PropertyVideo {
-  id          String   @id @default(cuid())
-  url         String
-  title       String?
-  type        VideoType @default(TOUR)
+  id    String    @id @default(cuid())
+  url   String
+  title String?
+  type  VideoType @default(TOUR)
 
-  propertyId  String
-  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 
-  createdAt   DateTime @default(now())
+  createdAt DateTime @default(now())
 
   @@map("property_videos")
 }
 
 model PropertyDocument {
-  id          String   @id @default(cuid())
-  name        String
-  url         String
-  type        DocumentType
-  size        Int?
+  id   String       @id @default(cuid())
+  name String
+  url  String
+  type DocumentType
+  size Int?
 
-  propertyId  String
-  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 
-  createdAt   DateTime @default(now())
+  createdAt DateTime @default(now())
 
   @@map("property_documents")
 }
 
 model Amenity {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  category    String
-  icon        String?
+  id       String  @id @default(cuid())
+  name     String  @unique
+  category String
+  icon     String?
 
-  properties  PropertyAmenity[]
+  properties PropertyAmenity[]
 
-  createdAt   DateTime @default(now())
+  createdAt DateTime @default(now())
 
   @@map("amenities")
 }
 
 model PropertyAmenity {
-  id          String   @id @default(cuid())
+  id String @id @default(cuid())
 
-  propertyId  String
-  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 
-  amenityId   String
-  amenity     Amenity  @relation(fields: [amenityId], references: [id], onDelete: Cascade)
+  amenityId String
+  amenity   Amenity @relation(fields: [amenityId], references: [id], onDelete: Cascade)
 
   @@unique([propertyId, amenityId])
   @@map("property_amenities")
 }
 
 model Feature {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  category    String
+  id       String @id @default(cuid())
+  name     String @unique
+  category String
 
-  properties  PropertyFeature[]
+  properties PropertyFeature[]
 
-  createdAt   DateTime @default(now())
+  createdAt DateTime @default(now())
 
   @@map("features")
 }
 
 model PropertyFeature {
-  id          String   @id @default(cuid())
-  value       String?
+  id    String  @id @default(cuid())
+  value String?
 
-  propertyId  String
-  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 
-  featureId   String
-  feature     Feature  @relation(fields: [featureId], references: [id], onDelete: Cascade)
+  featureId String
+  feature   Feature @relation(fields: [featureId], references: [id], onDelete: Cascade)
 
   @@unique([propertyId, featureId])
   @@map("property_features")
 }
 
 model Category {
-  id          String   @id @default(cuid())
-  name        String   @unique
+  id          String  @id @default(cuid())
+  name        String  @unique
   description String?
   icon        String?
-  color       String   @default("#3b82f6")
+  color       String  @default("#3b82f6")
 
-  properties  PropertyCategory[]
+  properties PropertyCategory[]
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("categories")
 }
 
 model PropertyCategory {
-  id          String   @id @default(cuid())
+  id String @id @default(cuid())
 
-  propertyId  String
-  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 
-  categoryId  String
-  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
-  createdAt   DateTime @default(now())
+  createdAt DateTime @default(now())
 
   @@unique([propertyId, categoryId])
   @@map("property_categories")
 }
 
 model Contact {
-  id          String      @id @default(cuid())
-  name        String
-  email       String
-  phone       String?
-  message     String?
-  type        ContactType @default(INQUIRY)
-  status      ContactStatus @default(NEW)
+  id      String        @id @default(cuid())
+  name    String
+  email   String
+  phone   String?
+  message String?
+  type    ContactType   @default(INQUIRY)
+  status  ContactStatus @default(NEW)
 
-  propertyId  String?
-  userId      String?
-  user        User?       @relation(fields: [userId], references: [id])
+  propertyId String?
+  property   Property? @relation(fields: [propertyId], references: [id])
 
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("contacts")
 }
 
 model Favorite {
-  id          String   @id @default(cuid())
+  id String @id @default(cuid())
 
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  propertyId  String
-  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 
-  createdAt   DateTime @default(now())
+  createdAt DateTime @default(now())
 
   @@unique([userId, propertyId])
   @@map("favorites")

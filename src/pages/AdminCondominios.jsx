@@ -76,8 +76,7 @@ const AdminCondominios = () => {
     // Additional Details
     shortSale: 'Regular Sale',
     newConstruction: false,
-    petFriendly: false,
-    furnished: false
+    petFriendly: false
   });
 
   useEffect(() => {
@@ -87,7 +86,7 @@ const AdminCondominios = () => {
   const loadCondominios = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://0.0.0.0:5000/api/properties', {
+      const response = await fetch('http://0.0.0.0:5000/api/admin/properties', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -164,7 +163,7 @@ const AdminCondominios = () => {
         // Update existing
         console.log('Updating condominio:', formData);
         // Replace with actual API call for update
-        // const response = await fetch(`http://0.0.0.0:5000/api/properties/${editingCondominio.id}`, {
+        // const response = await fetch(`http://0.0.0.0:5000/api/admin/properties/${editingCondominio.id}`, {
         //   method: 'PUT',
         //   headers: { 'Authorization': `Bearer ${token}` },
         //   body: formDataToSend
@@ -174,7 +173,7 @@ const AdminCondominios = () => {
         // Create new
         console.log('Creating condominio:', formData);
         // Replace with actual API call for create
-        // const response = await fetch('http://0.0.0.0:5000/api/properties', {
+        // const response = await fetch('http://0.0.0.0:5000/api/admin/properties', {
         //   method: 'POST',
         //   headers: { 'Authorization': `Bearer ${token}` },
         //   body: formDataToSend
@@ -289,7 +288,7 @@ const AdminCondominios = () => {
         console.log('Deleting condominio:', id);
         // Placeholder for actual delete logic
         // const token = localStorage.getItem('token');
-        // await fetch(`http://0.0.0.0:5000/api/properties/${id}`, {
+        // await fetch(`http://0.0.0.0:5000/api/admin/properties/${id}`, {
         //   method: 'DELETE',
         //   headers: { 'Authorization': `Bearer ${token}` }
         // });

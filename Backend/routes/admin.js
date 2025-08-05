@@ -197,22 +197,56 @@ router.get('/properties', async (req, res) => {
 router.post('/properties', async (req, res) => {
   try {
     const {
+      mlsId,
       title,
       description,
+      propertyType,
+      status,
+      categories,
       address,
       city,
       state,
       zipCode,
-      propertyType,
+      neighborhood,
+      subdivision,
       price,
+      pricePerSqft,
       bedrooms,
       bathrooms,
+      halfBathrooms,
       sqft,
+      adjustedSqft,
+      yearBuilt,
+      daysOnMarket,
+      dateListed,
+      furnished,
+      waterfront,
+      waterfrontDescription,
+      pool,
+      parking,
+      parkingSpaces,
+      parkingDescription,
+      interiorFeatures,
+      exteriorFeatures,
+      hoaFees,
+      taxAmount,
+      taxYear,
+      latitude,
+      longitude,
+      virtualTour,
+      amenities,
+      listingCourtesy,
+      listingAgent,
+      listingOffice,
+      shortSale,
+      newConstruction,
+      petFriendly,
       userId
     } = req.body;
 
     const property = await prisma.property.create({
       data: {
+        mlsId,
         title,
         description,
         address,
@@ -220,10 +254,41 @@ router.post('/properties', async (req, res) => {
         state,
         zipCode,
         propertyType,
-        price: parseFloat(price),
+        status: status || 'ACTIVE',
+        price: price ? parseFloat(price) : null,
+        pricePerSqft: pricePerSqft ? parseFloat(pricePerSqft) : null,
         bedrooms: bedrooms ? parseInt(bedrooms) : null,
         bathrooms: bathrooms ? parseFloat(bathrooms) : null,
+        halfBaths: halfBathrooms ? parseInt(halfBathrooms) : null,
         sqft: sqft ? parseInt(sqft) : null,
+        adjustedSqft: adjustedSqft ? parseInt(adjustedSqft) : null,
+        yearBuilt: yearBuilt ? parseInt(yearBuilt) : null,
+        daysOnMarket: daysOnMarket ? parseInt(daysOnMarket) : null,
+        listingDate: dateListed ? new Date(dateListed) : null,
+        furnished: furnished === 'true' || furnished === true,
+        waterfront: waterfront === 'true' || waterfront === true,
+        waterfrontDescription,
+        pool: pool === 'true' || pool === true,
+        parking: parking === 'true' || parking === true,
+        parkingSpaces: parkingSpaces ? parseInt(parkingSpaces) : null,
+        parkingDescription,
+        interiorFeatures,
+        exteriorFeatures,
+        hoaFees: hoaFees ? parseFloat(hoaFees) : null,
+        taxAmount: taxAmount ? parseFloat(taxAmount) : null,
+        taxYear: taxYear ? parseInt(taxYear) : null,
+        latitude: latitude ? parseFloat(latitude) : null,
+        longitude: longitude ? parseFloat(longitude) : null,
+        neighborhood,
+        subdivision,
+        virtualTour,
+        amenities,
+        listingCourtesy,
+        listingAgent,
+        listingOffice,
+        shortSale: shortSale || 'Regular Sale',
+        newConstruction: newConstruction === 'true' || newConstruction === true,
+        petFriendly: petFriendly === 'true' || petFriendly === true,
         userId: userId || req.user.userId,
         country: 'USA'
       },
@@ -245,13 +310,39 @@ router.post('/properties', async (req, res) => {
 router.put('/properties/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const updateData = req.body;
+    const updateData = { ...req.body };
 
     // Convert numeric fields
     if (updateData.price) updateData.price = parseFloat(updateData.price);
+    if (updateData.pricePerSqft) updateData.pricePerSqft = parseFloat(updateData.pricePerSqft);
     if (updateData.bedrooms) updateData.bedrooms = parseInt(updateData.bedrooms);
     if (updateData.bathrooms) updateData.bathrooms = parseFloat(updateData.bathrooms);
+    if (updateData.halfBathrooms) updateData.halfBaths = parseInt(updateData.halfBathrooms);
     if (updateData.sqft) updateData.sqft = parseInt(updateData.sqft);
+    if (updateData.adjustedSqft) updateData.adjustedSqft = parseInt(updateData.adjustedSqft);
+    if (updateData.yearBuilt) updateData.yearBuilt = parseInt(updateData.yearBuilt);
+    if (updateData.daysOnMarket) updateData.daysOnMarket = parseInt(updateData.daysOnMarket);
+    if (updateData.parkingSpaces) updateData.parkingSpaces = parseInt(updateData.parkingSpaces);
+    if (updateData.hoaFees) updateData.hoaFees = parseFloat(updateData.hoaFees);
+    if (updateData.taxAmount) updateData.taxAmount = parseFloat(updateData.taxAmount);
+    if (updateData.taxYear) updateData.taxYear = parseInt(updateData.taxYear);
+    if (updateData.latitude) updateData.latitude = parseFloat(updateData.latitude);
+    if (updateData.longitude) updateData.longitude = parseFloat(updateData.longitude);
+
+    // Convert boolean fields
+    if (updateData.furnished !== undefined) updateData.furnished = updateData.furnished === 'true' || updateData.furnished === true;
+    if (updateData.waterfront !== undefined) updateData.waterfront = updateData.waterfront === 'true' || updateData.waterfront === true;
+    if (updateData.pool !== undefined) updateData.pool = updateData.pool === 'true' || updateData.pool === true;
+    if (updateData.parking !== undefined) updateData.parking = updateData.parking === 'true' || updateData.parking === true;
+    if (updateData.newConstruction !== undefined) updateData.newConstruction = updateData.newConstruction === 'true' || updateData.newConstruction === true;
+    if (updateData.petFriendly !== undefined) updateData.petFriendly = updateData.petFriendly === 'true' || updateData.petFriendly === true;
+
+    // Convert date fields
+    if (updateData.dateListed) updateData.listingDate = new Date(updateData.dateListed);
+
+    // Remove fields that don't exist in the database schema
+    delete updateData.halfBathrooms;
+    delete updateData.dateListed;
 
     const property = await prisma.property.update({
       where: { id },
