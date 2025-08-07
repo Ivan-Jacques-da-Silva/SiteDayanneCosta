@@ -13,7 +13,8 @@ const PropertyListing = ({
   const [viewMode, setViewMode] = useState('grid');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(20);
-  const [filters, setFilters] = useState({
+  const [totalPages, setTotalPages] = useState(1); // Added for pagination total count
+  const [appliedFilters, setAppliedFilters] = useState({ // Renamed for clarity
     priceRange: [0, 50000000],
     bedrooms: '',
     bathrooms: '',
@@ -21,88 +22,38 @@ const PropertyListing = ({
     ...customFilters
   });
 
+  // State for the currently selected category filter
+  const [selectedCategory, setSelectedCategory] = useState('');
+
   useEffect(() => {
     fetchProperties();
-  }, [filters, apiEndpoint]);
+  }, [filters, apiEndpoint, currentPage]); // Added currentPage to dependency array
 
   const fetchProperties = async () => {
     try {
       setLoading(true);
+      let url = `${apiEndpoint}?page=${currentPage}&limit=${itemsPerPage}`;
 
-      // Build query parameters for dynamic endpoints
-      const queryParams = new URLSearchParams();
-      Object.keys(filters).forEach(key => {
-        if (filters[key] && key !== 'priceRange' && key !== 'sortBy' && key !== 'bedrooms' && key !== 'bathrooms') {
-          queryParams.append(key, filters[key]);
+      // Add filters to URL
+      Object.entries(appliedFilters).forEach(([key, value]) => {
+        if (value && key !== 'yearBuilt') {
+          url += `&${key}=${encodeURIComponent(value)}`;
         }
       });
-      if (filters.priceRange[0] > 0) queryParams.append('min', filters.priceRange[0]);
 
-      const url = queryParams.toString() ? `${apiEndpoint}?${queryParams}` : apiEndpoint;
-      
-      // Check if apiEndpoint is valid
-      if (!apiEndpoint || apiEndpoint === "/api/properties") {
-        // Use mock data for now since API endpoint doesn't exist
-        const mockData = [];
-        setProperties(mockData);
-        return;
+      // Add category filter if specified
+      if (filters.categoryName) {
+        url += `&categoryName=${encodeURIComponent(filters.categoryName)}`;
       }
-      
+
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+
       const data = await response.json();
-
-      if (Array.isArray(data)) {
-        let filteredData = data;
-
-        // Apply client-side filters
-        filteredData = filteredData.filter(property => {
-          const price = parseInt(property.price.replace(/[$,]/g, ''));
-          return price >= filters.priceRange[0] && price <= filters.priceRange[1];
-        });
-
-        if (filters.bedrooms) {
-          filteredData = filteredData.filter(property => {
-            const beds = parseInt(property.beds) || 0;
-            return beds >= parseInt(filters.bedrooms);
-          });
-        }
-
-        if (filters.bathrooms) {
-          filteredData = filteredData.filter(property => {
-            const baths = parseInt(property.baths) || 0;
-            return baths >= parseInt(filters.bathrooms);
-          });
-        }
-
-        // Sort data
-        if (filters.sortBy === 'price-asc') {
-          filteredData.sort((a, b) => {
-            const priceA = parseInt(a.price.replace(/[$,]/g, ''));
-            const priceB = parseInt(b.price.replace(/[$,]/g, ''));
-            return priceA - priceB;
-          });
-        } else if (filters.sortBy === 'sqft-desc') {
-          filteredData.sort((a, b) => {
-            const sqftA = parseInt(a.sqft?.replace(/,/g, '')) || 0;
-            const sqftB = parseInt(b.sqft?.replace(/,/g, '')) || 0;
-            return sqftB - sqftA;
-          });
-        } else if (filters.sortBy === 'bedrooms-desc') {
-          filteredData.sort((a, b) => {
-            const bedsA = parseInt(a.beds) || 0;
-            const bedsB = parseInt(b.beds) || 0;
-            return bedsB - bedsA;
-          });
-        }
-
-        setProperties(filteredData);
-      } else {
-        console.error('API Error: Invalid data format');
-        setProperties([]);
-      }
+      setProperties(data.properties || data);
+      setTotalPages(data.pagination?.totalPages || 1);
     } catch (error) {
       console.error('Error fetching properties:', error);
       setProperties([]);
@@ -117,7 +68,7 @@ const PropertyListing = ({
       ...prev,
       [name]: value
     }));
-    setCurrentPage(1);
+    setCurrentPage(1); // Reset to first page when filters change
   };
 
   const handlePriceRangeChange = (e) => {
@@ -132,15 +83,32 @@ const PropertyListing = ({
       ...prev,
       priceRange: newPriceRange
     }));
-    setCurrentPage(1);
+    setCurrentPage(1); // Reset to first page when filters change
   };
 
+  // Handler for category selection
+  const handleCategoryChange = (e) => {
+    const { value } = e.target;
+    setFilters(prev => ({
+      ...prev,
+      categoryName: value // Store category name in filters
+    }));
+    setSelectedCategory(value); // Update local state for selected category
+    setCurrentPage(1); // Reset to first page when category changes
+  };
+
+
   const formatPrice = (price) => {
-    return '$' + price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    // Ensure price is a number before formatting
+    const numericPrice = typeof price === 'string' ? parseInt(price.replace(/[$,]/g, '')) : price;
+    if (isNaN(numericPrice)) {
+      return '$N/A';
+    }
+    return '$' + numericPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
   // Pagination calculations
-  const totalPages = Math.ceil(properties.length / itemsPerPage);
+  const totalPagesCalculated = Math.ceil(properties.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentProperties = properties.slice(startIndex, endIndex);
@@ -151,12 +119,13 @@ const PropertyListing = ({
   };
 
   const renderPagination = () => {
-    if (totalPages <= 1) return null;
+    const effectiveTotalPages = totalPages > 0 ? totalPages : totalPagesCalculated; // Use fetched totalPages if available
+    if (effectiveTotalPages <= 1) return null;
 
     const pages = [];
     const maxVisiblePages = 5;
     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    let endPage = Math.min(effectiveTotalPages, startPage + maxVisiblePages - 1);
 
     if (endPage - startPage + 1 < maxVisiblePages) {
       startPage = Math.max(1, endPage - maxVisiblePages + 1);
@@ -186,7 +155,7 @@ const PropertyListing = ({
       );
     }
 
-    if (currentPage < totalPages) {
+    if (currentPage < effectiveTotalPages) {
       pages.push(
         <button
           key="next"
@@ -306,9 +275,9 @@ const PropertyListing = ({
 
             <div className={styles.filterGroup}>
               <select 
-                name="category" 
-                value={filters.category || ''} 
-                onChange={handleFilterChange}
+                name="categoryName" // Changed name to match the filter key used in fetchProperties
+                value={filters.categoryName || ''} 
+                onChange={handleCategoryChange} // Use the new handler for category
                 className={styles.filterSelect}
               >
                 <option value="">All Categories</option>

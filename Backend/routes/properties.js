@@ -407,4 +407,118 @@ router.get('/stats/overview', async (req, res) => {
   }
 });
 
+// POST /api/properties/category - Associate property with category
+router.post('/category', async (req, res) => {
+  try {
+    const { propertyId, categoryId } = req.body;
+
+    if (!propertyId || !categoryId) {
+      return res.status(400).json({ error: 'Property ID and Category ID are required' });
+    }
+
+    // Check if association already exists
+    const existingAssociation = await prisma.propertyCategory.findFirst({
+      where: {
+        propertyId: propertyId,
+        categoryId: categoryId
+      }
+    });
+
+    if (existingAssociation) {
+      return res.json({ message: 'Association already exists' });
+    }
+
+    // Create the association
+    const association = await prisma.propertyCategory.create({
+      data: {
+        propertyId: propertyId,
+        categoryId: categoryId
+      }
+    });
+
+    res.status(201).json(association);
+  } catch (error) {
+    console.error('Error associating property with category:', error);
+    res.status(500).json({ error: 'Failed to associate property with category' });
+  }
+});
+
+// GET /api/properties-by-category - Get properties by category name  
+router.get('-by-category', async (req, res) => {
+  try {
+    const { categoryName, page = 1, limit = 12 } = req.query;
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    let whereClause = {
+      status: 'ACTIVE'
+    };
+
+    // If category name is provided, filter by category
+    if (categoryName) {
+      whereClause.categories = {
+        some: {
+          category: {
+            name: {
+              equals: categoryName,
+              mode: 'insensitive'
+            }
+          }
+        }
+      };
+    }
+
+    const [properties, total] = await Promise.all([
+      prisma.property.findMany({
+        where: whereClause,
+        include: {
+          images: {
+            orderBy: { order: 'asc' },
+            take: 1
+          },
+          amenities: {
+            include: { amenity: true }
+          },
+          features: {
+            include: { feature: true }
+          },
+          categories: {
+            include: { 
+              category: {
+                include: {
+                  parent: true
+                }
+              } 
+            }
+          },
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              phone: true
+            }
+          }
+        },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: parseInt(limit)
+      }),
+      prisma.property.count({ where: whereClause })
+    ]);
+
+    res.json({
+      properties,
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages: Math.ceil(total / parseInt(limit)),
+        totalItems: total,
+        itemsPerPage: parseInt(limit)
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching properties by category:', error);
+    res.status(500).json({ error: 'Failed to fetch properties' });
+  }
+});
+
 module.exports = router;

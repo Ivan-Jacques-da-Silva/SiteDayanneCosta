@@ -20,7 +20,7 @@ const AdminCondominios = () => {
     // Address
     address: '',
     city: '',
-    state: '',
+    state: 'FL',
     zipCode: '',
     neighborhood: '',
     subdivision: '',
@@ -77,16 +77,25 @@ const AdminCondominios = () => {
     // Additional Details
     shortSale: 'Regular Sale',
     newConstruction: false,
-    petFriendly: false
+    petFriendly: false,
+
+    // Category fields
+    categoryId: '',
+    subcategoryName: ''
   });
 
   const [mainCategories, setMainCategories] = useState([]);
   const [allCategories, setAllCategories] = useState([]);
   const [customSubcategory, setCustomSubcategory] = useState('');
   const [availableSubcategories, setAvailableSubcategories] = useState([]);
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [imagePreviews, setImagePreviews] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
     loadCondominios();
+    loadCategories(); // Load categories on component mount
   }, []);
 
   useEffect(() => {
@@ -104,9 +113,12 @@ const AdminCondominios = () => {
     try {
       const response = await fetch('http://0.0.0.0:5000/api/categories/all');
       if (response.ok) {
-        const categories = await response.json();
-        setAllCategories(categories);
-        setMainCategories(categories.filter(cat => cat.isMainCategory));
+        const categoriesData = await response.json();
+        setAllCategories(categoriesData);
+        setMainCategories(categoriesData.filter(cat => cat.isMainCategory));
+        setCategories(categoriesData.filter(cat => !cat.isMainCategory)); // Set general categories for the new form field
+      } else {
+        console.error('Failed to load categories');
       }
     } catch (error) {
       console.error('Error loading categories:', error);
@@ -126,8 +138,12 @@ const AdminCondominios = () => {
       if (response.ok) {
         const data = await response.json();
         setCondominios(data);
+      } else if (response.status === 404) {
+        // Handle case where no properties are found
+        setCondominios([]);
       } else {
-        // Mock data for development
+        // Mock data for development if API fails or is unavailable
+        console.warn('API call failed or returned non-OK status. Using mock data.');
         setCondominios([
           {
             id: 1,
@@ -152,12 +168,41 @@ const AdminCondominios = () => {
             furnished: true,
             parkingSpaces: 1,
             amenities: 'Elevators, Barbecue, Deck, Marina Access, Gym, 24-hour Valet, Security, Sauna, Tennis Court',
-            categories: ['luxuryCondos', 'waterfront']
+            categories: ['luxuryCondos', 'waterfront'] // This property might have categories associated
           }
         ]);
       }
     } catch (error) {
       console.error('Error loading properties:', error);
+      // Fallback to mock data if fetch fails entirely
+      console.warn('Fetch failed. Using mock data.');
+      setCondominios([
+        {
+          id: 1,
+          title: 'Luxury Brickell Condo',
+          address: '2101 Brickell Ave #905',
+          city: 'Miami',
+          state: 'FL',
+          zipCode: '33129',
+          price: 495000,
+          bedrooms: 1,
+          bathrooms: 1,
+          sqft: 869,
+          status: 'ACTIVE',
+          mlsId: 'A11700727',
+          description: 'Experience spectacular bay views from this luxurious 1-bedroom, 1-bathroom condo...',
+          yearBuilt: 2004,
+          subdivision: 'Skyline Condo',
+          hoaFees: 1001,
+          taxAmount: 6186,
+          taxYear: 2024,
+          waterfront: true,
+          furnished: true,
+          parkingSpaces: 1,
+          amenities: 'Elevators, Barbecue, Deck, Marina Access, Gym, 24-hour Valet, Security, Sauna, Tennis Court',
+          categories: ['luxuryCondos', 'waterfront']
+        }
+      ]);
     } finally {
       setLoading(false);
     }
@@ -173,42 +218,122 @@ const AdminCondominios = () => {
 
       // Append all form fields
       Object.keys(formData).forEach(key => {
-        if (key === 'mainImage' && formData[key]) {
-          formDataToSend.append('mainImage', formData[key]);
-        } else if (key === 'galleryImages' && formData[key].length > 0) {
-          formData[key].forEach((file, index) => {
-            formDataToSend.append(`galleryImage_${index}`, file);
-          });
-        } else if (key === 'subcategories' && Array.isArray(formData[key])) {
-            formData[key].forEach((category, index) => {
-                formDataToSend.append(`subcategories_${index}`, category);
+        if (formData[key] !== null && formData[key] !== '') {
+          if (key === 'mainImage' && formData[key]) {
+            formDataToSend.append('mainImage', formData[key]);
+          } else if (key === 'galleryImages' && formData[key].length > 0) {
+            formData[key].forEach((file, index) => {
+              formDataToSend.append(`galleryImage_${index}`, file);
             });
-        }
-        else {
-          formDataToSend.append(key, formData[key]);
+          } else if (key === 'subcategories' && Array.isArray(formData[key])) {
+              formData[key].forEach((category, index) => {
+                  formDataToSend.append(`subcategories_${index}`, category);
+              });
+          }
+          else if (typeof formData[key] === 'boolean') {
+            formDataToSend.append(key, formData[key]);
+          }
+          else if (key !== 'subcategories') { // Ensure subcategories array is not appended directly if it's already handled
+            formDataToSend.append(key, formData[key]);
+          }
         }
       });
 
+      // Add property type and country if not already handled by formData
+      if (!formData.propertyType) formDataToSend.append('propertyType', 'CONDO');
+      if (!formData.country) formDataToSend.append('country', 'USA');
+
+      // Add images if any were selected
+      selectedImages.forEach((image, index) => {
+        formDataToSend.append('images', image); // Assuming the backend expects 'images' for gallery
+      });
+
+      let response;
       if (editingCondominio) {
-        // Update existing
+        // Update existing property
         console.log('Updating condominio:', formData);
-        // Replace with actual API call for update
-        // const response = await fetch(`http://0.0.0.0:5000/api/admin/properties/${editingCondominio.id}`, {
-        //   method: 'PUT',
-        //   headers: { 'Authorization': `Bearer ${token}` },
-        //   body: formDataToSend
-        // });
-        // if (!response.ok) throw new Error('Failed to update property');
+        response = await fetch(`http://0.0.0.0:5000/api/admin/properties/${editingCondominio.id}`, {
+          method: 'PUT',
+          headers: { 'Authorization': `Bearer ${token}` },
+          body: formDataToSend
+        });
+        if (!response.ok) throw new Error('Failed to update property');
       } else {
-        // Create new
+        // Create new property
         console.log('Creating condominio:', formData);
-        // Replace with actual API call for create
-        // const response = await fetch('http://0.0.0.0:5000/api/admin/properties', {
-        //   method: 'POST',
-        //   headers: { 'Authorization': `Bearer ${token}` },
-        //   body: formDataToSend
-        // });
-        // if (!response.ok) throw new Error('Failed to create property');
+        response = await fetch('http://0.0.0.0:5000/api/admin/properties', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
+          body: formDataToSend
+        });
+        if (!response.ok) {
+            const error = await response.json();
+            console.error("API Error:", error);
+            throw new Error(error.error || 'Failed to create property');
+        }
+        const property = await response.json(); // Assuming the response contains the created property data
+
+        // Create subcategory if provided and a main category is selected
+        if (formData.subcategoryName && formData.mainCategory) {
+          try {
+            await fetch('http://0.0.0.0:5000/api/categories/subcategory', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({
+                name: formData.subcategoryName,
+                parentId: formData.mainCategory, // Use mainCategory as parentId
+                description: `Custom subcategory for ${formData.subcategoryName.trim()}`
+              })
+            });
+            // Note: The newly created subcategory might not be immediately available in allCategories list without a re-fetch.
+          } catch (error) {
+            console.error('Error creating subcategory:', error);
+            // Optionally show an error to the user
+          }
+        }
+
+        // Associate property with selected main category
+        if (formData.mainCategory) {
+          try {
+            await fetch('http://0.0.0.0:5000/api/properties/category', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({
+                propertyId: property.id,
+                categoryId: formData.mainCategory
+              })
+            });
+          } catch (error) {
+            console.error('Error associating property with category:', error);
+            // Optionally show an error to the user
+          }
+        }
+        // Associate property with selected subcategories
+        if (formData.subcategories && formData.subcategories.length > 0) {
+          for (const subcategoryId of formData.subcategories) {
+            try {
+              await fetch('http://0.0.0.0:5000/api/properties/category', { // Reusing category endpoint for subcategories
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                  propertyId: property.id,
+                  categoryId: subcategoryId
+                })
+              });
+            } catch (error) {
+              console.error(`Error associating property with subcategory ${subcategoryId}:`, error);
+            }
+          }
+        }
       }
 
       setShowForm(false);
@@ -217,6 +342,7 @@ const AdminCondominios = () => {
       loadCondominios();
     } catch (error) {
       console.error('Error saving condominio:', error);
+      alert(`Failed to save property: ${error.message}`);
     }
   };
 
@@ -224,13 +350,33 @@ const AdminCondominios = () => {
     const { name, value, type, checked, files } = e.target;
 
     if (type === 'checkbox') {
-      // This case is now handled by specific category/subcategory handlers
       setFormData(prev => ({ ...prev, [name]: checked }));
     } else if (type === 'file') {
       if (name === 'mainImage') {
         setFormData(prev => ({ ...prev, [name]: files[0] }));
+        // Update image previews for main image
+        if (files[0]) {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            setFormData(prev => ({ ...prev, mainImagePreview: reader.result }));
+          };
+          reader.readAsDataURL(files[0]);
+        } else {
+          setFormData(prev => ({ ...prev, mainImagePreview: null }));
+        }
       } else if (name === 'galleryImages') {
-        setFormData(prev => ({ ...prev, [name]: Array.from(files) }));
+        const selectedFiles = Array.from(files);
+        setFormData(prev => ({ ...prev, galleryImages: selectedFiles }));
+
+        // Update image previews for gallery images
+        const previews = selectedFiles.map(file => {
+          return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.readAsDataURL(file);
+          });
+        });
+        Promise.all(previews).then(results => setImagePreviews(results));
       }
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
@@ -250,10 +396,12 @@ const AdminCondominios = () => {
     if (!customSubcategory.trim() || !formData.mainCategory) return;
 
     try {
+      const token = localStorage.getItem('token');
       const response = await fetch('http://0.0.0.0:5000/api/categories/subcategory', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           name: customSubcategory.trim(),
@@ -298,7 +446,7 @@ const AdminCondominios = () => {
       subcategories: [],
       address: '',
       city: '',
-      state: '',
+      state: 'FL',
       zipCode: '',
       neighborhood: '',
       subdivision: '',
@@ -335,34 +483,53 @@ const AdminCondominios = () => {
       listingOffice: '',
       shortSale: 'Regular Sale',
       newConstruction: false,
-      petFriendly: false
+      petFriendly: false,
+      categoryId: '',
+      subcategoryName: ''
     });
+    setSelectedImages([]);
+    setImagePreviews([]);
+    setSelectedCategory(null);
   };
 
   const handleEdit = (condominio) => {
     setEditingCondominio(condominio);
+    // Ensure subcategories are correctly mapped if they exist in the fetched data
+    const selectedSubcategories = condominio.subcategories ? condominio.subcategories.map(sub => typeof sub === 'string' ? sub : sub.id) : [];
+
     setFormData({
       ...condominio,
-      mainImage: null,
-      galleryImages: [],
-      subcategories: condominio.subcategories || []
+      mainImage: null, // Reset file input on edit
+      galleryImages: [], // Reset file input on edit
+      subcategories: selectedSubcategories,
+      mainCategory: condominio.mainCategory || '', // Ensure mainCategory is set
+      categoryId: condominio.categoryId || '', // Set categoryId if available
+      subcategoryName: '' // Reset custom subcategory name on edit
     });
+    
+    // Find and set the selected category based on fetched data
+    if (condominio.categoryId) {
+      const category = categories.find(cat => cat.id === condominio.categoryId);
+      setSelectedCategory(category);
+    } else {
+      setSelectedCategory(null);
+    }
+    
     setShowForm(true);
   };
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this condominium?')) {
       try {
-        console.log('Deleting condominio:', id);
-        // Placeholder for actual delete logic
-        // const token = localStorage.getItem('token');
-        // await fetch(`http://0.0.0.0:5000/api/admin/properties/${id}`, {
-        //   method: 'DELETE',
-        //   headers: { 'Authorization': `Bearer ${token}` }
-        // });
+        const token = localStorage.getItem('token');
+        await fetch(`http://0.0.0.0:5000/api/admin/properties/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
         loadCondominios(); // Reload to reflect deletion
       } catch (error) {
         console.error('Error deleting condominio:', error);
+        alert('Error deleting property.');
       }
     }
   };
@@ -441,12 +608,21 @@ const AdminCondominios = () => {
                       <span><i className="fas fa-ruler-combined"></i> {condominio.sqft} Sq.Ft</span>
                       <span><i className="fas fa-calendar"></i> Built {condominio.yearBuilt}</span>
                     </div>
-                    <p className={styles.description}>{condominio.description.substring(0, 150)}...</p>
+                    <p className={styles.description}>{condominio.description ? condominio.description.substring(0, 150) : ''}...</p>
                     <div className={styles.features}>
                       {condominio.waterfront && <span className={styles.feature}>Waterfront</span>}
                       {condominio.furnished && <span className={styles.feature}>Furnished</span>}
                       {condominio.pool && <span className={styles.feature}>Pool</span>}
                     </div>
+                    {/* Display associated categories */}
+                    {condominio.categories && condominio.categories.length > 0 && (
+                      <div className={styles.categories}>
+                        <strong>Categories:</strong>
+                        {condominio.categories.map((cat, index) => (
+                          <span key={index} className={styles.categoryTag}>{cat}</span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
@@ -524,7 +700,11 @@ const AdminCondominios = () => {
                   <select
                     name="mainCategory"
                     value={formData.mainCategory || ''}
-                    onChange={handleInputChange}
+                    onChange={(e) => {
+                      handleInputChange(e); // Update formData.mainCategory
+                      const selectedCat = mainCategories.find(cat => cat.id === e.target.value);
+                      setSelectedCategory(selectedCat);
+                    }}
                     className={styles.selectInput}
                     required
                   >
@@ -1076,6 +1256,9 @@ const AdminCondominios = () => {
                     className={styles.fileInput}
                   />
                   <small>Upload the main image for this property</small>
+                  {formData.mainImagePreview && (
+                    <img src={formData.mainImagePreview} alt="Main Preview" style={{ maxWidth: '200px', marginTop: '10px' }} />
+                  )}
                 </div>
 
                 <div className={styles.formGroup}>
@@ -1090,6 +1273,11 @@ const AdminCondominios = () => {
                     className={styles.fileInput}
                   />
                   <small>Upload multiple images for the property gallery</small>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '10px' }}>
+                    {imagePreviews.map((preview, index) => (
+                      <img key={index} src={preview} alt={`Gallery Preview ${index}`} style={{ maxWidth: '100px', maxHeight: '100px' }} />
+                    ))}
+                  </div>
                 </div>
 
                 <div className={styles.formGroup}>

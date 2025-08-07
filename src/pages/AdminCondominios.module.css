@@ -484,6 +484,17 @@
   cursor: not-allowed;
 }
 
+.imagePreview img:hover {
+  transform: scale(1.02);
+}
+
+.helpText {
+  font-size: 12px;
+  color: #666;
+  font-style: italic;
+  margin-top: 4px;
+}
+
 @media (max-width: 768px) {
   .condominiosPage {
     padding: 16px;

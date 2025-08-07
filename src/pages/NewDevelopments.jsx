@@ -45,14 +45,15 @@ const NewDevelopments = () => {
     bairro: '',
     ano: '',
     min: '',
-    yearBuilt: true // Flag to show year built in table
+    yearBuilt: true, // Flag to show year built in table
+    categoryName: 'New Developments' // Filter by category
   };
 
   return (
     <div>
       <Header />
       <PropertyListing
-        apiEndpoint="http://localhost:5000/api/new-developments-dinamico"
+        apiEndpoint="http://0.0.0.0:5000/api/properties-by-category"
         title="New Developments"
         breadcrumbPath="New Developments"
         filters={customFilters}
