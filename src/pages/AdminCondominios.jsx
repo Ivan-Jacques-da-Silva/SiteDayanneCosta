@@ -14,7 +14,8 @@ const AdminCondominios = () => {
     description: '',
     propertyType: 'CONDO',
     status: 'ACTIVE',
-    categories: [],
+    mainCategory: '',
+    subcategories: [],
 
     // Address
     address: '',
@@ -79,9 +80,38 @@ const AdminCondominios = () => {
     petFriendly: false
   });
 
+  const [mainCategories, setMainCategories] = useState([]);
+  const [allCategories, setAllCategories] = useState([]);
+  const [customSubcategory, setCustomSubcategory] = useState('');
+  const [availableSubcategories, setAvailableSubcategories] = useState([]);
+
   useEffect(() => {
     loadCondominios();
   }, []);
+
+  useEffect(() => {
+    if (formData.mainCategory) {
+      const subcats = allCategories.filter(cat => 
+        cat.parentId === formData.mainCategory && !cat.isMainCategory
+      );
+      setAvailableSubcategories(subcats);
+    } else {
+      setAvailableSubcategories([]);
+    }
+  }, [formData.mainCategory, allCategories]);
+
+  const loadCategories = async () => {
+    try {
+      const response = await fetch('http://0.0.0.0:5000/api/categories/all');
+      if (response.ok) {
+        const categories = await response.json();
+        setAllCategories(categories);
+        setMainCategories(categories.filter(cat => cat.isMainCategory));
+      }
+    } catch (error) {
+      console.error('Error loading categories:', error);
+    }
+  };
 
   const loadCondominios = async () => {
     try {
@@ -149,9 +179,9 @@ const AdminCondominios = () => {
           formData[key].forEach((file, index) => {
             formDataToSend.append(`galleryImage_${index}`, file);
           });
-        } else if (key === 'categories' && Array.isArray(formData[key])) {
+        } else if (key === 'subcategories' && Array.isArray(formData[key])) {
             formData[key].forEach((category, index) => {
-                formDataToSend.append(`categories_${index}`, category);
+                formDataToSend.append(`subcategories_${index}`, category);
             });
         }
         else {
@@ -194,9 +224,7 @@ const AdminCondominios = () => {
     const { name, value, type, checked, files } = e.target;
 
     if (type === 'checkbox') {
-      if (name === 'categories') { // This case is handled by specific category checkboxes below
-        return;
-      }
+      // This case is now handled by specific category/subcategory handlers
       setFormData(prev => ({ ...prev, [name]: checked }));
     } else if (type === 'file') {
       if (name === 'mainImage') {
@@ -209,16 +237,54 @@ const AdminCondominios = () => {
     }
   };
 
-  const handleCategoryChange = (e) => {
-    const { name, checked } = e.target;
-    setFormData(prev => {
-      const currentCategories = prev.categories || [];
-      if (checked) {
-        return { ...prev, categories: [...currentCategories, name] };
+  const handleSubcategoryChange = (subcategoryId) => {
+    setFormData(prev => ({
+      ...prev,
+      subcategories: prev.subcategories?.includes(subcategoryId)
+        ? prev.subcategories.filter(id => id !== subcategoryId)
+        : [...(prev.subcategories || []), subcategoryId]
+    }));
+  };
+
+  const handleAddCustomSubcategory = async () => {
+    if (!customSubcategory.trim() || !formData.mainCategory) return;
+
+    try {
+      const response = await fetch('http://0.0.0.0:5000/api/categories/subcategory', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: customSubcategory.trim(),
+          parentId: formData.mainCategory,
+          description: `Custom subcategory for ${customSubcategory.trim()}`
+        }),
+      });
+
+      if (response.ok) {
+        const newSubcategory = await response.json();
+        setAllCategories(prev => [...prev, newSubcategory]);
+        setFormData(prev => ({
+          ...prev,
+          subcategories: [...(prev.subcategories || []), newSubcategory.id]
+        }));
+        setCustomSubcategory('');
       } else {
-        return { ...prev, categories: currentCategories.filter(cat => cat !== name) };
+        const error = await response.json();
+        alert(error.error || 'Error creating subcategory');
       }
-    });
+    } catch (error) {
+      console.error('Error creating subcategory:', error);
+      alert('Error creating subcategory');
+    }
+  };
+
+  const handleRemoveSubcategory = (subcategoryId) => {
+    setFormData(prev => ({
+      ...prev,
+      subcategories: prev.subcategories?.filter(id => id !== subcategoryId) || []
+    }));
   };
 
   const resetForm = () => {
@@ -228,7 +294,8 @@ const AdminCondominios = () => {
       description: '',
       propertyType: 'CONDO',
       status: 'ACTIVE',
-      categories: [],
+      mainCategory: '',
+      subcategories: [],
       address: '',
       city: '',
       state: '',
@@ -277,7 +344,8 @@ const AdminCondominios = () => {
     setFormData({
       ...condominio,
       mainImage: null,
-      galleryImages: []
+      galleryImages: [],
+      subcategories: condominio.subcategories || []
     });
     setShowForm(true);
   };
@@ -451,72 +519,84 @@ const AdminCondominios = () => {
                   </div>
                 </div>
 
-                <div className={styles.formRow}>
-                  <div className={styles.formGroup}>
-                    <label htmlFor="categories">Categories</label>
-                    <div className={styles.checkboxGrid}>
-                      <label className={styles.checkbox}>
-                        <input
-                          type="checkbox"
-                          name="newDevelopments"
-                          checked={formData.categories?.includes('newDevelopments') || false}
-                          onChange={handleCategoryChange}
-                        />
-                        <span>New Developments</span>
-                      </label>
+                <div className={styles.formGroup}>
+                  <label>Main Category</label>
+                  <select
+                    name="mainCategory"
+                    value={formData.mainCategory || ''}
+                    onChange={handleInputChange}
+                    className={styles.selectInput}
+                    required
+                  >
+                    <option value="">Select Main Category</option>
+                    {mainCategories.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-                      <label className={styles.checkbox}>
-                        <input
-                          type="checkbox"
-                          name="luxuryCondos"
-                          checked={formData.categories?.includes('luxuryCondos') || false}
-                          onChange={handleCategoryChange}
-                        />
-                        <span>Luxury Condos</span>
-                      </label>
+                <div className={styles.formGroup}>
+                  <label>Subcategories</label>
+                  <div className={styles.subcategoryContainer}>
+                    {formData.mainCategory && availableSubcategories.length > 0 && (
+                      <div className={styles.checkboxGrid}>
+                        {availableSubcategories.map((subcategory) => (
+                          <label key={subcategory.id} className={styles.checkbox}>
+                            <input
+                              type="checkbox"
+                              checked={formData.subcategories?.includes(subcategory.id) || false}
+                              onChange={() => handleSubcategoryChange(subcategory.id)}
+                            />
+                            <span>{subcategory.name}</span>
+                          </label>
+                        ))}
+                      </div>
+                    )}
 
-                      <label className={styles.checkbox}>
-                        <input
-                          type="checkbox"
-                          name="singleFamily"
-                          checked={formData.categories?.includes('singleFamily') || false}
-                          onChange={handleCategoryChange}
-                        />
-                        <span>Single Family Homes</span>
-                      </label>
-
-                      <label className={styles.checkbox}>
-                        <input
-                          type="checkbox"
-                          name="waterfront"
-                          checked={formData.categories?.includes('waterfront') || false}
-                          onChange={handleCategoryChange}
-                        />
-                        <span>Waterfront Properties</span>
-                      </label>
-
-                      <label className={styles.checkbox}>
-                        <input
-                          type="checkbox"
-                          name="golfCourse"
-                          checked={formData.categories?.includes('golfCourse') || false}
-                          onChange={handleCategoryChange}
-                        />
-                        <span>Golf Course Properties</span>
-                      </label>
-
-                      <label className={styles.checkbox}>
-                        <input
-                          type="checkbox"
-                          name="privateExclusive"
-                          checked={formData.categories?.includes('privateExclusive') || false}
-                          onChange={handleCategoryChange}
-                        />
-                        <span>Private & Exclusive</span>
-                      </label>
+                    <div className={styles.customSubcategoryInput}>
+                      <input
+                        type="text"
+                        placeholder="Add custom subcategory"
+                        value={customSubcategory}
+                        onChange={(e) => setCustomSubcategory(e.target.value)}
+                        className={styles.textInput}
+                      />
+                      <button
+                        type="button"
+                        onClick={handleAddCustomSubcategory}
+                        className={styles.addButton}
+                        disabled={!customSubcategory.trim() || !formData.mainCategory}
+                      >
+                        Add
+                      </button>
                     </div>
-                    <small>Select property categories that apply to this listing</small>
+
+                    {formData.subcategories && formData.subcategories.length > 0 && (
+                      <div className={styles.selectedSubcategories}>
+                        <small>Selected subcategories:</small>
+                        <div className={styles.tagContainer}>
+                          {formData.subcategories.map((subId) => {
+                            const sub = allCategories.find(c => c.id === subId);
+                            return sub ? (
+                              <span key={subId} className={styles.tag}>
+                                {sub.name}
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveSubcategory(subId)}
+                                  className={styles.removeTag}
+                                >
+                                  ×
+                                </button>
+                              </span>
+                            ) : null;
+                          })}
+                        </div>
+                      </div>
+                    )}
                   </div>
+                  <small>Select existing subcategories or add custom ones</small>
                 </div>
 
                 <div className={styles.formGroup}>

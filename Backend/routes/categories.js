@@ -5,12 +5,21 @@ const { PrismaClient } = require('@prisma/client');
 const router = express.Router();
 const prisma = new PrismaClient();
 
-// GET /api/categories - List all categories
+// GET /api/categories - List all categories with subcategories
 router.get('/', async (req, res) => {
   try {
     const categories = await prisma.category.findMany({
+      where: { isMainCategory: true },
       orderBy: { name: 'asc' },
       include: {
+        subcategories: {
+          orderBy: { name: 'asc' },
+          include: {
+            _count: {
+              select: { properties: true }
+            }
+          }
+        },
         _count: {
           select: { properties: true }
         }
@@ -24,18 +33,21 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST /api/categories - Create new category
+// POST /api/categories - Create new category or subcategory
 router.post('/', async (req, res) => {
   try {
-    const { name, description, icon, color } = req.body;
+    const { name, description, icon, color, parentId, isMainCategory = true } = req.body;
 
     if (!name) {
       return res.status(400).json({ error: 'Category name is required' });
     }
 
+    // Format name: first letter uppercase, rest lowercase
+    const formattedName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+
     // Check if category already exists
     const existingCategory = await prisma.category.findFirst({
-      where: { name: { equals: name, mode: 'insensitive' } }
+      where: { name: { equals: formattedName, mode: 'insensitive' } }
     });
 
     if (existingCategory) {
@@ -44,10 +56,12 @@ router.post('/', async (req, res) => {
 
     const category = await prisma.category.create({
       data: {
-        name,
+        name: formattedName,
         description,
         icon,
-        color: color || '#3b82f6'
+        color: color || '#3b82f6',
+        isMainCategory,
+        parentId
       }
     });
 
@@ -105,6 +119,67 @@ router.delete('/:id', async (req, res) => {
   } catch (error) {
     console.error('Error deleting category:', error);
     res.status(400).json({ error: 'Failed to delete category' });
+  }
+});
+
+// GET /api/categories/all - Get all categories and subcategories for forms
+router.get('/all', async (req, res) => {
+  try {
+    const allCategories = await prisma.category.findMany({
+      orderBy: { name: 'asc' },
+      include: {
+        parent: true,
+        _count: {
+          select: { properties: true }
+        }
+      }
+    });
+
+    res.json(allCategories);
+  } catch (error) {
+    console.error('Error fetching all categories:', error);
+    res.status(500).json({ error: 'Failed to fetch categories' });
+  }
+});
+
+// POST /api/categories/subcategory - Create new subcategory
+router.post('/subcategory', async (req, res) => {
+  try {
+    const { name, parentId, description } = req.body;
+
+    if (!name || !parentId) {
+      return res.status(400).json({ error: 'Name and parent category are required' });
+    }
+
+    // Format name: first letter uppercase, rest lowercase
+    const formattedName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+
+    // Check if subcategory already exists
+    const existingSubcategory = await prisma.category.findFirst({
+      where: { 
+        name: { equals: formattedName, mode: 'insensitive' },
+        parentId: parentId
+      }
+    });
+
+    if (existingSubcategory) {
+      return res.status(400).json({ error: 'Subcategory already exists in this category' });
+    }
+
+    const subcategory = await prisma.category.create({
+      data: {
+        name: formattedName,
+        description,
+        isMainCategory: false,
+        parentId,
+        color: '#6366f1'
+      }
+    });
+
+    res.status(201).json(subcategory);
+  } catch (error) {
+    console.error('Error creating subcategory:', error);
+    res.status(400).json({ error: 'Failed to create subcategory' });
   }
 });
 
