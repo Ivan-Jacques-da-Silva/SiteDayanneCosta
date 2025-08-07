@@ -44,15 +44,15 @@ const NewDevelopments = () => {
     bairro: '',
     ano: '',
     min: '',
-    yearBuilt: true, // Flag to show year built in table
-    categoryName: 'New Developments' // Filter by category
+    yearBuilt: true,
+    categoryName: 'New Developments'
   };
 
   return (
     <div>
       <Header />
       <PropertyListing
-        apiEndpoint="http://0.0.0.0:5000/api/properties-by-category"
+        apiEndpoint="/api/properties-by-category"
         title="New Developments"
         breadcrumbPath="New Developments"
         filters={customFilters}

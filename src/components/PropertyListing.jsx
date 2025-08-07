@@ -13,8 +13,8 @@ const PropertyListing = ({
   const [viewMode, setViewMode] = useState('grid');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(20);
-  const [totalPages, setTotalPages] = useState(1); // Added for pagination total count
-  const [appliedFilters, setAppliedFilters] = useState({ // Renamed for clarity
+  const [totalPages, setTotalPages] = useState(1);
+  const [filters, setFilters] = useState({
     priceRange: [0, 50000000],
     bedrooms: '',
     bathrooms: '',
@@ -22,28 +22,32 @@ const PropertyListing = ({
     ...customFilters
   });
 
-  // State for the currently selected category filter
-  const [selectedCategory, setSelectedCategory] = useState('');
-
   useEffect(() => {
     fetchProperties();
-  }, [filters, apiEndpoint, currentPage]); // Added currentPage to dependency array
+  }, [filters, apiEndpoint, currentPage]);
 
   const fetchProperties = async () => {
     try {
       setLoading(true);
-      let url = `${apiEndpoint}?page=${currentPage}&limit=${itemsPerPage}`;
+      let url = `http://0.0.0.0:5000${apiEndpoint}?page=${currentPage}&limit=${itemsPerPage}`;
 
       // Add filters to URL
-      Object.entries(appliedFilters).forEach(([key, value]) => {
-        if (value && key !== 'yearBuilt') {
-          url += `&${key}=${encodeURIComponent(value)}`;
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value && key !== 'yearBuilt' && key !== 'priceRange') {
+          if (Array.isArray(value)) {
+            url += `&${key}=${encodeURIComponent(value.join(','))}`;
+          } else {
+            url += `&${key}=${encodeURIComponent(value)}`;
+          }
         }
       });
 
-      // Add category filter if specified
-      if (filters.categoryName) {
-        url += `&categoryName=${encodeURIComponent(filters.categoryName)}`;
+      // Add price range filters
+      if (filters.priceRange && filters.priceRange[0] > 0) {
+        url += `&minPrice=${filters.priceRange[0]}`;
+      }
+      if (filters.priceRange && filters.priceRange[1] < 50000000) {
+        url += `&maxPrice=${filters.priceRange[1]}`;
       }
 
       const response = await fetch(url);
@@ -53,7 +57,7 @@ const PropertyListing = ({
 
       const data = await response.json();
       setProperties(data.properties || data);
-      setTotalPages(data.pagination?.totalPages || 1);
+      setTotalPages(data.pagination?.totalPages || Math.ceil((data.pagination?.totalItems || data.length || 0) / itemsPerPage));
     } catch (error) {
       console.error('Error fetching properties:', error);
       setProperties([]);
@@ -68,7 +72,7 @@ const PropertyListing = ({
       ...prev,
       [name]: value
     }));
-    setCurrentPage(1); // Reset to first page when filters change
+    setCurrentPage(1);
   };
 
   const handlePriceRangeChange = (e) => {
@@ -83,18 +87,7 @@ const PropertyListing = ({
       ...prev,
       priceRange: newPriceRange
     }));
-    setCurrentPage(1); // Reset to first page when filters change
-  };
-
-  // Handler for category selection
-  const handleCategoryChange = (e) => {
-    const { value } = e.target;
-    setFilters(prev => ({
-      ...prev,
-      categoryName: value // Store category name in filters
-    }));
-    setSelectedCategory(value); // Update local state for selected category
-    setCurrentPage(1); // Reset to first page when category changes
+    setCurrentPage(1);
   };
 
 
