@@ -90,6 +90,15 @@ const PropertyListing = ({
     setCurrentPage(1);
   };
 
+  const handleCategoryChange = (e) => {
+    const { name, value } = e.target;
+    setFilters(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    setCurrentPage(1);
+  };
+
 
   const formatPrice = (price) => {
     // Ensure price is a number before formatting
@@ -356,16 +365,16 @@ const PropertyListing = ({
                         </div>
                         <div className={styles.propertyContent}>
                           <div className={styles.propertyPrice}>
-                            {property.price}
+                            {formatPrice(property.price)}
                           </div>
 
                           <div className={styles.propertyDetails}>
                             <div className={styles.propertySpecs}>
                               <span className={styles.spec}>
-                                <strong>{property.beds || 'N/A'}</strong> Bed(s)
+                                <strong>{property.bedrooms || property.beds || 'N/A'}</strong> Bed(s)
                               </span>
                               <span className={styles.spec}>
-                                <strong>{property.baths || 'N/A'}</strong> Bath(s)
+                                <strong>{property.bathrooms || property.baths || 'N/A'}</strong> Bath(s)
                               </span>
                               <span className={styles.spec}>
                                 <strong>{property.sqft || 'N/A'}</strong> Sq.Ft.
@@ -424,13 +433,13 @@ const PropertyListing = ({
                         {currentProperties.map((property, index) => (
                           <tr key={property.id || index} className={styles.propertyRow}>
                             <td>{property.address}</td>
-                            <td>{property.price}</td>
+                            <td>{formatPrice(property.price)}</td>
                             <td>0</td>
-                            <td>{property.beds || 'N/A'}</td>
-                            <td>{property.baths || 'N/A'}</td>
+                            <td>{property.bedrooms || property.beds || 'N/A'}</td>
+                            <td>{property.bathrooms || property.baths || 'N/A'}</td>
                             <td>{property.sqft || 'N/A'}</td>
-                            <td>{property.pricePerSqft || 'N/A'}</td>
-                            <td>{property.development || 'N/A'}</td>
+                            <td>{property.pricePerSqft ? formatPrice(property.pricePerSqft) : 'N/A'}</td>
+                            <td>{property.subdivision || property.development || 'N/A'}</td>
                             {customFilters.yearBuilt !== undefined && <td>{property.yearBuilt || 'N/A'}</td>}
                           </tr>
                         ))}
@@ -463,10 +472,10 @@ const PropertyListing = ({
                             </div>
                             <div className={styles.mapPropertyContent}>
                               <div className={styles.mapPropertyPrice}>
-                                {property.price}
+                                {formatPrice(property.price)}
                               </div>
                               <div className={styles.mapPropertySpecs}>
-                                {property.beds} beds • {property.baths} baths • {property.sqft} Sq.Ft.
+                                {property.bedrooms || property.beds} beds • {property.bathrooms || property.baths} baths • {property.sqft} Sq.Ft.
                               </div>
                               <div className={styles.mapPropertyAddress}>
                                 {property.address}
