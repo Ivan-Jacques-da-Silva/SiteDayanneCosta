@@ -45,7 +45,7 @@ const NewDevelopments = () => {
     ano: '',
     min: '',
     yearBuilt: true,
-    categoryName: 'New Developments'
+    category: 'New Developments'
   };
 
   return (

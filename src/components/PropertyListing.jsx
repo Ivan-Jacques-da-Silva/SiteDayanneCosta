@@ -33,7 +33,7 @@ const PropertyListing = ({
 
       // Add filters to URL
       Object.entries(filters).forEach(([key, value]) => {
-        if (value && key !== 'yearBuilt' && key !== 'priceRange') {
+        if (value && value !== '' && key !== 'yearBuilt' && key !== 'priceRange') {
           if (Array.isArray(value)) {
             url += `&${key}=${encodeURIComponent(value.join(','))}`;
           } else {
@@ -50,14 +50,28 @@ const PropertyListing = ({
         url += `&maxPrice=${filters.priceRange[1]}`;
       }
 
+      console.log('Fetching from URL:', url);
       const response = await fetch(url);
+      
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      setProperties(data.properties || data);
-      setTotalPages(data.pagination?.totalPages || Math.ceil((data.pagination?.totalItems || data.length || 0) / itemsPerPage));
+      console.log('API Response:', data);
+      
+      // Handle different response structures
+      let propertiesData = [];
+      if (Array.isArray(data)) {
+        propertiesData = data;
+      } else if (data.properties && Array.isArray(data.properties)) {
+        propertiesData = data.properties;
+      } else if (data.data && Array.isArray(data.data)) {
+        propertiesData = data.data;
+      }
+      
+      setProperties(propertiesData);
+      setTotalPages(data.pagination?.totalPages || Math.ceil((data.pagination?.totalItems || propertiesData.length || 0) / itemsPerPage));
     } catch (error) {
       console.error('Error fetching properties:', error);
       setProperties([]);
@@ -277,18 +291,18 @@ const PropertyListing = ({
 
             <div className={styles.filterGroup}>
               <select 
-                name="categoryName" // Changed name to match the filter key used in fetchProperties
-                value={filters.categoryName || ''} 
-                onChange={handleCategoryChange} // Use the new handler for category
+                name="category" 
+                value={filters.category || filters.categoryName || ''} 
+                onChange={handleFilterChange}
                 className={styles.filterSelect}
               >
                 <option value="">All Categories</option>
-                <option value="newDevelopments">New Developments</option>
-                <option value="luxuryCondos">Luxury Condos</option>
-                <option value="singleFamily">Single Family Homes</option>
-                <option value="waterfront">Waterfront Properties</option>
-                <option value="golfCourse">Golf Course Properties</option>
-                <option value="privateExclusive">Private & Exclusive</option>
+                <option value="New Developments">New Developments</option>
+                <option value="Luxury Condos">Luxury Condos</option>
+                <option value="Single Family Homes">Single Family Homes</option>
+                <option value="Waterfront Properties">Waterfront Properties</option>
+                <option value="Golf Course Properties">Golf Course Properties</option>
+                <option value="Private & Exclusive">Private & Exclusive</option>
               </select>
             </div>
 
