@@ -1,0 +1,50 @@
+<li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
+                      <Link to="" className={`ip-menu-link ${styles.ipMenuLink}`}>Search properties</Link>
+                      <ul className={`ip-submenu ${styles.ipSubmenu}`}>
+                        <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                          <Link to="/new-developments/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                            New Developments
+                          </Link>
+                        </li>
+                        <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                          <Link to="/single-family-homes/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                            Single Family Homes
+                          </Link>
+                        </li>
+                        <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                          <Link to="/luxury-condos/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                            Luxury Condos
+                          </Link>
+                        </li>
+                        <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
+                          <Link to="/neighborhoods/" className={`ip-menu-link ${styles.ipMenuLink}`}>Neighborhoods</Link>
+                          <ul className={`ip-submenu ${styles.ipSubmenu}`}>
+                            <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                              <Link to="/brickell/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                                Brickell
+                              </Link>
+                            </li>
+                            <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                              <Link to="/edgewater/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                                Edgewater
+                              </Link>
+                            </li>
+                            <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                              <Link to="/coconut-grove/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                                Coconut Grove
+                              </Link>
+                            </li>
+                            <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                              <Link to="/the-roads/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                                The Roads
+                              </Link>
+                            </li>
+                            <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                              <Link to="/neighborhoods/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                                View All
+                              </Link>
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
