@@ -2,6 +2,14 @@ import React, { useState, useEffect } from 'react';
 import AdminLayout from '../components/AdminLayout';
 import styles from './AdminCondominios.module.css';
 
+// Define the base API URL (this could be imported from a config file)
+const API_URL = process.env.REACT_APP_API_URL || 'http://0.0.0.0:5000';
+
+// Helper function to build API URLs
+const buildApiUrl = (endpoint) => {
+  return `${API_URL}${endpoint}`;
+};
+
 const AdminCondominios = () => {
   const [condominios, setCondominios] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -111,7 +119,7 @@ const AdminCondominios = () => {
 
   const loadCategories = async () => {
     try {
-      const response = await fetch('http://0.0.0.0:5000/api/categories/all');
+      const response = await fetch(buildApiUrl('/api/categories/all'));
       if (response.ok) {
         const categoriesData = await response.json();
         setAllCategories(categoriesData);
@@ -128,7 +136,7 @@ const AdminCondominios = () => {
   const loadCondominios = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://0.0.0.0:5000/api/admin/properties', {
+      const response = await fetch(buildApiUrl('/api/admin/properties'), {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -249,10 +257,14 @@ const AdminCondominios = () => {
       });
 
       let response;
+      const url = editingCondominio 
+          ? buildApiUrl(`/api/admin/properties/${editingCondominio.id}`)
+          : buildApiUrl('/api/admin/properties');
+
       if (editingCondominio) {
         // Update existing property
         console.log('Updating condominio:', formData);
-        response = await fetch(`http://0.0.0.0:5000/api/admin/properties/${editingCondominio.id}`, {
+        response = await fetch(url, {
           method: 'PUT',
           headers: { 'Authorization': `Bearer ${token}` },
           body: formDataToSend
@@ -261,7 +273,7 @@ const AdminCondominios = () => {
       } else {
         // Create new property
         console.log('Creating condominio:', formData);
-        response = await fetch('http://0.0.0.0:5000/api/admin/properties', {
+        response = await fetch(url, {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${token}` },
           body: formDataToSend
@@ -276,7 +288,7 @@ const AdminCondominios = () => {
         // Create subcategory if provided and a main category is selected
         if (formData.subcategoryName && formData.mainCategory) {
           try {
-            await fetch('http://0.0.0.0:5000/api/categories/subcategory', {
+            await fetch(buildApiUrl('/api/categories/subcategory'), {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -298,7 +310,7 @@ const AdminCondominios = () => {
         // Associate property with selected main category
         if (formData.mainCategory) {
           try {
-            await fetch('http://0.0.0.0:5000/api/properties/category', {
+            await fetch(buildApiUrl('/api/properties/category'), {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -318,7 +330,7 @@ const AdminCondominios = () => {
         if (formData.subcategories && formData.subcategories.length > 0) {
           for (const subcategoryId of formData.subcategories) {
             try {
-              await fetch('http://0.0.0.0:5000/api/properties/category', { // Reusing category endpoint for subcategories
+              await fetch(buildApiUrl('/api/properties/category'), { // Reusing category endpoint for subcategories
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -397,7 +409,7 @@ const AdminCondominios = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://0.0.0.0:5000/api/categories/subcategory', {
+      const response = await fetch(buildApiUrl('/api/categories/subcategory'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -506,7 +518,7 @@ const AdminCondominios = () => {
       categoryId: condominio.categoryId || '', // Set categoryId if available
       subcategoryName: '' // Reset custom subcategory name on edit
     });
-    
+
     // Find and set the selected category based on fetched data
     if (condominio.categoryId) {
       const category = categories.find(cat => cat.id === condominio.categoryId);
@@ -514,7 +526,7 @@ const AdminCondominios = () => {
     } else {
       setSelectedCategory(null);
     }
-    
+
     setShowForm(true);
   };
 
@@ -522,7 +534,7 @@ const AdminCondominios = () => {
     if (window.confirm('Are you sure you want to delete this condominium?')) {
       try {
         const token = localStorage.getItem('token');
-        await fetch(`http://0.0.0.0:5000/api/admin/properties/${id}`, {
+        await fetch(buildApiUrl(`/api/admin/properties/${id}`), {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${token}` }
         });

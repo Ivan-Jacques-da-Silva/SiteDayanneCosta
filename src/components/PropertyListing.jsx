@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styles from "./PropertyListing.module.css";
+import { buildApiUrl } from "../config/api";
 
 const PropertyListing = ({
   apiEndpoint = "/api/properties",
@@ -29,7 +30,7 @@ const PropertyListing = ({
   const fetchProperties = async () => {
     try {
       setLoading(true);
-      let url = `http://0.0.0.0:5000${apiEndpoint}?page=${currentPage}&limit=${itemsPerPage}`;
+      let url = `${buildApiUrl(apiEndpoint)}?page=${currentPage}&limit=${itemsPerPage}`;
 
       // Add filters to URL
       Object.entries(filters).forEach(([key, value]) => {
