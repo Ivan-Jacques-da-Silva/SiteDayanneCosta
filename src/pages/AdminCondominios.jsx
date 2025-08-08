@@ -2,13 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AdminLayout from '../components/AdminLayout';
 import styles from './AdminCondominios.module.css';
 
-// Define the base API URL (this could be imported from a config file)
-const API_URL = process.env.REACT_APP_API_URL || 'http://0.0.0.0:5000';
-
-// Helper function to build API URLs
-const buildApiUrl = (endpoint) => {
-  return `${API_URL}${endpoint}`;
-};
+import { buildApiUrl } from '../config/api';
 
 const AdminCondominios = () => {
   const [condominios, setCondominios] = useState([]);

@@ -2,28 +2,32 @@
 const corsConfig = {
   // Endereços permitidos para desenvolvimento e produção
   allowedOrigins: [
-    // Desenvolvimento local (prioridade)
+    // VS Code / Desenvolvimento local (localhost)
     'http://localhost:3000',
     'http://localhost:5173',
+    'http://localhost:5174',
     'http://localhost:5000',
+    'http://localhost:8080',
     'http://127.0.0.1:3000',
     'http://127.0.0.1:5173',
+    'http://127.0.0.1:5174',
     'http://127.0.0.1:5000',
+    'http://127.0.0.1:8080',
+    
+    // Replit development (0.0.0.0)
     'http://0.0.0.0:3000',
     'http://0.0.0.0:5173',
+    'http://0.0.0.0:5174',
     'http://0.0.0.0:5000',
+    'http://0.0.0.0:8080',
     
-    // Replit development
+    // Replit production
     'https://*.replit.dev',
     'https://*.replit.co',
     
     // Produção
     'https://site.dayannecosta.com',
-    'https://www.dayannecosta.com',
-    
-    // Replit (caso precise usar)
-    'https://*.replit.dev',
-    'https://*.replit.co'
+    'https://www.dayannecosta.com'
   ],
 
   // Configurações do CORS

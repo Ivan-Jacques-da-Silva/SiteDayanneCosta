@@ -1,11 +1,22 @@
 
 // API Configuration
-const API_CONFIG = {
-  // Change this URL based on your environment
-  // Development: 'http://localhost:5000'
-  // Production: 'https://site.dayannecosta.com'
-  BASE_URL: 'http://0.0.0.0:5000',
+const getBaseUrl = () => {
+  // Check if running on Replit
+  if (window.location.hostname.includes('replit.dev') || window.location.hostname.includes('replit.co')) {
+    return 'http://0.0.0.0:5000';
+  }
+  
+  // Check if in production
+  if (window.location.hostname === 'site.dayannecosta.com' || window.location.hostname === 'www.dayannecosta.com') {
+    return 'https://site.dayannecosta.com';
+  }
+  
+  // Default to localhost for local development (VS Code)
+  return 'http://localhost:5000';
+};
 
+const API_CONFIG = {
+  BASE_URL: getBaseUrl(),
   
   // API endpoints
   ENDPOINTS: {
