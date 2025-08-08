@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { propertyExampleData, convertToApiFormat } from '../data/propertyExample';
+import { buildApiUrl } from '../config/api';
 import styles from './AdminPropertyForm.module.css';
 
 const AdminPropertyForm = () => {
@@ -24,7 +25,7 @@ const AdminPropertyForm = () => {
 
       const apiData = convertToApiFormat(formData, userData.id);
 
-      const response = await fetch('http://0.0.0.0:5000/api/properties', {
+      const response = await fetch(buildApiUrl('/api/properties'), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

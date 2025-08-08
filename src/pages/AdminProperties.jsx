@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { buildApiUrl } from '../config/api';
 import styles from './AdminProperties.module.css';
 
 const AdminProperties = () => {
@@ -46,7 +47,7 @@ const AdminProperties = () => {
         ...(filter && { status: filter })
       });
 
-      const response = await fetch(`http://0.0.0.0:5000/api/admin/properties?${queryParams}`, {
+      const response = await fetch(buildApiUrl(`/api/admin/properties?${queryParams}`), {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -72,7 +73,7 @@ const AdminProperties = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://0.0.0.0:5000/api/admin/properties/${propertyId}`, {
+      const response = await fetch(buildApiUrl(`/api/admin/properties/${propertyId}`), {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

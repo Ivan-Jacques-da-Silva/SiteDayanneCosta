@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AdminLayout from '../components/AdminLayout';
+import { buildApiUrl } from '../config/api';
 import styles from './AdminUsuarios.module.css';
 
 const AdminUsuarios = () => {
@@ -30,7 +31,7 @@ const AdminUsuarios = () => {
         ...(filter && { role: filter })
       });
 
-      const response = await fetch(`http://0.0.0.0:5000/api/admin/users?${params}`, {
+      const response = await fetch(buildApiUrl(`/api/admin/users?${params}`), {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -84,7 +85,7 @@ const AdminUsuarios = () => {
 
       if (editingUser) {
         // Update existing user
-        const response = await fetch(`http://0.0.0.0:5000/api/admin/users/${editingUser.id}`, {
+        const response = await fetch(buildApiUrl(`/api/admin/users/${editingUser.id}`), {
           method: 'PUT',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -94,7 +95,7 @@ const AdminUsuarios = () => {
         });
       } else {
         // Create new user
-        const response = await fetch('http://0.0.0.0:5000/api/users/register', {
+        const response = await fetch(buildApiUrl('/api/users/register'), {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -137,7 +138,7 @@ const AdminUsuarios = () => {
     if (window.confirm('Are you sure you want to delete this user?')) {
       try {
         const token = localStorage.getItem('token');
-        await fetch(`http://0.0.0.0:5000/api/admin/users/${id}`, {
+        await fetch(buildApiUrl(`/api/admin/users/${id}`), {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${token}`

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { buildApiUrl } from '../config/api';
 import styles from './Login.module.css';
 
 const Login = () => {
@@ -26,7 +27,7 @@ const Login = () => {
     e.preventDefault();
     
     try {
-      const response = await fetch('http://localhost:5000/api/users/login', {
+      const response = await fetch(buildApiUrl('/api/users/login'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

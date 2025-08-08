@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { buildApiUrl } from '../config/api';
 import styles from './Register.module.css';
 
 const Register = () => {
@@ -78,7 +79,7 @@ const Register = () => {
     
     if (Object.keys(newErrors).length === 0) {
       try {
-        const response = await fetch('http://0.0.0.0:5000/api/users/register', {
+        const response = await fetch(buildApiUrl('/api/users/register'), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

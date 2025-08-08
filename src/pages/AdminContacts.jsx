@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { buildApiUrl } from '../config/api';
 import styles from './AdminContacts.module.css';
 
 const AdminContacts = () => {
@@ -32,7 +33,7 @@ const AdminContacts = () => {
         ...(statusFilter && { status: statusFilter })
       });
 
-      const response = await fetch(`/api/admin/contacts?${params}`, {
+      const response = await fetch(buildApiUrl(`/api/admin/contacts?${params}`), {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -53,7 +54,7 @@ const AdminContacts = () => {
   const updateContactStatus = async (contactId, newStatus) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`/api/admin/contacts/${contactId}/status`, {
+      const response = await fetch(buildApiUrl(`/api/admin/contacts/${contactId}/status`), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
