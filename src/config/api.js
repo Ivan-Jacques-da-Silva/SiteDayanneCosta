@@ -2,9 +2,11 @@
 // API Configuration
 const API_CONFIG = {
   // Change this URL based on your environment
-  // Development: 'http://0.0.0.0:5000'
+  // Development: 'http://localhost:5000'
   // Production: 'https://site.dayannecosta.com'
-  BASE_URL: 'http://0.0.0.0:5000',
+  // BASE_URL: 'http://0.0.0.0:5000',
+  BASE_URL: 'http://localhost:5000',
+
   
   // API endpoints
   ENDPOINTS: {
