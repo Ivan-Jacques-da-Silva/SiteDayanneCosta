@@ -101,7 +101,7 @@ const AdminProperties = () => {
     // If it's already a full URL or starts with http, return as is
     if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('//')) return url;
     // If it starts with /uploads, prepend the backend URL
-    if (url.startsWith('/uploads')) {
+    if (url.startsWith('uploads')) {
       return `http://localhost:5000${url}`;
     }
     // Otherwise, assume it's a relative path and prepend the backend URL with '/properties/'
@@ -597,7 +597,7 @@ const PropertyEditModal = ({ property, onClose, onSave, showNotification }) => {
     // If it's already a full URL or starts with http, return as is
     if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('//')) return url;
     // If it starts with /uploads, prepend the backend URL
-    if (url.startsWith('/uploads')) {
+    if (url.startsWith('uploads')) {
       return `http://localhost:5000${url}`;
     }
     // Otherwise, assume it's a relative path and prepend the backend URL with '/properties/'
