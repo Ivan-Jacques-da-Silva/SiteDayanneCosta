@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MdEmail, MdPhone } from 'react-icons/md';
@@ -11,7 +10,9 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState(null);
-  const [currentLanguage, setCurrentLanguage] = useState('EN');
+  const [currentLanguage, setCurrentLanguage] = useState(() => {
+    return localStorage.getItem('selectedLanguage') || 'EN';
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,6 +22,16 @@ const Header = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    // Restaurar idioma salvo ao carregar a página
+    const savedLanguage = localStorage.getItem('selectedLanguage');
+    if (savedLanguage && savedLanguage !== 'EN') {
+      setTimeout(() => {
+        translatePage(getLanguageCode(savedLanguage), savedLanguage);
+      }, 2000); // Aguardar o Google Translate carregar
+    }
   }, []);
 
   const toggleMobileMenu = () => {
@@ -36,68 +47,81 @@ const Header = () => {
     setOpenSubmenu(openSubmenu === menuName ? null : menuName);
   };
 
+  const getLanguageCode = (displayName) => {
+    switch (displayName) {
+      case 'BR': return 'pt';
+      case 'ES': return 'es';
+      case 'EN': return 'en';
+      default: return 'en';
+    }
+  };
+
   const translatePage = (language, displayName) => {
     setCurrentLanguage(displayName);
-    
-    // Get the Google Translate element
-    const googleTranslateElement = document.querySelector('.goog-te-combo');
-    
-    if (googleTranslateElement) {
-      googleTranslateElement.value = language;
-      googleTranslateElement.dispatchEvent(new Event('change'));
-    } else {
-      // Fallback: add Google Translate element if not present
-      const translateDiv = document.createElement('div');
-      translateDiv.id = 'google_translate_element';
-      translateDiv.style.display = 'none';
-      document.body.appendChild(translateDiv);
-      
-      // Initialize Google Translate
-      if (window.google && window.google.translate) {
-        new window.google.translate.TranslateElement({
-          pageLanguage: 'en',
-          includedLanguages: 'en,pt,es',
-          layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
-          autoDisplay: false
-        }, 'google_translate_element');
-        
-        // Try again after initialization
-        setTimeout(() => {
-          const newGoogleTranslateElement = document.querySelector('.goog-te-combo');
-          if (newGoogleTranslateElement) {
-            newGoogleTranslateElement.value = language;
-            newGoogleTranslateElement.dispatchEvent(new Event('change'));
-          }
-        }, 1000);
+    localStorage.setItem('selectedLanguage', displayName);
+
+    // Função para executar a tradução
+    const executeTranslation = () => {
+      const googleTranslateElement = document.querySelector('.goog-te-combo');
+
+      if (googleTranslateElement) {
+        if (language === 'en') {
+          // Para voltar ao inglês, selecionar a primeira opção (Original)
+          googleTranslateElement.selectedIndex = 0;
+        } else {
+          googleTranslateElement.value = language;
+        }
+
+        // Disparar evento de mudança
+        const event = new Event('change', { bubbles: true });
+        googleTranslateElement.dispatchEvent(event);
       }
+    };
+
+    // Verificar se o Google Translate já está carregado
+    if (document.querySelector('.goog-te-combo')) {
+      executeTranslation();
+    } else {
+      // Aguardar o Google Translate carregar
+      const checkGoogleTranslate = setInterval(() => {
+        if (document.querySelector('.goog-te-combo')) {
+          clearInterval(checkGoogleTranslate);
+          executeTranslation();
+        }
+      }, 100);
+
+      // Timeout de segurança
+      setTimeout(() => {
+        clearInterval(checkGoogleTranslate);
+      }, 10000);
     }
   };
 
   return (
     <>
       <div className={`ip ip-theme-compass ${styles.ip}`} id="ip">
-        <header 
-          className={`ip-header ibc-t-design-1 js-header ${styles.ipHeader} ${scrolled ? styles.activeFixed : ''}`} 
-          id="ip-header" 
+        <header
+          className={`ip-header ibc-t-design-1 js-header ${styles.ipHeader} ${scrolled ? styles.activeFixed : ''}`}
+          id="ip-header"
           role="banner"
         >
           <div className={`ip-header-wrap ${styles.ipHeaderWrap}`}>
-            
+
             {/* Header Bottom */}
             <div className={`ip-header-bottom ${styles.ipHeaderBottom}`}>
               {/* Left Column - Logos */}
               <div className={`ip-header-left ${styles.ipHeaderLeft}`}>
                 <Link to="/" className={`ip-header-logo ${styles.ipHeaderLogo}`} title="Home">
                   <div className={`ip-header-logo-wrapper ${styles.ipHeaderLogoWrapper}`}>
-                    <img 
-                      alt="" 
-                      className={`ip-header-logo-image ip-h-auto js-header-logo-image ${styles.ipHeaderLogoImage}`} 
+                    <img
+                      alt=""
+                      className={`ip-header-logo-image ip-h-auto js-header-logo-image ${styles.ipHeaderLogoImage}`}
                       src={scrolled ? logoDark : logoLight}
                     />
                   </div>
-                  <img 
-                    alt="" 
-                    className={`ip-header-logo-broker js-header-logo-image ${styles.ipHeaderLogoBroker} ${scrolled ? styles.logoBlack : ''}`} 
+                  <img
+                    alt=""
+                    className={`ip-header-logo-broker js-header-logo-image ${styles.ipHeaderLogoBroker} ${scrolled ? styles.logoBlack : ''}`}
                     src={compassImg}
                   />
                 </Link>
@@ -109,32 +133,32 @@ const Header = () => {
                 <div className={`ip-header-top-row ${styles.ipHeaderTopRow}`}>
                   {/* Social Links */}
                   <div className={`ip-social ip-d-flex ibc-u-align-items-center ibc-u-justify-content-center ip-mx-0 ${styles.ipSocial}`}>
-                    <a 
-                      aria-label="Follow us on Youtube" 
-                      className={`ip-social-link ip-youtube idx-icon-youtube ibc-u-position-relative ${styles.ipSocialLink}`} 
-                      href="https://www.youtube.com/@dayannecosta1958" 
-                      rel="nofollow noreferrer" 
-                      target="_blank" 
+                    <a
+                      aria-label="Follow us on Youtube"
+                      className={`ip-social-link ip-youtube idx-icon-youtube ibc-u-position-relative ${styles.ipSocialLink}`}
+                      href="https://www.youtube.com/@dayannecosta1958"
+                      rel="nofollow noreferrer"
+                      target="_blank"
                       title="Youtube"
                     >
                       <i className="fab fa-youtube"></i>
                     </a>
-                    <a 
-                      aria-label="Follow us on Instagram" 
-                      className={`ip-social-link ip-instagram idx-icon-instagram ibc-u-position-relative ${styles.ipSocialLink}`} 
-                      href="https://www.instagram.com/dayanne_vc?igsh=MXVuOG5heDdrbno1bw==" 
-                      rel="nofollow noreferrer" 
-                      target="_blank" 
+                    <a
+                      aria-label="Follow us on Instagram"
+                      className={`ip-social-link ip-instagram idx-icon-instagram ibc-u-position-relative ${styles.ipSocialLink}`}
+                      href="https://www.instagram.com/dayanne_vc?igsh=MXVuOG5heDdrbno1bw=="
+                      rel="nofollow noreferrer"
+                      target="_blank"
                       title="Instagram"
                     >
                       <i className="fab fa-instagram"></i>
                     </a>
-                    <a 
-                      aria-label="Follow us on Linked In" 
-                      className={`ip-social-link ip-linkedin idx-icon-linkedin2 ibc-u-position-relative ${styles.ipSocialLink}`} 
-                      href="http://www.linkedin.com/in/dayanne-costa-66451162" 
-                      rel="nofollow noreferrer" 
-                      target="_blank" 
+                    <a
+                      aria-label="Follow us on Linked In"
+                      className={`ip-social-link ip-linkedin idx-icon-linkedin2 ibc-u-position-relative ${styles.ipSocialLink}`}
+                      href="http://www.linkedin.com/in/dayanne-costa-66451162"
+                      rel="nofollow noreferrer"
+                      target="_blank"
                       title="Linked In"
                     >
                       <i className="fab fa-linkedin"></i>
@@ -150,24 +174,24 @@ const Header = () => {
                       <span className={`ibc-c-language-switcher-label ip-mr-1 notranslate js-language-switcher-label ${styles.languageLabel}`}>{currentLanguage}</span>
                     </button>
                     <div className={`ibc-c-language-switcher-select ip-position-absolute js-language-switcher-select ${styles.languageSelect}`}>
-                      <button 
-                        className={`ibc-c-language-switcher-option ip-position-relative ip-d-flex ibc-u-align-items-center ibc-u-justify-content-center ip-w-full body-xs ip-text-uppercase notranslate js-language-switcher-option ${styles.languageOption} ${currentLanguage === 'EN' ? styles.active : ''}`} 
+                      <button
+                        className={`ibc-c-language-switcher-option ip-position-relative ip-d-flex ibc-u-align-items-center ibc-u-justify-content-center ip-w-full body-xs ip-text-uppercase notranslate js-language-switcher-option ${styles.languageOption} ${currentLanguage === 'EN' ? styles.active : ''}`}
                         onClick={() => translatePage('en', 'EN')}
                         style={{ background: 'none', border: 'none', cursor: 'pointer' }}
                       >
                         <span className="ip-d-inline-block ip-text-center">EN</span>
                         <span className={`ibc-c-language-switcher-flag ip-d-inline-block ip-my-0 ip-mx-1 flag-english ${styles.flagIcon}`}>🇺🇸</span>
                       </button>
-                      <button 
-                        className={`ibc-c-language-switcher-option ip-position-relative ip-d-flex ibc-u-align-items-center ibc-u-justify-content-center ip-w-full body-xs ip-text-uppercase notranslate js-language-switcher-option ${styles.languageOption} ${currentLanguage === 'BR' ? styles.active : ''}`} 
+                      <button
+                        className={`ibc-c-language-switcher-option ip-position-relative ip-d-flex ibc-u-align-items-center ibc-u-justify-content-center ip-w-full body-xs ip-text-uppercase notranslate js-language-switcher-option ${styles.languageOption} ${currentLanguage === 'BR' ? styles.active : ''}`}
                         onClick={() => translatePage('pt', 'BR')}
                         style={{ background: 'none', border: 'none', cursor: 'pointer' }}
                       >
                         <span className="ip-d-inline-block ip-text-center">BR</span>
                         <span className={`ibc-c-language-switcher-flag ip-d-inline-block ip-my-0 ip-mx-1 flag-portuguese ${styles.flagIcon}`}>🇧🇷</span>
                       </button>
-                      <button 
-                        className={`ibc-c-language-switcher-option ip-position-relative ip-d-flex ibc-u-align-items-center ibc-u-justify-content-center ip-w-full body-xs ip-text-uppercase notranslate js-language-switcher-option ${styles.languageOption} ${currentLanguage === 'ES' ? styles.active : ''}`} 
+                      <button
+                        className={`ibc-c-language-switcher-option ip-position-relative ip-d-flex ibc-u-align-items-center ibc-u-justify-content-center ip-w-full body-xs ip-text-uppercase notranslate js-language-switcher-option ${styles.languageOption} ${currentLanguage === 'ES' ? styles.active : ''}`}
                         onClick={() => translatePage('es', 'ES')}
                         style={{ background: 'none', border: 'none', cursor: 'pointer' }}
                       >
@@ -180,17 +204,17 @@ const Header = () => {
                   {/* Contact Section */}
                   <div className={`ip-contact ${styles.ipContact}`}>
                     <div className={`ip-contact-wrap ibc-u-d-flex ibc-u-align-items-center ${styles.ipContactWrap}`}>
-                      <a 
-                        className={`ip-contact-item ip-contact-email ibc-u-position-relative ip-d-flex ibc-u-align-items-center ${styles.ipContactItem} ${styles.ipContactEmail}`} 
-                        href="mailto:dayannecosta@compass.com" 
+                      <a
+                        className={`ip-contact-item ip-contact-email ibc-u-position-relative ip-d-flex ibc-u-align-items-center ${styles.ipContactItem} ${styles.ipContactEmail}`}
+                        href="mailto:dayannecosta@compass.com"
                         title="dayannecosta@compass.com"
                       >
                         <MdEmail className={`ip-contact-icon ${styles.ipContactIcon}`} />
                         <span className={`ip-contact-value ip-ml-2 ${styles.ipContactValue}`}>dayannecosta@compass.com</span>
                       </a>
-                      <a 
-                        className={`ip-contact-item ip-contact-phone ibc-u-position-relative ip-d-flex ibc-u-align-items-center ${styles.ipContactItem} ${styles.ipContactPhone}`} 
-                        href="tel:+1 (646) 598-3588" 
+                      <a
+                        className={`ip-contact-item ip-contact-phone ibc-u-position-relative ip-d-flex ibc-u-align-items-center ${styles.ipContactItem} ${styles.ipContactPhone}`}
+                        href="tel:+1 (646) 598-3588"
                         title="+1 (646) 598-3588"
                       >
                         <MdPhone className={`ip-contact-icon ${styles.ipContactIcon}`} />
@@ -229,7 +253,7 @@ const Header = () => {
                         Home
                       </Link>
                     </li>
-                    
+
                     <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
                       <Link to="" className={`ip-menu-link ${styles.ipMenuLink}`}>Search properties</Link>
                       <ul className={`ip-submenu ${styles.ipSubmenu}`}>
@@ -327,10 +351,10 @@ const Header = () => {
                   </ul>
                 </nav>
 
-                <button 
+                <button
                   aria-expanded={showMobileMenu}
-                  aria-label="Show main menu" 
-                  className={`ip-menu-button ${styles.ipMenuButton}`} 
+                  aria-label="Show main menu"
+                  className={`ip-menu-button ${styles.ipMenuButton}`}
                   id="show-mobile-menu"
                   onClick={toggleMobileMenu}
                 >
@@ -351,9 +375,9 @@ const Header = () => {
 
         {/* Mobile Menu */}
         <div className={`ip-mobile-menu-wrap ${styles.ipMobileMenuWrap} ${showMobileMenu ? styles.show : ''}`}>
-          <button 
+          <button
             aria-expanded={showMobileMenu}
-            aria-label="Close main menu" 
+            aria-label="Close main menu"
             className={`ip-menu-button ip-menu-button-close js-toggle-menu ${styles.ipMenuButton} ${styles.ipMenuButtonClose}`}
             onClick={toggleMobileMenu}
           >
@@ -373,7 +397,7 @@ const Header = () => {
 
               <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
-                  <button 
+                  <button
                     className={`ip-menu-link ${styles.ipMenuLink}`}
                     style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer' }}
                     onClick={() => toggleSubmenu('search')}
@@ -400,7 +424,7 @@ const Header = () => {
                   </li>
                   <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
                     <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
-                      <button 
+                      <button
                         className={`ip-menu-link ${styles.ipMenuLink}`}
                         style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer' }}
                         onClick={() => toggleSubmenu('neighborhoods-mobile')}
@@ -450,7 +474,7 @@ const Header = () => {
 
               <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
-                  <button 
+                  <button
                     className={`ip-menu-link ${styles.ipMenuLink}`}
                     style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer' }}
                     onClick={() => toggleSubmenu('advantages')}
@@ -475,7 +499,7 @@ const Header = () => {
 
               <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
-                  <button 
+                  <button
                     className={`ip-menu-link ${styles.ipMenuLink}`}
                     style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer' }}
                     onClick={() => toggleSubmenu('about')}
@@ -500,7 +524,7 @@ const Header = () => {
 
               <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
-                  <button 
+                  <button
                     className={`ip-menu-link ${styles.ipMenuLink}`}
                     style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer' }}
                     onClick={() => toggleSubmenu('neighborhoods')}
@@ -555,34 +579,34 @@ const Header = () => {
               <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
                   <div className={`ip-menu-link ${styles.ipMenuLink}`} style={{ display: 'flex', alignItems: 'center', gap: '1rem', justifyContent: 'center', padding: '1rem' }}>
-                    <a 
-                      aria-label="Follow us on Youtube" 
-                      className={`ip-social-link ${styles.ipSocialLink}`} 
-                      href="https://www.youtube.com/@dayannecosta1958" 
-                      rel="nofollow noreferrer" 
-                      target="_blank" 
+                    <a
+                      aria-label="Follow us on Youtube"
+                      className={`ip-social-link ${styles.ipSocialLink}`}
+                      href="https://www.youtube.com/@dayannecosta1958"
+                      rel="nofollow noreferrer"
+                      target="_blank"
                       title="Youtube"
                       style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', backgroundColor: '#000', color: '#fff', borderRadius: '50%', fontSize: '18px' }}
                     >
                       <i className="fab fa-youtube"></i>
                     </a>
-                    <a 
-                      aria-label="Follow us on Instagram" 
-                      className={`ip-social-link ${styles.ipSocialLink}`} 
-                      href="https://www.instagram.com/dayanne_vc?igsh=MXVuOG5heDdrbno1bw==" 
-                      rel="nofollow noreferrer" 
-                      target="_blank" 
+                    <a
+                      aria-label="Follow us on Instagram"
+                      className={`ip-social-link ${styles.ipSocialLink}`}
+                      href="https://www.instagram.com/dayanne_vc?igsh=MXVuOG5heDdrbno1bw=="
+                      rel="nofollow noreferrer"
+                      target="_blank"
                       title="Instagram"
                       style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', backgroundColor: '#000', color: '#fff', borderRadius: '50%', fontSize: '18px' }}
                     >
                       <i className="fab fa-instagram"></i>
                     </a>
-                    <a 
-                      aria-label="Follow us on Linked In" 
-                      className={`ip-social-link ${styles.ipSocialLink}`} 
-                      href="http://www.linkedin.com/in/dayanne-costa-66451162" 
-                      rel="nofollow noreferrer" 
-                      target="_blank" 
+                    <a
+                      aria-label="Follow us on Linked In"
+                      className={`ip-social-link ${styles.ipSocialLink}`}
+                      href="http://www.linkedin.com/in/dayanne-costa-66451162"
+                      rel="nofollow noreferrer"
+                      target="_blank"
                       title="Linked In"
                       style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', backgroundColor: '#000', color: '#fff', borderRadius: '50%', fontSize: '18px' }}
                     >
@@ -595,9 +619,9 @@ const Header = () => {
               {/* Email Contact */}
               <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
-                  <a 
-                    className={`ip-menu-link ${styles.ipMenuLink}`} 
-                    href="mailto:dayannecosta@compass.com" 
+                  <a
+                    className={`ip-menu-link ${styles.ipMenuLink}`}
+                    href="mailto:dayannecosta@compass.com"
                     title="dayannecosta@compass.com"
                     style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}
                   >
@@ -610,9 +634,9 @@ const Header = () => {
               {/* Phone Contact */}
               <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
-                  <a 
-                    className={`ip-menu-link ${styles.ipMenuLink}`} 
-                    href="tel:+1 (646) 598-3588" 
+                  <a
+                    className={`ip-menu-link ${styles.ipMenuLink}`}
+                    href="tel:+1 (646) 598-3588"
                     title="+1 (646) 598-3588"
                     style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}
                   >
@@ -655,7 +679,7 @@ const Header = () => {
               {/* Language Switcher */}
               <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
-                  <button 
+                  <button
                     className={`ip-menu-link ${styles.ipMenuLink}`}
                     style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer' }}
                     onClick={() => toggleSubmenu('language')}
@@ -669,8 +693,8 @@ const Header = () => {
                 </div>
                 <ul className={`ip-submenu js-submenu ${styles.ipSubmenu} ${openSubmenu === 'language' ? styles.open : ''}`}>
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                    <button 
-                      className={`ip-menu-link ${styles.ipMenuLink}`} 
+                    <button
+                      className={`ip-menu-link ${styles.ipMenuLink} ${currentLanguage === 'EN' ? styles.active : ''}`}
                       onClick={() => {
                         translatePage('en', 'EN');
                         handleNavClick();
@@ -682,8 +706,8 @@ const Header = () => {
                     </button>
                   </li>
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                    <button 
-                      className={`ip-menu-link ${styles.ipMenuLink}`} 
+                    <button
+                      className={`ip-menu-link ${styles.ipMenuLink} ${currentLanguage === 'BR' ? styles.active : ''}`}
                       onClick={() => {
                         translatePage('pt', 'BR');
                         handleNavClick();
@@ -695,8 +719,8 @@ const Header = () => {
                     </button>
                   </li>
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                    <button 
-                      className={`ip-menu-link ${styles.ipMenuLink}`} 
+                    <button
+                      className={`ip-menu-link ${styles.ipMenuLink} ${currentLanguage === 'ES' ? styles.active : ''}`}
                       onClick={() => {
                         translatePage('es', 'ES');
                         handleNavClick();

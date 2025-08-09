@@ -3,9 +3,44 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { PrismaClient } = require('@prisma/client');
 const { authenticateToken, requireAdmin } = require('../middleware/auth');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
 const router = express.Router();
 const prisma = new PrismaClient();
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadPath = 'Backend/uploads/properties/';
+    // Create directory if it doesn't exist
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+    cb(null, uploadPath);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024 // 10MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only JPEG, PNG and WebP images are allowed'), false);
+    }
+  }
+});
+
 
 // Aplicar middlewares de autenticação e admin a todas as rotas
 router.use(authenticateToken);
@@ -150,20 +185,22 @@ router.get('/users', async (req, res) => {
 // GET /api/admin/properties - Get all properties with pagination
 router.get('/properties', async (req, res) => {
   try {
-    const { page = 1, limit = 10, status } = req.query;
+    const { page = 1, limit = 12 } = req.query; // Changed default limit to 12
     const skip = (parseInt(page) - 1) * parseInt(limit);
-
-    const where = status ? { status } : {};
 
     const [properties, total] = await Promise.all([
       prisma.property.findMany({
-        where,
         include: {
-          user: {
-            select: { name: true, email: true }
-          },
           images: {
-            select: { url: true, isPrimary: true }
+            select: { url: true, isPrimary: true },
+            orderBy: { order: 'asc' }
+          },
+          categories: {
+            include: {
+              category: {
+                select: { name: true, id: true }
+              }
+            }
           },
           _count: {
             select: {
@@ -175,7 +212,7 @@ router.get('/properties', async (req, res) => {
         skip,
         take: parseInt(limit)
       }),
-      prisma.property.count({ where })
+      prisma.property.count()
     ]);
 
     res.json({
@@ -194,7 +231,7 @@ router.get('/properties', async (req, res) => {
 });
 
 // POST /api/admin/properties - Create new property
-router.post('/properties', async (req, res) => {
+router.post('/properties', upload.fields([{ name: 'primaryImage', maxCount: 1 }, { name: 'galleryImages', maxCount: 10 }]), async (req, res) => {
   try {
     const {
       mlsId,
@@ -290,11 +327,22 @@ router.post('/properties', async (req, res) => {
         newConstruction: newConstruction === 'true' || newConstruction === true,
         petFriendly: petFriendly === 'true' || petFriendly === true,
         userId: userId || req.user.userId,
-        country: 'USA'
+        country: 'USA',
+        category: updateData.category || null,
+        neighborhood: updateData.neighborhood || null,
+        images: {
+          create: [
+            ...(req.files.primaryImage ? [{ url: req.files.primaryImage[0].path, isPrimary: true, order: 0 }] : []),
+            ...(req.files.galleryImages ? req.files.galleryImages.map((file, index) => ({ url: file.path, isPrimary: false, order: index + 1 })) : [])
+          ]
+        }
       },
       include: {
         user: {
           select: { name: true, email: true }
+        },
+        images: {
+          orderBy: { order: 'asc' }
         }
       }
     });
@@ -302,15 +350,49 @@ router.post('/properties', async (req, res) => {
     res.status(201).json(property);
   } catch (error) {
     console.error('Error creating property:', error);
-    res.status(500).json({ error: 'Failed to create property' });
+    res.status(500).json({ error: 'Failed to create property', details: error.message });
   }
 });
 
 // PUT /api/admin/properties/:id - Update property
-router.put('/properties/:id', async (req, res) => {
+router.put('/properties/:id', upload.fields([{ name: 'primaryImage', maxCount: 1 }, { name: 'galleryImages', maxCount: 10 }]), async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = { ...req.body };
+    const existingProperty = await prisma.property.findUnique({ where: { id }, include: { images: true } });
+
+    // Handle image updates
+    const newImages = [];
+    if (req.files.primaryImage && req.files.primaryImage.length > 0) {
+      const primaryImage = req.files.primaryImage[0];
+      const existingPrimaryImage = existingProperty.images.find(img => img.isPrimary);
+      if (existingPrimaryImage) {
+        // Delete old primary image file
+        fs.unlinkSync(existingPrimaryImage.url);
+        // Update existing primary image record
+        await prisma.image.update({
+          where: { id: existingPrimaryImage.id },
+          data: { url: primaryImage.path, order: 0 }
+        });
+      } else {
+        // Add new primary image record
+        newImages.push({ url: primaryImage.path, isPrimary: true, order: 0 });
+      }
+    }
+
+    if (req.files.galleryImages && req.files.galleryImages.length > 0) {
+      req.files.galleryImages.forEach((file, index) => {
+        newImages.push({ url: file.path, isPrimary: false, order: index + 1 });
+      });
+    }
+
+    if (newImages.length > 0) {
+      updateData.images = {
+        create: newImages,
+        // Optionally, handle deletion of old gallery images if needed
+        // For now, we just add new ones and ensure order is maintained
+      };
+    }
 
     // Convert numeric fields
     if (updateData.price) updateData.price = parseFloat(updateData.price);
@@ -340,9 +422,13 @@ router.put('/properties/:id', async (req, res) => {
     // Convert date fields
     if (updateData.dateListed) updateData.listingDate = new Date(updateData.dateListed);
 
-    // Remove fields that don't exist in the database schema
+    // Remove fields that don't exist in the database schema or are handled separately
     delete updateData.halfBathrooms;
     delete updateData.dateListed;
+    delete updateData.primaryImage;
+    delete updateData.galleryImages;
+    delete updateData.userId; // Assuming userId is not updatable via this route or handled differently
+
 
     const property = await prisma.property.update({
       where: { id },
@@ -350,6 +436,9 @@ router.put('/properties/:id', async (req, res) => {
       include: {
         user: {
           select: { name: true, email: true }
+        },
+        images: {
+          orderBy: { order: 'asc' }
         }
       }
     });
@@ -357,7 +446,7 @@ router.put('/properties/:id', async (req, res) => {
     res.json(property);
   } catch (error) {
     console.error('Error updating property:', error);
-    res.status(400).json({ error: 'Failed to update property' });
+    res.status(400).json({ error: 'Failed to update property', details: error.message });
   }
 });
 
@@ -366,6 +455,25 @@ router.delete('/properties/:id', async (req, res) => {
   try {
     const { id } = req.params;
 
+    // Find the property to get its images
+    const property = await prisma.property.findUnique({
+      where: { id },
+      include: { images: true }
+    });
+
+    if (!property) {
+      return res.status(404).json({ error: 'Property not found' });
+    }
+
+    // Delete associated image files from the server
+    for (const image of property.images) {
+      const imagePath = path.join(__dirname, '..', '..', image.url); // Adjust path as necessary
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+    }
+
+    // Delete the property and its associated images from the database
     await prisma.property.delete({
       where: { id }
     });
@@ -373,7 +481,7 @@ router.delete('/properties/:id', async (req, res) => {
     res.json({ message: 'Property deleted successfully' });
   } catch (error) {
     console.error('Error deleting property:', error);
-    res.status(400).json({ error: 'Failed to delete property' });
+    res.status(400).json({ error: 'Failed to delete property', details: error.message });
   }
 });
 

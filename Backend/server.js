@@ -56,8 +56,8 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('combined'));
 }
 
-// Serve static files
-app.use('/uploads', express.static('uploads'));
+// Static files - serve uploaded images
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Serve frontend static files
 app.use(express.static('../dist'));

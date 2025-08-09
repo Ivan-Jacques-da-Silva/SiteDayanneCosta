@@ -192,9 +192,116 @@
   background: #fef2f2;
 }
 
+.actionButtons {
+  display: flex;
+  gap: 4px;
+}
+
 .cardContent {
   padding-top: 16px;
   border-top: 1px solid #f3f4f6;
+}
+
+.propertyType {
+  color: #6b7280;
+  font-size: 12px;
+  margin: 4px 0;
+  font-weight: 500;
+}
+
+.propertyDetails {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.propertyDetails span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.description {
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+
+.features {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.feature {
+  background: #eff6ff;
+  color: #1e40af;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.categories {
+  margin-bottom: 12px;
+}
+
+.categories strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #374151;
+  font-size: 14px;
+}
+
+.categoryTag {
+  background: #f3f4f6;
+  color: #4b5563;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  margin-right: 8px;
+  margin-bottom: 4px;
+  display: inline-block;
+}
+
+.imageCount {
+  color: #6b7280;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.cardMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid #f3f4f6;
+  padding-top: 8px;
+  margin-top: 12px;
+}
+
+.cardMeta small {
+  color: #9ca3af;
+  font-size: 11px;
+}
+
+.emptyIcon {
+  font-size: 3rem;
+  color: #d1d5db;
+  margin-bottom: 16px;
+}
+
+.emptyState h3 {
+  color: #374151;
+  font-size: 1.25rem;
+  margin-bottom: 8px;
 }
 
 .propertyDetails {
