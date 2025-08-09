@@ -1,0 +1,44 @@
+GET //uploads/properties/primaryImage-1754776057799-799233709.jpeg 404 1.712 ms - 244
+GET //uploads/properties/primaryImage-1754774018145-144404322.jpeg 404 2.342 ms - 244
+Error: ENOENT: no such file or directory, stat 'C:\Users\Notebook\Downloads\SiteDayanneCosta\dist\index.html'
+Error: ENOENT: no such file or directory, stat 'C:\Users\Notebook\Downloads\SiteDayanneCosta\dist\index.html'
+GET //src/assets/img/testesImagens.jpeg 404 3.647 ms - 244
+Error: ENOENT: no such file or directory, stat 'C:\Users\Notebook\Downloads\SiteDayanneCosta\dist\index.html'
+GET //uploads/properties/primaryImage-1754776057799-799233709.jpeg 404 1.246 ms - 244
+Error: ENOENT: no such file or directory, stat 'C:\Users\Notebook\Downloads\SiteDayanneCosta\dist\index.html'
+GET //uploads/properties/galleryImages-1754776057802-727607582.jpeg 404 2.221 ms - 244
+GET //uploads/properties/galleryImages-1754776057802-235457574.jpeg 404 2.361 ms - 244
+GET //uploads/properties/galleryImages-1754776057804-656582019.jpeg 404 2.616 ms - 244
+GET //uploads/properties/galleryImages-1754776057806-756265561.jpeg 404 2.891 ms - 244
+Error: ENOENT: no such file or directory, stat 'C:\Users\Notebook\Downloads\SiteDayanneCosta\dist\index.html'
+Error: ENOENT: no such file or directory, stat 'C:\Users\Notebook\Downloads\SiteDayanneCosta\dist\index.html'
+Error: ENOENT: no such file or directory, stat 'C:\Users\Notebook\Downloads\SiteDayanneCosta\dist\index.html'
+Error: ENOENT: no such file or directory, stat 'C:\Users\Notebook\Downloads\SiteDayanneCosta\dist\index.html'
+GET //uploads/properties/galleryImages-1754776057808-582341312.jpeg 404 4.219 ms - 244
+Error: ENOENT: no such file or directory, stat 'C:\Users\Notebook\Downloads\SiteDayanneCosta\dist\index.html'
+GET //uploads/properties/galleryImages-1754776057809-51334304.jpeg 404 1.873 ms - 244
+Error: ENOENT: no such file or directory, stat 'C:\Users\Notebook\Downloads\SiteDayanneCosta\dist\index.html'
+GET //uploads/properties/galleryImages-1754776057811-756772202.jpeg 404 0.528 ms - 244
+Error: ENOENT: no such file or directory, stat 'C:\Users\Notebook\Downloads\SiteDayanneCosta\dist\index.html'
+PUT /api/admin/properties/cme4plxpp003pv5x3n806d3lq 200 34.434 ms - 2878
+GET /api/admin/properties?page=1&limit=12 200 6.643 ms - 17385
+GET //src/assets/img/testesImagens.jpeg 404 0.952 ms - 244
+Error: ENOENT: no such file or directory, stat 'C:\Users\Notebook\Downloads\SiteDayanneCosta\dist\index.html'
+GET //uploads/properties/primaryImage-1754777175144-115784384.jpeg 404 1.378 ms - 244
+GET //uploads/properties/primaryImage-1754774018145-144404322.jpeg 404 1.652 ms - 244
+Error: ENOENT: no such file or directory, stat 'C:\Users\Notebook\Downloads\SiteDayanneCosta\dist\index.html'
+Error: ENOENT: no such file or directory, stat 'C:\Users\Notebook\Downloads\SiteDayanneCosta\dist\index.html'
+GET //uploads/properties/primaryImage-1754777175144-115784384.jpeg 404 0.700 ms - 244
+Error: ENOENT: no such file or directory, stat 'C:\Users\Notebook\Downloads\SiteDayanneCosta\dist\index.html'
+GET //uploads/properties/galleryImages-1754777175146-47716989.jpeg 404 2.241 ms - 244
+GET //uploads/properties/galleryImages-1754777175149-651299681.jpeg 404 2.499 ms - 244
+GET //uploads/properties/galleryImages-1754777175151-542473570.jpeg 404 2.709 ms - 244
+GET //uploads/properties/galleryImages-1754777175152-511126361.jpeg 404 2.982 ms - 244
+GET //uploads/properties/galleryImages-1754777175154-531502664.jpeg 404 3.034 ms - 244
+GET //uploads/properties/galleryImages-1754777175154-162731068.jpeg 404 3.139 ms - 244
+Error: ENOENT: no such file or directory, stat 'C:\Users\Notebook\Downloads\SiteDayanneCosta\dist\index.html'
+Error: ENOENT: no such file or directory, stat 'C:\Users\Notebook\Downloads\SiteDayanneCosta\dist\index.html'
+Error: ENOENT: no such file or directory, stat 'C:\Users\Notebook\Downloads\SiteDayanneCosta\dist\index.html'
+Error: ENOENT: no such file or directory, stat 'C:\Users\Notebook\Downloads\SiteDayanneCosta\dist\index.html'
+Error: ENOENT: no such file or directory, stat 'C:\Users\Notebook\Downloads\SiteDayanneCosta\dist\index.html'
+Error: ENOENT: no such file or directory, stat 'C:\Users\Notebook\Downloads\SiteDayanneCosta\dist\index.html'
