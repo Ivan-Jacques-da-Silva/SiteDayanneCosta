@@ -15,6 +15,7 @@ model User {
   email     String   @unique
   name      String
   password  String
+  phone     String?
   role      UserRole @default(AGENT)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -41,7 +42,7 @@ model Property {
   subdivision           String?
   propertyType          String
   propertySubType       String?
-  status                String             @default("ACTIVE")
+  status                PropertyStatus     @default(ACTIVE)
   price                 Float?
   pricePerSqft          Float?
   bedrooms              Int?

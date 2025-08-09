@@ -57,14 +57,20 @@ const PropertyListing = ({
       }
 
       console.log("Fetching from URL:", url);
+      console.log("Current filters:", filters);
+      
       const response = await fetch(url);
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorText = await response.text();
+        console.error("HTTP Error Response:", errorText);
+        throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
       }
 
       const data = await response.json();
       console.log("API Response:", data);
+      console.log("Response type:", typeof data);
+      console.log("Is array:", Array.isArray(data));
 
       // Handle different response structures
       let propertiesData = [];
@@ -75,6 +81,16 @@ const PropertyListing = ({
       } else if (data.data && Array.isArray(data.data)) {
         propertiesData = data.data;
       }
+
+      console.log("Processed properties data:", propertiesData);
+
+      // Transform property data to include image URL from images array
+      propertiesData = propertiesData.map(property => ({
+        ...property,
+        image: property.images && property.images.length > 0 
+          ? property.images[0].url 
+          : property.image || placeholderImage
+      }));
 
       setProperties(propertiesData);
       setTotalPages(

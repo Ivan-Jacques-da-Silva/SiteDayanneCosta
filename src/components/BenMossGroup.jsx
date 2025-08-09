@@ -1,26 +1,26 @@
+
 import React from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button, Image } from 'react-bootstrap';
 import styles from './BenMossGroup.module.css';
 import equipe from '../assets/img/equipe.jpg';
 
 const BenMossGroup = () => {
   return (
     <section className={`${styles.benMossSection}`} style={{ backgroundColor: '#f5f5f5' }}>
-      <Container fluid className="p-0">
+      <Container fluid>
         <Row className="align-items-center g-0">
-          {/* Imagem à esquerda */}
+          {/* Coluna da esquerda - imagem */}
           <Col lg={6} className="p-0">
-            <div className={styles.imageWrapper}>
-              <img 
-                src={equipe} 
-                alt="Ben Moss Group" 
-                className={styles.teamImage}
-              />
-            </div>
+            <Image 
+              src={equipe} 
+              alt="Ben Moss Group" 
+              className="w-100 h-100" 
+              style={{ objectFit: 'cover', border: 'none' }}
+            />
           </Col>
 
-          {/* Texto à direita */}
-          <Col lg={6} className={styles.textContent}>
+          {/* Coluna da direita - texto */}
+          <Col lg={6} className="px-5 py-4">
             <h2 className="fw-bold mb-4">Ben Moss Group</h2>
             <p>
               The Ben Moss Group combines individual strengths including negotiation, sales, marketing, and sports to create a strong

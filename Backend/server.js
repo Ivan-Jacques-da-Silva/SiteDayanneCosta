@@ -73,6 +73,7 @@ app.get('/api/health', (req, res) => {
 
 // API Routes
 app.use('/api/properties', propertyRoutes);
+app.use('/api/properties-by-category', require('./routes/properties-by-category'));
 app.use('/api/users', userRoutes);
 app.use('/api/contacts', contactRoutes);
 app.use('/api/favorites', favoriteRoutes);

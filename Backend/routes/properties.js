@@ -46,7 +46,10 @@ router.get('/', async (req, res) => {
       bedrooms,
       bathrooms,
       city,
-      state
+      state,
+      categoryName,
+      category,
+      sortBy
     } = req.query;
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
@@ -67,8 +70,32 @@ router.get('/', async (req, res) => {
       ...(bedrooms && { bedrooms: parseInt(bedrooms) }),
       ...(bathrooms && { bathrooms: parseFloat(bathrooms) }),
       ...(city && { city: { contains: city, mode: 'insensitive' } }),
-      ...(state && { state: { contains: state, mode: 'insensitive' } })
+      ...(state && { state: { contains: state, mode: 'insensitive' } }),
+      ...(categoryName && {
+        categories: {
+          some: {
+            category: {
+              name: {
+                equals: categoryName,
+                mode: 'insensitive'
+              }
+            }
+          }
+        }
+      })
     };
+
+    // Handle sorting
+    let orderBy = { createdAt: 'desc' };
+    if (sortBy === 'priceAsc') {
+      orderBy = { price: 'asc' };
+    } else if (sortBy === 'priceDesc') {
+      orderBy = { price: 'desc' };
+    } else if (sortBy === 'createdAtDesc') {
+      orderBy = { createdAt: 'desc' };
+    } else if (sortBy === 'createdAtAsc') {
+      orderBy = { createdAt: 'asc' };
+    }
 
     const [properties, total] = await Promise.all([
       prisma.property.findMany({
@@ -84,10 +111,19 @@ router.get('/', async (req, res) => {
             include: { feature: true }
           },
           user: {
-            select: { id: true, name: true, email: true }
+            select: { id: true, name: true, email: true, phone: true }
+          },
+          categories: {
+            include: { 
+              category: {
+                include: {
+                  parent: true
+                }
+              } 
+            }
           }
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy,
         skip,
         take: parseInt(limit)
       }),
@@ -128,6 +164,15 @@ router.get('/:id', async (req, res) => {
         },
         user: {
           select: { id: true, name: true, email: true }
+        },
+        categories: {
+          include: { 
+            category: {
+              include: {
+                parent: true
+              }
+            } 
+          }
         }
       }
     });
@@ -180,7 +225,8 @@ router.post('/', upload.array('images', 10), async (req, res) => {
       virtualTour,
       userId,
       amenities,
-      features
+      features,
+      categories
     } = req.body;
 
     // Create property
@@ -262,6 +308,19 @@ router.post('/', upload.array('images', 10), async (req, res) => {
       });
     }
 
+    // Add categories if provided
+    if (categories && categories.length > 0) {
+      const categoryIds = JSON.parse(categories);
+      const categoryData = categoryIds.map(id => ({
+        propertyId: property.id,
+        categoryId: id
+      }));
+
+      await prisma.propertyCategory.createMany({
+        data: categoryData
+      });
+    }
+
     // Fetch the complete property data
     const completeProperty = await prisma.property.findUnique({
       where: { id: property.id },
@@ -272,6 +331,15 @@ router.post('/', upload.array('images', 10), async (req, res) => {
         },
         features: {
           include: { feature: true }
+        },
+        categories: {
+          include: { 
+            category: {
+              include: {
+                parent: true
+              }
+            } 
+          }
         }
       }
     });
@@ -294,8 +362,24 @@ router.put('/:id', upload.array('images', 10), async (req, res) => {
     if (updateData.pricePerSqft) updateData.pricePerSqft = parseFloat(updateData.pricePerSqft);
     if (updateData.bedrooms) updateData.bedrooms = parseInt(updateData.bedrooms);
     if (updateData.bathrooms) updateData.bathrooms = parseFloat(updateData.bathrooms);
-    if (updateData.pool) updateData.pool = updateData.pool === 'true';
-    if (updateData.waterfront) updateData.waterfront = updateData.waterfront === 'true';
+    if (updateData.halfBaths) updateData.halfBaths = parseInt(updateData.halfBaths);
+    if (updateData.sqft) updateData.sqft = parseInt(updateData.sqft);
+    if (updateData.lotSize) updateData.lotSize = parseFloat(updateData.lotSize);
+    if (updateData.yearBuilt) updateData.yearBuilt = parseInt(updateData.yearBuilt);
+    if (updateData.garage) updateData.garage = parseInt(updateData.garage);
+    if (updateData.parking) updateData.parking = parseInt(updateData.parking);
+    if (updateData.pool !== undefined) updateData.pool = updateData.pool === 'true';
+    if (updateData.waterfront !== undefined) updateData.waterfront = updateData.waterfront === 'true';
+    if (updateData.furnished !== undefined) updateData.furnished = updateData.furnished === 'true';
+    if (updateData.petFriendly !== undefined) updateData.petFriendly = updateData.petFriendly === 'true';
+    if (updateData.latitude) updateData.latitude = parseFloat(updateData.latitude);
+    if (updateData.longitude) updateData.longitude = parseFloat(updateData.longitude);
+    if (updateData.listingDate) updateData.listingDate = new Date(updateData.listingDate);
+    if (updateData.daysOnMarket) updateData.daysOnMarket = parseInt(updateData.daysOnMarket);
+
+    // Handle potential updates to images, amenities, features, and categories
+    // For simplicity, this example assumes full replacement or doesn't handle partial updates for these.
+    // A more robust solution would involve checking if these fields are present and handling them accordingly.
 
     const property = await prisma.property.update({
       where: { id },
@@ -307,6 +391,15 @@ router.put('/:id', upload.array('images', 10), async (req, res) => {
         },
         features: {
           include: { feature: true }
+        },
+        categories: {
+          include: { 
+            category: {
+              include: {
+                parent: true
+              }
+            } 
+          }
         }
       }
     });
@@ -379,7 +472,8 @@ router.get('/stats/overview', async (req, res) => {
       activeProperties,
       soldProperties,
       averagePrice,
-      propertyTypeStats
+      propertyTypeStats,
+      categoryStats
     ] = await Promise.all([
       prisma.property.count(),
       prisma.property.count({ where: { status: 'ACTIVE' } }),
@@ -391,15 +485,38 @@ router.get('/stats/overview', async (req, res) => {
       prisma.property.groupBy({
         by: ['propertyType'],
         _count: { propertyType: true }
+      }),
+      prisma.propertyCategory.groupBy({
+        by: ['categoryId'],
+        _count: { categoryId: true },
+        _avg: { propertyId: true } // This might not be the most meaningful aggregation for categories
       })
     ]);
+
+    // Enhance categoryStats by fetching category names
+    const categoryNames = await prisma.category.findMany({
+      where: {
+        id: { in: categoryStats.map(cs => cs.categoryId) }
+      },
+      select: { id: true, name: true }
+    });
+
+    const enrichedCategoryStats = categoryStats.map(cs => {
+      const categoryInfo = categoryNames.find(cn => cn.id === cs.categoryId);
+      return {
+        categoryId: cs.categoryId,
+        categoryName: categoryInfo ? categoryInfo.name : 'Unknown',
+        propertyCount: cs._count.categoryId
+      };
+    });
 
     res.json({
       totalProperties,
       activeProperties,
       soldProperties,
       averagePrice: averagePrice._avg.price,
-      propertyTypeStats
+      propertyTypeStats,
+      categoryStats: enrichedCategoryStats
     });
   } catch (error) {
     console.error('Error fetching stats:', error);
@@ -443,82 +560,6 @@ router.post('/category', async (req, res) => {
   }
 });
 
-// GET /api/properties-by-category - Get properties by category name  
-router.get('-by-category', async (req, res) => {
-  try {
-    const { categoryName, page = 1, limit = 12 } = req.query;
-    const skip = (parseInt(page) - 1) * parseInt(limit);
 
-    let whereClause = {
-      status: 'ACTIVE'
-    };
-
-    // If category name is provided, filter by category
-    if (categoryName) {
-      whereClause.categories = {
-        some: {
-          category: {
-            name: {
-              equals: categoryName,
-              mode: 'insensitive'
-            }
-          }
-        }
-      };
-    }
-
-    const [properties, total] = await Promise.all([
-      prisma.property.findMany({
-        where: whereClause,
-        include: {
-          images: {
-            orderBy: { order: 'asc' },
-            take: 1
-          },
-          amenities: {
-            include: { amenity: true }
-          },
-          features: {
-            include: { feature: true }
-          },
-          categories: {
-            include: { 
-              category: {
-                include: {
-                  parent: true
-                }
-              } 
-            }
-          },
-          user: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-              phone: true
-            }
-          }
-        },
-        orderBy: { createdAt: 'desc' },
-        skip,
-        take: parseInt(limit)
-      }),
-      prisma.property.count({ where: whereClause })
-    ]);
-
-    res.json({
-      properties,
-      pagination: {
-        currentPage: parseInt(page),
-        totalPages: Math.ceil(total / parseInt(limit)),
-        totalItems: total,
-        itemsPerPage: parseInt(limit)
-      }
-    });
-  } catch (error) {
-    console.error('Error fetching properties by category:', error);
-    res.status(500).json({ error: 'Failed to fetch properties' });
-  }
-});
 
 module.exports = router;

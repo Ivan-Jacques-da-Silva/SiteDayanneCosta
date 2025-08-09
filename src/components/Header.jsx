@@ -11,6 +11,7 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState(null);
+  const [currentLanguage, setCurrentLanguage] = useState('EN');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,6 +34,43 @@ const Header = () => {
 
   const toggleSubmenu = (menuName) => {
     setOpenSubmenu(openSubmenu === menuName ? null : menuName);
+  };
+
+  const translatePage = (language, displayName) => {
+    setCurrentLanguage(displayName);
+    
+    // Get the Google Translate element
+    const googleTranslateElement = document.querySelector('.goog-te-combo');
+    
+    if (googleTranslateElement) {
+      googleTranslateElement.value = language;
+      googleTranslateElement.dispatchEvent(new Event('change'));
+    } else {
+      // Fallback: add Google Translate element if not present
+      const translateDiv = document.createElement('div');
+      translateDiv.id = 'google_translate_element';
+      translateDiv.style.display = 'none';
+      document.body.appendChild(translateDiv);
+      
+      // Initialize Google Translate
+      if (window.google && window.google.translate) {
+        new window.google.translate.TranslateElement({
+          pageLanguage: 'en',
+          includedLanguages: 'en,pt,es',
+          layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+          autoDisplay: false
+        }, 'google_translate_element');
+        
+        // Try again after initialization
+        setTimeout(() => {
+          const newGoogleTranslateElement = document.querySelector('.goog-te-combo');
+          if (newGoogleTranslateElement) {
+            newGoogleTranslateElement.value = language;
+            newGoogleTranslateElement.dispatchEvent(new Event('change'));
+          }
+        }, 1000);
+      }
+    }
   };
 
   return (
@@ -109,21 +147,33 @@ const Header = () => {
                       <span className={`ibc-c-language-switcher-flag ip-d-inline-block ip-my-0 ip-mr-1 flag-english js-language-switcher-flag ${styles.flagIcon}`}>
                         <i className="fas fa-globe"></i>
                       </span>
-                      <span className={`ibc-c-language-switcher-label ip-mr-1 notranslate js-language-switcher-label ${styles.languageLabel}`}>EN</span>
+                      <span className={`ibc-c-language-switcher-label ip-mr-1 notranslate js-language-switcher-label ${styles.languageLabel}`}>{currentLanguage}</span>
                     </button>
                     <div className={`ibc-c-language-switcher-select ip-position-absolute js-language-switcher-select ${styles.languageSelect}`}>
-                      <a className={`ibc-c-language-switcher-option ip-position-relative ip-d-flex ibc-u-align-items-center ibc-u-justify-content-center ip-w-full body-xs ip-text-uppercase notranslate ibc-is-active js-language-switcher-option ${styles.languageOption} ${styles.active}`} data-iso="en" href="#" rel="nofollow">
+                      <button 
+                        className={`ibc-c-language-switcher-option ip-position-relative ip-d-flex ibc-u-align-items-center ibc-u-justify-content-center ip-w-full body-xs ip-text-uppercase notranslate js-language-switcher-option ${styles.languageOption} ${currentLanguage === 'EN' ? styles.active : ''}`} 
+                        onClick={() => translatePage('en', 'EN')}
+                        style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+                      >
                         <span className="ip-d-inline-block ip-text-center">EN</span>
                         <span className={`ibc-c-language-switcher-flag ip-d-inline-block ip-my-0 ip-mx-1 flag-english ${styles.flagIcon}`}>🇺🇸</span>
-                      </a>
-                      <a className={`ibc-c-language-switcher-option ip-position-relative ip-d-flex ibc-u-align-items-center ibc-u-justify-content-center ip-w-full body-xs ip-text-uppercase notranslate js-language-switcher-option ${styles.languageOption}`} data-iso="pt" href="#" rel="nofollow">
+                      </button>
+                      <button 
+                        className={`ibc-c-language-switcher-option ip-position-relative ip-d-flex ibc-u-align-items-center ibc-u-justify-content-center ip-w-full body-xs ip-text-uppercase notranslate js-language-switcher-option ${styles.languageOption} ${currentLanguage === 'BR' ? styles.active : ''}`} 
+                        onClick={() => translatePage('pt', 'BR')}
+                        style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+                      >
                         <span className="ip-d-inline-block ip-text-center">BR</span>
                         <span className={`ibc-c-language-switcher-flag ip-d-inline-block ip-my-0 ip-mx-1 flag-portuguese ${styles.flagIcon}`}>🇧🇷</span>
-                      </a>
-                      <a className={`ibc-c-language-switcher-option ip-position-relative ip-d-flex ibc-u-align-items-center ibc-u-justify-content-center ip-w-full body-xs ip-text-uppercase notranslate js-language-switcher-option ${styles.languageOption}`} data-iso="es" href="#" rel="nofollow">
+                      </button>
+                      <button 
+                        className={`ibc-c-language-switcher-option ip-position-relative ip-d-flex ibc-u-align-items-center ibc-u-justify-content-center ip-w-full body-xs ip-text-uppercase notranslate js-language-switcher-option ${styles.languageOption} ${currentLanguage === 'ES' ? styles.active : ''}`} 
+                        onClick={() => translatePage('es', 'ES')}
+                        style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+                      >
                         <span className="ip-d-inline-block ip-text-center">ES</span>
                         <span className={`ibc-c-language-switcher-flag ip-d-inline-block ip-my-0 ip-mx-1 flag-spanish ${styles.flagIcon}`}>🇪🇸</span>
-                      </a>
+                      </button>
                     </div>
                   </div>
 
@@ -619,22 +669,43 @@ const Header = () => {
                 </div>
                 <ul className={`ip-submenu js-submenu ${styles.ipSubmenu} ${openSubmenu === 'language' ? styles.open : ''}`}>
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                    <a className={`ip-menu-link ${styles.ipMenuLink}`} href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <button 
+                      className={`ip-menu-link ${styles.ipMenuLink}`} 
+                      onClick={() => {
+                        translatePage('en', 'EN');
+                        handleNavClick();
+                      }}
+                      style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'none', border: 'none', cursor: 'pointer' }}
+                    >
                       <span>🇺🇸</span>
                       <span>English</span>
-                    </a>
+                    </button>
                   </li>
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                    <a className={`ip-menu-link ${styles.ipMenuLink}`} href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <button 
+                      className={`ip-menu-link ${styles.ipMenuLink}`} 
+                      onClick={() => {
+                        translatePage('pt', 'BR');
+                        handleNavClick();
+                      }}
+                      style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'none', border: 'none', cursor: 'pointer' }}
+                    >
                       <span>🇧🇷</span>
                       <span>Português</span>
-                    </a>
+                    </button>
                   </li>
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                    <a className={`ip-menu-link ${styles.ipMenuLink}`} href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <button 
+                      className={`ip-menu-link ${styles.ipMenuLink}`} 
+                      onClick={() => {
+                        translatePage('es', 'ES');
+                        handleNavClick();
+                      }}
+                      style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'none', border: 'none', cursor: 'pointer' }}
+                    >
                       <span>🇪🇸</span>
                       <span>Español</span>
-                    </a>
+                    </button>
                   </li>
                 </ul>
               </li>
