@@ -32,12 +32,12 @@ const upload = multer({
   }
 });
 
-// GET /api/properties - List all properties with pagination and filters
+// GET /api/properties - List all properties with optional pagination and filters
 router.get('/', async (req, res) => {
   try {
     const { 
-      page = 1, 
-      limit = 10, 
+      page, 
+      limit, 
       search, 
       propertyType, 
       status, 
@@ -52,7 +52,10 @@ router.get('/', async (req, res) => {
       sortBy
     } = req.query;
 
-    const skip = (parseInt(page) - 1) * parseInt(limit);
+    // Only apply pagination if both page and limit are provided
+    const shouldPaginate = page && limit;
+    const skip = shouldPaginate ? (parseInt(page) - 1) * parseInt(limit) : undefined;
+    const take = shouldPaginate ? parseInt(limit) : undefined;
 
     const where = {
       ...(search && {
@@ -97,48 +100,61 @@ router.get('/', async (req, res) => {
       orderBy = { createdAt: 'asc' };
     }
 
-    const [properties, total] = await Promise.all([
-      prisma.property.findMany({
-        where,
-        include: {
-          images: {
-            orderBy: { order: 'asc' }
-          },
-          amenities: {
-            include: { amenity: true }
-          },
-          features: {
-            include: { feature: true }
-          },
-          user: {
-            select: { id: true, name: true, email: true, phone: true }
-          },
-          categories: {
-            include: { 
-              category: {
-                include: {
-                  parent: true
-                }
-              } 
-            }
-          }
+    const queryOptions = {
+      where,
+      include: {
+        images: {
+          orderBy: { order: 'asc' }
         },
-        orderBy,
-        skip,
-        take: parseInt(limit)
-      }),
+        amenities: {
+          include: { amenity: true }
+        },
+        features: {
+          include: { feature: true }
+        },
+        user: {
+          select: { id: true, name: true, email: true, phone: true }
+        },
+        categories: {
+          include: { 
+            category: {
+              include: {
+                parent: true
+              }
+            } 
+          }
+        }
+      },
+      orderBy
+    };
+
+    // Add pagination only if specified
+    if (shouldPaginate) {
+      queryOptions.skip = skip;
+      queryOptions.take = take;
+    }
+
+    const [properties, total] = await Promise.all([
+      prisma.property.findMany(queryOptions),
       prisma.property.count({ where })
     ]);
 
-    res.json({
+    const response = {
       properties,
-      pagination: {
+      total
+    };
+
+    // Include pagination info only if pagination was applied
+    if (shouldPaginate) {
+      response.pagination = {
         page: parseInt(page),
         limit: parseInt(limit),
         total,
         pages: Math.ceil(total / parseInt(limit))
-      }
-    });
+      };
+    }
+
+    res.json(response);
   } catch (error) {
     console.error('Error fetching properties:', error);
     res.status(500).json({ error: 'Failed to fetch properties' });

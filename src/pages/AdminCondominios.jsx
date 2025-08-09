@@ -92,6 +92,14 @@ const AdminCondominios = () => {
   });
   const [currentPage, setCurrentPage] = useState(1);
 
+  // State for filters
+  const [filters, setFilters] = useState({
+    search: '',
+    category: '',
+    status: '',
+    neighborhood: ''
+  });
+
   // Categorias fixas
   const PROPERTY_CATEGORIES = [
     { value: 'NEW_DEVELOPMENTS', label: 'New Developments' },
@@ -109,7 +117,7 @@ const AdminCondominios = () => {
 
   useEffect(() => {
     loadCondominios();
-  }, []);
+  }, [currentPage, filters]); // Reload when page or filters change
 
   const loadCondominios = async (page = 1) => {
     try {
@@ -123,7 +131,24 @@ const AdminCondominios = () => {
         return;
       }
 
-      const response = await fetch(buildApiUrl(`/api/admin/properties?page=${page}&limit=12`), {
+      let url = buildApiUrl('/api/admin/properties');
+
+      // Apply filters if any
+      const params = new URLSearchParams();
+      if (filters.search) params.append('search', filters.search);
+      if (filters.category) params.append('categoria', filters.category);
+      if (filters.status) params.append('status', filters.status);
+      if (filters.neighborhood) params.append('bairro', filters.neighborhood);
+
+      // Add current page to params if we were to re-introduce pagination
+      // params.append('page', page.toString());
+      // params.append('limit', pagination.limit.toString());
+
+      if (params.toString()) {
+        url += `?${params.toString()}`;
+      }
+
+      const response = await fetch(url, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -137,7 +162,8 @@ const AdminCondominios = () => {
 
         if (data.properties && Array.isArray(data.properties)) {
           setCondominios(data.properties);
-          setPagination(data.pagination);
+          // Remove pagination dependency since we're loading all properties
+          setPagination({ ...pagination, total: data.properties.length, pages: 1 });
         } else {
           console.warn('Unexpected data format for properties:', data);
           setCondominios([]);
@@ -218,7 +244,7 @@ const AdminCondominios = () => {
       setShowForm(false);
       setEditingCondominio(null);
       resetForm();
-      await loadCondominios(currentPage);
+      await loadCondominios(); // Reload properties after save
       alert('Condomínio salvo com sucesso!');
     } catch (error) {
       console.error('Error saving condominio:', error);
@@ -337,7 +363,7 @@ const AdminCondominios = () => {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${token}` }
         });
-        await loadCondominios(currentPage);
+        await loadCondominios(); // Reload properties after delete
       } catch (error) {
         console.error('Error deleting condominio:', error);
         alert('Error deleting property.');
@@ -358,6 +384,30 @@ const AdminCondominios = () => {
       console.error("Error formatting price:", price, e);
       return price;
     }
+  };
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters(prevFilters => ({
+      ...prevFilters,
+      [name]: value
+    }));
+  };
+
+  const applyFilters = () => {
+    setCurrentPage(1); // Reset to first page when filters change
+    loadCondominios();
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      search: '',
+      category: '',
+      status: '',
+      neighborhood: ''
+    });
+    setCurrentPage(1);
+    loadCondominios();
   };
 
   if (loading && !showForm) {
@@ -388,6 +438,67 @@ const AdminCondominios = () => {
               >
                 <i className="fas fa-plus"></i> Add New Property
               </button>
+            </div>
+
+            {/* Filters */}
+            <div className={styles.filtersContainer}>
+              <div className={styles.filtersHeader}>
+                <h3><i className="fas fa-filter"></i> Filter Properties</h3>
+              </div>
+              
+              <div className={styles.filtersGrid}>
+                <div className={styles.filterGroup}>
+                  <label>Search</label>
+                  <input
+                    type="text"
+                    name="search"
+                    placeholder="Search by title, address, or MLS ID"
+                    value={filters.search}
+                    onChange={handleFilterChange}
+                    className={styles.filterInput}
+                  />
+                </div>
+                
+                <div className={styles.filterGroup}>
+                  <label>Category</label>
+                  <select name="category" value={filters.category} onChange={handleFilterChange} className={styles.filterSelect}>
+                    <option value="">All Categories</option>
+                    {PROPERTY_CATEGORIES.map(cat => (
+                      <option key={cat.value} value={cat.value}>{cat.label}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div className={styles.filterGroup}>
+                  <label>Status</label>
+                  <select name="status" value={filters.status} onChange={handleFilterChange} className={styles.filterSelect}>
+                    <option value="">All Statuses</option>
+                    <option value="ACTIVE">Active</option>
+                    <option value="PENDING">Pending</option>
+                    <option value="SOLD">Sold</option>
+                    <option value="OFF_MARKET">Off Market</option>
+                  </select>
+                </div>
+                
+                <div className={styles.filterGroup}>
+                  <label>Neighborhood</label>
+                  <select name="neighborhood" value={filters.neighborhood} onChange={handleFilterChange} className={styles.filterSelect}>
+                    <option value="">All Neighborhoods</option>
+                    {NEIGHBORHOODS.map(nh => (
+                      <option key={nh.value} value={nh.value}>{nh.label}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              
+              <div className={styles.filterActions}>
+                <button onClick={applyFilters} className={styles.applyFiltersBtn}>
+                  <i className="fas fa-search"></i> Apply Filters
+                </button>
+                <button onClick={clearFilters} className={styles.clearFiltersBtn}>
+                  <i className="fas fa-times"></i> Clear Filters
+                </button>
+              </div>
             </div>
 
             <div className={styles.condominiosList}>
@@ -501,8 +612,8 @@ const AdminCondominios = () => {
               )}
             </div>
 
-            {/* Pagination */}
-            {!loading && condominios.length > 0 && pagination.pages > 1 && (
+            {/* Pagination - Removed as we are loading all properties */}
+            {/* {!loading && condominios.length > 0 && pagination.pages > 1 && (
               <div style={{
                 display: 'flex',
                 justifyContent: 'center',
@@ -553,7 +664,7 @@ const AdminCondominios = () => {
                   Próxima
                 </button>
               </div>
-            )}
+            )} */}
           </>
         ) : (
           <div className={styles.formPanel}>

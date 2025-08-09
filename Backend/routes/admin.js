@@ -182,11 +182,15 @@ router.get('/users', async (req, res) => {
   }
 });
 
-// GET /api/admin/properties - Get all properties with pagination
+// GET /api/admin/properties - Get all properties with optional pagination
 router.get('/properties', async (req, res) => {
   try {
-    const { page = 1, limit = 12, search, status } = req.query;
-    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const { page, limit, search, status } = req.query;
+    
+    // Only apply pagination if both page and limit are provided
+    const shouldPaginate = page && limit;
+    const skip = shouldPaginate ? (parseInt(page) - 1) * parseInt(limit) : undefined;
+    const take = shouldPaginate ? parseInt(limit) : undefined;
 
     // Build where clause for filtering
     const where = {};
@@ -203,39 +207,52 @@ router.get('/properties', async (req, res) => {
       where.status = status;
     }
 
-    const [properties, total] = await Promise.all([
-      prisma.property.findMany({
-        where,
-        include: {
-          images: {
-            select: { url: true, isPrimary: true },
-            orderBy: { order: 'asc' }
-          },
-          user: {
-            select: { name: true, email: true }
-          },
-          _count: {
-            select: {
-              favorites: true
-            }
-          }
+    const queryOptions = {
+      where,
+      include: {
+        images: {
+          select: { url: true, isPrimary: true },
+          orderBy: { order: 'asc' }
         },
-        orderBy: { createdAt: 'desc' },
-        skip,
-        take: parseInt(limit)
-      }),
+        user: {
+          select: { name: true, email: true }
+        },
+        _count: {
+          select: {
+            favorites: true
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    };
+
+    // Add pagination only if specified
+    if (shouldPaginate) {
+      queryOptions.skip = skip;
+      queryOptions.take = take;
+    }
+
+    const [properties, total] = await Promise.all([
+      prisma.property.findMany(queryOptions),
       prisma.property.count({ where })
     ]);
 
-    res.json({
+    const response = {
       properties,
-      pagination: {
+      total
+    };
+
+    // Include pagination info only if pagination was applied
+    if (shouldPaginate) {
+      response.pagination = {
         page: parseInt(page),
         limit: parseInt(limit),
         total,
         pages: Math.ceil(total / parseInt(limit))
-      }
-    });
+      };
+    }
+
+    res.json(response);
   } catch (error) {
     console.error('Error fetching properties:', error);
     res.status(500).json({ error: 'Failed to fetch properties' });

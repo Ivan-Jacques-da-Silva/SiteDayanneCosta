@@ -1,6 +1,7 @@
-
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
+const fs = require('fs');
+const path = require('path');
 
 const prisma = new PrismaClient();
 
@@ -10,17 +11,23 @@ async function main() {
   try {
     // Clean existing data
     await cleanDatabase();
-    
+
+    // Ensure uploads directory exists
+    await ensureUploadsDirectory();
+
     // Create users
     const users = await createUsers();
-    
+
     // Create amenities and features
     await createAmenitiesAndFeatures();
-    
-    // Create sample properties with correct categories
+
+    // Create sample properties with correct categories and images
     await createSampleProperties(users);
-    
+
     console.log('\n✅ Database setup completed successfully!');
+    console.log('\n👤 Admin Login:');
+    console.log('   Email: admin@dayannecosta.com');
+    console.log('   Password: admin123');
   } catch (error) {
     console.error('❌ Error setting up database:', error);
     throw error;
@@ -29,7 +36,8 @@ async function main() {
 
 async function cleanDatabase() {
   console.log('🧹 Cleaning existing database...');
-  
+
+  // Delete all data in correct order to avoid foreign key constraints
   await prisma.propertyFeature.deleteMany();
   await prisma.propertyAmenity.deleteMany();
   await prisma.propertyDocument.deleteMany();
@@ -41,8 +49,42 @@ async function cleanDatabase() {
   await prisma.feature.deleteMany();
   await prisma.amenity.deleteMany();
   await prisma.user.deleteMany();
-  
+
+  // Clean uploads directory
+  const uploadsDir = path.join(__dirname, '..', 'uploads', 'properties');
+  if (fs.existsSync(uploadsDir)) {
+    const files = fs.readdirSync(uploadsDir);
+    for (const file of files) {
+      const filePath = path.join(uploadsDir, file);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
+    console.log('🗑️ Cleaned uploads directory');
+  }
+
   console.log('✅ Database cleaned!');
+}
+
+async function ensureUploadsDirectory() {
+  console.log('📁 Ensuring uploads directory exists...');
+
+  const uploadsDir = path.join(__dirname, '..', 'uploads', 'properties');
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+    console.log('✅ Created uploads directory');
+  }
+
+  // Copy sample image to uploads directory if it exists
+  const sampleImageSrc = path.join(__dirname, '..', '..', 'src', 'assets', 'img', 'testesImagens.jpeg');
+  const sampleImageDest = path.join(uploadsDir, 'sample-property.jpeg');
+
+  if (fs.existsSync(sampleImageSrc)) {
+    fs.copyFileSync(sampleImageSrc, sampleImageDest);
+    console.log('✅ Sample image copied to uploads');
+  } else {
+    console.log('⚠️ Sample image not found, properties will be created without images');
+  }
 }
 
 async function createUsers() {
@@ -61,7 +103,7 @@ async function createUsers() {
   const agentUser = await prisma.user.create({
     data: {
       email: 'agent@dayannecosta.com',
-      name: 'Real Estate Agent',
+      name: 'Dayanne Costa',
       password: await bcrypt.hash('agent123', 12),
       phone: '+1-305-555-0002',
       role: 'AGENT'
@@ -69,7 +111,7 @@ async function createUsers() {
   });
 
   console.log('✅ Users created!');
-  
+
   return { adminUser, agentUser };
 }
 
@@ -119,6 +161,10 @@ async function createAmenitiesAndFeatures() {
 
 async function createSampleProperties(users) {
   console.log('🏠 Creating sample properties...');
+
+  // Check if sample image exists
+  const sampleImagePath = path.join(__dirname, '..', 'uploads', 'properties', 'sample-property.jpeg');
+  const hasImage = fs.existsSync(sampleImagePath);
 
   const sampleProperties = [
     // 1. NEW DEVELOPMENTS - 4 properties
@@ -993,23 +1039,31 @@ async function createSampleProperties(users) {
   ];
 
   for (const propertyData of sampleProperties) {
-    const property = await prisma.property.create({
-      data: propertyData
-    });
+    try {
+      const property = await prisma.property.create({
+        data: propertyData
+      });
 
-    // Add sample image
-    await prisma.propertyImage.create({
-      data: {
-        propertyId: property.id,
-        url: '/src/assets/img/testesImagens.jpeg',
-        caption: 'Property Image',
-        isPrimary: true,
-        order: 1
+      // Add sample image if available
+      if (hasImage) {
+        await prisma.propertyImage.create({
+          data: {
+            propertyId: property.id,
+            url: '/uploads/properties/sample-property.jpeg',
+            caption: 'Property Image',
+            isPrimary: true,
+            order: 1
+          }
+        });
       }
-    });
+
+      console.log(`✓ Created: ${property.title}`);
+    } catch (error) {
+      console.error(`❌ Error creating property ${propertyData.title}:`, error.message);
+    }
   }
 
-  console.log('✅ Sample properties created with correct categories!');
+  console.log('✅ Sample properties created with correct categories and images!');
 }
 
 main()
