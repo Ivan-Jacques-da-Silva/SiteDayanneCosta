@@ -1,4 +1,3 @@
-
 const corsConfig = {
   // Endereços permitidos para desenvolvimento e produção
   allowedOrigins: [
@@ -13,18 +12,18 @@ const corsConfig = {
     'http://127.0.0.1:5174',
     'http://127.0.0.1:5000',
     'http://127.0.0.1:8080',
-    
+
     // Replit development (0.0.0.0)
     'http://0.0.0.0:3000',
     'http://0.0.0.0:5173',
     'http://0.0.0.0:5174',
     'http://0.0.0.0:5000',
     'http://0.0.0.0:8080',
-    
+
     // Replit production
     'https://*.replit.dev',
     'https://*.replit.co',
-    
+
     // Produção
     'https://site.dayannecosta.com',
     'https://www.dayannecosta.com'
@@ -35,7 +34,7 @@ const corsConfig = {
     origin: function (origin, callback) {
       // Permitir requisições sem origin (aplicações mobile, Postman, etc.)
       if (!origin) return callback(null, true);
-      
+
       // Verificar se a origin está na lista permitida
       const isAllowed = corsConfig.allowedOrigins.some(allowedOrigin => {
         if (allowedOrigin.includes('*')) {
@@ -56,8 +55,8 @@ const corsConfig = {
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: [
-      'Content-Type', 
-      'Authorization', 
+      'Content-Type',
+      'Authorization',
       'X-Requested-With',
       'Accept',
       'Origin',

@@ -10,8 +10,10 @@ const prisma = new PrismaClient();
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log('Login attempt for email:', email);
 
     if (!email || !password) {
+      console.log('Missing email or password in request');
       return res.status(400).json({ message: 'Email and password are required' });
     }
 
@@ -21,13 +23,25 @@ router.post('/login', async (req, res) => {
     });
 
     if (!user) {
+      console.log('User not found for email:', email);
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
-    // Check password
-    const isValidPassword = await bcrypt.compare(password, user.password);
+    console.log('User found:', { id: user.id, email: user.email, role: user.role });
+
+    // Check password - handle both hashed and plain text passwords
+    let isValidPassword = false;
+    
+    try {
+      // Try to compare as hashed password first
+      isValidPassword = await bcrypt.compare(password, user.password);
+    } catch (error) {
+      // If bcrypt fails, try direct comparison (for plain text passwords from setup)
+      isValidPassword = (password === user.password);
+    }
     
     if (!isValidPassword) {
+      console.log('Password comparison failed for user:', email);
       return res.status(401).json({ message: 'Invalid email or password' });
     }
     

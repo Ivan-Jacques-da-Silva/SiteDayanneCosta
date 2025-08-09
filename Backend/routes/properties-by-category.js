@@ -1,4 +1,3 @@
-
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 
@@ -8,10 +7,10 @@ const prisma = new PrismaClient();
 // GET /api/properties-by-category - Get properties filtered by category
 router.get('/', async (req, res) => {
   try {
-    const { 
-      category, 
+    const {
+      category,
       neighborhood,
-      page = 1, 
+      page = 1,
       limit = 12,
       minPrice,
       maxPrice,
@@ -135,6 +134,113 @@ router.get('/', async (req, res) => {
 
   } catch (error) {
     console.error('Error fetching properties by category:', error);
+    res.status(500).json({ error: 'Failed to fetch properties' });
+  }
+});
+
+// GET /api/properties/category/:category - Get properties by category
+router.get('/category/:category', async (req, res) => {
+  try {
+    const { category } = req.params;
+    const { page = 1, limit = 12, search, status } = req.query;
+
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    const where = {
+      categoria: category.toUpperCase(),
+      ...(search && {
+        OR: [
+          { title: { contains: search, mode: 'insensitive' } },
+          { description: { contains: search, mode: 'insensitive' } },
+          { address: { contains: search, mode: 'insensitive' } },
+          { city: { contains: search, mode: 'insensitive' } }
+        ]
+      }),
+      ...(status && { status })
+    };
+
+    const properties = await prisma.property.findMany({
+      where,
+      include: {
+        images: {
+          orderBy: { order: 'asc' }
+        },
+        user: {
+          select: { name: true, email: true }
+        }
+      },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: parseInt(limit)
+    });
+
+    const total = await prisma.property.count({ where });
+
+    res.json({
+      properties,
+      pagination: {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        total,
+        pages: Math.ceil(total / parseInt(limit))
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching properties by category:', error);
+    res.status(500).json({ error: 'Failed to fetch properties' });
+  }
+});
+
+// GET /api/properties/neighborhood/:neighborhood - Get properties by neighborhood
+router.get('/neighborhood/:neighborhood', async (req, res) => {
+  try {
+    const { neighborhood } = req.params;
+    const { page = 1, limit = 12, search, status } = req.query;
+
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    const where = {
+      categoria: 'NEIGHBORHOODS',
+      bairro: neighborhood.toUpperCase(),
+      ...(search && {
+        OR: [
+          { title: { contains: search, mode: 'insensitive' } },
+          { description: { contains: search, mode: 'insensitive' } },
+          { address: { contains: search, mode: 'insensitive' } },
+          { city: { contains: search, mode: 'insensitive' } }
+        ]
+      }),
+      ...(status && { status })
+    };
+
+    const properties = await prisma.property.findMany({
+      where,
+      include: {
+        images: {
+          orderBy: { order: 'asc' }
+        },
+        user: {
+          select: { name: true, email: true }
+        }
+      },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: parseInt(limit)
+    });
+
+    const total = await prisma.property.count({ where });
+
+    res.json({
+      properties,
+      pagination: {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        total,
+        pages: Math.ceil(total / parseInt(limit))
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching properties by neighborhood:', error);
     res.status(500).json({ error: 'Failed to fetch properties' });
   }
 });

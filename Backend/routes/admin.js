@@ -185,22 +185,34 @@ router.get('/users', async (req, res) => {
 // GET /api/admin/properties - Get all properties with pagination
 router.get('/properties', async (req, res) => {
   try {
-    const { page = 1, limit = 12 } = req.query; // Changed default limit to 12
+    const { page = 1, limit = 12, search, status } = req.query;
     const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    // Build where clause for filtering
+    const where = {};
+    
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: 'insensitive' } },
+        { address: { contains: search, mode: 'insensitive' } },
+        { city: { contains: search, mode: 'insensitive' } }
+      ];
+    }
+    
+    if (status) {
+      where.status = status;
+    }
 
     const [properties, total] = await Promise.all([
       prisma.property.findMany({
+        where,
         include: {
           images: {
             select: { url: true, isPrimary: true },
             orderBy: { order: 'asc' }
           },
-          categories: {
-            include: {
-              category: {
-                select: { name: true, id: true }
-              }
-            }
+          user: {
+            select: { name: true, email: true }
           },
           _count: {
             select: {
@@ -212,7 +224,7 @@ router.get('/properties', async (req, res) => {
         skip,
         take: parseInt(limit)
       }),
-      prisma.property.count()
+      prisma.property.count({ where })
     ]);
 
     res.json({
@@ -239,7 +251,8 @@ router.post('/properties', upload.fields([{ name: 'primaryImage', maxCount: 1 },
       description,
       propertyType,
       status,
-      categories,
+      categoria,
+      bairro,
       address,
       city,
       state,
@@ -290,8 +303,10 @@ router.post('/properties', upload.fields([{ name: 'primaryImage', maxCount: 1 },
         city,
         state,
         zipCode,
-        propertyType,
+        propertyType: propertyType || 'CONDO',
         status: status || 'ACTIVE',
+        categoria: categoria || 'LUXURY_CONDOS',
+        bairro: bairro || null,
         price: price ? parseFloat(price) : null,
         pricePerSqft: pricePerSqft ? parseFloat(pricePerSqft) : null,
         bedrooms: bedrooms ? parseInt(bedrooms) : null,
@@ -306,7 +321,7 @@ router.post('/properties', upload.fields([{ name: 'primaryImage', maxCount: 1 },
         waterfront: waterfront === 'true' || waterfront === true,
         waterfrontDescription,
         pool: pool === 'true' || pool === true,
-        parking: parking === 'true' || parking === true,
+        parking: parkingSpaces ? parseInt(parkingSpaces) : null,
         parkingSpaces: parkingSpaces ? parseInt(parkingSpaces) : null,
         parkingDescription,
         interiorFeatures,
@@ -316,7 +331,7 @@ router.post('/properties', upload.fields([{ name: 'primaryImage', maxCount: 1 },
         taxYear: taxYear ? parseInt(taxYear) : null,
         latitude: latitude ? parseFloat(latitude) : null,
         longitude: longitude ? parseFloat(longitude) : null,
-        neighborhood,
+        neighborhood: neighborhood || bairro,
         subdivision,
         virtualTour,
         amenities,
@@ -328,12 +343,10 @@ router.post('/properties', upload.fields([{ name: 'primaryImage', maxCount: 1 },
         petFriendly: petFriendly === 'true' || petFriendly === true,
         userId: userId || req.user.userId,
         country: 'USA',
-        category: updateData.category || null,
-        neighborhood: updateData.neighborhood || null,
         images: {
           create: [
-            ...(req.files.primaryImage ? [{ url: req.files.primaryImage[0].path, isPrimary: true, order: 0 }] : []),
-            ...(req.files.galleryImages ? req.files.galleryImages.map((file, index) => ({ url: file.path, isPrimary: false, order: index + 1 })) : [])
+            ...(req.files?.primaryImage ? [{ url: `/uploads/properties/${req.files.primaryImage[0].filename}`, isPrimary: true, order: 0 }] : []),
+            ...(req.files?.galleryImages ? req.files.galleryImages.map((file, index) => ({ url: `/uploads/properties/${file.filename}`, isPrimary: false, order: index + 1 })) : [])
           ]
         }
       },
@@ -359,39 +372,81 @@ router.put('/properties/:id', upload.fields([{ name: 'primaryImage', maxCount: 1
   try {
     const { id } = req.params;
     const updateData = { ...req.body };
-    const existingProperty = await prisma.property.findUnique({ where: { id }, include: { images: true } });
+    const existingProperty = await prisma.property.findUnique({ 
+      where: { id }, 
+      include: { images: true } 
+    });
+
+    if (!existingProperty) {
+      return res.status(404).json({ error: 'Property not found' });
+    }
 
     // Handle image updates
-    const newImages = [];
-    if (req.files.primaryImage && req.files.primaryImage.length > 0) {
-      const primaryImage = req.files.primaryImage[0];
-      const existingPrimaryImage = existingProperty.images.find(img => img.isPrimary);
-      if (existingPrimaryImage) {
-        // Delete old primary image file
-        fs.unlinkSync(existingPrimaryImage.url);
-        // Update existing primary image record
-        await prisma.image.update({
-          where: { id: existingPrimaryImage.id },
-          data: { url: primaryImage.path, order: 0 }
-        });
-      } else {
-        // Add new primary image record
-        newImages.push({ url: primaryImage.path, isPrimary: true, order: 0 });
+    if (req.files && (req.files.primaryImage || req.files.galleryImages)) {
+      // Handle primary image update
+      if (req.files.primaryImage && req.files.primaryImage.length > 0) {
+        const primaryImageFile = req.files.primaryImage[0];
+        const existingPrimaryImage = existingProperty.images.find(img => img.isPrimary);
+        
+        if (existingPrimaryImage) {
+          // Delete old primary image file if it exists
+          const oldImagePath = path.join(__dirname, '..', existingPrimaryImage.url);
+          if (fs.existsSync(oldImagePath)) {
+            fs.unlinkSync(oldImagePath);
+          }
+          
+          // Update existing primary image record
+          await prisma.propertyImage.update({
+            where: { id: existingPrimaryImage.id },
+            data: { 
+              url: `/uploads/properties/${primaryImageFile.filename}`,
+              order: 0 
+            }
+          });
+        } else {
+          // Create new primary image record
+          await prisma.propertyImage.create({
+            data: {
+              propertyId: id,
+              url: `/uploads/properties/${primaryImageFile.filename}`,
+              isPrimary: true,
+              order: 0
+            }
+          });
+        }
       }
-    }
 
-    if (req.files.galleryImages && req.files.galleryImages.length > 0) {
-      req.files.galleryImages.forEach((file, index) => {
-        newImages.push({ url: file.path, isPrimary: false, order: index + 1 });
-      });
-    }
+      // Handle gallery images
+      if (req.files.galleryImages && req.files.galleryImages.length > 0) {
+        // Delete old gallery images
+        const oldGalleryImages = existingProperty.images.filter(img => !img.isPrimary);
+        for (const oldImage of oldGalleryImages) {
+          const oldImagePath = path.join(__dirname, '..', oldImage.url);
+          if (fs.existsSync(oldImagePath)) {
+            fs.unlinkSync(oldImagePath);
+          }
+        }
+        
+        // Delete old gallery image records
+        await prisma.propertyImage.deleteMany({
+          where: {
+            propertyId: id,
+            isPrimary: false
+          }
+        });
 
-    if (newImages.length > 0) {
-      updateData.images = {
-        create: newImages,
-        // Optionally, handle deletion of old gallery images if needed
-        // For now, we just add new ones and ensure order is maintained
-      };
+        // Create new gallery image records
+        const galleryImageData = req.files.galleryImages.map((file, index) => ({
+          propertyId: id,
+          url: `/uploads/properties/${file.filename}`,
+          isPrimary: false,
+          order: index + 1
+        }));
+
+        await prisma.propertyImage.createMany({
+          data: galleryImageData
+        });
+      }
     }
 
     // Convert numeric fields
@@ -415,9 +470,17 @@ router.put('/properties/:id', upload.fields([{ name: 'primaryImage', maxCount: 1
     if (updateData.furnished !== undefined) updateData.furnished = updateData.furnished === 'true' || updateData.furnished === true;
     if (updateData.waterfront !== undefined) updateData.waterfront = updateData.waterfront === 'true' || updateData.waterfront === true;
     if (updateData.pool !== undefined) updateData.pool = updateData.pool === 'true' || updateData.pool === true;
-    if (updateData.parking !== undefined) updateData.parking = updateData.parking === 'true' || updateData.parking === true;
     if (updateData.newConstruction !== undefined) updateData.newConstruction = updateData.newConstruction === 'true' || updateData.newConstruction === true;
     if (updateData.petFriendly !== undefined) updateData.petFriendly = updateData.petFriendly === 'true' || updateData.petFriendly === true;
+
+    // Convert parking to Int - parking field expects an integer, not boolean
+    if (updateData.parking !== undefined) {
+      if (updateData.parkingSpaces) {
+        updateData.parking = parseInt(updateData.parkingSpaces);
+      } else {
+        updateData.parking = updateData.parking === 'true' || updateData.parking === true ? 1 : null;
+      }
+    }
 
     // Convert date fields
     if (updateData.dateListed) updateData.listingDate = new Date(updateData.dateListed);
@@ -427,9 +490,15 @@ router.put('/properties/:id', upload.fields([{ name: 'primaryImage', maxCount: 1
     delete updateData.dateListed;
     delete updateData.primaryImage;
     delete updateData.galleryImages;
-    delete updateData.userId; // Assuming userId is not updatable via this route or handled differently
+    delete updateData.userId;
+    delete updateData.id;
+    delete updateData.createdAt;
+    delete updateData.updatedAt;
+    delete updateData.images;
+    delete updateData.user;
+    delete updateData._count;
 
-
+    // Update the property
     const property = await prisma.property.update({
       where: { id },
       data: updateData,
