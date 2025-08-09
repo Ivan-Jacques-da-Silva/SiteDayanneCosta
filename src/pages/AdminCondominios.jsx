@@ -122,7 +122,7 @@ const AdminCondominios = () => {
 
   useEffect(() => {
     loadCondominios(currentPage);
-  }, [currentPage]); // Only reload when page changes
+  }, []); // Only load once on component mount
 
   const loadCondominios = async (page = 1) => {
     try {
@@ -249,7 +249,7 @@ const AdminCondominios = () => {
       setShowForm(false);
       setEditingCondominio(null);
       resetForm();
-      await loadCondominios(); // Reload properties after save
+      await loadCondominios(1); // Reload properties after save
       setNotificationMessage('Condomínio salvo com sucesso!');
       setNotificationType('success');
       setShowNotification(true);
@@ -352,12 +352,12 @@ const AdminCondominios = () => {
     if (condominio.images && condominio.images.length > 0) {
       const existingGalleryPreviews = condominio.images
         .filter(img => !img.isPrimary)
-        .map(img => img.url);
+        .map(img => `http://localhost:5000${img.url}`);
       setImagePreviews(existingGalleryPreviews);
 
       const existingMainPreview = condominio.images.find(img => img.isPrimary);
       if (existingMainPreview) {
-        setMainImagePreview(existingMainPreview.url);
+        setMainImagePreview(`http://localhost:5000${existingMainPreview.url}`);
       }
     }
 
@@ -372,7 +372,7 @@ const AdminCondominios = () => {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${token}` }
         });
-        await loadCondominios(); // Reload properties after delete
+        await loadCondominios(1); // Reload properties after delete
         setNotificationMessage('Propriedade deletada com sucesso!');
         setNotificationType('success');
         setShowNotification(true);
@@ -409,8 +409,8 @@ const AdminCondominios = () => {
   };
 
   const applyFilters = () => {
-    setCurrentPage(1); // Reset to first page when filters change
-    loadCondominios(1);
+    setCurrentPage(1);
+    setTimeout(() => loadCondominios(1), 100); // Prevent rapid successive calls
   };
 
   const clearFilters = () => {
@@ -530,7 +530,7 @@ const AdminCondominios = () => {
                         marginBottom: '16px'
                       }}>
                         <img
-                          src={condominio.images.find(img => img.isPrimary)?.url || condominio.images[0]?.url}
+                          src={`http://localhost:5000${condominio.images.find(img => img.isPrimary)?.url || condominio.images[0]?.url}`}
                           alt={condominio.title}
                           style={{
                             width: '100%',
@@ -538,7 +538,8 @@ const AdminCondominios = () => {
                             objectFit: 'cover'
                           }}
                           onError={(e) => {
-                            e.target.src = '/placeholder-image.jpg';
+                            console.log('Image failed to load:', e.target.src);
+                            e.target.style.display = 'none';
                           }}
                         />
                       </div>
