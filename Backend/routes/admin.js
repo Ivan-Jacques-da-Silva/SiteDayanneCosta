@@ -13,12 +13,11 @@ const prisma = new PrismaClient();
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadPath = 'uploads/properties/';
-    // Create directory if it doesn't exist
-    if (!fs.existsSync(uploadPath)) {
-      fs.mkdirSync(uploadPath, { recursive: true });
+    const uploadDir = 'uploads/properties/';
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
     }
-    cb(null, uploadPath);
+    cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -186,7 +185,7 @@ router.get('/users', async (req, res) => {
 router.get('/properties', async (req, res) => {
   try {
     const { page, limit, search, status } = req.query;
-    
+
     // Only apply pagination if both page and limit are provided
     const shouldPaginate = page && limit;
     const skip = shouldPaginate ? (parseInt(page) - 1) * parseInt(limit) : undefined;
@@ -194,7 +193,7 @@ router.get('/properties', async (req, res) => {
 
     // Build where clause for filtering
     const where = {};
-    
+
     if (search) {
       where.OR = [
         { title: { contains: search, mode: 'insensitive' } },
@@ -202,7 +201,7 @@ router.get('/properties', async (req, res) => {
         { city: { contains: search, mode: 'insensitive' } }
       ];
     }
-    
+
     if (status) {
       where.status = status;
     }
@@ -389,9 +388,9 @@ router.put('/properties/:id', upload.fields([{ name: 'primaryImage', maxCount: 1
   try {
     const { id } = req.params;
     const updateData = { ...req.body };
-    const existingProperty = await prisma.property.findUnique({ 
-      where: { id }, 
-      include: { images: true } 
+    const existingProperty = await prisma.property.findUnique({
+      where: { id },
+      include: { images: true }
     });
 
     if (!existingProperty) {
@@ -404,20 +403,20 @@ router.put('/properties/:id', upload.fields([{ name: 'primaryImage', maxCount: 1
       if (req.files.primaryImage && req.files.primaryImage.length > 0) {
         const primaryImageFile = req.files.primaryImage[0];
         const existingPrimaryImage = existingProperty.images.find(img => img.isPrimary);
-        
+
         if (existingPrimaryImage) {
           // Delete old primary image file if it exists
           const oldImagePath = path.join(__dirname, '..', existingPrimaryImage.url);
           if (fs.existsSync(oldImagePath)) {
             fs.unlinkSync(oldImagePath);
           }
-          
+
           // Update existing primary image record
           await prisma.propertyImage.update({
             where: { id: existingPrimaryImage.id },
-            data: { 
+            data: {
               url: `uploads/properties/${primaryImageFile.filename}`,
-              order: 0 
+              order: 0
             }
           });
         } else {
@@ -443,7 +442,7 @@ router.put('/properties/:id', upload.fields([{ name: 'primaryImage', maxCount: 1
             fs.unlinkSync(oldImagePath);
           }
         }
-        
+
         // Delete old gallery image records
         await prisma.propertyImage.deleteMany({
           where: {

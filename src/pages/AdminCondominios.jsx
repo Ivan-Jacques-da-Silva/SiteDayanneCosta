@@ -350,14 +350,15 @@ const AdminCondominios = () => {
 
     // Previews for existing images
     if (condominio.images && condominio.images.length > 0) {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
       const existingGalleryPreviews = condominio.images
         .filter(img => !img.isPrimary)
-        .map(img => `http://localhost:5000${img.url}`);
+        .map(img => `${apiUrl}${img.url}`);
       setImagePreviews(existingGalleryPreviews);
 
       const existingMainPreview = condominio.images.find(img => img.isPrimary);
       if (existingMainPreview) {
-        setMainImagePreview(`http://localhost:5000${existingMainPreview.url}`);
+        setMainImagePreview(`${apiUrl}${existingMainPreview.url}`);
       }
     }
 
@@ -530,7 +531,7 @@ const AdminCondominios = () => {
                         marginBottom: '16px'
                       }}>
                         <img
-                          src={`http://localhost:5000${condominio.images.find(img => img.isPrimary)?.url || condominio.images[0]?.url}`}
+                          src={`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${condominio.images.find(img => img.isPrimary)?.url || condominio.images[0]?.url}`}
                           alt={condominio.title}
                           style={{
                             width: '100%',
