@@ -100,6 +100,11 @@ const AdminCondominios = () => {
     neighborhood: ''
   });
 
+  // State for notification modal
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
+  const [notificationType, setNotificationType] = useState('success'); // 'success' or 'error'
+
   // Categorias fixas
   const PROPERTY_CATEGORIES = [
     { value: 'NEW_DEVELOPMENTS', label: 'New Developments' },
@@ -245,10 +250,14 @@ const AdminCondominios = () => {
       setEditingCondominio(null);
       resetForm();
       await loadCondominios(); // Reload properties after save
-      alert('Condomínio salvo com sucesso!');
+      setNotificationMessage('Condomínio salvo com sucesso!');
+      setNotificationType('success');
+      setShowNotification(true);
     } catch (error) {
       console.error('Error saving condominio:', error);
-      alert(`Falha ao salvar o imóvel: ${error.message}`);
+      setNotificationMessage(`Falha ao salvar o imóvel: ${error.message}`);
+      setNotificationType('error');
+      setShowNotification(true);
     } finally {
       setLoading(false);
     }
@@ -364,9 +373,14 @@ const AdminCondominios = () => {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         await loadCondominios(); // Reload properties after delete
+        setNotificationMessage('Propriedade deletada com sucesso!');
+        setNotificationType('success');
+        setShowNotification(true);
       } catch (error) {
         console.error('Error deleting condominio:', error);
-        alert('Error deleting property.');
+        setNotificationMessage('Erro ao deletar propriedade.');
+        setNotificationType('error');
+        setShowNotification(true);
       }
     }
   };
@@ -1406,6 +1420,37 @@ const AdminCondominios = () => {
                 </button>
               </div>
             </form>
+          </div>
+        )}
+
+        {/* Notification Modal */}
+        {showNotification && (
+          <div className={styles.notificationOverlay}>
+            <div className={`${styles.notificationModal} ${styles[notificationType]}`}>
+              <div className={styles.notificationHeader}>
+                <div className={styles.notificationIcon}>
+                  <i className={notificationType === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-triangle'}></i>
+                </div>
+                <h3>{notificationType === 'success' ? 'Sucesso!' : 'Erro!'}</h3>
+                <button 
+                  className={styles.closeNotification}
+                  onClick={() => setShowNotification(false)}
+                >
+                  <i className="fas fa-times"></i>
+                </button>
+              </div>
+              <div className={styles.notificationBody}>
+                <p>{notificationMessage}</p>
+              </div>
+              <div className={styles.notificationActions}>
+                <button 
+                  className={styles.confirmBtn}
+                  onClick={() => setShowNotification(false)}
+                >
+                  OK
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>
