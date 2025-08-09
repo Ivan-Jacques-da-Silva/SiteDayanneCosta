@@ -194,7 +194,6 @@ model Category {
   description String?
   icon        String?
   color       String  @default("#3b82f6")
-  isMainCategory Boolean @default(true)
   parentId    String?
   parent      Category? @relation("CategoryHierarchy", fields: [parentId], references: [id])
   subcategories Category[] @relation("CategoryHierarchy")

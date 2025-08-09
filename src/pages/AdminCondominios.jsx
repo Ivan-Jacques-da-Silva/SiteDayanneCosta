@@ -102,7 +102,7 @@ const AdminCondominios = () => {
 
   useEffect(() => {
     if (formData.mainCategory) {
-      const subcats = allCategories.filter(cat => 
+      const subcats = allCategories.filter(cat =>
         cat.parentId === formData.mainCategory && !cat.isMainCategory
       );
       setAvailableSubcategories(subcats);
@@ -139,7 +139,8 @@ const AdminCondominios = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setCondominios(data);
+        // Ensure data is always an array
+        setCondominios(Array.isArray(data) ? data : []);
       } else if (response.status === 404) {
         // Handle case where no properties are found
         setCondominios([]);
@@ -228,9 +229,9 @@ const AdminCondominios = () => {
               formDataToSend.append(`galleryImage_${index}`, file);
             });
           } else if (key === 'subcategories' && Array.isArray(formData[key])) {
-              formData[key].forEach((category, index) => {
-                  formDataToSend.append(`subcategories_${index}`, category);
-              });
+            formData[key].forEach((category, index) => {
+              formDataToSend.append(`subcategories_${index}`, category);
+            });
           }
           else if (typeof formData[key] === 'boolean') {
             formDataToSend.append(key, formData[key]);
@@ -251,9 +252,9 @@ const AdminCondominios = () => {
       });
 
       let response;
-      const url = editingCondominio 
-          ? buildApiUrl(`/api/admin/properties/${editingCondominio.id}`)
-          : buildApiUrl('/api/admin/properties');
+      const url = editingCondominio
+        ? buildApiUrl(`/api/admin/properties/${editingCondominio.id}`)
+        : buildApiUrl('/api/admin/properties');
 
       if (editingCondominio) {
         // Update existing property
@@ -273,9 +274,9 @@ const AdminCondominios = () => {
           body: formDataToSend
         });
         if (!response.ok) {
-            const error = await response.json();
-            console.error("API Error:", error);
-            throw new Error(error.error || 'Failed to create property');
+          const error = await response.json();
+          console.error("API Error:", error);
+          throw new Error(error.error || 'Failed to create property');
         }
         const property = await response.json(); // Assuming the response contains the created property data
 
@@ -572,7 +573,7 @@ const AdminCondominios = () => {
                 <h1>Manage Properties</h1>
                 <p>Register and manage luxury condominiums and properties</p>
               </div>
-              <button 
+              <button
                 className={styles.addBtn}
                 onClick={() => {
                   resetForm();
@@ -585,8 +586,8 @@ const AdminCondominios = () => {
             </div>
 
             <div className={styles.condominiosList}>
-              {condominios.map((condominio) => (
-                <div key={condominio.id} className={styles.condominioCard}>
+              {Array.isArray(condominios) && condominios.length > 0 ? condominios.map((condominio) => (
+                <div key={condominio.id || Math.random()} className={styles.condominioCard}>
                   <div className={styles.cardHeader}>
                     <div>
                       <h3>{condominio.title}</h3>
@@ -631,7 +632,12 @@ const AdminCondominios = () => {
                     )}
                   </div>
                 </div>
-              ))}
+              )) : (
+                <div className={styles.emptyState}>
+                  <p>No properties found. Click "Add New Property" to add your first one.</p>
+                </div>
+
+              )}
             </div>
           </>
         ) : (
@@ -641,7 +647,7 @@ const AdminCondominios = () => {
                 <h1>{editingCondominio ? 'Edit Property' : 'Add New Property'}</h1>
                 <p>Complete property information and media</p>
               </div>
-              <button 
+              <button
                 className={styles.backBtn}
                 onClick={() => setShowForm(false)}
               >
@@ -1361,15 +1367,15 @@ const AdminCondominios = () => {
               </section>
 
               <div className={styles.formActions}>
-                <button 
-                  type="button" 
-                  onClick={() => setShowForm(false)} 
+                <button
+                  type="button"
+                  onClick={() => setShowForm(false)}
                   className={styles.cancelBtn}
                 >
                   <i className="fas fa-times"></i> Cancel
                 </button>
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className={styles.submitBtn}
                   disabled={loading}
                 >

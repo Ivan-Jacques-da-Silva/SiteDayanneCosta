@@ -40,7 +40,6 @@ const SingleFamilyHomes = () => {
     <div>
       <Header />
       <PropertyListing 
-        apiEndpoint="http://localhost:5000/api/single-family-homes"
         title={pageData.title}
         breadcrumbPath="Single Family Homes"
         filters={{ cidade: '', min: '' }}

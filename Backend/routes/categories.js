@@ -1,4 +1,3 @@
-
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 
@@ -9,7 +8,7 @@ const prisma = new PrismaClient();
 router.get('/', async (req, res) => {
   try {
     const categories = await prisma.category.findMany({
-      where: { isMainCategory: true },
+      where: { parentId: null },
       orderBy: { name: 'asc' },
       include: {
         subcategories: {
@@ -36,7 +35,7 @@ router.get('/', async (req, res) => {
 // POST /api/categories - Create new category or subcategory
 router.post('/', async (req, res) => {
   try {
-    const { name, description, icon, color, parentId, isMainCategory = true } = req.body;
+    const { name, description, icon, color, parentId } = req.body;
 
     if (!name) {
       return res.status(400).json({ error: 'Category name is required' });
@@ -60,7 +59,6 @@ router.post('/', async (req, res) => {
         description,
         icon,
         color: color || '#3b82f6',
-        isMainCategory,
         parentId
       }
     });
@@ -126,11 +124,14 @@ router.delete('/:id', async (req, res) => {
 router.get('/all', async (req, res) => {
   try {
     const allCategories = await prisma.category.findMany({
-      orderBy: { name: 'asc' },
+      orderBy: {
+        name: "asc"
+      },
       include: {
-        parent: true,
         _count: {
-          select: { properties: true }
+          select: {
+            properties: true
+          }
         }
       }
     });
@@ -170,7 +171,6 @@ router.post('/subcategory', async (req, res) => {
       data: {
         name: formattedName,
         description,
-        isMainCategory: false,
         parentId,
         color: '#6366f1'
       }

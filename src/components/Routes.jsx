@@ -3,26 +3,83 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Home from '../pages/Home';
 import About from '../pages/About';
+import AboutTeam from '../pages/AboutTeam';
 import Contact from '../pages/Contact';
 import Buy from '../pages/Buy';
+import BuySell from '../pages/BuySell';
 import Sell from '../pages/Sell';
 import Search from '../pages/Search';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
+import ForgotPassword from '../pages/ForgotPassword';
 import AdminDashboard from '../pages/AdminDashboard';
+import AdminCondominios from '../pages/AdminCondominios';
+import AdminUsuarios from '../pages/AdminUsuarios';
+import AdminFavoritos from '../pages/AdminFavoritos';
+import AdminFormularios from '../pages/AdminFormularios';
+import AdminContacts from '../pages/AdminContacts';
+import AdminProperties from '../pages/AdminProperties';
+import AdminPropertyForm from '../pages/AdminPropertyForm';
+import SingleFamilyHomes from '../pages/SingleFamilyHomes';
+import LuxuryCondos from '../pages/LuxuryCondos';
+import Neighborhoods from '../pages/Neighborhoods';
+import Neighborhood from '../pages/Neighborhood';
+import Brickell from '../pages/Brickell';
+import BrickellCondos from '../pages/BrickellCondos';
+import Edgewater from '../pages/Edgewater';
+import CoconutGrove from '../pages/CoconutGrove';
+import TheRoads from '../pages/TheRoads';
+import NewDevelopments from '../pages/NewDevelopments';
+import CompassConcierge from '../pages/CompassConcierge';
+import PrivateExclusive from '../pages/PrivateExclusive';
 
 function AppRoutes() {
   return (
     <Routes>
+      {/* Main Pages */}
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
+      <Route path="/about-team" element={<AboutTeam />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/buy" element={<Buy />} />
+      <Route path="/buy-sell" element={<BuySell />} />
       <Route path="/sell" element={<Sell />} />
       <Route path="/search" element={<Search />} />
+      
+      {/* Property Types */}
+      <Route path="/single-family-homes" element={<SingleFamilyHomes />} />
+      <Route path="/luxury-condos" element={<LuxuryCondos />} />
+      <Route path="/new-developments" element={<NewDevelopments />} />
+      
+      {/* Neighborhoods */}
+      <Route path="/neighborhoods" element={<Neighborhoods />} />
+      <Route path="/neighborhood/:slug" element={<Neighborhood />} />
+      <Route path="/brickell" element={<Brickell />} />
+      <Route path="/brickell-condos" element={<BrickellCondos />} />
+      <Route path="/edgewater" element={<Edgewater />} />
+      <Route path="/coconut-grove" element={<CoconutGrove />} />
+      <Route path="/the-roads" element={<TheRoads />} />
+      
+      {/* Services */}
+      <Route path="/compass-concierge" element={<CompassConcierge />} />
+      <Route path="/private-exclusive" element={<PrivateExclusive />} />
+      
+      {/* Auth */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/admin/*" element={<AdminDashboard />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      
+      {/* Admin Routes */}
+      <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      <Route path="/admin/condominios" element={<AdminCondominios />} />
+      <Route path="/admin/usuarios" element={<AdminUsuarios />} />
+      <Route path="/admin/favoritos" element={<AdminFavoritos />} />
+      <Route path="/admin/formularios" element={<AdminFormularios />} />
+      <Route path="/admin/contacts" element={<AdminContacts />} />
+      <Route path="/admin/properties" element={<AdminProperties />} />
+      <Route path="/admin/properties/new" element={<AdminPropertyForm />} />
+      <Route path="/admin/properties/edit/:id" element={<AdminPropertyForm />} />
     </Routes>
   );
 }

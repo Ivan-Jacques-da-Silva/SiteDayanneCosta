@@ -2,6 +2,7 @@
 .aboutTeamPage {
   min-height: 100vh;
   background-color: #f0f0f0;
+  overflow-x: hidden;
 }
 
 .aboutTeamSection {
@@ -44,6 +45,7 @@
   width: 100%;
   position: relative;
   overflow: hidden;
+  max-width: 100%;
 }
 
 .teamImage {
@@ -51,6 +53,7 @@
   height: 100%;
   object-fit: contain;
   object-position: center;
+  max-width: 100%;
 }
 
 /* Responsive */
@@ -61,6 +64,10 @@
   
   .title {
     font-size: 36px;
+  }
+  
+  .imageWrapper {
+    max-width: 100%;
   }
 }
 
@@ -77,6 +84,7 @@
   .imageWrapper {
     height: 60vh;
     min-height: 400px;
+    max-width: 100%;
   }
   
   .teamImage {
@@ -96,6 +104,7 @@
   .imageWrapper {
     height: 50vh;
     min-height: 350px;
+    max-width: 100%;
   }
 }
 
@@ -106,5 +115,9 @@
   
   .title {
     font-size: 28px;
+  }
+  
+  .aboutTeamContent {
+    padding-right: 0;
   }
 }

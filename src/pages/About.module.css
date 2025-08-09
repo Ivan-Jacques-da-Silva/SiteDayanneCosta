@@ -72,11 +72,10 @@
 
 .imageWrapper {
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   position: relative;
   overflow: hidden;
-  margin-left: 0;
-  margin-right: -15px;
+  max-width: 100%;
 }
 
 .profileImage {
@@ -84,6 +83,7 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
+  max-width: 100%;
 }
 
 /* Responsive */
@@ -112,9 +112,8 @@
   .imageWrapper {
     height: 60vh;
     min-height: 400px;
-    width: 100vw;
-    margin-left: -15px;
-    margin-right: -15px;
+    width: 100%;
+    max-width: 100%;
   }
 }
 
