@@ -16,8 +16,8 @@ const AdminCondominios = () => {
     description: '',
     propertyType: 'CONDO',
     status: 'ACTIVE',
-    category: '', // Categoria principal
-    neighborhood: '', // Subcategoria (quando categoria = "Neighborhoods")
+    categoria: '', // Categoria principal
+    bairro: '', // Subcategoria (quando categoria = "Neighborhoods")
 
     // Address
     address: '',
@@ -93,18 +93,18 @@ const AdminCondominios = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   // Categorias fixas
-  const CATEGORIES = [
-    { value: 'new-developments', label: 'New Developments' },
-    { value: 'single-family-homes', label: 'Single Family Homes' },
-    { value: 'luxury-condos', label: 'Luxury Condos' },
-    { value: 'neighborhoods', label: 'Neighborhoods' }
+  const PROPERTY_CATEGORIES = [
+    { value: 'NEW_DEVELOPMENTS', label: 'New Developments' },
+    { value: 'SINGLE_FAMILY_HOMES', label: 'Single Family Homes' },
+    { value: 'LUXURY_CONDOS', label: 'Luxury Condos' },
+    { value: 'NEIGHBORHOODS', label: 'Neighborhoods' }
   ];
 
   const NEIGHBORHOODS = [
-    { value: 'brickell', label: 'Brickell' },
-    { value: 'edgewater', label: 'Edgewater' },
-    { value: 'coconut-grove', label: 'Coconut Grove' },
-    { value: 'the-roads', label: 'The Roads' }
+    { value: 'BRICKELL', label: 'Brickell' },
+    { value: 'EDGEWATER', label: 'Edgewater' },
+    { value: 'COCONUT_GROVE', label: 'Coconut Grove' },
+    { value: 'THE_ROADS', label: 'The Roads' }
   ];
 
   useEffect(() => {
@@ -256,8 +256,8 @@ const AdminCondominios = () => {
       description: '',
       propertyType: 'CONDO',
       status: 'ACTIVE',
-      category: '',
-      neighborhood: '',
+      categoria: '',
+      bairro: '',
       address: '',
       city: '',
       state: 'FL',
@@ -309,8 +309,8 @@ const AdminCondominios = () => {
       ...condominio,
       mainImage: null,
       galleryImages: [],
-      category: condominio.category || '',
-      neighborhood: condominio.neighborhood || ''
+      categoria: condominio.categoria || '',
+      bairro: condominio.bairro || ''
     });
 
     // Previews for existing images
@@ -426,11 +426,11 @@ const AdminCondominios = () => {
                         </p>
                         <p className={styles.mlsId}>MLS: {condominio.mlsId || 'N/A'}</p>
                         <p className={styles.propertyType}>Type: {condominio.propertyType || 'N/A'}</p>
-                        {condominio.category && (
-                          <p className={styles.category}>Category: {condominio.category}</p>
+                        {condominio.categoria && (
+                          <p className={styles.category}>Category: {condominio.categoria}</p>
                         )}
-                        {condominio.neighborhood && (
-                          <p className={styles.neighborhood}>Neighborhood: {condominio.neighborhood}</p>
+                        {condominio.bairro && (
+                          <p className={styles.neighborhood}>Neighborhood: {condominio.bairro}</p>
                         )}
                       </div>
                       <div className={styles.cardActions}>
@@ -628,30 +628,30 @@ const AdminCondominios = () => {
 
                 <div className={styles.formRow}>
                   <div className={styles.formGroup}>
-                    <label htmlFor="category">Category</label>
+                    <label htmlFor="categoria">Category</label>
                     <select
-                      id="category"
-                      name="category"
-                      value={formData.category}
+                      id="categoria"
+                      name="categoria"
+                      value={formData.categoria}
                       onChange={handleInputChange}
                       required
                     >
                       <option value="">Select Category</option>
-                      {CATEGORIES.map((category) => (
-                        <option key={category.value} value={category.value}>
-                          {category.label}
+                      {PROPERTY_CATEGORIES.map((cat) => (
+                        <option key={cat.value} value={cat.value}>
+                          {cat.label}
                         </option>
                       ))}
                     </select>
                   </div>
 
-                  {formData.category === 'neighborhoods' && (
+                  {formData.categoria === 'NEIGHBORHOODS' && (
                     <div className={styles.formGroup}>
-                      <label htmlFor="neighborhood">Neighborhood</label>
+                      <label htmlFor="bairro">Neighborhood</label>
                       <select
-                        id="neighborhood"
-                        name="neighborhood"
-                        value={formData.neighborhood}
+                        id="bairro"
+                        name="bairro"
+                        value={formData.bairro}
                         onChange={handleInputChange}
                         required
                       >

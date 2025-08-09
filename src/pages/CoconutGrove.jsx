@@ -41,7 +41,14 @@ const CoconutGrove = () => {
   return (
     <div>
       <Header />
-      <PropertyListing pageData={pageData} />
+      <PropertyListing 
+        apiEndpoint="/api/properties-by-category"
+        title={pageData.title}
+        breadcrumbPath="Coconut Grove"
+        filters={{ category: 'coconut_grove' }}
+        placeholderImage={pageData.heroImage}
+        pageData={pageData}
+      />
       <Footer />
     </div>
   );

@@ -41,11 +41,12 @@ const Neighborhoods = () => {
     <div>
       <Header />
       <PropertyListing 
-        apiEndpoint="/api/properties"
+        apiEndpoint="/api/properties-by-category"
         title={pageData.title}
         breadcrumbPath="Neighborhoods"
-        filters={pageData.searchParams}
+        filters={{ category: 'neighborhoods' }}
         placeholderImage="/src/assets/img/testesImagens.jpeg"
+        pageData={pageData}
       />
       <Footer />
     </div>

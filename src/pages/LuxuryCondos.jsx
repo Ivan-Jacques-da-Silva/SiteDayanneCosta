@@ -43,10 +43,10 @@ const LuxuryCondos = () => {
     <div>
       <Header />
       <PropertyListing 
-        apiEndpoint="http://localhost:5000/api/luxury-condos"
+        apiEndpoint="/api/properties-by-category"
         title={pageData.title}
         breadcrumbPath="Luxury Condos"
-        filters={{ min: '' }}
+        filters={{ category: 'luxury_condos' }}
         placeholderImage="/src/assets/img/luxury-condos.jpeg"
         pageData={pageData}
       />

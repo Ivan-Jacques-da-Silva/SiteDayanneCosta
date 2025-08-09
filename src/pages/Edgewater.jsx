@@ -41,7 +41,14 @@ const Edgewater = () => {
   return (
     <div>
       <Header />
-      <PropertyListing pageData={pageData} />
+      <PropertyListing 
+        apiEndpoint="/api/properties-by-category"
+        title={pageData.title}
+        breadcrumbPath="Edgewater"
+        filters={{ category: 'edgewater' }}
+        placeholderImage={pageData.heroImage}
+        pageData={pageData}
+      />
       <Footer />
     </div>
   );

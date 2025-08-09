@@ -41,7 +41,14 @@ const Brickell = () => {
   return (
     <div>
       <Header />
-      <PropertyListing pageData={pageData} />
+      <PropertyListing 
+        apiEndpoint="/api/properties-by-category"
+        title={pageData.title}
+        breadcrumbPath="Brickell"
+        filters={{ category: 'brickell' }}
+        placeholderImage={pageData.heroImage}
+        pageData={pageData}
+      />
       <Footer />
     </div>
   );

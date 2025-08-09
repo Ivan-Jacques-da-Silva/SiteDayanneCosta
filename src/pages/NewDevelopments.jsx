@@ -40,12 +40,7 @@ const NewDevelopments = () => {
 
   // Custom filters for New Developments
   const customFilters = {
-    cidade: '',
-    bairro: '',
-    ano: '',
-    min: '',
-    yearBuilt: true,
-    category: 'New Developments'
+    category: 'new_developments'
   };
 
   return (
