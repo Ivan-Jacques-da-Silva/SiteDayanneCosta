@@ -6,6 +6,7 @@ import styles from './AdminPropertyForm.module.css';
 const AdminPropertyForm = () => {
   const [formData, setFormData] = useState(propertyExampleData);
   const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState({ show: false, type: '', message: '' });
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -35,14 +36,15 @@ const AdminPropertyForm = () => {
       });
 
       if (response.ok) {
-        alert('Property added successfully!');
+        showNotification('success', 'Property added successfully!');
         // Redirecionar ou limpar formulário
       } else {
-        alert('Error adding property');
+        const errorData = await response.json();
+        showNotification('error', errorData.error || 'Error adding property');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Error adding property');
+      showNotification('error', 'Error adding property: ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -50,6 +52,17 @@ const AdminPropertyForm = () => {
 
   const loadExampleData = () => {
     setFormData(propertyExampleData);
+  };
+
+  const showNotification = (type, message) => {
+    setNotification({ show: true, type, message });
+    setTimeout(() => {
+      setNotification({ show: false, type: '', message: '' });
+    }, 4000);
+  };
+
+  const closeNotification = () => {
+    setNotification({ show: false, type: '', message: '' });
   };
 
   return (
@@ -393,6 +406,21 @@ const AdminPropertyForm = () => {
           </button>
         </div>
       </form>
+
+      {/* Notification Modal */}
+      {notification.show && (
+        <div className={styles.notificationOverlay} onClick={closeNotification}>
+          <div className={`${styles.notificationModal} ${styles[notification.type]}`}>
+            <div className={styles.notificationHeader}>
+              <h3>{notification.type === 'success' ? '✅ Success' : '❌ Error'}</h3>
+              <button className={styles.closeButton} onClick={closeNotification}>×</button>
+            </div>
+            <div className={styles.notificationBody}>
+              <p>{notification.message}</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
