@@ -116,8 +116,8 @@ const AdminCondominios = () => {
   ];
 
   useEffect(() => {
-    loadCondominios();
-  }, [currentPage, filters]); // Reload when page or filters change
+    loadCondominios(currentPage);
+  }, [currentPage]); // Only reload when page changes
 
   const loadCondominios = async (page = 1) => {
     try {
@@ -343,12 +343,12 @@ const AdminCondominios = () => {
     if (condominio.images && condominio.images.length > 0) {
       const existingGalleryPreviews = condominio.images
         .filter(img => !img.isPrimary)
-        .map(img => `http://localhost:5000/${img.url}`);
+        .map(img => img.url);
       setImagePreviews(existingGalleryPreviews);
 
       const existingMainPreview = condominio.images.find(img => img.isPrimary);
       if (existingMainPreview) {
-        setMainImagePreview(`http://localhost:5000/${existingMainPreview.url}`);
+        setMainImagePreview(existingMainPreview.url);
       }
     }
 
@@ -396,7 +396,7 @@ const AdminCondominios = () => {
 
   const applyFilters = () => {
     setCurrentPage(1); // Reset to first page when filters change
-    loadCondominios();
+    loadCondominios(1);
   };
 
   const clearFilters = () => {
@@ -407,7 +407,8 @@ const AdminCondominios = () => {
       neighborhood: ''
     });
     setCurrentPage(1);
-    loadCondominios();
+    // Load condominios without filters
+    setTimeout(() => loadCondominios(1), 100);
   };
 
   if (loading && !showForm) {
@@ -515,7 +516,7 @@ const AdminCondominios = () => {
                         marginBottom: '16px'
                       }}>
                         <img
-                          src={`http://localhost:5000/${condominio.images.find(img => img.isPrimary)?.url || condominio.images[0]?.url}`}
+                          src={condominio.images.find(img => img.isPrimary)?.url || condominio.images[0]?.url}
                           alt={condominio.title}
                           style={{
                             width: '100%',
