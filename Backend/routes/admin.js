@@ -13,7 +13,7 @@ const prisma = new PrismaClient();
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadPath = 'Backend/uploads/properties/';
+    const uploadPath = 'uploads/properties/';
     // Create directory if it doesn't exist
     if (!fs.existsSync(uploadPath)) {
       fs.mkdirSync(uploadPath, { recursive: true });
