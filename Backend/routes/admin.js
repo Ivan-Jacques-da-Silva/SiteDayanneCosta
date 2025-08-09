@@ -345,8 +345,8 @@ router.post('/properties', upload.fields([{ name: 'primaryImage', maxCount: 1 },
         country: 'USA',
         images: {
           create: [
-            ...(req.files?.primaryImage ? [{ url: `http://localhost:5000/uploads/properties/${req.files.primaryImage[0].filename}`, isPrimary: true, order: 0 }] : []),
-            ...(req.files?.galleryImages ? req.files.galleryImages.map((file, index) => ({ url: `http://localhost:5000/uploads/properties/${file.filename}`, isPrimary: false, order: index + 1 })) : [])
+            ...(req.files?.primaryImage ? [{ url: `/uploads/properties/${req.files.primaryImage[0].filename}`, isPrimary: true, order: 0 }] : []),
+            ...(req.files?.galleryImages ? req.files.galleryImages.map((file, index) => ({ url: `/uploads/properties/${file.filename}`, isPrimary: false, order: index + 1 })) : [])
           ]
         }
       },
@@ -399,7 +399,7 @@ router.put('/properties/:id', upload.fields([{ name: 'primaryImage', maxCount: 1
           await prisma.propertyImage.update({
             where: { id: existingPrimaryImage.id },
             data: { 
-              url: `http://localhost:5000/uploads/properties/${primaryImageFile.filename}`,
+              url: `/uploads/properties/${primaryImageFile.filename}`,
               order: 0 
             }
           });
@@ -408,7 +408,7 @@ router.put('/properties/:id', upload.fields([{ name: 'primaryImage', maxCount: 1
           await prisma.propertyImage.create({
             data: {
               propertyId: id,
-              url: `http://localhost:5000/uploads/properties/${primaryImageFile.filename}`,
+              url: `/uploads/properties/${primaryImageFile.filename}`,
               isPrimary: true,
               order: 0
             }
@@ -438,7 +438,7 @@ router.put('/properties/:id', upload.fields([{ name: 'primaryImage', maxCount: 1
         // Create new gallery image records
         const galleryImageData = req.files.galleryImages.map((file, index) => ({
           propertyId: id,
-          url: `http://localhost:5000/uploads/properties/${file.filename}`,
+          url: `/uploads/properties/${file.filename}`,
           isPrimary: false,
           order: index + 1
         }));
