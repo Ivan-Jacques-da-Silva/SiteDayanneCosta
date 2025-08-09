@@ -88,6 +88,7 @@ const AdminProperties = () => {
   // Notification helpers
   const showNotification = (message, type = 'success') => {
     setNotification({ message, type });
+    // Automatically hide notification after 5 seconds
     setTimeout(() => setNotification(null), 5000);
   };
 
@@ -98,14 +99,15 @@ const AdminProperties = () => {
   const getImageUrl = (url) => {
     if (!url) return null;
     // If it's already a full URL or starts with http, return as is
-    if (url.startsWith('http') || url.startsWith('//')) return url;
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('//')) return url;
     // If it starts with /uploads, prepend the backend URL
-    if (url.startsWith('/uploads')) {
+    if (url.startsWith('uploads')) {
       return `http://localhost:5000${url}`;
     }
-    // Otherwise, assume it's a relative path and prepend the backend URL
+    // Otherwise, assume it's a relative path and prepend the backend URL with '/properties/'
     return `http://localhost:5000/uploads/properties/${url}`;
   };
+
 
   useEffect(() => {
     loadProperties();
@@ -174,7 +176,7 @@ const AdminProperties = () => {
   const confirmDelete = async () => {
     const id = showDeleteModal;
     setShowDeleteModal(null);
-    
+
     try {
       showNotification('Excluindo propriedade...', 'info');
 
@@ -333,13 +335,17 @@ const AdminProperties = () => {
                           className={styles.propertyImage}
                           onError={(e) => {
                             e.target.style.display = 'none';
-                            e.target.nextSibling.style.display = 'flex';
+                            // Show a fallback or placeholder if image fails to load
+                            if (e.target.nextSibling) {
+                              e.target.nextSibling.style.display = 'flex';
+                            }
                           }}
                         />
                       ) : (
                         <div className={styles.noImage}>No Image</div>
                       )}
-                      <div className={styles.noImage} style={{display: 'none'}}>No Image</div>
+                      {/* Fallback div for broken image links */}
+                      <div className={styles.noImage} style={{ display: property.images && property.images.length > 0 ? 'none' : 'flex' }}>No Image</div>
                     </td>
                     <td>{property.title}</td>
                     <td>{property.address}, {property.city}</td>
@@ -414,7 +420,7 @@ const AdminProperties = () => {
             setEditingProperty(null);
           }}
           onSave={() => {
-            loadProperties();
+            loadProperties(); // Reload properties after save
             setShowEditModal(false);
             setEditingProperty(null);
           }}
@@ -533,9 +539,11 @@ const PropertyEditModal = ({ property, onClose, onSave, showNotification }) => {
 
       // Add all form fields except images
       Object.keys(formData).forEach(key => {
-        if (key !== 'primaryImage' && key !== 'galleryImages' && 
-            formData[key] !== null && formData[key] !== undefined && formData[key] !== '') {
-          formDataToSend.append(key, formData[key]);
+        // Append only if the value is not null/undefined and not an empty string (unless it's a checkbox that's false)
+        if (formData[key] !== null && formData[key] !== undefined) {
+          if (typeof formData[key] === 'boolean' || formData[key] !== '') {
+            formDataToSend.append(key, formData[key]);
+          }
         }
       });
 
@@ -574,11 +582,11 @@ const PropertyEditModal = ({ property, onClose, onSave, showNotification }) => {
         onSave(); // This will call loadProperties and reset modal states
       } else {
         const errorData = await response.json();
-        showNotification('Erro ao salvar propriedade: ' + (errorData.error || 'Erro desconhecido'), 'error');
+        showNotification('error', errorData.error || 'Erro ao salvar propriedade');
       }
     } catch (error) {
       console.error('Error submitting form:', error);
-      showNotification('Erro ao salvar propriedade: ' + error.message, 'error');
+      showNotification('error', 'Erro ao salvar propriedade: ' + error.message);
     } finally {
       setSaving(false);
     }
@@ -587,14 +595,15 @@ const PropertyEditModal = ({ property, onClose, onSave, showNotification }) => {
   const getImageUrl = (url) => {
     if (!url) return null;
     // If it's already a full URL or starts with http, return as is
-    if (url.startsWith('http') || url.startsWith('//')) return url;
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('//')) return url;
     // If it starts with /uploads, prepend the backend URL
-    if (url.startsWith('/uploads')) {
+    if (url.startsWith('uploads')) {
       return `http://localhost:5000${url}`;
     }
-    // Otherwise, assume it's a relative path and prepend the backend URL
+    // Otherwise, assume it's a relative path and prepend the backend URL with '/properties/'
     return `http://localhost:5000/uploads/properties/${url}`;
   };
+
 
   return (
     <div className={styles.modalOverlay}>
