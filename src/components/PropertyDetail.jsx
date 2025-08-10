@@ -1,12 +1,18 @@
 
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './PropertyDetail.module.css';
 
 const PropertyDetail = ({ propertyId, propertyData = null }) => {
+  const navigate = useNavigate();
   const [property, setProperty] = useState(propertyData);
   const [loading, setLoading] = useState(!propertyData);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showImageModal, setShowImageModal] = useState(false);
+
+  const handleBackClick = () => {
+    navigate(-1);
+  };
 
   useEffect(() => {
     if (!propertyData && propertyId) {
@@ -82,7 +88,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
             <span>{property.city}, {property.state} {property.zipCode}</span>
           </h1>
           <div className={styles.breadcrumbOptions}>
-            <button className={styles.backBtn}>Back to results</button>
+            <button className={styles.backBtn} onClick={handleBackClick}>Back to results</button>
             <button className={styles.shareBtn}>Share</button>
             <button className={styles.saveBtn}>Save</button>
             <a href={`tel:${property.agentPhone}`} className={styles.phoneBtn}>

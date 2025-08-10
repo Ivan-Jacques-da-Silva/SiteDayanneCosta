@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Home from '../pages/Home';
@@ -32,6 +31,7 @@ import TheRoads from '../pages/TheRoads';
 import NewDevelopments from '../pages/NewDevelopments';
 import CompassConcierge from '../pages/CompassConcierge';
 import PrivateExclusive from '../pages/PrivateExclusive';
+import PropertyDetailPage from '../pages/PropertyDetailPage';
 
 function AppRoutes() {
   return (
@@ -45,12 +45,12 @@ function AppRoutes() {
       <Route path="/buy-sell" element={<BuySell />} />
       <Route path="/sell" element={<Sell />} />
       <Route path="/search" element={<Search />} />
-      
+
       {/* Property Types */}
       <Route path="/single-family-homes" element={<SingleFamilyHomes />} />
       <Route path="/luxury-condos" element={<LuxuryCondos />} />
       <Route path="/new-developments" element={<NewDevelopments />} />
-      
+
       {/* Neighborhoods */}
       <Route path="/neighborhoods" element={<Neighborhoods />} />
       <Route path="/neighborhood/:slug" element={<Neighborhood />} />
@@ -59,16 +59,16 @@ function AppRoutes() {
       <Route path="/edgewater" element={<Edgewater />} />
       <Route path="/coconut-grove" element={<CoconutGrove />} />
       <Route path="/the-roads" element={<TheRoads />} />
-      
+
       {/* Services */}
       <Route path="/compass-concierge" element={<CompassConcierge />} />
       <Route path="/private-exclusive" element={<PrivateExclusive />} />
-      
+
       {/* Auth */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
-      
+
       {/* Admin Routes */}
       <Route path="/admin" element={<AdminDashboard />} />
       <Route path="/admin/dashboard" element={<AdminDashboard />} />
@@ -80,6 +80,9 @@ function AppRoutes() {
       <Route path="/admin/properties" element={<AdminProperties />} />
       <Route path="/admin/properties/new" element={<AdminPropertyForm />} />
       <Route path="/admin/properties/edit/:id" element={<AdminPropertyForm />} />
+
+      {/* Property Detail Route */}
+      <Route path="/property/:id" element={<PropertyDetailPage />} />
     </Routes>
   );
 }

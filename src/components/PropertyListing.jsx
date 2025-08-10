@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import styles from "./PropertyListing.module.css";
 import { buildApiUrl, getImageUrl } from "../config/api";
 
@@ -9,6 +10,7 @@ const PropertyListing = ({
   filters: customFilters = {},
   placeholderImage = "https://via.placeholder.com/400x300?text=Property",
 }) => {
+  const navigate = useNavigate();
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState("grid");
@@ -22,6 +24,10 @@ const PropertyListing = ({
     sortBy: "price-desc",
     ...customFilters,
   });
+
+  const handleViewDetails = (property) => {
+    navigate(`/property/${property.id}`, { state: { property } });
+  };
 
   useEffect(() => {
     fetchProperties();
@@ -455,7 +461,10 @@ const PropertyListing = ({
                           </div>
 
                           <div className={styles.propertyActions}>
-                            <button className={styles.viewDetailsBtn}>
+                            <button 
+                              className={styles.viewDetailsBtn}
+                              onClick={() => handleViewDetails(property)}
+                            >
                               View Details
                             </button>
                             <button className={styles.favoriteBtn}>♡</button>
