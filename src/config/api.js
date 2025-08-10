@@ -61,13 +61,26 @@ export const getImageUrl = (imagePath) => {
   // Remove barra inicial se existir para evitar dupla barra
   const cleanPath = imagePath.startsWith('/') ? imagePath.substring(1) : imagePath;
   
-  // Se não começa com uploads/, adiciona o prefixo
-  const finalPath = cleanPath.startsWith('uploads/') ? cleanPath : `uploads/properties/${cleanPath}`;
+  // Se não começa com uploads/, adiciona o prefixo completo
+  let finalPath;
+  if (cleanPath.startsWith('uploads/')) {
+    finalPath = cleanPath;
+  } else {
+    finalPath = `uploads/properties/${cleanPath}`;
+  }
   
-  // Usar sempre a URL base correta do backend
-  const fullUrl = `${API_CONFIG.BASE_URL}/${finalPath}`;
+  // Construir URL correta sem dupla barra
+  const baseUrl = API_CONFIG.BASE_URL.endsWith('/') ? API_CONFIG.BASE_URL.slice(0, -1) : API_CONFIG.BASE_URL;
+  const fullUrl = `${baseUrl}/${finalPath}`;
   
-  console.log('Image URL constructed:', fullUrl);
+  console.log('Image URL constructed:', {
+    original: imagePath,
+    cleanPath,
+    finalPath,
+    baseUrl,
+    fullUrl
+  });
+  
   return fullUrl;
 };
 

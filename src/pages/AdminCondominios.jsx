@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AdminLayout from '../components/AdminLayout';
 import styles from './AdminCondominios.module.css';
 
+// Import the centralized getImageUrl function
 import { buildApiUrl, getImageUrl } from '../config/api';
 
 const AdminCondominios = () => {
@@ -333,11 +334,11 @@ const AdminCondominios = () => {
       newConstruction: false,
       petFriendly: false
     });
-    
+
     // Clear image previews
     setImagePreviews([]);
     setMainImagePreview('');
-    
+
     // Clear editing state
     setEditingCondominio(null);
   };
@@ -469,7 +470,7 @@ const AdminCondominios = () => {
               <div className={styles.filtersHeader}>
                 <h3><i className="fas fa-filter"></i> Filter Properties</h3>
               </div>
-              
+
               <div className={styles.filtersGrid}>
                 <div className={styles.filterGroup}>
                   <label>Search</label>
@@ -482,7 +483,7 @@ const AdminCondominios = () => {
                     className={styles.filterInput}
                   />
                 </div>
-                
+
                 <div className={styles.filterGroup}>
                   <label>Category</label>
                   <select name="category" value={filters.category} onChange={handleFilterChange} className={styles.filterSelect}>
@@ -492,7 +493,7 @@ const AdminCondominios = () => {
                     ))}
                   </select>
                 </div>
-                
+
                 <div className={styles.filterGroup}>
                   <label>Status</label>
                   <select name="status" value={filters.status} onChange={handleFilterChange} className={styles.filterSelect}>
@@ -503,7 +504,7 @@ const AdminCondominios = () => {
                     <option value="OFF_MARKET">Off Market</option>
                   </select>
                 </div>
-                
+
                 <div className={styles.filterGroup}>
                   <label>Neighborhood</label>
                   <select name="neighborhood" value={filters.neighborhood} onChange={handleFilterChange} className={styles.filterSelect}>
@@ -514,7 +515,7 @@ const AdminCondominios = () => {
                   </select>
                 </div>
               </div>
-              
+
               <div className={styles.filterActions}>
                 <button onClick={applyFilters} className={styles.applyFiltersBtn}>
                   <i className="fas fa-search"></i> Apply Filters
@@ -1441,7 +1442,7 @@ const AdminCondominios = () => {
                   <i className={notificationType === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-triangle'}></i>
                 </div>
                 <h3>{notificationType === 'success' ? 'Sucesso!' : 'Erro!'}</h3>
-                <button 
+                <button
                   className={styles.closeNotification}
                   onClick={() => setShowNotification(false)}
                 >
@@ -1452,7 +1453,7 @@ const AdminCondominios = () => {
                 <p>{notificationMessage}</p>
               </div>
               <div className={styles.notificationActions}>
-                <button 
+                <button
                   className={styles.confirmBtn}
                   onClick={() => setShowNotification(false)}
                 >

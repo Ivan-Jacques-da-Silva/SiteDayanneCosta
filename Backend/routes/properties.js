@@ -286,7 +286,7 @@ router.post('/', upload.array('images', 10), async (req, res) => {
     // Add images if uploaded
     if (req.files && req.files.length > 0) {
       const imageData = req.files.map((file, index) => ({
-        url: `/uploads/properties/${file.filename}`,
+        url: `uploads/properties/${file.filename}`,
         order: index,
         isPrimary: index === 0,
         propertyId: property.id

@@ -62,6 +62,20 @@ if (!fs.existsSync(propertiesDir)) {
   fs.mkdirSync(propertiesDir, { recursive: true });
 }
 
+// Add middleware to log image requests for debugging
+app.use('/uploads', (req, res, next) => {
+  console.log(`Image request: ${req.method} ${req.originalUrl}`);
+  console.log(`File path: ${path.join(__dirname, 'uploads', req.path)}`);
+  console.log(`File exists: ${fs.existsSync(path.join(__dirname, 'uploads', req.path))}`);
+  
+  // Add CORS headers for images
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  
+  next();
+});
+
 // Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
