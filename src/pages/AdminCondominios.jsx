@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AdminLayout from '../components/AdminLayout';
 import styles from './AdminCondominios.module.css';
 
-import { buildApiUrl } from '../config/api';
+import { buildApiUrl, getImageUrl } from '../config/api';
 
 const AdminCondominios = () => {
   const [condominios, setCondominios] = useState([]);
@@ -333,8 +333,13 @@ const AdminCondominios = () => {
       newConstruction: false,
       petFriendly: false
     });
+    
+    // Clear image previews
     setImagePreviews([]);
     setMainImagePreview('');
+    
+    // Clear editing state
+    setEditingCondominio(null);
   };
 
   const handleEdit = (condominio) => {
@@ -352,13 +357,17 @@ const AdminCondominios = () => {
     if (condominio.images && condominio.images.length > 0) {
       const existingGalleryPreviews = condominio.images
         .filter(img => !img.isPrimary)
-        .map(img => img.url);
+        .map(img => getImageUrl(img.url));
       setImagePreviews(existingGalleryPreviews);
 
       const existingMainPreview = condominio.images.find(img => img.isPrimary);
       if (existingMainPreview) {
-        setMainImagePreview(existingMainPreview.url);
+        setMainImagePreview(getImageUrl(existingMainPreview.url));
       }
+    } else {
+      // Reset previews if no images
+      setImagePreviews([]);
+      setMainImagePreview('');
     }
 
     setShowForm(true);
@@ -530,7 +539,7 @@ const AdminCondominios = () => {
                         marginBottom: '16px'
                       }}>
                         <img
-                          src={condominio.images.find(img => img.isPrimary)?.url || condominio.images[0]?.url}
+                          src={getImageUrl(condominio.images.find(img => img.isPrimary)?.url || condominio.images[0]?.url)}
                           alt={condominio.title}
                           style={{
                             width: '100%',

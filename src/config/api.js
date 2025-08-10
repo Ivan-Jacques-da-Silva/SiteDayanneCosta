@@ -65,7 +65,10 @@ export const getImageUrl = (imagePath) => {
   const finalPath = cleanPath.startsWith('uploads/') ? cleanPath : `uploads/properties/${cleanPath}`;
   
   // Usar sempre a URL base correta do backend
-  return `${API_CONFIG.BASE_URL}/${finalPath}`;
+  const fullUrl = `${API_CONFIG.BASE_URL}/${finalPath}`;
+  
+  console.log('Image URL constructed:', fullUrl);
+  return fullUrl;
 };
 
 export default API_CONFIG;

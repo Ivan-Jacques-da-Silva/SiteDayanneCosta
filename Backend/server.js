@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
+const fs = require('fs');
 require('dotenv').config();
 
 const { PrismaClient } = require('@prisma/client');
@@ -48,6 +49,18 @@ if (!process.env.JWT_SECRET) {
 // Middleware
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+
+// Create uploads directory if it doesn't exist
+const uploadsDir = path.join(__dirname, 'uploads');
+const propertiesDir = path.join(uploadsDir, 'properties');
+
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+if (!fs.existsSync(propertiesDir)) {
+  fs.mkdirSync(propertiesDir, { recursive: true });
+}
 
 // Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -112,7 +125,7 @@ app.use('*', (req, res, next) => {
     return res.status(404).json({ error: 'Route not found' });
   }
   const indexPath = path.join(__dirname, '../dist/index.html');
-  if (require('fs').existsSync(indexPath)) {
+  if (fs.existsSync(indexPath)) {
     res.sendFile(indexPath);
   } else {
     res.status(404).json({ error: 'Frontend not built. Run npm run build first.' });
