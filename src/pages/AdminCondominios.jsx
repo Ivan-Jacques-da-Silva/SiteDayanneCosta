@@ -150,7 +150,7 @@ const AdminCondominios = () => {
 
       // Apply filters if any
       const params = new URLSearchParams();
-      if (filters.search) params.append('search', filters.search);
+      if (filters.search && filters.search.length >= 3) params.append('search', filters.search);
       if (filters.category) params.append('categoria', filters.category);
       if (filters.status) params.append('status', filters.status);
       if (filters.neighborhood) params.append('bairro', filters.neighborhood);
@@ -545,6 +545,14 @@ const AdminCondominios = () => {
   };
 
   const applyFilters = () => {
+    // Validate search filter
+    if (filters.search && filters.search.length < 3) {
+      setNotificationMessage('A busca deve ter pelo menos 3 caracteres.');
+      setNotificationType('error');
+      setShowNotification(true);
+      return;
+    }
+    
     setCurrentPage(1); // Reset to first page when filters change
     loadCondominios(1);
   };
@@ -603,7 +611,7 @@ const AdminCondominios = () => {
                   <input
                     type="text"
                     name="search"
-                    placeholder="Search by title, address, or MLS ID"
+                    placeholder="Search by title, address, or MLS ID (min. 3 characters)"
                     value={filters.search}
                     onChange={handleFilterChange}
                     className={styles.filterInput}

@@ -193,7 +193,7 @@ router.get('/users', async (req, res) => {
 // GET /api/admin/properties - Get all properties with optional pagination
 router.get('/properties', async (req, res) => {
   try {
-    const { page, limit, search, status } = req.query;
+    const { page, limit, search, status, categoria, bairro } = req.query;
 
     // Only apply pagination if both page and limit are provided
     const shouldPaginate = page && limit;
@@ -207,12 +207,21 @@ router.get('/properties', async (req, res) => {
       where.OR = [
         { title: { contains: search, mode: 'insensitive' } },
         { address: { contains: search, mode: 'insensitive' } },
-        { city: { contains: search, mode: 'insensitive' } }
+        { city: { contains: search, mode: 'insensitive' } },
+        { mlsId: { contains: search, mode: 'insensitive' } }
       ];
     }
 
     if (status) {
       where.status = status;
+    }
+
+    if (categoria) {
+      where.categoria = categoria;
+    }
+
+    if (bairro) {
+      where.bairro = bairro;
     }
 
     const queryOptions = {
