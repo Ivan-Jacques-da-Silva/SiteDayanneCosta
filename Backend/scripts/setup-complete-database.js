@@ -162,9 +162,55 @@ async function createAmenitiesAndFeatures() {
 async function createSampleProperties(users) {
   console.log('🏠 Creating sample properties...');
 
-  // Check if sample image exists
-  const sampleImagePath = path.join(__dirname, '..', 'uploads', 'properties', 'sample-property.jpeg');
-  const hasImage = fs.existsSync(sampleImagePath);
+  // Function to get images for a property based on naming patterns
+  function getPropertyImages(propertyTitle) {
+    const uploadsDir = path.join(__dirname, '..', 'uploads', 'properties');
+
+    if (!fs.existsSync(uploadsDir)) {
+      console.log('⚠️ Uploads directory does not exist');
+      return { primary: null, gallery: [] };
+    }
+
+    const files = fs.readdirSync(uploadsDir);
+
+    // Map property titles to image patterns
+    const imagePatterns = {
+      'Echo Brickell': ['galleryimages-1754773031275', 'galleryimages-1754773031276', 'galleryimages-1754773031277', 'primaryimage-1754772555589'],
+      'Aston Martin Residences': ['galleryimages-1754773448181', 'galleryimages-1754773448184', 'galleryimages-1754773448186', 'primaryimage-1754772568127'],
+      'Four Seasons Residences': ['galleryimages-1754773448187', 'galleryimages-1754774018147', 'primaryimage-1754772790679'],
+      'Coral Gables Estate': ['galleryimages-1754774018150', 'galleryimages-1754774018151', 'primaryimage-1754773031267'],
+      'Coconut Grove Family Home': ['galleryimages-1754774018152', 'galleryimages-1754774491445', 'primaryimage-1754773448180'],
+      'Venetian Islands Waterfront': ['galleryimages-1754774491447', 'galleryimages-1754774491448', 'primaryimage-1754774018145'],
+      'Doral Golf Course Estate': ['galleryimages-1754774491449', 'galleryimages-1754774491450', 'primaryimage-1754774491442'],
+      'Edgewater Modern High-Rise': ['galleryimages-1754781518402', 'galleryimages-1754781518405', 'primaryimage-1754781518400'],
+      'Historic The Roads Charmer': ['galleryimages-1754781518407', 'galleryimages-1754781518409', 'primaryimage-1754781518409']
+    };
+
+    let primaryImage = null;
+    let galleryImages = [];
+
+    // Find matching pattern for this property
+    for (const [title, patterns] of Object.entries(imagePatterns)) {
+      if (propertyTitle.includes(title) || title.includes(propertyTitle.split(' ')[0])) {
+        for (const pattern of patterns) {
+          const matchingFiles = files.filter(file => file.includes(pattern));
+
+          for (const file of matchingFiles) {
+            const imagePath = `uploads/properties/${file}`;
+
+            if (pattern.startsWith('primaryimage')) {
+              primaryImage = imagePath;
+            } else if (pattern.startsWith('galleryimages')) {
+              galleryImages.push(imagePath);
+            }
+          }
+        }
+        break;
+      }
+    }
+
+    return { primary: primaryImage, gallery: galleryImages };
+  }
 
   const sampleProperties = [
     // 1. NEW DEVELOPMENTS - 4 properties
@@ -1044,17 +1090,75 @@ async function createSampleProperties(users) {
         data: propertyData
       });
 
-      // Add sample image if available
-      if (hasImage) {
+      const uploadsDir = path.join(__dirname, '..', 'uploads', 'properties');
+      let files = [];
+      if (fs.existsSync(uploadsDir)) {
+        files = fs.readdirSync(uploadsDir);
+      } else {
+        console.log(`⚠️ Uploads directory does not exist for property: ${property.title}`);
+      }
+
+      // Procurar por imagem principal (procurar tanto primaryimage quanto galleryimages que possam ser principal)
+      const primaryImageFile = files.find(file =>
+        file.includes('primaryimage-') ||
+        file.includes('mainimage-')
+      );
+
+      // Se não encontrar primaryimage, usar a primeira galleryimage como principal
+      const fallbackPrimaryImage = !primaryImageFile ? files.find(file =>
+        file.includes('galleryimages-')
+      ) : null;
+
+      const images = [];
+
+      if (primaryImageFile) {
+        images.push({
+          url: `uploads/properties/${primaryImageFile}`,
+          isPrimary: true,
+          order: 0
+        });
+      } else if (fallbackPrimaryImage) {
+        images.push({
+          url: `uploads/properties/${fallbackPrimaryImage}`,
+          isPrimary: true,
+          order: 0
+        });
+      }
+
+      // Adicionar imagens da galeria (excluir a que foi usada como principal)
+      const usedAsPrimary = primaryImageFile || fallbackPrimaryImage;
+      const galleryImages = files.filter(file =>
+        file.includes('galleryimages-') && file !== usedAsPrimary
+      );
+
+      // Add primary image to database
+      if (images.length > 0) {
         await prisma.propertyImage.create({
           data: {
             propertyId: property.id,
-            url: '/uploads/properties/sample-property.jpeg',
-            caption: 'Property Image',
-            isPrimary: true,
-            order: 1
+            url: images[0].url,
+            caption: 'Main Property Image',
+            isPrimary: images[0].isPrimary,
+            order: images[0].order
           }
         });
+        console.log(`  ✓ Added primary image: ${images[0].url}`);
+      }
+
+      // Add gallery images to database
+      if (galleryImages.length > 0) {
+        for (let i = 0; i < galleryImages.length; i++) {
+          await prisma.propertyImage.create({
+            data: {
+              propertyId: property.id,
+              url: `uploads/properties/${galleryImages[i]}`,
+              caption: `Gallery Image ${i + 1}`,
+              isPrimary: false,
+              order: i + 1
+            }
+          });
+        }
+        console.log(`  ✓ Added ${galleryImages.length} gallery images`);
       }
 
       console.log(`✓ Created: ${property.title}`);

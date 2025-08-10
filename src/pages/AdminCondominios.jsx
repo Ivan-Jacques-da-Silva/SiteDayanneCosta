@@ -122,7 +122,7 @@ const AdminCondominios = () => {
 
   useEffect(() => {
     loadCondominios(currentPage);
-  }, []); // Only load once on component mount
+  }, [currentPage]); // Only reload when page changes
 
   const loadCondominios = async (page = 1) => {
     try {
@@ -249,7 +249,7 @@ const AdminCondominios = () => {
       setShowForm(false);
       setEditingCondominio(null);
       resetForm();
-      await loadCondominios(1); // Reload properties after save
+      await loadCondominios(); // Reload properties after save
       setNotificationMessage('Condomínio salvo com sucesso!');
       setNotificationType('success');
       setShowNotification(true);
@@ -350,15 +350,14 @@ const AdminCondominios = () => {
 
     // Previews for existing images
     if (condominio.images && condominio.images.length > 0) {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
       const existingGalleryPreviews = condominio.images
         .filter(img => !img.isPrimary)
-        .map(img => `${apiUrl}${img.url}`);
+        .map(img => img.url);
       setImagePreviews(existingGalleryPreviews);
 
       const existingMainPreview = condominio.images.find(img => img.isPrimary);
       if (existingMainPreview) {
-        setMainImagePreview(`${apiUrl}${existingMainPreview.url}`);
+        setMainImagePreview(existingMainPreview.url);
       }
     }
 
@@ -373,7 +372,7 @@ const AdminCondominios = () => {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${token}` }
         });
-        await loadCondominios(1); // Reload properties after delete
+        await loadCondominios(); // Reload properties after delete
         setNotificationMessage('Propriedade deletada com sucesso!');
         setNotificationType('success');
         setShowNotification(true);
@@ -410,8 +409,8 @@ const AdminCondominios = () => {
   };
 
   const applyFilters = () => {
-    setCurrentPage(1);
-    setTimeout(() => loadCondominios(1), 100); // Prevent rapid successive calls
+    setCurrentPage(1); // Reset to first page when filters change
+    loadCondominios(1);
   };
 
   const clearFilters = () => {
@@ -531,7 +530,7 @@ const AdminCondominios = () => {
                         marginBottom: '16px'
                       }}>
                         <img
-                          src={`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${condominio.images.find(img => img.isPrimary)?.url || condominio.images[0]?.url}`}
+                          src={condominio.images.find(img => img.isPrimary)?.url || condominio.images[0]?.url}
                           alt={condominio.title}
                           style={{
                             width: '100%',
@@ -539,8 +538,7 @@ const AdminCondominios = () => {
                             objectFit: 'cover'
                           }}
                           onError={(e) => {
-                            console.log('Image failed to load:', e.target.src);
-                            e.target.style.display = 'none';
+                            e.target.src = '/placeholder-image.jpg';
                           }}
                         />
                       </div>

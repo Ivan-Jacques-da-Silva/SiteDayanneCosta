@@ -13,15 +13,23 @@ const prisma = new PrismaClient();
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadDir = 'uploads/properties/';
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
+    // Ensure the uploads directory exists
+    const dir = path.join(__dirname, '..', 'uploads', 'properties');
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
     }
-    cb(null, uploadDir);
+    cb(null, dir);
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+    let fieldPrefix = 'galleryimages';
+    
+    // Check for different possible field names for primary image
+    if (file.fieldname === 'mainImage' || file.fieldname === 'primaryImage' || file.fieldname === 'imagemPrincipal') {
+      fieldPrefix = 'primaryimage';
+    }
+    
+    cb(null, `${fieldPrefix}-${uniqueSuffix}${path.extname(file.originalname)}`);
   }
 });
 
@@ -259,7 +267,12 @@ router.get('/properties', async (req, res) => {
 });
 
 // POST /api/admin/properties - Create new property
-router.post('/properties', upload.fields([{ name: 'primaryImage', maxCount: 1 }, { name: 'galleryImages', maxCount: 10 }]), async (req, res) => {
+router.post('/properties', upload.fields([
+  { name: 'mainImage', maxCount: 1 }, 
+  { name: 'primaryImage', maxCount: 1 }, 
+  { name: 'imagemPrincipal', maxCount: 1 },
+  { name: 'galleryImages', maxCount: 10 }
+]), async (req, res) => {
   try {
     const {
       mlsId,
@@ -361,8 +374,18 @@ router.post('/properties', upload.fields([{ name: 'primaryImage', maxCount: 1 },
         country: 'USA',
         images: {
           create: [
-            ...(req.files?.primaryImage ? [{ url: `uploads/properties/${req.files.primaryImage[0].filename}`, isPrimary: true, order: 0 }] : []),
-            ...(req.files?.galleryImages ? req.files.galleryImages.map((file, index) => ({ url: `uploads/properties/${file.filename}`, isPrimary: false, order: index + 1 })) : [])
+            // Check for primary image in different possible field names
+            ...((req.files?.mainImage || req.files?.primaryImage || req.files?.imagemPrincipal) ? 
+              [{ 
+                url: `uploads/properties/${(req.files.mainImage || req.files.primaryImage || req.files.imagemPrincipal)[0].filename}`, 
+                isPrimary: true, 
+                order: 0 
+              }] : []),
+            ...(req.files?.galleryImages ? req.files.galleryImages.map((file, index) => ({ 
+              url: `uploads/properties/${file.filename}`, 
+              isPrimary: false, 
+              order: index + 1 
+            })) : [])
           ]
         }
       },
@@ -384,7 +407,12 @@ router.post('/properties', upload.fields([{ name: 'primaryImage', maxCount: 1 },
 });
 
 // PUT /api/admin/properties/:id - Update property
-router.put('/properties/:id', upload.fields([{ name: 'primaryImage', maxCount: 1 }, { name: 'galleryImages', maxCount: 10 }]), async (req, res) => {
+router.put('/properties/:id', upload.fields([
+  { name: 'mainImage', maxCount: 1 }, 
+  { name: 'primaryImage', maxCount: 1 }, 
+  { name: 'imagemPrincipal', maxCount: 1 },
+  { name: 'galleryImages', maxCount: 10 }
+]), async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = { ...req.body };
@@ -398,10 +426,11 @@ router.put('/properties/:id', upload.fields([{ name: 'primaryImage', maxCount: 1
     }
 
     // Handle image updates
-    if (req.files && (req.files.primaryImage || req.files.galleryImages)) {
+    if (req.files && ((req.files.mainImage || req.files.primaryImage || req.files.imagemPrincipal) || req.files.galleryImages)) {
       // Handle primary image update
-      if (req.files.primaryImage && req.files.primaryImage.length > 0) {
-        const primaryImageFile = req.files.primaryImage[0];
+      const primaryImageFile = (req.files.mainImage || req.files.primaryImage || req.files.imagemPrincipal);
+      if (primaryImageFile && primaryImageFile.length > 0) {
+        const primaryFile = primaryImageFile[0];
         const existingPrimaryImage = existingProperty.images.find(img => img.isPrimary);
 
         if (existingPrimaryImage) {
@@ -415,7 +444,7 @@ router.put('/properties/:id', upload.fields([{ name: 'primaryImage', maxCount: 1
           await prisma.propertyImage.update({
             where: { id: existingPrimaryImage.id },
             data: {
-              url: `uploads/properties/${primaryImageFile.filename}`,
+              url: `uploads/properties/${primaryFile.filename}`,
               order: 0
             }
           });
@@ -424,7 +453,7 @@ router.put('/properties/:id', upload.fields([{ name: 'primaryImage', maxCount: 1
           await prisma.propertyImage.create({
             data: {
               propertyId: id,
-              url: `uploads/properties/${primaryImageFile.filename}`,
+              url: `uploads/properties/${primaryFile.filename}`,
               isPrimary: true,
               order: 0
             }

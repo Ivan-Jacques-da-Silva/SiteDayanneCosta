@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styles from "./PropertyListing.module.css";
-import { buildApiUrl } from "../config/api";
+import { buildApiUrl, getImageUrl } from "../config/api";
 
 const PropertyListing = ({
   apiEndpoint = "/api/properties",
@@ -88,7 +88,7 @@ const PropertyListing = ({
       propertiesData = propertiesData.map(property => ({
         ...property,
         image: property.images && property.images.length > 0 
-          ? property.images[0].url 
+          ? getImageUrl(property.images[0].url)
           : property.image || placeholderImage
       }));
 
@@ -410,7 +410,7 @@ const PropertyListing = ({
                       >
                         <div className={styles.propertyImageContainer}>
                           <img
-                            src={property.image || placeholderImage}
+                            src={getImageUrl(property.image) || placeholderImage}
                             alt={`Property at ${property.address}`}
                             className={styles.propertyImage}
                           />
@@ -552,7 +552,7 @@ const PropertyListing = ({
                           >
                             <div className={styles.mapPropertyImage}>
                               <img
-                                src={property.image || placeholderImage}
+                                src={getImageUrl(property.image) || placeholderImage}
                                 alt={property.address}
                               />
                             </div>
