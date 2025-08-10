@@ -1,26 +1,70 @@
 
 .propertyDetail {
-  max-width: 1200px;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #fff;
+}
+
+/* Loading State */
+.loading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  gap: 20px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #000;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  font-size: 18px;
+  color: #666;
+}
+
+/* Fixed Header Section */
+.fixedHeader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  z-index: 1000;
+  padding: 15px 0;
+}
+
+.container {
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 20px;
-  font-family: 'Raleway', sans-serif;
 }
 
-/* Header Section */
-.headerSection {
-  padding: 20px 0;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.titleContainer {
+.headerContent {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 20px;
 }
 
 .propertyTitle {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 300;
   color: #000;
   margin: 0;
@@ -28,39 +72,43 @@
 
 .propertyTitle span {
   display: block;
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: #666;
   font-weight: 400;
-  margin-top: 5px;
 }
 
-.breadcrumbOptions {
+.headerActions {
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
 }
 
-.backBtn, .shareBtn, .saveBtn, .phoneBtn {
-  padding: 10px 20px;
+.shareBtn, .backBtn, .newSearchBtn, .favoriteBtn {
+  padding: 8px 16px;
   border: 1px solid #000;
   background: transparent;
   color: #000;
-  text-decoration: none;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.backBtn:hover, .shareBtn:hover, .saveBtn:hover {
+.shareBtn:hover, .backBtn:hover, .newSearchBtn:hover, .favoriteBtn:hover {
   background: #000;
   color: #fff;
 }
 
 .phoneBtn {
+  padding: 8px 16px;
   background: #000;
   color: #fff;
+  border: 1px solid #000;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 .phoneBtn:hover {
@@ -68,95 +116,235 @@
   color: #000;
 }
 
-/* Image Gallery */
-.imageGallery {
-  padding: 20px 0;
+/* Full Screen Slider Section */
+.fullSlider {
+  margin-top: 80px;
+  position: relative;
+  height: 60vh;
+  min-height: 500px;
+  background: #000;
 }
 
-.mainImageContainer {
+.sliderContainer {
   position: relative;
   width: 100%;
-  height: 400px;
-  overflow: hidden;
-  border-radius: 8px;
+  height: 100%;
 }
 
-.mainImage {
+.sliderImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
   cursor: pointer;
-  transition: transform 0.3s ease;
 }
 
-.mainImage:hover {
-  transform: scale(1.02);
+.mapView {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #f5f5f5;
+  display: none;
 }
 
-.imageControls {
+.mapView.active {
+  display: block;
+}
+
+.mapContainer {
+  width: 100%;
+  height: 100%;
+}
+
+.mapPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+}
+
+.mapPlaceholder h3 {
+  margin: 0 0 10px 0;
+  color: #666;
+}
+
+.mapPlaceholder p {
+  margin: 5px 0;
+  color: #888;
+  text-align: center;
+}
+
+/* Slider Options */
+.sliderOptions {
   position: absolute;
   bottom: 20px;
+  left: 20px;
   right: 20px;
   display: flex;
-  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.galleryBtn, .mapBtn, .tourBtn {
-  padding: 8px 16px;
-  background: rgba(0, 0, 0, 0.8);
+.sliderOptionsList {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 20px;
+}
+
+.optionBtn, .tourBtn {
+  padding: 10px 20px;
+  background: rgba(0, 0, 0, 0.7);
   color: #fff;
   border: none;
-  border-radius: 4px;
+  text-decoration: none;
   font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
-  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.optionBtn.active, .optionBtn:hover, .tourBtn:hover {
+  background: #fff;
+  color: #000;
+}
+
+.fullScreenBtn {
+  padding: 10px 20px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  border: none;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.fullScreenBtn:hover {
+  background: #fff;
+  color: #000;
+}
+
+/* Slider Navigation */
+.sliderPrev, .sliderNext {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  border: none;
+  font-size: 24px;
   cursor: pointer;
   transition: background 0.3s ease;
 }
 
-.galleryBtn:hover, .mapBtn:hover, .tourBtn:hover {
-  background: rgba(0, 0, 0, 0.9);
+.sliderPrev {
+  left: 20px;
 }
 
-/* Property Information */
-.propertyInfo {
+.sliderNext {
+  right: 20px;
+}
+
+.sliderPrev:hover, .sliderNext:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/* Auto Navigation Buttons */
+.autoNavigation {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 30px 0;
-  border-bottom: 1px solid #e0e0e0;
+  pointer-events: none;
+  z-index: 10;
 }
 
-.priceSection {
-  flex: 1;
-}
-
-.price {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #000;
-  margin-bottom: 10px;
-}
-
-.priceDetails {
+.autoNavBtn {
+  width: 60px;
+  height: 60px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  pointer-events: auto;
   display: flex;
   align-items: center;
-  gap: 20px;
+  justify-content: center;
+  border-radius: 50%;
+  margin: 0 20px;
 }
 
-.pricePerSqft {
-  font-size: 14px;
+.autoNavBtn:hover {
+  background: rgba(0, 0, 0, 1);
+  transform: scale(1.1);
+}
+
+.autoNavigation .autoNavBtn:first-child {
+  margin-left: 20px;
+}
+
+.autoNavigation .autoNavBtn:last-child {
+  margin-right: 20px;
+}
+
+/* Main Section */
+.mainSection {
+  padding: 40px 0;
+}
+
+/* Property Information Bar */
+.propertyInfoBar {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding: 20px 0;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 40px;
+  list-style: none;
+  margin: 0 0 40px 0;
+}
+
+.priceProperty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.priceProperty {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 5px;
+}
+
+.estimatedPayment {
+  font-size: 12px;
   color: #666;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .calculatorBtn {
-  padding: 8px 16px;
+  padding: 4px 8px;
   background: transparent;
   border: 1px solid #000;
   color: #000;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 10px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -166,299 +354,353 @@
   color: #fff;
 }
 
-.propertySpecs {
-  display: flex;
-  gap: 30px;
-}
-
-.spec {
+.infoItem {
   text-align: center;
 }
 
-.specNumber {
+.infoNumber {
   display: block;
   font-size: 1.5rem;
   font-weight: 700;
   color: #000;
 }
 
-.specLabel {
+.infoLabel {
   display: block;
-  font-size: 14px;
+  font-size: 12px;
   color: #666;
   text-transform: uppercase;
   margin-top: 5px;
 }
 
-/* Main Content */
+.saveBtn {
+  margin-left: auto;
+}
+
+.saveButton {
+  padding: 10px 20px;
+  background: transparent;
+  border: 1px solid #000;
+  color: #000;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.saveButton:hover {
+  background: #000;
+  color: #fff;
+}
+
+/* Main Content Layout */
 .mainContent {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 40px;
-  padding: 40px 0;
 }
 
-.basicInfo, .description, .amenities, .features, .mapSection, .similarProperties {
-  grid-column: 1;
-  margin-bottom: 40px;
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
 
-.basicInfo h2, .description h2, .amenities h2, .features h2, .mapSection h2, .similarProperties h2 {
-  font-size: 1.5rem;
+.rightColumn {
+  position: sticky;
+  top: 120px;
+  height: fit-content;
+}
+
+/* Property Detail Cards */
+.basicInfoCard, .descriptionCard, .amenitiesCard, .featuresCard, .locationMapCard, .similarPropertiesCard {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  padding: 25px;
+  margin-bottom: 20px;
+}
+
+.basicInfoCard h2, .descriptionCard h2, .amenitiesCard h2, .featuresCard h2, .locationMapCard h2, .similarPropertiesCard h2 {
+  font-size: 1.25rem;
   font-weight: 600;
   color: #000;
-  margin-bottom: 20px;
-  border-bottom: 2px solid #000;
+  margin: 0 0 20px 0;
   padding-bottom: 10px;
+  border-bottom: 1px solid #e0e0e0;
 }
 
-.infoList, .featuresList {
+.basicInfoList, .featuresList {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.infoList li, .featuresList li {
+.basicInfoList li, .featuresList li {
   display: flex;
   justify-content: space-between;
-  padding: 10px 0;
-  border-bottom: 1px solid #f0f0f0;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.basicInfoList li:last-child, .featuresList li:last-child {
+  border-bottom: none;
 }
 
 .infoLabel, .featureLabel {
-  font-weight: 600;
-  color: #333;
+  font-size: 14px;
+  color: #666;
+  font-weight: 400;
 }
 
 .infoValue, .featureValue {
-  color: #666;
-  text-align: right;
+  font-size: 14px;
+  color: #000;
+  font-weight: 600;
 }
 
-.description p {
+.descriptionCard p {
   line-height: 1.6;
   color: #333;
-}
-
-.amenitiesList {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 10px;
-  list-style: none;
-  padding: 0;
   margin: 0;
 }
 
+.amenitiesList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
 .amenitiesList li {
-  padding: 8px 12px;
-  background: #f8f9fa;
-  border-radius: 4px;
-  font-size: 14px;
+  padding: 8px 0;
   color: #333;
 }
 
-/* Map Section */
-.mapSection {
-  margin-bottom: 40px;
+/* Location Map Card */
+.mapHeader h2 {
+  margin: 0 0 5px 0;
+  font-size: 1.25rem;
+  border: none;
+  padding: 0;
 }
 
-.mapSection h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #000;
-  margin-bottom: 5px;
-}
-
-.mapSection p {
+.mapHeader span {
   color: #666;
-  margin-bottom: 20px;
+  font-size: 14px;
 }
 
-.mapPlaceholder {
-  width: 100%;
-  height: 300px;
-  background: #f5f5f5;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.mapWrapper {
+  margin-top: 20px;
 }
 
-.mapError {
+.mapContent {
   text-align: center;
-  max-width: 300px;
+  padding: 40px 20px;
 }
 
 .errorIcon {
   font-size: 48px;
-  margin-bottom: 15px;
-}
-
-.mapError h3 {
-  font-size: 1.5rem;
-  color: #333;
-  margin-bottom: 10px;
-  font-weight: 600;
-}
-
-.mapError p {
-  color: #666;
-  font-size: 14px;
-  line-height: 1.5;
+  margin-bottom: 20px;
 }
 
 /* Similar Properties */
-.similarGrid {
+.similarPropertiesList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
 }
 
-.similarCard {
-  background: #fff;
+.similarPropertyItem {
+  margin: 0;
+}
+
+.similarPropertyCard {
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border-radius: 4px;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.similarCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+.similarPropertyCard:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-color: #ccc;
 }
 
-.similarImage {
+.similarPropertyBody {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.similarPropertySlider {
+  width: 120px;
+  height: 80px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.similarPropertyImage {
   width: 100%;
-  height: 180px;
+  height: 100%;
   object-fit: cover;
 }
 
-.similarInfo {
-  padding: 15px;
+.similarPropertyInfo {
+  padding: 12px 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.similarPrice {
-  font-size: 1.2rem;
+.similarPropertyPrice {
+  font-size: 1.1rem;
   font-weight: 700;
   color: #000;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
-.similarSpecs {
+.similarPropertyDetail {
   display: flex;
-  gap: 15px;
-  margin-bottom: 8px;
-  font-size: 14px;
-  color: #666;
+  gap: 8px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
 }
 
-.similarAddress {
-  font-size: 13px;
+.similarPropertySpecs {
+  font-size: 11px;
   color: #666;
-  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.similarPropertySpecs strong {
+  font-weight: 600;
+  color: #000;
+}
+
+.similarPropertyAddress {
+  font-size: 12px;
+  color: #666;
+  line-height: 1.3;
 }
 
 /* Contact Sidebar */
 .contactSidebar {
-  grid-column: 2;
-  grid-row: 1;
-  position: sticky;
-  top: 20px;
-  height: fit-content;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  padding: 25px;
+}
+
+.contactHeader {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.contactHeader span {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #000;
 }
 
 .agentInfo {
   display: flex;
   align-items: center;
   gap: 15px;
-  margin-bottom: 20px;
-  padding: 20px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.agentAvatar {
+  flex-shrink: 0;
 }
 
 .agentPhoto {
-  width: 60px;
-  height: 60px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   object-fit: cover;
 }
 
 .agentDetails h3 {
+  margin: 0 0 5px 0;
   font-size: 1.1rem;
   font-weight: 600;
   color: #000;
-  margin: 0 0 5px 0;
 }
 
-.agentDetails p {
-  margin: 0;
+.agentPhone {
   font-size: 14px;
   color: #666;
 }
 
-.agentDetails a {
+.agentPhone a {
   color: #000;
   text-decoration: none;
   font-weight: 600;
 }
 
+/* Contact Form */
 .contactForm {
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 20px;
-}
-
-.contactForm h3 {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #000;
-  margin: 0 0 20px 0;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .formGroup {
-  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
 }
 
 .formGroup label {
-  display: block;
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
+  font-size: 12px;
+  color: #666;
   margin-bottom: 5px;
+  text-transform: uppercase;
+  font-weight: 600;
 }
 
-.formGroup input,
-.formGroup textarea {
-  width: 100%;
-  padding: 10px;
+.formGroup input, .formGroup textarea {
+  padding: 12px;
   border: 1px solid #ddd;
-  border-radius: 4px;
   font-size: 14px;
-  font-family: inherit;
   transition: border-color 0.3s ease;
 }
 
-.formGroup input:focus,
-.formGroup textarea:focus {
+.formGroup input:focus, .formGroup textarea:focus {
   outline: none;
   border-color: #000;
 }
 
+.formGroup textarea {
+  resize: vertical;
+  font-family: inherit;
+}
+
+.requiredFields {
+  font-size: 11px;
+  color: #666;
+  font-style: italic;
+}
+
 .submitBtn {
-  width: 100%;
-  padding: 12px;
+  padding: 15px;
   background: #000;
   color: #fff;
   border: none;
-  border-radius: 4px;
   font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .submitBtn:hover {
@@ -470,19 +712,22 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  bottom: 0;
   background: rgba(0, 0, 0, 0.9);
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 1000;
+  align-items: center;
+  z-index: 2000;
 }
 
 .modalContent {
   position: relative;
-  max-width: 90%;
-  max-height: 90%;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .modalImage {
@@ -493,80 +738,48 @@
 
 .closeModal {
   position: absolute;
-  top: -40px;
-  right: 0;
-  background: transparent;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.9);
   border: none;
-  color: #fff;
-  font-size: 30px;
+  font-size: 24px;
   cursor: pointer;
-  padding: 5px;
+  border-radius: 50%;
 }
 
 .prevBtn, .nextBtn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.5);
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.9);
   border: none;
-  color: #fff;
   font-size: 24px;
-  padding: 10px 15px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  border-radius: 50%;
 }
 
 .prevBtn {
-  left: -50px;
+  left: 20px;
 }
 
 .nextBtn {
-  right: -50px;
-}
-
-.prevBtn:hover, .nextBtn:hover {
-  background: rgba(0, 0, 0, 0.8);
+  right: 20px;
 }
 
 .imageCounter {
   position: absolute;
-  bottom: -40px;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
   color: #fff;
+  padding: 10px 20px;
+  border-radius: 20px;
   font-size: 14px;
-}
-
-/* Loading & Error States */
-.loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  text-align: center;
-}
-
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #333;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 20px;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.error {
-  text-align: center;
-  padding: 60px 20px;
-  font-size: 1.2rem;
-  color: #666;
 }
 
 /* Responsive Design */
@@ -575,85 +788,143 @@
     grid-template-columns: 1fr;
   }
   
-  .contactSidebar {
-    grid-column: 1;
-    grid-row: auto;
+  .rightColumn {
     position: static;
-    margin-top: 40px;
+    order: -1;
   }
   
-  .propertyInfo {
-    flex-direction: column;
+  .propertyInfoBar {
+    flex-wrap: wrap;
     gap: 20px;
-    text-align: center;
   }
   
-  .propertySpecs {
-    justify-content: center;
+  .headerActions {
+    flex-wrap: wrap;
+    gap: 10px;
   }
 }
 
 @media (max-width: 768px) {
-  .propertyDetail {
-    padding: 0 15px;
-  }
-  
-  .titleContainer {
+  .headerContent {
     flex-direction: column;
+    align-items: flex-start;
     gap: 15px;
   }
   
-  .breadcrumbOptions {
-    justify-content: center;
-  }
-  
   .propertyTitle {
-    font-size: 1.5rem;
-    text-align: center;
+    font-size: 1.25rem;
   }
   
-  .price {
-    font-size: 2rem;
+  .propertyTitle span {
+    font-size: 0.9rem;
   }
   
-  .propertySpecs {
-    gap: 20px;
+  .fullSlider {
+    height: 40vh;
+    min-height: 300px;
   }
   
-  .similarGrid {
+  .similarPropertiesList {
     grid-template-columns: 1fr;
   }
   
-  .prevBtn, .nextBtn {
-    position: static;
-    margin: 10px 5px;
+  .propertyInfoBar {
+    gap: 15px;
   }
   
-  .imageCounter {
-    position: static;
-    margin-top: 10px;
-    transform: none;
+  .infoNumber {
+    font-size: 1.25rem;
+  }
+  
+  .sliderOptions {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .similarPropertiesList {
+    grid-template-columns: 1fr;
+  }
+  
+  .similarPropertySlider {
+    width: 100px;
+    height: 70px;
+  }
+  
+  .similarPropertyInfo {
+    padding: 10px 12px;
+  }
+  
+  .similarPropertyPrice {
+    font-size: 1rem;
+  }
+  
+  .similarPropertySpecs {
+    font-size: 10px;
+  }
+  
+  .similarPropertyAddress {
+    font-size: 11px;
   }
 }
 
 @media (max-width: 480px) {
-  .mainImageContainer {
-    height: 250px;
+  .container {
+    padding: 0 15px;
   }
   
-  .imageControls {
-    bottom: 10px;
-    right: 10px;
-    flex-direction: column;
+  .fixedHeader {
+    padding: 10px 0;
   }
   
-  .propertySpecs {
-    flex-direction: column;
-    gap: 15px;
+  .fullSlider {
+    margin-top: 70px;
   }
   
-  .priceDetails {
+  .basicInfoCard, .descriptionCard, .amenitiesCard, .featuresCard, .locationMapCard, .similarPropertiesCard, .contactSidebar {
+    padding: 20px;
+  }
+  
+  .propertyInfoBar {
     flex-direction: column;
-    gap: 10px;
+    align-items: flex-start;
+  }
+  
+  .headerActions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .similarPropertiesList {
+    gap: 8px;
+  }
+  
+  .similarPropertySlider {
+    width: 80px;
+    height: 60px;
+  }
+  
+  .similarPropertyInfo {
+    padding: 8px 10px;
+  }
+  
+  .similarPropertyPrice {
+    font-size: 0.95rem;
+    margin-bottom: 2px;
+  }
+  
+  .similarPropertyDetail {
+    gap: 6px;
+    margin-bottom: 2px;
+  }
+  
+  .similarPropertySpecs {
+    font-size: 9px;
+  }
+  
+  .similarPropertyAddress {
+    font-size: 10px;
   }
 }

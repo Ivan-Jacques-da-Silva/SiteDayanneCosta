@@ -29,6 +29,10 @@ const PropertyListing = ({
     navigate(`/property/${property.id}`, { state: { property } });
   };
 
+  const handleSimilarPropertyClick = (property) => {
+    navigate(`/property/${property.id}`, { state: { property } });
+  };
+
   useEffect(() => {
     fetchProperties();
   }, [filters, apiEndpoint, currentPage]);
