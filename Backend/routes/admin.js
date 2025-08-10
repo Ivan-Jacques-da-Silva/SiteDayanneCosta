@@ -21,16 +21,11 @@ const storage = multer.diskStorage({
     cb(null, dir);
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    let fieldPrefix = 'galleryimages';
-    
-    // Check for different possible field names for primary image
-    if (file.fieldname === 'mainImage' || file.fieldname === 'primaryImage' || file.fieldname === 'imagemPrincipal') {
-      fieldPrefix = 'primaryimage';
-    }
-    
-    cb(null, `${fieldPrefix}-${uniqueSuffix}${path.extname(file.originalname)}`);
+    const unico = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const prefixo = file.fieldname === 'primaryImage' ? 'primary' : 'gallery';
+    cb(null, `${prefixo}-${unico}${path.extname(file.originalname)}`);
   }
+
 });
 
 const upload = multer({
@@ -52,6 +47,12 @@ const upload = multer({
 // Aplicar middlewares de autenticação e admin a todas as rotas
 router.use(authenticateToken);
 router.use(requireAdmin);
+
+router.use((req, res, next) => {
+  console.log(`➡️  ${req.method} ${req.originalUrl}`);
+  next();
+});
+
 
 // GET /api/admin/dashboard - Dashboard statistics
 router.get('/dashboard', async (req, res) => {
@@ -268,11 +269,21 @@ router.get('/properties', async (req, res) => {
 
 // POST /api/admin/properties - Create new property
 router.post('/properties', upload.fields([
-  { name: 'mainImage', maxCount: 1 }, 
-  { name: 'primaryImage', maxCount: 1 }, 
-  { name: 'imagemPrincipal', maxCount: 1 },
-  { name: 'galleryImages', maxCount: 10 }
-]), async (req, res) => {
+  { name: 'primaryImage', maxCount: 1 },
+  { name: 'galleryImages', maxCount: 20 }
+]), (req, res, next) => {
+
+  // Debug middleware para verificar campos recebidos
+  console.log('🔍 POST Request Debug:');
+  console.log('📁 Files received:', req.files ? Object.keys(req.files) : 'none');
+  console.log('📝 Body fields:', Object.keys(req.body));
+  if (req.files) {
+    Object.keys(req.files).forEach(field => {
+      console.log(`   - ${field}: ${req.files[field].length} file(s)`);
+    });
+  }
+  next();
+}, async (req, res) => {
   try {
     const {
       mlsId,
@@ -374,17 +385,15 @@ router.post('/properties', upload.fields([
         country: 'USA',
         images: {
           create: [
-            // Check for primary image in different possible field names
-            ...((req.files?.mainImage || req.files?.primaryImage || req.files?.imagemPrincipal) ? 
-              [{ 
-                url: `uploads/properties/${(req.files.mainImage || req.files.primaryImage || req.files.imagemPrincipal)[0].filename}`, 
-                isPrimary: true, 
-                order: 0 
-              }] : []),
-            ...(req.files?.galleryImages ? req.files.galleryImages.map((file, index) => ({ 
-              url: `uploads/properties/${file.filename}`, 
-              isPrimary: false, 
-              order: index + 1 
+            ...(req.files?.primaryImage ? [{
+              url: `/uploads/properties/${req.files.primaryImage[0].filename}`,
+              isPrimary: true,
+              order: 0
+            }] : []),
+            ...(req.files?.galleryImages ? req.files.galleryImages.map((file, i) => ({
+              url: `/uploads/properties/${file.filename}`,
+              isPrimary: false,
+              order: i + 1
             })) : [])
           ]
         }
@@ -408,11 +417,21 @@ router.post('/properties', upload.fields([
 
 // PUT /api/admin/properties/:id - Update property
 router.put('/properties/:id', upload.fields([
-  { name: 'mainImage', maxCount: 1 }, 
-  { name: 'primaryImage', maxCount: 1 }, 
-  { name: 'imagemPrincipal', maxCount: 1 },
-  { name: 'galleryImages', maxCount: 10 }
-]), async (req, res) => {
+  { name: 'primaryImage', maxCount: 1 },
+  { name: 'galleryImages', maxCount: 20 }
+]), (req, res, next) => {
+
+  // Debug middleware para verificar campos recebidos
+  console.log('🔍 PUT Request Debug:');
+  console.log('📁 Files received:', req.files ? Object.keys(req.files) : 'none');
+  console.log('📝 Body fields:', Object.keys(req.body));
+  if (req.files) {
+    Object.keys(req.files).forEach(field => {
+      console.log(`   - ${field}: ${req.files[field].length} file(s)`);
+    });
+  }
+  next();
+}, async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = { ...req.body };
@@ -426,72 +445,59 @@ router.put('/properties/:id', upload.fields([
     }
 
     // Handle image updates
-    if (req.files && ((req.files.mainImage || req.files.primaryImage || req.files.imagemPrincipal) || req.files.galleryImages)) {
-      // Handle primary image update
-      const primaryImageFile = (req.files.mainImage || req.files.primaryImage || req.files.imagemPrincipal);
-      if (primaryImageFile && primaryImageFile.length > 0) {
-        const primaryFile = primaryImageFile[0];
-        const existingPrimaryImage = existingProperty.images.find(img => img.isPrimary);
+    if (req.files && Object.keys(req.files).length > 0) {
+      // Handle primary image update - check all possible field names
+      const primaryImageFile = req.files?.primaryImage?.[0] || null;
 
-        if (existingPrimaryImage) {
-          // Delete old primary image file if it exists
-          const oldImagePath = path.join(__dirname, '..', existingPrimaryImage.url);
-          if (fs.existsSync(oldImagePath)) {
-            fs.unlinkSync(oldImagePath);
-          }
+      if (primaryImageFile) {
+        const existente = existingProperty.images.find(img => img.isPrimary);
 
-          // Update existing primary image record
+        if (existente) {
+          const oldPath = path.resolve(process.cwd(), existente.url.replace(/^\//, ''));
+          if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+
           await prisma.propertyImage.update({
-            where: { id: existingPrimaryImage.id },
+            where: { id: existente.id },
             data: {
-              url: `uploads/properties/${primaryFile.filename}`,
+              url: `/uploads/properties/${primaryImageFile.filename}`,
               order: 0
             }
           });
         } else {
-          // Create new primary image record
           await prisma.propertyImage.create({
             data: {
               propertyId: id,
-              url: `uploads/properties/${primaryFile.filename}`,
+              url: `/uploads/properties/${primaryImageFile.filename}`,
               isPrimary: true,
               order: 0
             }
           });
         }
       }
+      // Handle gallery images - check all possible field names
+      const galleryImageFiles = req.files?.galleryImages || [];
 
-      // Handle gallery images
-      if (req.files.galleryImages && req.files.galleryImages.length > 0) {
-        // Delete old gallery images
-        const oldGalleryImages = existingProperty.images.filter(img => !img.isPrimary);
-        for (const oldImage of oldGalleryImages) {
-          const oldImagePath = path.join(__dirname, '..', oldImage.url);
-          if (fs.existsSync(oldImagePath)) {
-            fs.unlinkSync(oldImagePath);
-          }
+      if (galleryImageFiles.length > 0) {
+        const antigas = existingProperty.images.filter(img => !img.isPrimary);
+        for (const img of antigas) {
+          const oldPath = path.resolve(process.cwd(), img.url.replace(/^\//, ''));
+          if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
         }
 
-        // Delete old gallery image records
         await prisma.propertyImage.deleteMany({
-          where: {
-            propertyId: id,
-            isPrimary: false
-          }
+          where: { propertyId: id, isPrimary: false }
         });
-
-        // Create new gallery image records
-        const galleryImageData = req.files.galleryImages.map((file, index) => ({
-          propertyId: id,
-          url: `uploads/properties/${file.filename}`,
-          isPrimary: false,
-          order: index + 1
-        }));
 
         await prisma.propertyImage.createMany({
-          data: galleryImageData
+          data: galleryImageFiles.map((file, i) => ({
+            propertyId: id,
+            url: `/uploads/properties/${file.filename}`,
+            isPrimary: false,
+            order: i + 1
+          }))
         });
       }
+
     }
 
     // Convert numeric fields
@@ -581,11 +587,12 @@ router.delete('/properties/:id', async (req, res) => {
 
     // Delete associated image files from the server
     for (const image of property.images) {
-      const imagePath = path.join(__dirname, '..', '..', image.url); // Adjust path as necessary
+      const imagePath = path.resolve(process.cwd(), image.url.replace(/^\//, ''));
       if (fs.existsSync(imagePath)) {
         fs.unlinkSync(imagePath);
       }
     }
+
 
     // Delete the property and its associated images from the database
     await prisma.property.delete({

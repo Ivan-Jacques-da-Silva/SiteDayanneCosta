@@ -23,7 +23,12 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Security middleware
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' }, // libera images/css/js para outras origins (ex: 5173 -> 5000)
+  })
+);
+
 
 // Rate limiting
 const limiter = rateLimit({
@@ -62,17 +67,28 @@ if (!fs.existsSync(propertiesDir)) {
   fs.mkdirSync(propertiesDir, { recursive: true });
 }
 
+// CORS específico para /uploads
+app.use('/uploads', cors());
+
 // Add middleware to log image requests for debugging
 app.use('/uploads', (req, res, next) => {
-  console.log(`Image request: ${req.method} ${req.originalUrl}`);
-  console.log(`File path: ${path.join(__dirname, 'uploads', req.path)}`);
-  console.log(`File exists: ${fs.existsSync(path.join(__dirname, 'uploads', req.path))}`);
-  
+  const filePath = path.join(__dirname, 'uploads', req.path);
+  console.log(`📸 Image request: ${req.method} ${req.originalUrl}`);
+  console.log(`📁 File path: ${filePath}`);
+  console.log(`✅ File exists: ${fs.existsSync(filePath)}`);
+
+  // List files in uploads directory for debugging
+  const uploadsPath = path.join(__dirname, 'uploads', 'properties');
+  if (fs.existsSync(uploadsPath)) {
+    const files = fs.readdirSync(uploadsPath);
+    console.log(`📂 Files in uploads/properties:`, files.slice(0, 5)); // Show first 5 files
+  }
+
   // Add CORS headers for images
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  
+
   next();
 });
 

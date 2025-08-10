@@ -65,8 +65,9 @@ const AdminCondominios = () => {
     longitude: '',
 
     // Media
-    mainImage: null,
+    primaryImage: null,
     galleryImages: [],
+
     virtualTour: '',
 
     // Amenities
@@ -85,6 +86,7 @@ const AdminCondominios = () => {
 
   const [imagePreviews, setImagePreviews] = useState([]);
   const [mainImagePreview, setMainImagePreview] = useState('');
+  const [removedImageIndexes, setRemovedImageIndexes] = useState([]);
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 12,
@@ -122,22 +124,29 @@ const AdminCondominios = () => {
   ];
 
   useEffect(() => {
+    console.log('🔁 useEffect currentPage changed:', currentPage);
     loadCondominios(currentPage);
-  }, [currentPage]); // Only reload when page changes
+  }, [currentPage]);
 
   const loadCondominios = async (page = 1) => {
     try {
       setLoading(true);
+      console.log('🟦 loadCondominios:start', { page, when: new Date().toISOString() });
+
       const token = localStorage.getItem('token');
 
       if (!token) {
         console.error('No token found');
         setCondominios([]);
         setLoading(false);
+
         return;
       }
 
       let url = buildApiUrl('/api/admin/properties');
+      console.log('🟦 baseURL:', url);
+      console.log('🟦 filters at call:', JSON.parse(JSON.stringify(filters)));
+
 
       // Apply filters if any
       const params = new URLSearchParams();
@@ -154,6 +163,10 @@ const AdminCondominios = () => {
         url += `?${params.toString()}`;
       }
 
+      console.log('🟦 final URL:', url);
+      console.log('🟦 has token?', !!token);
+
+
       const response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -162,12 +175,27 @@ const AdminCondominios = () => {
         }
       });
 
+      console.log('🟩 response.status:', response.status);
+
+
       if (response.ok) {
         const data = await response.json();
-        console.log('Properties loaded:', data);
+        console.log('🟩 data keys:', Object.keys(data));
+        console.log('🟩 properties is array?', Array.isArray(data.properties), 'len:', data.properties?.length);
+
 
         if (data.properties && Array.isArray(data.properties)) {
-          setCondominios(data.properties);
+          // Manter URLs originais do banco para exibição
+          const formattedCondominios = data.properties.map(property => ({
+            ...property,
+            images: property.images?.map(img => ({
+              ...img,
+              url: getImageUrl(img.url)
+            })) || []
+          }));
+          console.log('🟩 formatted len:', formattedCondominios.length);
+
+          setCondominios(formattedCondominios);
           // Remove pagination dependency since we're loading all properties
           setPagination({ ...pagination, total: data.properties.length, pages: 1 });
         } else {
@@ -177,15 +205,19 @@ const AdminCondominios = () => {
         }
       } else {
         const errorText = await response.text();
+        console.log('🟥 body text:', errorText);
+
         console.error('Failed to load properties:', response.status, errorText);
         setCondominios([]);
         setPagination({ page: 1, limit: 12, total: 0, pages: 0 });
       }
     } catch (error) {
+      console.error('🟥 loadCondominios:catch', error);
       console.error('Error loading properties:', error);
       setCondominios([]);
       setPagination({ page: 1, limit: 12, total: 0, pages: 0 });
     } finally {
+      console.log('🟨 loadCondominios:finally -> setLoading(false)');
       setLoading(false);
     }
   };
@@ -193,47 +225,108 @@ const AdminCondominios = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    console.log('🟦 handleSubmit:start', { editingId: editingCondominio?.id || null });
+
     try {
       const token = localStorage.getItem('token');
 
-      // Create FormData for file uploads
-      const formDataToSend = new FormData();
+      // Prepare the data to be sent
+      const propertyData = {
+        ...formData,
+        price: parseFloat(formData.price) || 0,
+        pricePerSqft: parseFloat(formData.pricePerSqft) || 0,
+        bedrooms: parseInt(formData.bedrooms) || 0,
+        bathrooms: parseFloat(formData.bathrooms) || 0,
+        halfBathrooms: parseInt(formData.halfBathrooms) || 0,
+        sqft: parseInt(formData.sqft) || 0,
+        adjustedSqft: parseInt(formData.adjustedSqft) || 0,
+        yearBuilt: parseInt(formData.yearBuilt) || 0,
+        daysOnMarket: parseInt(formData.daysOnMarket) || 0,
+        hoaFees: parseFloat(formData.hoaFees) || 0,
+        taxAmount: parseFloat(formData.taxAmount) || 0,
+        taxYear: parseInt(formData.taxYear) || 0,
+        latitude: parseFloat(formData.latitude) || 0,
+        longitude: parseFloat(formData.longitude) || 0,
+        parkingSpaces: parseInt(formData.parkingSpaces) || 0,
+      };
 
-      // Append all form fields
-      Object.keys(formData).forEach(key => {
-        if (formData[key] !== null && formData[key] !== '') {
-          if (key === 'mainImage' && formData[key] instanceof File) {
-            formDataToSend.append('primaryImage', formData[key]);
-          } else if (key === 'galleryImages' && Array.isArray(formData[key]) && formData[key].length > 0) {
-            formData[key].forEach((file) => {
-              if (file instanceof File) {
-                formDataToSend.append('galleryImages', file);
-              }
-            });
-          } else if (typeof formData[key] === 'boolean') {
-            formDataToSend.append(key, formData[key]);
-          } else if (key !== 'mainImage' && key !== 'galleryImages') {
-            formDataToSend.append(key, formData[key]);
-          }
+      // Remove undefined or null values from propertyData to avoid sending them if not needed
+      Object.keys(propertyData).forEach(key => {
+        if (propertyData[key] === undefined || propertyData[key] === null) {
+          delete propertyData[key];
         }
       });
 
-      // Add property type if not already handled
-      if (!formData.propertyType) formDataToSend.append('propertyType', 'CONDO');
-      if (!formData.state) formDataToSend.append('state', 'FL');
 
       let response;
-      const url = editingCondominio
-        ? buildApiUrl(`/api/admin/properties/${editingCondominio.id}`)
-        : buildApiUrl('/api/admin/properties');
+      const editingId = editingCondominio ? editingCondominio.id : null;
+      const url = editingId ? buildApiUrl(`/api/admin/properties/${editingId}`) : buildApiUrl('/api/admin/properties');
 
-      if (editingCondominio) {
+      if (editingId) {
+        const formDataToSend = new FormData();
+
+        // Adicionar dados do formulário (exceto arquivos)
+        Object.keys(propertyData).forEach(key => {
+          if (
+            key !== 'images' &&
+            key !== 'primaryImage' &&
+            key !== 'galleryImages' &&
+            propertyData[key] !== null &&
+            propertyData[key] !== undefined
+          ) {
+            formDataToSend.append(key, propertyData[key]);
+          }
+        });
+
+        // Adicionar nova imagem principal se existir
+        if (formData.primaryImage instanceof File) {
+          formDataToSend.append('primaryImage', formData.primaryImage);
+        }
+
+        // Adicionar novas imagens da galeria se existirem
+        if (Array.isArray(formData.galleryImages) && formData.galleryImages.length > 0) {
+          formData.galleryImages.forEach((file) => {
+            if (file instanceof File) {
+              formDataToSend.append('galleryImages', file);
+            }
+          });
+        }
+
         response = await fetch(url, {
           method: 'PUT',
           headers: { 'Authorization': `Bearer ${token}` },
           body: formDataToSend
         });
       } else {
+        const formDataToSend = new FormData();
+
+        // Adicionar dados do formulário (exceto arquivos)
+        Object.keys(propertyData).forEach(key => {
+          if (
+            key !== 'images' &&
+            key !== 'primaryImage' &&
+            key !== 'galleryImages' &&
+            propertyData[key] !== null &&
+            propertyData[key] !== undefined
+          ) {
+            formDataToSend.append(key, propertyData[key]);
+          }
+        });
+
+        // Adicionar imagem principal
+        if (formData.primaryImage instanceof File) {
+          formDataToSend.append('primaryImage', formData.primaryImage);
+        }
+
+        // Adicionar imagens da galeria
+        if (Array.isArray(formData.galleryImages) && formData.galleryImages.length > 0) {
+          formData.galleryImages.forEach((file) => {
+            if (file instanceof File) {
+              formDataToSend.append('galleryImages', file);
+            }
+          });
+        }
+
         response = await fetch(url, {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${token}` },
@@ -241,6 +334,7 @@ const AdminCondominios = () => {
         });
       }
 
+      console.log('🟩 save response.status:', response.status);
       if (!response.ok) {
         const error = await response.json();
         console.error("API Error:", error);
@@ -268,7 +362,7 @@ const AdminCondominios = () => {
     const { name, value, type, checked, files } = e.target;
 
     if (type === 'file') {
-      if (name === 'mainImage' && files[0]) {
+      if (name === 'primaryImage' && files[0]) {
         setFormData(prev => ({ ...prev, [name]: files[0] }));
         setMainImagePreview(URL.createObjectURL(files[0]));
       } else if (name === 'galleryImages') {
@@ -276,13 +370,35 @@ const AdminCondominios = () => {
         setFormData(prev => ({ ...prev, [name]: fileArray }));
 
         const previewUrls = fileArray.map(file => URL.createObjectURL(file));
-        setImagePreviews(previewUrls);
+        setImagePreviews(prev => [...prev, ...previewUrls]); // Append new previews
       }
     } else if (type === 'checkbox') {
       setFormData(prev => ({ ...prev, [name]: checked }));
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
+  };
+
+  const removeMainImage = () => {
+    setFormData(prev => ({ ...prev, primaryImage: null }));
+    setMainImagePreview('');
+  };
+
+
+  const removeGalleryImage = (index) => {
+    // Remove from image previews
+    const newImagePreviews = imagePreviews.filter((_, i) => i !== index);
+    setImagePreviews(newImagePreviews);
+
+    // Remove from gallery images
+    const newGalleryImages = formData.galleryImages.filter((_, i) => i !== index);
+    setFormData(prev => ({ ...prev, galleryImages: newGalleryImages }));
+
+    // Add to removed indexes for tracking
+    setRemovedImageIndexes(prev => [...prev, index]);
+
+    // Show success message
+    console.log(`Imagem ${index + 1} removida da galeria`);
   };
 
   const resetForm = () => {
@@ -323,7 +439,7 @@ const AdminCondominios = () => {
       taxYear: '',
       latitude: '',
       longitude: '',
-      mainImage: null,
+      primaryImage: null,
       galleryImages: [],
       virtualTour: '',
       amenities: '',
@@ -338,6 +454,7 @@ const AdminCondominios = () => {
     // Clear image previews
     setImagePreviews([]);
     setMainImagePreview('');
+    setRemovedImageIndexes([]);
 
     // Clear editing state
     setEditingCondominio(null);
@@ -346,33 +463,37 @@ const AdminCondominios = () => {
   const handleEdit = (condominio) => {
     setEditingCondominio(condominio);
 
-    setFormData({
+    // Preenche o formulário com os dados existentes
+    const initialFormData = {
       ...condominio,
-      mainImage: null,
-      galleryImages: [],
+      primaryImage: null,     // reset input de arquivo
+      galleryImages: [],      // reset input de arquivo
       categoria: condominio.categoria || '',
       bairro: condominio.bairro || ''
-    });
+    };
+    setFormData(initialFormData);
 
-    // Previews for existing images
+    // Previews das imagens existentes
     if (condominio.images && condominio.images.length > 0) {
       const existingGalleryPreviews = condominio.images
         .filter(img => !img.isPrimary)
-        .map(img => getImageUrl(img.url));
+        .map(img => img.url);
+
+      // ✅ Faltava essa linha
       setImagePreviews(existingGalleryPreviews);
 
       const existingMainPreview = condominio.images.find(img => img.isPrimary);
       if (existingMainPreview) {
-        setMainImagePreview(getImageUrl(existingMainPreview.url));
+        setMainImagePreview(existingMainPreview.url);
       }
     } else {
-      // Reset previews if no images
       setImagePreviews([]);
       setMainImagePreview('');
     }
 
     setShowForm(true);
   };
+
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this condominium?')) {
@@ -398,15 +519,20 @@ const AdminCondominios = () => {
   const formatPrice = (price) => {
     if (price === undefined || price === null || price === '') return '';
     try {
+      // Ensure price is treated as a number
+      const numericPrice = parseFloat(price);
+      if (isNaN(numericPrice)) {
+        return price; // Return original if it cannot be parsed
+      }
       return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
         minimumFractionDigits: 0,
         maximumFractionDigits: 0
-      }).format(price);
+      }).format(numericPrice);
     } catch (e) {
       console.error("Error formatting price:", price, e);
-      return price;
+      return price; // Return original value if formatting fails
     }
   };
 
@@ -540,7 +666,7 @@ const AdminCondominios = () => {
                         marginBottom: '16px'
                       }}>
                         <img
-                          src={getImageUrl(condominio.images.find(img => img.isPrimary)?.url || condominio.images[0]?.url)}
+                          src={condominio.images.find(img => img.isPrimary)?.url || condominio.images[0]?.url}
                           alt={condominio.title}
                           style={{
                             width: '100%',
@@ -548,7 +674,7 @@ const AdminCondominios = () => {
                             objectFit: 'cover'
                           }}
                           onError={(e) => {
-                            e.target.src = '/placeholder-image.jpg';
+                            e.target.src = '/placeholder-image.jpg'; // Fallback image
                           }}
                         />
                       </div>
@@ -1255,18 +1381,19 @@ const AdminCondominios = () => {
                 <h2><i className="fas fa-camera"></i> Media & Images</h2>
 
                 <div className={styles.formGroup}>
-                  <label htmlFor="mainImage">Main Image</label>
+                  <label htmlFor="primaryImage">Main Image</label>
                   <input
                     type="file"
-                    id="mainImage"
-                    name="mainImage"
+                    id="primaryImage"
+                    name="primaryImage"
                     onChange={handleInputChange}
                     accept="image/jpeg,image/jpg,image/png,image/webp"
                     className={styles.fileInput}
                   />
+
                   <small>Upload the main property image (JPEG, PNG, WebP)</small>
                   {mainImagePreview && (
-                    <div style={{ marginTop: '10px' }}>
+                    <div style={{ marginTop: '10px', position: 'relative', display: 'inline-block' }}>
                       <img
                         src={mainImagePreview}
                         alt="Main image preview"
@@ -1278,6 +1405,30 @@ const AdminCondominios = () => {
                           borderRadius: '8px'
                         }}
                       />
+                      <button
+                        type="button"
+                        onClick={removeMainImage}
+                        style={{
+                          position: 'absolute',
+                          top: '5px',
+                          right: '5px',
+                          background: 'rgba(255, 0, 0, 0.8)',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '50%',
+                          width: '25px',
+                          height: '25px',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '14px',
+                          fontWeight: 'bold'
+                        }}
+                        title="Remove image"
+                      >
+                        ×
+                      </button>
                     </div>
                   )}
                 </div>
@@ -1318,10 +1469,44 @@ const AdminCondominios = () => {
                               border: '1px solid #d1d5db'
                             }}
                           />
+                          <button
+                            type="button"
+                            onClick={() => removeGalleryImage(index)}
+                            style={{
+                              position: 'absolute',
+                              top: '5px',
+                              right: '5px',
+                              background: 'rgba(239, 68, 68, 0.9)',
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: '50%',
+                              width: '24px',
+                              height: '24px',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '14px',
+                              fontWeight: 'bold',
+                              boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                              transition: 'all 0.2s ease'
+                            }}
+                            title="Remover imagem"
+                            onMouseEnter={(e) => {
+                              e.target.style.background = 'rgba(220, 38, 38, 1)';
+                              e.target.style.transform = 'scale(1.1)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.target.style.background = 'rgba(239, 68, 68, 0.9)';
+                              e.target.style.transform = 'scale(1)';
+                            }}
+                          >
+                            ×
+                          </button>
                           <span style={{
                             position: 'absolute',
-                            top: '4px',
-                            right: '4px',
+                            bottom: '4px',
+                            left: '4px',
                             backgroundColor: 'rgba(0,0,0,0.7)',
                             color: 'white',
                             padding: '2px 6px',

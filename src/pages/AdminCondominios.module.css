@@ -26,7 +26,8 @@
   margin: 0;
 }
 
-.addBtn, .backBtn {
+.addBtn,
+.backBtn {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -41,7 +42,8 @@
   text-decoration: none;
 }
 
-.addBtn:hover, .backBtn:hover {
+.addBtn:hover,
+.backBtn:hover {
   background: #2563eb;
 }
 
@@ -629,7 +631,8 @@
   margin-top: 20px;
 }
 
-.applyFiltersBtn, .clearFiltersBtn {
+.applyFiltersBtn,
+.clearFiltersBtn {
   padding: 10px 20px;
   border-radius: 8px;
   font-weight: 500;
@@ -668,7 +671,9 @@
     align-items: stretch;
   }
 
-  .condominiosList, .formRow, .checkboxGrid {
+  .condominiosList,
+  .formRow,
+  .checkboxGrid {
     grid-template-columns: 1fr;
   }
 
@@ -695,7 +700,8 @@
     flex-direction: column;
   }
 
-  .applyFiltersBtn, .clearFiltersBtn {
+  .applyFiltersBtn,
+  .clearFiltersBtn {
     width: 100%;
     justify-content: center;
   }
@@ -849,8 +855,124 @@
     opacity: 0;
     transform: scale(0.8) translateY(-20px);
   }
+
   100% {
     opacity: 1;
     transform: scale(1) translateY(0);
+  }
+}
+
+/* ===== Filters — visual refresh (drop-in) ===== */
+.filtersContainer {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 18px;
+  box-shadow: 0 6px 14px rgba(17, 24, 39, 0.06);
+  position: sticky;
+  /* fica “colado” no topo ao rolar */
+  top: 12px;
+  z-index: 5;
+}
+
+.filtersHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.filtersHeader h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+/* grid compacto e consistente em desktop */
+.filtersContainer .filtersGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  /* search maior */
+  gap: 12px 16px;
+  margin: 8px 0 6px;
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filterGroup label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+/* inputs/select enxutos */
+.filterInput,
+.filterSelect {
+  height: 40px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: #fff;
+  color: #111827;
+  outline: none;
+}
+
+.filterInput:focus,
+.filterSelect:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, .12);
+}
+
+/* ações alinhadas à direita, sem “peso” visual */
+.filtersContainer .filterActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.applyFiltersBtn,
+.clearFiltersBtn {
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+/* responsivo */
+@media (max-width: 1024px) {
+  .filtersContainer .filtersGrid {
+    grid-template-columns: 1fr 1fr;
+    /* 2 colunas em tablets */
+  }
+}
+
+@media (max-width: 768px) {
+  .filtersContainer {
+    position: static;
+    /* evita “jump” em mobile */
+    padding: 12px 14px;
+  }
+
+  .filtersContainer .filtersGrid {
+    grid-template-columns: 1fr;
+    /* 1 coluna em mobile */
+    gap: 12px;
+  }
+
+  .filtersContainer .filterActions {
+    justify-content: stretch;
+    flex-direction: column;
+  }
+
+  .applyFiltersBtn,
+  .clearFiltersBtn {
+    width: 100%;
   }
 }

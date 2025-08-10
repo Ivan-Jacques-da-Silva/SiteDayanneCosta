@@ -69,7 +69,7 @@ export const getImageUrl = (imagePath) => {
     finalPath = `uploads/properties/${cleanPath}`;
   }
   
-  // Construir URL correta sem dupla barra
+  // Construir URL correta para o backend
   const baseUrl = API_CONFIG.BASE_URL.endsWith('/') ? API_CONFIG.BASE_URL.slice(0, -1) : API_CONFIG.BASE_URL;
   const fullUrl = `${baseUrl}/${finalPath}`;
   
