@@ -8,7 +8,17 @@ const fs = require('fs');
 require('dotenv').config();
 
 const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+
+let prisma;
+try {
+  prisma = new PrismaClient({
+    log: ['error'],
+    errorFormat: 'minimal',
+  });
+} catch (error) {
+  console.error('❌ Failed to initialize Prisma Client:', error.message);
+  prisma = null;
+}
 
 // Import routes
 const propertyRoutes = require('./routes/properties');
@@ -171,17 +181,29 @@ app.use('*', (req, res, next) => {
 // Graceful shutdown
 process.on('SIGINT', async () => {
   console.log('Shutting down gracefully...');
-  await prisma.$disconnect();
+  if (prisma) {
+    try {
+      await prisma.$disconnect();
+    } catch (error) {
+      console.error('Error disconnecting Prisma:', error);
+    }
+  }
   process.exit(0);
 });
 
 // Test database connection
 async function testConnection() {
+  if (!prisma) {
+    console.log('⚠️  Database client not initialized - running without database');
+    return;
+  }
+
   try {
     await prisma.$connect();
     console.log('✅ Database connected successfully');
   } catch (error) {
     console.error('❌ Database connection failed:', error.message);
+    console.log('💡 The application will continue without database functionality');
   }
 }
 

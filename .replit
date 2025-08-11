@@ -25,7 +25,7 @@ mode = "parallel"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd Backend && npx prisma generate && npx prisma db push && npm start"
+args = "cd Backend && rm -rf node_modules/.prisma && npm install && npx prisma generate && node server.js"
 
 [[workflows.workflow]]
 name = "Backend Server"
