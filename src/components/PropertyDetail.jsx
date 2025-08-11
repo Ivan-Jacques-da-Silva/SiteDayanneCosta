@@ -262,14 +262,14 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
           {/* Auto navigation timer for carousel */}
           {images.length > 1 && viewMode === "photos" && (
             <div className={styles.autoNavigation}>
-              <button 
+              <button
                 className={styles.autoNavBtn}
                 onClick={prevImage}
                 onMouseEnter={() => {}}
               >
                 ‹
               </button>
-              <button 
+              <button
                 className={styles.autoNavBtn}
                 onClick={nextImage}
                 onMouseEnter={() => {}}
@@ -394,13 +394,26 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
               )}
 
               {/* Amenities */}
-              {property.amenities && property.amenities.length > 0 && (
+              {property.amenities && (
                 <div className={styles.amenitiesCard}>
                   <h2>Amenities</h2>
                   <ul className={styles.amenitiesList}>
-                    {property.amenities.map((amenity, index) => (
-                      <li key={index}>{amenity}</li>
-                    ))}
+                    {(() => {
+                      // Handle both string and array formats
+                      let amenitiesArray = [];
+                      if (typeof property.amenities === 'string') {
+                        // If it's a string, try to split by comma or use as single item
+                        amenitiesArray = property.amenities.includes(',')
+                          ? property.amenities.split(',').map(item => item.trim())
+                          : [property.amenities];
+                      } else if (Array.isArray(property.amenities)) {
+                        amenitiesArray = property.amenities;
+                      }
+
+                      return amenitiesArray.length > 0 ? amenitiesArray.map((amenity, index) => (
+                        <li key={index}>{amenity}</li>
+                      )) : null;
+                    })()}
                   </ul>
                 </div>
               )}
@@ -453,6 +466,50 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                   </li>
                 </ul>
               </div>
+
+              {property.interiorFeatures && (
+                <div className={styles.featuresSection}>
+                  <h4>Interior Features</h4>
+                  <ul className={styles.featuresList}>
+                    {(() => {
+                      let featuresArray = [];
+                      if (typeof property.interiorFeatures === 'string') {
+                        featuresArray = property.interiorFeatures.includes(',')
+                          ? property.interiorFeatures.split(',').map(item => item.trim())
+                          : [property.interiorFeatures];
+                      } else if (Array.isArray(property.interiorFeatures)) {
+                        featuresArray = property.interiorFeatures;
+                      }
+
+                      return featuresArray.length > 0 ? featuresArray.map((feature, index) => (
+                        <li key={index}>{feature}</li>
+                      )) : null;
+                    })()}
+                  </ul>
+                </div>
+              )}
+
+              {property.exteriorFeatures && (
+                <div className={styles.featuresSection}>
+                  <h4>Exterior Features</h4>
+                  <ul className={styles.featuresList}>
+                    {(() => {
+                      let featuresArray = [];
+                      if (typeof property.exteriorFeatures === 'string') {
+                        featuresArray = property.exteriorFeatures.includes(',')
+                          ? property.exteriorFeatures.split(',').map(item => item.trim())
+                          : [property.exteriorFeatures];
+                      } else if (Array.isArray(property.exteriorFeatures)) {
+                        featuresArray = property.exteriorFeatures;
+                      }
+
+                      return featuresArray.length > 0 ? featuresArray.map((feature, index) => (
+                        <li key={index}>{feature}</li>
+                      )) : null;
+                    })()}
+                  </ul>
+                </div>
+              )}
 
               {/* Map Section */}
               <div className={styles.locationMapCard}>
