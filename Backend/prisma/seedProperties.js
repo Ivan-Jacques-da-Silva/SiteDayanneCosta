@@ -7,35 +7,35 @@ const prisma = new PrismaClient();
 // Principal Images
 const principalImages = {
   echoBrickell: {
-    url: 'echo-brickell-principal.jpg',
+    url: '/img/echo-brickell-principal.jpg',
     caption: 'Echo Brickell - Stunning Bay Views'
   },
   astonMartin: {
-    url: 'aston-martin-principal.jpg',
+    url: '/img/aston-martin-principal.jpg',
     caption: 'Aston Martin Residences - Ultra Luxury Living'
   },
   fourSeasons: {
-    url: 'four-seasons-principal.jpg',
+    url: '/img/four-seasons-principal.jpg',
     caption: 'Four Seasons Residences - Luxury Defined'
   },
   coralGables: {
-    url: 'coral-gables-principal.jpg',
+    url: '/img/coral-gables-principal.jpg',
     caption: 'Coral Gables Estate - Mediterranean Elegance'
   },
   coconutGrove: {
-    url: 'coconut-grove-principal.jpg',
+    url: '/img/coconut-grove-principal.jpg',
     caption: 'Modern Coconut Grove Home'
   },
   venetianIslands: {
-    url: 'venetian-islands-principal.jpg',
+    url: '/img/venetian-islands-principal.jpg',
     caption: 'Venetian Islands Waterfront Mansion'
   },
   edgewater: {
-    url: 'edgewater-principal.jpg',
+    url: '/img/edgewater-principal.jpg',
     caption: 'Edgewater Modern Living'
   },
   theRoads: {
-    url: 'the-roads-principal.jpg',
+    url: '/img/the-roads-principal.jpg',
     caption: 'Historic Roads Charmer'
   }
 };
@@ -43,58 +43,58 @@ const principalImages = {
 // Gallery Images
 const galleryImages = {
   echoBrickell: [
-    { url: 'echo-brickell-living.jpg', caption: 'Spacious Living Room' },
-    { url: 'echo-brickell-kitchen.jpg', caption: 'Gourmet Kitchen' },
-    { url: 'echo-brickell-bedroom.jpg', caption: 'Master Bedroom' },
-    { url: 'echo-brickell-bathroom.jpg', caption: 'Luxury Bathroom' },
-    { url: 'echo-brickell-balcony.jpg', caption: 'Private Balcony' },
-    { url: 'echo-brickell-amenities.jpg', caption: 'Building Amenities' }
+    { url: '/img/echo-brickell-living.jpg', caption: 'Spacious Living Room' },
+    { url: '/img/echo-brickell-kitchen.jpg', caption: 'Gourmet Kitchen' },
+    { url: '/img/echo-brickell-bedroom.jpg', caption: 'Master Bedroom' },
+    { url: '/img/echo-brickell-bathroom.jpg', caption: 'Luxury Bathroom' },
+    { url: '/img/echo-brickell-balcony.jpg', caption: 'Private Balcony' },
+    { url: '/img/echo-brickell-amenities.jpg', caption: 'Building Amenities' }
   ],
   astonMartin: [
-    { url: 'aston-martin-living.jpg', caption: 'Designer Living Space' },
-    { url: 'aston-martin-kitchen.jpg', caption: 'Chef Kitchen' },
-    { url: 'aston-martin-master.jpg', caption: 'Master Suite' },
-    { url: 'aston-martin-terrace.jpg', caption: 'Private Terrace' },
-    { url: 'aston-martin-amenities.jpg', caption: 'Exclusive Amenities' }
+    { url: '/img/aston-martin-living.jpg', caption: 'Designer Living Space' },
+    { url: '/img/aston-martin-kitchen.jpg', caption: 'Chef Kitchen' },
+    { url: '/img/aston-martin-master.jpg', caption: 'Master Suite' },
+    { url: '/img/aston-martin-terrace.jpg', caption: 'Private Terrace' },
+    { url: '/img/aston-martin-amenities.jpg', caption: 'Exclusive Amenities' }
   ],
   fourSeasons: [
-    { url: 'four-seasons-living.jpg', caption: 'Elegant Living Room' },
-    { url: 'four-seasons-dining.jpg', caption: 'Formal Dining Area' },
-    { url: 'four-seasons-kitchen.jpg', caption: 'Gourmet Kitchen' },
-    { url: 'four-seasons-master.jpg', caption: 'Master Bedroom Suite' },
-    { url: 'four-seasons-view.jpg', caption: 'Panoramic Bay Views' }
+    { url: '/img/four-seasons-living.jpg', caption: 'Elegant Living Room' },
+    { url: '/img/four-seasons-dining.jpg', caption: 'Formal Dining Area' },
+    { url: '/img/four-seasons-kitchen.jpg', caption: 'Gourmet Kitchen' },
+    { url: '/img/four-seasons-master.jpg', caption: 'Master Bedroom Suite' },
+    { url: '/img/four-seasons-view.jpg', caption: 'Panoramic Bay Views' }
   ],
   coralGables: [
-    { url: 'coral-gables-exterior.jpg', caption: 'Stunning Exterior' },
-    { url: 'coral-gables-foyer.jpg', caption: 'Grand Foyer' },
-    { url: 'coral-gables-kitchen.jpg', caption: 'Gourmet Kitchen' },
-    { url: 'coral-gables-pool.jpg', caption: 'Resort-Style Pool' },
-    { url: 'coral-gables-master.jpg', caption: 'Master Bedroom' },
-    { url: 'coral-gables-garden.jpg', caption: 'Lush Gardens' }
+    { url: '/img/coral-gables-exterior.jpg', caption: 'Stunning Exterior' },
+    { url: '/img/coral-gables-foyer.jpg', caption: 'Grand Foyer' },
+    { url: '/img/coral-gables-kitchen.jpg', caption: 'Gourmet Kitchen' },
+    { url: '/img/coral-gables-pool.jpg', caption: 'Resort-Style Pool' },
+    { url: '/img/coral-gables-master.jpg', caption: 'Master Bedroom' },
+    { url: '/img/coral-gables-garden.jpg', caption: 'Lush Gardens' }
   ],
   coconutGrove: [
-    { url: 'coconut-grove-living.jpg', caption: 'Open Living Space' },
-    { url: 'coconut-grove-kitchen.jpg', caption: 'Chef Kitchen' },
-    { url: 'coconut-grove-pool.jpg', caption: 'Pool Area' },
-    { url: 'coconut-grove-rooftop.jpg', caption: 'Rooftop Terrace' }
+    { url: '/img/coconut-grove-living.jpg', caption: 'Open Living Space' },
+    { url: '/img/coconut-grove-kitchen.jpg', caption: 'Chef Kitchen' },
+    { url: '/img/coconut-grove-pool.jpg', caption: 'Pool Area' },
+    { url: '/img/coconut-grove-rooftop.jpg', caption: 'Rooftop Terrace' }
   ],
   venetianIslands: [
-    { url: 'venetian-islands-dock.jpg', caption: 'Private Dock' },
-    { url: 'venetian-islands-pool.jpg', caption: 'Infinity Pool' },
-    { url: 'venetian-islands-interior.jpg', caption: 'Luxury Interior' },
-    { url: 'venetian-islands-view.jpg', caption: 'Bay Views' }
+    { url: '/img/venetian-islands-dock.jpg', caption: 'Private Dock' },
+    { url: '/img/venetian-islands-pool.jpg', caption: 'Infinity Pool' },
+    { url: '/img/venetian-islands-interior.jpg', caption: 'Luxury Interior' },
+    { url: '/img/venetian-islands-view.jpg', caption: 'Bay Views' }
   ],
   edgewater: [
-    { url: 'edgewater-living.jpg', caption: 'Modern Living Room' },
-    { url: 'edgewater-kitchen.jpg', caption: 'Gourmet Kitchen' },
-    { url: 'edgewater-bedroom.jpg', caption: 'Master Bedroom' },
-    { url: 'edgewater-view.jpg', caption: 'Bay Views' }
+    { url: '/img/edgewater-living.jpg', caption: 'Modern Living Room' },
+    { url: '/img/edgewater-kitchen.jpg', caption: 'Gourmet Kitchen' },
+    { url: '/img/edgewater-bedroom.jpg', caption: 'Master Bedroom' },
+    { url: '/img/edgewater-view.jpg', caption: 'Bay Views' }
   ],
   theRoads: [
-    { url: 'the-roads-exterior.jpg', caption: 'Historic Architecture' },
-    { url: 'the-roads-living.jpg', caption: 'Original Details' },
-    { url: 'the-roads-kitchen.jpg', caption: 'Updated Kitchen' },
-    { url: 'the-roads-pool.jpg', caption: 'Private Pool' }
+    { url: '/img/the-roads-exterior.jpg', caption: 'Historic Architecture' },
+    { url: '/img/the-roads-living.jpg', caption: 'Original Details' },
+    { url: '/img/the-roads-kitchen.jpg', caption: 'Updated Kitchen' },
+    { url: '/img/the-roads-pool.jpg', caption: 'Private Pool' }
   ]
 };
 
@@ -104,29 +104,6 @@ async function seedProperties() {
   try {
     // Connect to database
     await prisma.$connect();
-
-    // First, ensure categories exist
-    const categories = [
-      { name: 'New Developments', description: 'Newly built or under construction properties' },
-      { name: 'Luxury Condos', description: 'High-end condominium properties with premium amenities' },
-      { name: 'Single Family Homes', description: 'Detached single family residential properties' },
-      { name: 'Waterfront Properties', description: 'Properties with direct water access or water views' },
-      { name: 'Golf Course Properties', description: 'Properties located near or overlooking golf courses' },
-      { name: 'Private & Exclusive', description: 'Exclusive luxury properties with enhanced privacy' },
-      // Neighborhoods
-      { name: 'Brickell', description: 'Properties in the Brickell neighborhood' },
-      { name: 'Edgewater', description: 'Properties in the Edgewater neighborhood' },
-      { name: 'Coconut Grove', description: 'Properties in the Coconut Grove neighborhood' },
-      { name: 'The Roads', description: 'Properties in The Roads neighborhood' }
-    ];
-
-    for (const category of categories) {
-      await prisma.category.upsert({
-        where: { name: category.name },
-        update: {},
-        create: category
-      });
-    }
 
     // Get or create admin user
     let adminUser = await prisma.user.findFirst({
