@@ -355,7 +355,7 @@ router.post('/properties', upload.fields([
         propertyType: propertyType || 'CONDO',
         status: status || 'ACTIVE',
         categoria: categoria || 'LUXURY_CONDOS',
-        bairro: bairro || null,
+        bairro: (bairro && bairro !== "") ? bairro : null,
         price: price ? parseFloat(price) : null,
         pricePerSqft: pricePerSqft ? parseFloat(pricePerSqft) : null,
         bedrooms: bedrooms ? parseInt(bedrooms) : null,
@@ -546,6 +546,11 @@ router.put('/properties/:id', upload.fields([
 
     // Convert date fields
     if (updateData.dateListed) updateData.listingDate = new Date(updateData.dateListed);
+
+    // Handle enum fields - convert empty strings to null
+    if (updateData.bairro === "" || updateData.bairro === null || updateData.bairro === undefined) {
+      updateData.bairro = null;
+    }
 
     // Remove fields that don't exist in the database schema or are handled separately
     delete updateData.halfBathrooms;
