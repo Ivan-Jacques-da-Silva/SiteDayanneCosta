@@ -1,0 +1,122 @@
+📸 Image request: GET /uploads/properties/img/coral-gables-garden.jpg
+📁 File path: C:\Users\Notebook\Downloads\SiteDayanneCosta\Backend\uploads\properties\img\coral-gables-garden.jpg
+✅ File exists: false
+📂 Files in uploads/properties: [
+  'gallery-1754795919476-757374189.jpeg',    
+  'gallery-1754930616056-96048825.jpeg',     
+  'gallery-1754930616058-421125204.jpeg',    
+  'gallery-1754930616059-666955930.jpeg',    
+  'gallery-1754930616060-638318108.jpeg'     
+]
+GET /uploads/properties/img/coral-gables-garden.jpg 200 0.657 ms - 1687
+➡️  PUT /api/admin/properties/cme7c855i0019vkk0ryuoe4rw3
+🔍 PUT Request Debug:
+📁 Files received: [ 'primaryImage', 'galleryImages' ]
+📝 Body fields: [
+  'id',              'mlsId',              'title',
+  'description',     'address',            'city',
+  'state',           'zipCode',            'country',
+  'subdivision',     'propertyType',       'propertySubType',
+  'status',          'price',              'pricePerSqft',
+  'bedrooms',        'bathrooms',          'halfBaths',
+  'sqft',            'adjustedSqft',       'lotSize',
+  'yearBuilt',       'garage',             'parking',
+  'parkingSpaces',   'parkingDescription', 'pool',
+  'waterfront',      'furnished',          'petFriendly',
+  'newConstruction', 'latitude',           'longitude',
+  'listingDate',     'daysOnMarket',       'virtualTour',
+  'amenities',       'interiorFeatures',   'exteriorFeatures',
+  'hoaFees',         'taxAmount',          'taxYear',
+  'listingCourtesy', 'listingAgent',       'listingOffice',
+  'shortSale',       'categoria',          'bairro',
+  'userId',          'createdAt',          'updatedAt',
+  'user',            '_count',             'halfBathrooms'
+]
+   - primaryImage: 1 file(s)
+   - galleryImages: 6 file(s)
+Error updating property: PrismaClientValidationError:
+Invalid `prisma.property.update()` invocation in
+C:\Users\Notebook\Downloads\SiteDayanneCosta\Backend\routes\admin.js:565:44
+
+  562 delete updateData.waterfrontDescription;
+  563
+  564 // Update the property
+→ 565 const property = await prisma.property.update({
+        where: {
+          id: "cme7c855i0019vk0ryuoe4rw3"    
+        },
+        data: {
+          mlsId: "A12345681",
+          title: "Stunning Coral Gables Estate",
+          description: "Magnificent single family estate in prestigious Coral Gables. This architectural masterpiece features 6 bedrooms, 5.5 bathrooms, gourmet kitchen with butler pantry, library, wine cellar, resort-style pool with spa, outdoor summer kitchen, and lush landscaping on an oversized corner lot. The property combines classic Mediterranean architecture with modern luxury amenities.",     
+          address: "1234 Coral Way",
+          city: "Coral Gables",
+          state: "FL",
+          zipCode: "33134",
+          country: "USA",
+          subdivision: "Coral Gables Estates",
+          propertyType: "SINGLE_FAMILY",     
+          propertySubType: "Mediterranean Estate",
+          status: "ACTIVE",
+          price: 2800000,
+          pricePerSqft: 650,
+          bedrooms: 6,
+          bathrooms: 5.5,
+          halfBaths: 0,
+          sqft: 4308,
+          adjustedSqft: 4308,
+          lotSize: 0.45,
+          yearBuilt: 2015,
+          garage: 3,
+          parking: 6,
+          parkingSpaces: 6,
+          parkingDescription: "3-car garage plus circular driveway",
+          pool: true,
+          waterfront: false,
+          furnished: false,
+          petFriendly: true,
+          newConstruction: false,
+          latitude: 25.7463,
+          longitude: -80.2581,
+          listingDate: "2025-08-11T16:39:21.330Z",
+          daysOnMarket: 18,
+          virtualTour: "https://example.com/virtual-tour-coral-gables",
+          amenities: "Private pool, Wine cellar, Library, Summer kitchen, Garden, Security system",
+          interiorFeatures: "Marble floors, Crown molding, Coffered ceilings, Gourmet kitchen, Butler pantry, Master suite, Walk-in closets",
+          exteriorFeatures: "Mediterranean architecture, Tile roof, Covered terraces, Outdoor kitchen, Pool and spa, Mature landscaping",
+          hoaFees: 0,
+          taxAmount: 28000,
+          taxYear: 2024,
+          listingCourtesy: "Coral Gables Realty",
+          listingAgent: "Carlos Mendoza",    
+          listingOffice: "The Keyes Company",
+          shortSale: "Regular Sale",
+          categoria: "SINGLE_FAMILY_HOMES",  
+          bairro: ""
+                  ~~
+        },
+        include: {
+          user: {
+            select: {
+              name: true,
+              email: true
+            }
+          },
+          images: {
+            orderBy: {
+              order: "asc"
+            }
+          }
+        }
+      })
+
+Invalid value for argument `bairro`. Expected Bairro.
+    at wn (C:\Users\Notebook\Downloads\SiteDayanneCosta\Backend\node_modules\@prisma\client\runtime\library.js:29:1363)
+    at $n.handleRequestError (C:\Users\Notebook\Downloads\SiteDayanneCosta\Backend\node_modules\@prisma\client\runtime\library.js:121:6958)
+    at $n.handleAndLogRequestError (C:\Users\Notebook\Downloads\SiteDayanneCosta\Backend\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Notebook\Downloads\SiteDayanneCosta\Backend\node_modules\@prisma\client\runtime\library.js:121:6307)       
+    at async l (C:\Users\Notebook\Downloads\SiteDayanneCosta\Backend\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async C:\Users\Notebook\Downloads\SiteDayanneCosta\Backend\routes\admin.js:565:22 {
+  clientVersion: '5.22.0'
+}
+PUT /api/admin/properties/cme7c855i0019vk0ryuoe4rw3 400 37.437 ms - 3089
