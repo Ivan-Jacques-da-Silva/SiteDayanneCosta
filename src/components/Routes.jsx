@@ -32,6 +32,7 @@ import NewDevelopments from '../pages/NewDevelopments';
 import CompassConcierge from '../pages/CompassConcierge';
 import PrivateExclusive from '../pages/PrivateExclusive';
 import PropertyDetailPage from '../pages/PropertyDetailPage';
+import ProtectedRoute from '../components/ProtectedRoute';
 
 function AppRoutes() {
   return (
@@ -70,16 +71,16 @@ function AppRoutes() {
       <Route path="/forgot-password" element={<ForgotPassword />} />
 
       {/* Admin Routes */}
-      <Route path="/admin" element={<AdminDashboard />} />
-      <Route path="/admin/dashboard" element={<AdminDashboard />} />
-      <Route path="/admin/condominios" element={<AdminCondominios />} />
-      <Route path="/admin/usuarios" element={<AdminUsuarios />} />
-      <Route path="/admin/favoritos" element={<AdminFavoritos />} />
-      <Route path="/admin/formularios" element={<AdminFormularios />} />
-      <Route path="/admin/contacts" element={<AdminContacts />} />
-      <Route path="/admin/properties" element={<AdminProperties />} />
-      <Route path="/admin/properties/new" element={<AdminPropertyForm />} />
-      <Route path="/admin/properties/edit/:id" element={<AdminPropertyForm />} />
+      <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+      <Route path="/admin/dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+      <Route path="/admin/properties" element={<ProtectedRoute><AdminProperties /></ProtectedRoute>} />
+      <Route path="/admin/properties/new" element={<ProtectedRoute><AdminPropertyForm /></ProtectedRoute>} />
+      <Route path="/admin/properties/edit/:id" element={<ProtectedRoute><AdminPropertyForm /></ProtectedRoute>} />
+      <Route path="/admin/condominios" element={<ProtectedRoute><AdminCondominios /></ProtectedRoute>} />
+      <Route path="/admin/usuarios" element={<ProtectedRoute><AdminUsuarios /></ProtectedRoute>} />
+      <Route path="/admin/favoritos" element={<ProtectedRoute><AdminFavoritos /></ProtectedRoute>} />
+      <Route path="/admin/contacts" element={<ProtectedRoute><AdminContacts /></ProtectedRoute>} />
+      <Route path="/admin/formularios" element={<ProtectedRoute><AdminFormularios /></ProtectedRoute>} />
 
       {/* Property Detail Route */}
       <Route path="/property/:id" element={<PropertyDetailPage />} />

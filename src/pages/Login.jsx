@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { buildApiUrl } from '../config/api';
 import styles from './Login.module.css';
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { login: authLogin, isAuthenticated, user, loading } = useAuth();
+  
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -14,6 +18,17 @@ const Login = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
+
+  // Redirecionar se já estiver logado
+  useEffect(() => {
+    if (!loading && isAuthenticated && user) {
+      if (user.role === 'ADMIN') {
+        navigate('/admin', { replace: true });
+      } else {
+        navigate('/', { replace: true });
+      }
+    }
+  }, [isAuthenticated, user, loading, navigate]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -44,16 +59,10 @@ const Login = () => {
 
       const data = await response.json();
 
-      // Save user data and token to localStorage
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      // Use auth context to handle login
+      authLogin(data.user, data.token);
       
-      // Redirect based on user role
-      if (data.user.role === 'ADMIN') {
-        window.location.href = '/admin';
-      } else {
-        window.location.href = '/';
-      }
+      // Navigation will be handled by useEffect above
     } catch (error) {
       console.error('Login error:', error);
       if (error.message.includes('HTTP error! status: 401')) {
@@ -65,6 +74,21 @@ const Login = () => {
       }
     }
   };
+
+  // Show loading while checking authentication
+  if (loading) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        fontSize: '18px'
+      }}>
+        Verificando autenticação...
+      </div>
+    );
+  }
 
   return (
     <div className={styles.loginPage}>
