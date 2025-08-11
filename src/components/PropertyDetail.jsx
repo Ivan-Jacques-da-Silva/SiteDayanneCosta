@@ -11,6 +11,17 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
   const [showImageModal, setShowImageModal] = useState(false);
   const [similarProperties, setSimilarProperties] = useState([]);
   const [viewMode, setViewMode] = useState("photos");
+  
+  // Form state
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState('');
 
   const handleBackClick = () => {
     navigate(-1);
@@ -23,6 +34,15 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
       fetchSimilarProperties(propertyData.categoria);
     }
   }, [propertyId, propertyData]);
+
+  useEffect(() => {
+    if (property) {
+      setFormData(prev => ({
+        ...prev,
+        message: `I am interested in ${property.address} ${property.city}, ${property.state} ${property.zipCode}`
+      }));
+    }
+  }, [property]);
 
   // Debug images when property loads
   useEffect(() => {
@@ -109,6 +129,53 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
     navigate(`/property/${similarProperty.id}`, {
       state: { property: similarProperty },
     });
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitMessage('');
+
+    try {
+      const response = await fetch('/api/emails/property-inquiry', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          propertyId: property.id
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSubmitMessage('Interesse enviado com sucesso! Entraremos em contato em breve.');
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          message: `I am interested in ${property.address} ${property.city}, ${property.state} ${property.zipCode}`
+        });
+      } else {
+        setSubmitMessage('Erro ao enviar interesse: ' + data.message);
+      }
+    } catch (error) {
+      setSubmitMessage('Erro ao enviar interesse. Tente novamente.');
+      console.error('Error submitting form:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (loading) {
@@ -631,7 +698,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                   </div>
                 </div>
 
-                <form className={styles.contactForm}>
+                <form className={styles.contactForm} onSubmit={handleSubmit}>
                   <div className={styles.formGroup}>
                     <label htmlFor="firstName">First Name</label>
                     <input
@@ -639,6 +706,8 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                       id="firstName"
                       name="firstName"
                       placeholder="First Name*"
+                      value={formData.firstName}
+                      onChange={handleInputChange}
                       required
                     />
                   </div>
@@ -649,6 +718,8 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                       id="lastName"
                       name="lastName"
                       placeholder="Last Name*"
+                      value={formData.lastName}
+                      onChange={handleInputChange}
                       required
                     />
                   </div>
@@ -659,6 +730,8 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                       id="email"
                       name="email"
                       placeholder="Email*"
+                      value={formData.email}
+                      onChange={handleInputChange}
                       required
                     />
                   </div>
@@ -669,6 +742,8 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                       id="phone"
                       name="phone"
                       placeholder="Phone*"
+                      value={formData.phone}
+                      onChange={handleInputChange}
                       required
                     />
                   </div>
@@ -679,12 +754,24 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                       name="message"
                       rows="4"
                       placeholder="Comments"
-                      defaultValue={`I am interested in ${property.address} ${property.city}, ${property.state} ${property.zipCode}`}
-                    ></textarea>
+                      value={formData.message}
+                      onChange={handleInputChange}
+                    />
                   </div>
+                  
+                  {submitMessage && (
+                    <div className={styles.submitMessage}>
+                      {submitMessage}
+                    </div>
+                  )}
+                  
                   <div className={styles.requiredFields}>* Required Fields</div>
-                  <button type="submit" className={styles.submitBtn}>
-                    Request Information
+                  <button 
+                    type="submit" 
+                    className={styles.submitBtn}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? 'Enviando...' : 'Request Information'}
                   </button>
                 </form>
               </div>

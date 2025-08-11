@@ -1,10 +1,81 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import styles from './Contact.module.css';
 
 const Contact = () => {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    message: '',
+    amTime: false,
+    pmTime: false
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState('');
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitMessage('');
+
+    try {
+      const timePreference = [];
+      if (formData.amTime) timePreference.push('AM');
+      if (formData.pmTime) timePreference.push('PM');
+      
+      const messageWithPreference = formData.message + 
+        (timePreference.length > 0 ? `\n\nMelhor horário para contato: ${timePreference.join(', ')}` : '');
+
+      const response = await fetch('/api/emails/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          message: messageWithPreference
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSubmitMessage('Mensagem enviada com sucesso! Entraremos em contato em breve.');
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          message: '',
+          amTime: false,
+          pmTime: false
+        });
+      } else {
+        setSubmitMessage('Erro ao enviar mensagem: ' + data.message);
+      }
+    } catch (error) {
+      setSubmitMessage('Erro ao enviar mensagem. Tente novamente.');
+      console.error('Error submitting form:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className={styles.contactPage}>
       <Header />
@@ -58,27 +129,62 @@ const Contact = () => {
             
             <div className={styles.rightSection}>
               <div className={styles.contactForm}>
-                <form>
+                <form onSubmit={handleSubmit}>
                   <div className={styles.formRow}>
                     <div className={styles.formGroup}>
-                      <input type="text" placeholder="First Name *" required />
+                      <input 
+                        type="text" 
+                        name="firstName"
+                        placeholder="First Name *" 
+                        value={formData.firstName}
+                        onChange={handleInputChange}
+                        required 
+                      />
                     </div>
                     <div className={styles.formGroup}>
-                      <input type="text" placeholder="Last Name *" required />
+                      <input 
+                        type="text" 
+                        name="lastName"
+                        placeholder="Last Name *" 
+                        value={formData.lastName}
+                        onChange={handleInputChange}
+                        required 
+                      />
                     </div>
                   </div>
                   
                   <div className={styles.formRow}>
                     <div className={styles.formGroup}>
-                      <input type="email" placeholder="Email *" required />
+                      <input 
+                        type="email" 
+                        name="email"
+                        placeholder="Email *" 
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        required 
+                      />
                     </div>
                     <div className={styles.formGroup}>
-                      <input type="tel" placeholder="+55" />
+                      <input 
+                        type="tel" 
+                        name="phone"
+                        placeholder="Phone *" 
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        required 
+                      />
                     </div>
                   </div>
                   
                   <div className={styles.formGroup}>
-                    <textarea placeholder="Message" rows="6" required></textarea>
+                    <textarea 
+                      name="message"
+                      placeholder="Message" 
+                      rows="6" 
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      required
+                    />
                   </div>
                   
                   <div className={styles.checkboxGroup}>
@@ -87,15 +193,37 @@ const Contact = () => {
                     </label>
                     <div className={styles.checkboxOptions}>
                       <label className={styles.checkboxOption}>
-                        <input type="checkbox" /> am
+                        <input 
+                          type="checkbox" 
+                          name="amTime"
+                          checked={formData.amTime}
+                          onChange={handleInputChange}
+                        /> am
                       </label>
                       <label className={styles.checkboxOption}>
-                        <input type="checkbox" /> pm
+                        <input 
+                          type="checkbox" 
+                          name="pmTime"
+                          checked={formData.pmTime}
+                          onChange={handleInputChange}
+                        /> pm
                       </label>
                     </div>
                   </div>
                   
-                  <button type="submit" className={styles.submitBtn}>Submit</button>
+                  {submitMessage && (
+                    <div className={styles.submitMessage}>
+                      {submitMessage}
+                    </div>
+                  )}
+                  
+                  <button 
+                    type="submit" 
+                    className={styles.submitBtn}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? 'Enviando...' : 'Submit'}
+                  </button>
                 </form>
               </div>
             </div>

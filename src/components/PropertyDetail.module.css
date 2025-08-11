@@ -1,4 +1,3 @@
-
 .propertyDetail {
   width: 100%;
   min-height: 100vh;
@@ -704,7 +703,23 @@
 }
 
 .submitBtn:hover {
-  background: #333;
+  background-color: #0056b3;
+}
+
+.submitBtn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.submitMessage {
+  margin: 12px 0;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  text-align: center;
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
 }
 
 /* Image Modal */
@@ -787,17 +802,17 @@
   .mainContent {
     grid-template-columns: 1fr;
   }
-  
+
   .rightColumn {
     position: static;
     order: -1;
   }
-  
+
   .propertyInfoBar {
     flex-wrap: wrap;
     gap: 20px;
   }
-  
+
   .headerActions {
     flex-wrap: wrap;
     gap: 10px;
@@ -810,32 +825,32 @@
     align-items: flex-start;
     gap: 15px;
   }
-  
+
   .propertyTitle {
     font-size: 1.25rem;
   }
-  
+
   .propertyTitle span {
     font-size: 0.9rem;
   }
-  
+
   .fullSlider {
     height: 40vh;
     min-height: 300px;
   }
-  
+
   .similarPropertiesList {
     grid-template-columns: 1fr;
   }
-  
+
   .propertyInfoBar {
     gap: 15px;
   }
-  
+
   .infoNumber {
     font-size: 1.25rem;
   }
-  
+
   .sliderOptions {
     flex-direction: column;
     gap: 15px;
@@ -847,24 +862,24 @@
   .similarPropertiesList {
     grid-template-columns: 1fr;
   }
-  
+
   .similarPropertySlider {
     width: 100px;
     height: 70px;
   }
-  
+
   .similarPropertyInfo {
     padding: 10px 12px;
   }
-  
+
   .similarPropertyPrice {
     font-size: 1rem;
   }
-  
+
   .similarPropertySpecs {
     font-size: 10px;
   }
-  
+
   .similarPropertyAddress {
     font-size: 11px;
   }
@@ -874,56 +889,56 @@
   .container {
     padding: 0 15px;
   }
-  
+
   .fixedHeader {
     padding: 10px 0;
   }
-  
+
   .fullSlider {
     margin-top: 70px;
   }
-  
+
   .basicInfoCard, .descriptionCard, .amenitiesCard, .featuresCard, .locationMapCard, .similarPropertiesCard, .contactSidebar {
     padding: 20px;
   }
-  
+
   .propertyInfoBar {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .headerActions {
     width: 100%;
     justify-content: space-between;
   }
-  
+
   .similarPropertiesList {
     gap: 8px;
   }
-  
+
   .similarPropertySlider {
     width: 80px;
     height: 60px;
   }
-  
+
   .similarPropertyInfo {
     padding: 8px 10px;
   }
-  
+
   .similarPropertyPrice {
     font-size: 0.95rem;
     margin-bottom: 2px;
   }
-  
+
   .similarPropertyDetail {
     gap: 6px;
     margin-bottom: 2px;
   }
-  
+
   .similarPropertySpecs {
     font-size: 9px;
   }
-  
+
   .similarPropertyAddress {
     font-size: 10px;
   }

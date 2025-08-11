@@ -124,6 +124,7 @@ app.use('/api/amenities', amenityRoutes);
 app.use('/api/features', featureRoutes);
 app.use('/api/categories', require('./routes/categories'));
 app.use('/api/admin', adminRoutes);
+app.use('/api/emails', require('./routes/emails'));
 
 // Error handling middleware
 app.use((err, req, res, next) => {
