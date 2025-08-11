@@ -114,6 +114,11 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Simple test route
+app.get('/test', (req, res) => {
+  res.send('OK - Backend está funcionando!');
+});
+
 // API Routes
 app.use('/api/properties', propertyRoutes);
 app.use('/api/properties-by-category', require('./routes/properties-by-category'));
