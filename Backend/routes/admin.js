@@ -517,7 +517,9 @@ router.put('/properties/:id', upload.fields([
     if (updateData.halfBathrooms) updateData.halfBaths = parseInt(updateData.halfBathrooms);
     if (updateData.sqft) updateData.sqft = parseInt(updateData.sqft);
     if (updateData.adjustedSqft) updateData.adjustedSqft = parseInt(updateData.adjustedSqft);
+    if (updateData.lotSize) updateData.lotSize = parseFloat(updateData.lotSize);
     if (updateData.yearBuilt) updateData.yearBuilt = parseInt(updateData.yearBuilt);
+    if (updateData.garage) updateData.garage = parseInt(updateData.garage);
     if (updateData.daysOnMarket) updateData.daysOnMarket = parseInt(updateData.daysOnMarket);
     if (updateData.parkingSpaces) updateData.parkingSpaces = parseInt(updateData.parkingSpaces);
     if (updateData.hoaFees) updateData.hoaFees = parseFloat(updateData.hoaFees);
@@ -557,6 +559,7 @@ router.put('/properties/:id', upload.fields([
     delete updateData.images;
     delete updateData.user;
     delete updateData._count;
+    delete updateData.waterfrontDescription;
 
     // Update the property
     const property = await prisma.property.update({
