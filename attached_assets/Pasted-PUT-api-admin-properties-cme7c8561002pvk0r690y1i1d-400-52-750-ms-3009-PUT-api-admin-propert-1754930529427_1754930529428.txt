@@ -1,0 +1,112 @@
+PUT /api/admin/properties/cme7c8561002pvk0r690y1i1d 400 52.750 ms - 3009
+➡️  PUT /api/admin/properties/cme7c8561002pvkk0r690y1i1d
+🔍 PUT Request Debug:
+📁 Files received: [ 'primaryImage', 'galleryImages' ]
+📝 Body fields: [
+  'id',              'mlsId',              'title',
+  'description',     'address',            'city',
+  'state',           'zipCode',            'country',
+  'subdivision',     'propertyType',       'propertySubType',
+  'status',          'price',              'pricePerSqft',
+  'bedrooms',        'bathrooms',          'halfBaths',
+  'sqft',            'adjustedSqft',       'lotSize',
+  'yearBuilt',       'garage',             'parking',
+  'parkingSpaces',   'parkingDescription', 'pool',
+  'waterfront',      'furnished',          'petFriendly',
+  'newConstruction', 'latitude',           'longitude',
+  'listingDate',     'daysOnMarket',       'virtualTour',
+  'amenities',       'interiorFeatures',   'exteriorFeatures',
+  'hoaFees',         'taxAmount',          'taxYear',
+  'listingCourtesy', 'listingAgent',       'listingOffice',
+  'shortSale',       'categoria',          'bairro',
+  'userId',          'createdAt',          'updatedAt',
+  'user',            '_count',             'halfBathrooms'
+]
+   - primaryImage: 1 file(s)
+   - galleryImages: 6 file(s)
+Error updating property: PrismaClientValidationError:
+Invalid `prisma.property.update()` invocation in
+C:\Users\Notebook\Downloads\SiteDayanneCosta\Backend\routes\admin.js:562:44
+
+  559 delete updateData._count;
+  560
+  561 // Update the property
+→ 562 const property = await prisma.property.update({
+        where: {
+          id: "cme7c8561002pvk0r690y1i1d"    
+        },
+        data: {
+          mlsId: "A12345685",
+          title: "Historic The Roads Charmer",
+          description: "Beautifully restored historic home in The Roads neighborhood. This charming residence features original architectural details including hardwood floors, crown molding, and decorative elements, seamlessly blended with modern updates including renovated kitchen, updated bathrooms, and smart home technology.",
+          address: "1357 SW 22nd Ave",       
+          city: "Miami",
+          state: "FL",
+          zipCode: "33145",
+          country: "USA",
+          subdivision: "The Roads Historic District",
+          propertyType: "SINGLE_FAMILY",     
+          propertySubType: "Historic Mediterranean Revival",
+          status: "ACTIVE",
+          price: 1250000,
+          pricePerSqft: 625,
+          bedrooms: 3,
+          bathrooms: 2.5,
+          halfBaths: 0,
+          sqft: 2000,
+          adjustedSqft: 2000,
+          lotSize: "0.18",
+                   ~~~~~~
+          yearBuilt: 1925,
+          garage: "2",
+          parking: 3,
+          parkingSpaces: 3,
+          parkingDescription: "2-car garage plus driveway",
+          pool: true,
+          waterfront: false,
+          furnished: false,
+          petFriendly: true,
+          newConstruction: false,
+          latitude: 25.7543,
+          longitude: -80.2234,
+          listingDate: "2025-08-11T16:39:21.330Z",
+          daysOnMarket: 22,
+          virtualTour: "https://example.com/virtual-tour-the-roads",
+          amenities: "Historic charm, Updated systems, Pool, Garden, Security system",    
+          interiorFeatures: "Original hardwood floors, Crown molding, Updated kitchen, Renovated bathrooms, Period details",
+          exteriorFeatures: "Historic architecture, Tile roof, Pool, Mature trees, Garden",
+          hoaFees: 0,
+          taxAmount: 12500,
+          taxYear: 2024,
+          listingCourtesy: "The Roads Realty",
+          listingAgent: "Patricia Lopez",    
+          listingOffice: "Compass",
+          shortSale: "Regular Sale",
+          categoria: "SINGLE_FAMILY_HOMES",  
+          bairro: "THE_ROADS"
+        },
+        include: {
+          user: {
+            select: {
+              name: true,
+              email: true
+            }
+          },
+          images: {
+            orderBy: {
+              order: "asc"
+            }
+          }
+        }
+      })
+
+Argument `lotSize`: Invalid value provided. Expected Float, NullableFloatFieldUpdateOperationsInput or Null, provided String.
+    at wn (C:\Users\Notebook\Downloads\SiteDayanneCosta\Backend\node_modules\@prisma\client\runtime\library.js:29:1363)
+    at $n.handleRequestError (C:\Users\Notebook\Downloads\SiteDayanneCosta\Backend\node_modules\@prisma\client\runtime\library.js:121:6958)
+    at $n.handleAndLogRequestError (C:\Users\Notebook\Downloads\SiteDayanneCosta\Backend\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Notebook\Downloads\SiteDayanneCosta\Backend\node_modules\@prisma\client\runtime\library.js:121:6307)       
+    at async l (C:\Users\Notebook\Downloads\SiteDayanneCosta\Backend\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async C:\Users\Notebook\Downloads\SiteDayanneCosta\Backend\routes\admin.js:562:22 {
+  clientVersion: '5.22.0'
+}
+PUT /api/admin/properties/cme7c8561002pvk0r690y1i1d 400 29.616 ms - 3009
