@@ -1,9 +1,17 @@
 import React from 'react';
 import { Container, Row, Col, Button, Card } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import styles from './FeaturedNeighborhoods.module.css';
 
 const FeaturedNeighborhoods = () => {
-  const neighborhoods = ["Brickell", "Coconut Grove", "Miami Beach", "Downtown"];
+  const navigate = useNavigate();
+  
+  const neighborhoods = [
+    { name: "Brickell", link: "/brickell/" },
+    { name: "Edgewater", link: "/edgewater/" },
+    { name: "Coconut Grove", link: "/coconut-grove/" },
+    { name: "The Roads", link: "/the-roads/" }
+  ];
   const featuredListing = {
     price: "$3,850,000",
     address: "2020 North Bayshore",
@@ -23,8 +31,12 @@ const FeaturedNeighborhoods = () => {
         <Row className="g-3 mb-5">
           {neighborhoods.map((neighborhood, index) => (
             <Col key={index} xs={6} md={3}>
-              <div className={styles.neighborhoodCard}>
-                {neighborhood}
+              <div 
+                className={styles.neighborhoodCard}
+                onClick={() => navigate(neighborhood.link)}
+                style={{ cursor: 'pointer' }}
+              >
+                {neighborhood.name}
               </div>
             </Col>
           ))}
@@ -32,7 +44,11 @@ const FeaturedNeighborhoods = () => {
 
         <Row className="mb-4">
           <Col className="text-center">
-            <Button variant="link" className={styles.viewAllButton}>
+            <Button 
+              variant="link" 
+              className={styles.viewAllButton}
+              onClick={() => navigate('/neighborhoods/')}
+            >
               View All <i className="bi bi-arrow-right ms-2"></i>
             </Button>
           </Col>

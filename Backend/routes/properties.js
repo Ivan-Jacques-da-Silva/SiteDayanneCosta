@@ -75,15 +75,9 @@ router.get('/', async (req, res) => {
       ...(city && { city: { contains: city, mode: 'insensitive' } }),
       ...(state && { state: { contains: state, mode: 'insensitive' } }),
       ...(categoryName && {
-        categories: {
-          some: {
-            category: {
-              name: {
-                equals: categoryName,
-                mode: 'insensitive'
-              }
-            }
-          }
+        categoria: {
+          equals: categoryName.toUpperCase().replace(' ', '_'),
+          mode: 'insensitive'
         }
       })
     };
@@ -104,24 +98,22 @@ router.get('/', async (req, res) => {
       where,
       include: {
         images: {
-          orderBy: { order: 'asc' }
+          orderBy: {
+            order: 'asc'
+          }
         },
-        amenities: {
-          include: { amenity: true }
+        propertyAmenities: {
+          include: {
+            amenity: true
+          }
         },
-        features: {
-          include: { feature: true }
-        },
+        features: true,
         user: {
-          select: { id: true, name: true, email: true, phone: true }
-        },
-        categories: {
-          include: { 
-            category: {
-              include: {
-                parent: true
-              }
-            } 
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true
           }
         }
       },
@@ -172,23 +164,12 @@ router.get('/:id', async (req, res) => {
         },
         videos: true,
         documents: true,
-        amenities: {
+        propertyAmenities: {
           include: { amenity: true }
         },
-        features: {
-          include: { feature: true }
-        },
+        features: true,
         user: {
           select: { id: true, name: true, email: true }
-        },
-        categories: {
-          include: { 
-            category: {
-              include: {
-                parent: true
-              }
-            } 
-          }
         }
       }
     });
@@ -342,21 +323,10 @@ router.post('/', upload.array('images', 10), async (req, res) => {
       where: { id: property.id },
       include: {
         images: true,
-        amenities: {
+        propertyAmenities: {
           include: { amenity: true }
         },
-        features: {
-          include: { feature: true }
-        },
-        categories: {
-          include: { 
-            category: {
-              include: {
-                parent: true
-              }
-            } 
-          }
-        }
+        features: true
       }
     });
 
@@ -402,21 +372,10 @@ router.put('/:id', upload.array('images', 10), async (req, res) => {
       data: updateData,
       include: {
         images: true,
-        amenities: {
+        propertyAmenities: {
           include: { amenity: true }
         },
-        features: {
-          include: { feature: true }
-        },
-        categories: {
-          include: { 
-            category: {
-              include: {
-                parent: true
-              }
-            } 
-          }
-        }
+        features: true
       }
     });
 

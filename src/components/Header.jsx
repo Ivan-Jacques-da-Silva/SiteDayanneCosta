@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { MdEmail, MdPhone } from 'react-icons/md';
-import { useAuth } from '../contexts/AuthContext';
 import styles from './Header.module.css';
 import compassImg from '../assets/img/compas.png';
 import logoLight from '../assets/img/logo-dc.png';
@@ -14,14 +13,6 @@ const Header = () => {
   const [currentLanguage, setCurrentLanguage] = useState(() => {
     return localStorage.getItem('selectedLanguage') || 'EN';
   });
-  const navigate = useNavigate();
-  const { user, isAuthenticated, logout } = useAuth();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const handleLogout = () => {
-    logout();
-    navigate('/', { replace: true });
-  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -235,31 +226,19 @@ const Header = () => {
                   {/* Login Section */}
                   <div className={`ip-login js-login ${styles.ipLogin}`}>
                     <ul className={`ip-login-wrap item-no-hea ibc-u-d-flex ibc-u-align-items-center ${styles.ipLoginWrap}`} id="user-options">
-                      {isAuthenticated ? (
-                        <div className={styles.userMenu}>
-                          <span className={styles.userName}>Olá, {user?.name}</span>
-                          {user?.role === 'ADMIN' && (
-                            <Link to="/admin" className={styles.adminLink}>Admin</Link>
-                          )}
-                          <button onClick={handleLogout} className={styles.logoutButton}>Logout</button>
-                        </div>
-                      ) : (
-                        <li className={`ip-login-item login ${styles.ipLoginItem}`} data-modal="modal_login" data-tab="tabLogin">
-                          <Link to="/login" aria-label="Login" className={`lg-login ip-login-btn ${styles.ipLoginBtn}`}>
-                            <span className={`ip-login-icon idx-icon-user ${styles.ipLoginIcon}`}>
-                              <i className="fas fa-user"></i>
-                            </span>
-                            <span className={`ip-login-text ${styles.ipLoginText}`}>Login</span>
-                          </Link>
-                        </li>
-                      )}
-                      {!isAuthenticated && (
-                        <li className={`ip-login-item register ibc-u-position-relative ip-pl-2 ${styles.ipLoginItem} ${styles.register}`} data-modal="modal_login" data-tab="tabRegister">
-                          <Link to="/register" aria-label="Register" className={`lg-register ip-login-btn ${styles.ipLoginBtn}`}>
-                            <span className={`ip-login-text ${styles.ipLoginText}`}>Register</span>
-                          </Link>
-                        </li>
-                      )}
+                      <li className={`ip-login-item login ${styles.ipLoginItem}`} data-modal="modal_login" data-tab="tabLogin">
+                        <Link to="/login" aria-label="Login" className={`lg-login ip-login-btn ${styles.ipLoginBtn}`}>
+                          <span className={`ip-login-icon idx-icon-user ${styles.ipLoginIcon}`}>
+                            <i className="fas fa-user"></i>
+                          </span>
+                          <span className={`ip-login-text ${styles.ipLoginText}`}>Login</span>
+                        </Link>
+                      </li>
+                      <li className={`ip-login-item register ibc-u-position-relative ip-pl-2 ${styles.ipLoginItem} ${styles.register}`} data-modal="modal_login" data-tab="tabRegister">
+                        <Link to="/register" aria-label="Register" className={`lg-register ip-login-btn ${styles.ipLoginBtn}`}>
+                          <span className={`ip-login-text ${styles.ipLoginText}`}>Register</span>
+                        </Link>
+                      </li>
                     </ul>
                   </div>
                 </div>

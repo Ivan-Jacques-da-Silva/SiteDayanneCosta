@@ -21,6 +21,12 @@
   .neighborhoodCard:hover {
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    background-color: #f8f9fa;
+    cursor: pointer;
+  }
+
+  .neighborhoodCard:active {
+    transform: translateY(-1px);
   }
   
   .viewAllButton {

@@ -1,5 +1,7 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes as RouterRoutes, Route, Navigate } from 'react-router-dom';
+import ProtectedRoute from './ProtectedRoute';
+import { useAuth } from '../contexts/AuthContext';
 import Home from '../pages/Home';
 import About from '../pages/About';
 import AboutTeam from '../pages/AboutTeam';
@@ -32,11 +34,11 @@ import NewDevelopments from '../pages/NewDevelopments';
 import CompassConcierge from '../pages/CompassConcierge';
 import PrivateExclusive from '../pages/PrivateExclusive';
 import PropertyDetailPage from '../pages/PropertyDetailPage';
-import ProtectedRoute from '../components/ProtectedRoute';
 
-function AppRoutes() {
+
+const AppRoutes = () => {
   return (
-    <Routes>
+    <RouterRoutes>
       {/* Main Pages */}
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
@@ -84,7 +86,7 @@ function AppRoutes() {
 
       {/* Property Detail Route */}
       <Route path="/property/:id" element={<PropertyDetailPage />} />
-    </Routes>
+    </RouterRoutes>
   );
 }
 
