@@ -469,21 +469,28 @@
   position: relative;
 }
 
-.ipMenuItemHasChildren:hover > .ipSubmenu,
-.ipSubmenu:hover,
-.ipMenuItemHasChildren:focus-within > .ipSubmenu {
-  display: block;
+/* Desktop hover behavior - only for desktop */
+@media (min-width: 992px) {
+  .ipMenuItemHasChildren:hover > .ipSubmenu,
+  .ipSubmenu:hover,
+  .ipMenuItemHasChildren:focus-within > .ipSubmenu {
+    display: block;
+  }
 }
 
-/* Mobile Dropdown Behavior */
+/* Mobile Dropdown Behavior - click only */
 @media (max-width: 991.98px) {
   .ipMenuItemHasChildren:hover > .ipSubmenu {
     display: none !important;
   }
   
-  /* Enable touch-friendly mobile dropdowns */
-  .ipMenuItemHasChildren:active > .ipSubmenu,
-  .ipMenuItemHasChildren.mobile-open > .ipSubmenu {
+  /* Disable all hover effects on mobile by default */
+  .ipMenuItemHasChildren > .ipSubmenu {
+    display: none;
+  }
+  
+  /* Enable touch-friendly mobile dropdowns when open class is present */
+  .ipMenuItemHasChildren > .ipSubmenu.open {
     display: block !important;
     position: static;
     box-shadow: none;
@@ -511,31 +518,51 @@
   pointer-events: auto;
 }
 
-/* Prevent menu from closing during animations and transitions */
-.ipMenuItemHasChildren:hover > .ipSubmenu,
-.ipSubmenu:hover,
-.ipMenuItemHasChildren:focus-within > .ipSubmenu {
-  display: block !important;
-  animation: none !important;
-  transition-delay: 0s !important;
+/* Desktop only - Prevent menu from closing during animations and transitions */
+@media (min-width: 992px) {
+  .ipMenuItemHasChildren:hover > .ipSubmenu,
+  .ipSubmenu:hover,
+  .ipMenuItemHasChildren:focus-within > .ipSubmenu {
+    display: block !important;
+    animation: none !important;
+    transition-delay: 0s !important;
+  }
+
+  /* Nested submenu (Neighborhoods submenu) - Enhanced hover behavior */
+  .ipMenuItemHasChildren .ipMenuItemHasChildren:hover > .ipSubmenu,
+  .ipMenuItemHasChildren .ipSubmenu:hover,
+  .ipMenuItemHasChildren .ipMenuItemHasChildren:focus-within > .ipSubmenu,
+  .ipMenuItemHasChildren .ipMenuItemHasChildren:hover .ipSubmenu,
+  .ipMenuItemHasChildren .ipMenuItemHasChildren .ipSubmenu:hover {
+    display: block !important;
+    animation: none !important;
+    transition-delay: 0s !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Ensure stable hover area */
+  .ipMenuItemHasChildren .ipMenuItemHasChildren:hover::after {
+    display: block;
+  }
+
+  /* Additional bridge area for better hover experience */
+  .ipMenuItemHasChildren .ipSubmenu .ipMenuItemHasChildren:hover::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background: transparent;
+    pointer-events: auto;
+    z-index: -1;
+  }
 }
 
 /* Nested submenu (Neighborhoods submenu) */
 .ipMenuItemHasChildren .ipMenuItemHasChildren {
   position: relative;
-}
-
-.ipMenuItemHasChildren .ipMenuItemHasChildren:hover > .ipSubmenu,
-.ipMenuItemHasChildren .ipSubmenu:hover,
-.ipMenuItemHasChildren .ipMenuItemHasChildren:focus-within > .ipSubmenu {
-  display: block !important;
-  animation: none !important;
-  transition-delay: 0s !important;
-}
-
-/* Ensure stable hover area */
-.ipMenuItemHasChildren .ipMenuItemHasChildren:hover::after {
-  display: block;
 }
 
 .ipMenuItemHasChildren .ipSubmenu .ipSubmenu {
@@ -671,17 +698,50 @@
   right: 0;
 }
 
-.ipMenuButtonClose {
-  border: none;
-  background: none;
-  color: var(--ip-menu-mobile-link-color);
-  cursor: pointer;
+.ipMobileMenuHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
   padding: 1rem;
   border-bottom: 1px solid var(--ip-menu-mobile-link-border-color);
+  position: relative;
+}
+
+.ipMenuCloseX {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: none;
+  border: none;
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--ip-menu-mobile-link-color);
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.ipMobileMenuLogo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  justify-content: center;
+}
+
+.ipMobileMenuLogoImage {
+  height: 25px;
+  width: auto;
+}
+
+.ipMobileMenuLogoBroker {
+  height: 12px;
+  width: auto;
+  filter: brightness(0);
 }
 
 .ipMobileMenu {
@@ -741,7 +801,17 @@
 }
 
 .ipMobileMenu .ipSubmenu.open {
-  display: block;
+  display: block !important;
+}
+
+/* Nested submenu styling for mobile */
+.ipMobileMenu .ipSubmenu .ipSubmenu {
+  background: #e9ecef;
+  display: none;
+}
+
+.ipMobileMenu .ipSubmenu .ipSubmenu.open {
+  display: block !important;
 }
 
 .ipMobileMenu .ipSubmenu .ipMenuLink {

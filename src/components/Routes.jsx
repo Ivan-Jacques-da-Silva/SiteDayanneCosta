@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes as RouterRoutes, Route, Navigate } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
+import ScrollToTop from './ScrollToTop';
 import { useAuth } from '../contexts/AuthContext';
 import Home from '../pages/Home';
 import About from '../pages/About';
@@ -38,7 +39,9 @@ import PropertyDetailPage from '../pages/PropertyDetailPage';
 
 const AppRoutes = () => {
   return (
-    <RouterRoutes>
+    <>
+      <ScrollToTop />
+      <RouterRoutes>
       {/* Main Pages */}
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
@@ -87,6 +90,7 @@ const AppRoutes = () => {
       {/* Property Detail Route */}
       <Route path="/property/:id" element={<PropertyDetailPage />} />
     </RouterRoutes>
+    </>
   );
 }
 

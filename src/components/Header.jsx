@@ -44,7 +44,18 @@ const Header = () => {
   };
 
   const toggleSubmenu = (menuName) => {
-    setOpenSubmenu(openSubmenu === menuName ? null : menuName);
+    // Para submenus aninhados, precisamos manter o menu pai aberto
+    if (menuName === 'neighborhoods-mobile') {
+      // Se estamos abrindo/fechando neighborhoods, mantemos search aberto
+      if (openSubmenu === 'neighborhoods-mobile') {
+        setOpenSubmenu('search'); // Volta para mostrar apenas search
+      } else {
+        setOpenSubmenu('neighborhoods-mobile'); // Abre neighborhoods
+      }
+    } else {
+      // Para outros menus, comportamento normal
+      setOpenSubmenu(openSubmenu === menuName ? null : menuName);
+    }
   };
 
   const getLanguageCode = (displayName) => {
@@ -272,35 +283,36 @@ const Header = () => {
                             Luxury Condos
                           </Link>
                         </li>
-                        <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
-                          <Link to="/neighborhoods/" className={`ip-menu-link ${styles.ipMenuLink}`}>Neighborhoods</Link>
-                          <ul className={`ip-submenu ${styles.ipSubmenu}`}>
-                            <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                              <Link to="/brickell/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                                Brickell
-                              </Link>
-                            </li>
-                            <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                              <Link to="/edgewater/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                                Edgewater
-                              </Link>
-                            </li>
-                            <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                              <Link to="/coconut-grove/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                                Coconut Grove
-                              </Link>
-                            </li>
-                            <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                              <Link to="/the-roads/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                                The Roads
-                              </Link>
-                            </li>
-                            <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                              <Link to="/neighborhoods/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                                View All
-                              </Link>
-                            </li>
-                          </ul>
+                      </ul>
+                    </li>
+
+                    <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
+                      <Link to="" className={`ip-menu-link ${styles.ipMenuLink}`}>Neighborhoods</Link>
+                      <ul className={`ip-submenu ${styles.ipSubmenu}`}>
+                        <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                          <Link to="/brickell/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                            Brickell
+                          </Link>
+                        </li>
+                        <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                          <Link to="/edgewater/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                            Edgewater
+                          </Link>
+                        </li>
+                        <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                          <Link to="/coconut-grove/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                            Coconut Grove
+                          </Link>
+                        </li>
+                        <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                          <Link to="/the-roads/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                            The Roads
+                          </Link>
+                        </li>
+                        <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                          <Link to="/neighborhoods/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                            View All
+                          </Link>
                         </li>
                       </ul>
                     </li>
@@ -375,15 +387,28 @@ const Header = () => {
 
         {/* Mobile Menu */}
         <div className={`ip-mobile-menu-wrap ${styles.ipMobileMenuWrap} ${showMobileMenu ? styles.show : ''}`}>
-          <button
-            aria-expanded={showMobileMenu}
-            aria-label="Close main menu"
-            className={`ip-menu-button ip-menu-button-close js-toggle-menu ${styles.ipMenuButton} ${styles.ipMenuButtonClose}`}
-            onClick={toggleMobileMenu}
-          >
-            <span className={`ip-menu-button-text ${styles.ipMenuButtonText}`}>Close Menu</span>
-            <span className={`ip-menu-button-icon ${styles.ipMenuButtonIcon}`}></span>
-          </button>
+          <div className={`ip-mobile-menu-header ${styles.ipMobileMenuHeader}`}>
+            <button
+              aria-expanded={showMobileMenu}
+              aria-label="Close main menu"
+              className={`ip-menu-close-x ${styles.ipMenuCloseX}`}
+              onClick={toggleMobileMenu}
+            >
+              ×
+            </button>
+            <div className={`ip-mobile-menu-logo ${styles.ipMobileMenuLogo}`}>
+              <img
+                src={logoDark}
+                alt="Dayanne Costa"
+                className={`${styles.ipMobileMenuLogoImage}`}
+              />
+              <img
+                src={compassImg}
+                alt="Compass"
+                className={`${styles.ipMobileMenuLogoBroker}`}
+              />
+            </div>
+          </div>
 
           <nav aria-label="Mobile" className={`ip-mobile-menu ${styles.ipMobileMenu}`} role="navigation">
             <ul>
@@ -406,7 +431,7 @@ const Header = () => {
                     <span style={{ marginLeft: 'auto' }}>{openSubmenu === 'search' ? '−' : '+'}</span>
                   </button>
                 </div>
-                <ul className={`ip-submenu js-submenu ${styles.ipSubmenu} ${openSubmenu === 'search' ? styles.open : ''}`}>
+                <ul className={`ip-submenu js-submenu ${styles.ipSubmenu} ${(openSubmenu === 'search' || openSubmenu === 'neighborhoods-mobile') ? styles.open : ''}`}>
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                     <Link to="/new-developments/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
                       New Developments
@@ -433,33 +458,31 @@ const Header = () => {
                         <span style={{ marginLeft: 'auto' }}>{openSubmenu === 'neighborhoods-mobile' ? '−' : '+'}</span>
                       </button>
                     </div>
-                    <ul className={`ip-submenu js-submenu ${styles.ipSubmenu} ${openSubmenu === 'neighborhoods-mobile' ? styles.open : ''}`}>
-                      <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                        <Link to="/brickell/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                          Brickell
-                        </Link>
-                      </li>
-                      <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                        <Link to="/edgewater/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                          Edgewater
-                        </Link>
-                      </li>
-                      <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                        <Link to="/coconut-grove/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                          Coconut Grove
-                        </Link>
-                      </li>
-                      <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                        <Link to="/the-roads/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                          The Roads
-                        </Link>
-                      </li>
-                      <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                        <Link to="/neighborhoods/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                          View All
-                        </Link>
-                      </li>
-                    </ul>
+                  </li>
+                  <li className={`ip-menu-item ${styles.ipMenuItem} ${openSubmenu === 'neighborhoods-mobile' ? styles.open : ''}`} style={{ display: openSubmenu === 'neighborhoods-mobile' ? 'block' : 'none' }}>
+                    <Link to="/neighborhoods/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick} style={{ paddingLeft: '2rem', backgroundColor: '#e9ecef' }}>
+                      All Neighborhoods
+                    </Link>
+                  </li>
+                  <li className={`ip-menu-item ${styles.ipMenuItem} ${openSubmenu === 'neighborhoods-mobile' ? styles.open : ''}`} style={{ display: openSubmenu === 'neighborhoods-mobile' ? 'block' : 'none' }}>
+                    <Link to="/brickell/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick} style={{ paddingLeft: '2rem', backgroundColor: '#e9ecef' }}>
+                      Brickell
+                    </Link>
+                  </li>
+                  <li className={`ip-menu-item ${styles.ipMenuItem} ${openSubmenu === 'neighborhoods-mobile' ? styles.open : ''}`} style={{ display: openSubmenu === 'neighborhoods-mobile' ? 'block' : 'none' }}>
+                    <Link to="/edgewater/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick} style={{ paddingLeft: '2rem', backgroundColor: '#e9ecef' }}>
+                      Edgewater
+                    </Link>
+                  </li>
+                  <li className={`ip-menu-item ${styles.ipMenuItem} ${openSubmenu === 'neighborhoods-mobile' ? styles.open : ''}`} style={{ display: openSubmenu === 'neighborhoods-mobile' ? 'block' : 'none' }}>
+                    <Link to="/coconut-grove/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick} style={{ paddingLeft: '2rem', backgroundColor: '#e9ecef' }}>
+                      Coconut Grove
+                    </Link>
+                  </li>
+                  <li className={`ip-menu-item ${styles.ipMenuItem} ${openSubmenu === 'neighborhoods-mobile' ? styles.open : ''}`} style={{ display: openSubmenu === 'neighborhoods-mobile' ? 'block' : 'none' }}>
+                    <Link to="/the-roads/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick} style={{ paddingLeft: '2rem', backgroundColor: '#e9ecef' }}>
+                      The Roads
+                    </Link>
                   </li>
                 </ul>
               </li>
@@ -522,45 +545,7 @@ const Header = () => {
                 </ul>
               </li>
 
-              <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
-                <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
-                  <button
-                    className={`ip-menu-link ${styles.ipMenuLink}`}
-                    style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer' }}
-                    onClick={() => toggleSubmenu('neighborhoods')}
-                  >
-                    <span style={{ flex: 1 }}>Neighborhoods</span>
-                    <span style={{ marginLeft: 'auto' }}>{openSubmenu === 'neighborhoods' ? '−' : '+'}</span>
-                  </button>
-                </div>
-                <ul className={`ip-submenu js-submenu ${styles.ipSubmenu} ${openSubmenu === 'neighborhoods' ? styles.open : ''}`}>
-                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                    <Link to="/brickell/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                      Brickell
-                    </Link>
-                  </li>
-                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                    <Link to="/edgewater/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                      Edgewater
-                    </Link>
-                  </li>
-                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                    <Link to="/coconut-grove/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                      Coconut Grove
-                    </Link>
-                  </li>
-                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                    <Link to="/the-roads/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                      The Roads
-                    </Link>
-                  </li>
-                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                    <Link to="/neighborhoods/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                      View All
-                    </Link>
-                  </li>
-                </ul>
-              </li>
+              
 
               <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
