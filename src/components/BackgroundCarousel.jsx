@@ -11,7 +11,7 @@ const BackgroundCarousel = ({ images = [], interval = 5000, children }) => {
     const timer = setInterval(() => {
       setCurrentIndex((prevIndex) => 
         prevIndex === images.length - 1 ? 0 : prevIndex + 1
-      );
+      ); 
     }, interval);
 
     return () => clearInterval(timer);
