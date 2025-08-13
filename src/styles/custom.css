@@ -1,9 +1,11 @@
 /* Hide Google Translate widget but keep functionality */
 #google_translate_element {
-  position: absolute !important;
+  position: fixed !important;
+  top: -9999px !important;
   left: -9999px !important;
   opacity: 0 !important;
   pointer-events: none !important;
+  z-index: -1 !important;
 }
 
 .goog-te-banner-frame {
@@ -20,10 +22,12 @@ body {
 
 /* Keep combo visible but hidden - needed for functionality */
 .goog-te-combo {
-  position: absolute !important;
+  position: fixed !important;
+  top: -9999px !important;
   left: -9999px !important;
   opacity: 0 !important;
   pointer-events: auto !important;
+  z-index: -1 !important;
 }
 
 /* Hide Google Translate iframe */

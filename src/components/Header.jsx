@@ -12,7 +12,8 @@ window.googleTranslateElementInit = function() {
     pageLanguage: 'en',
     includedLanguages: 'en,pt,es',
     layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
-    autoDisplay: false
+    autoDisplay: false,
+    multilanguagePage: true
   }, 'google_translate_element');
 };
 
@@ -38,6 +39,15 @@ const Header = () => {
       script.type = 'text/javascript';
       script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
       script.async = true;
+      script.onload = () => {
+        console.log('Google Translate script carregado');
+        // Aguardar um pouco antes de tentar inicializar
+        setTimeout(() => {
+          if (window.googleTranslateElementInit) {
+            window.googleTranslateElementInit();
+          }
+        }, 1000);
+      };
       document.getElementsByTagName('head')[0].appendChild(script);
     }
     
@@ -100,13 +110,16 @@ const Header = () => {
         console.log('Tentando traduzir para:', language);
         
         if (language === 'en') {
-          // Para voltar ao inglês
-          googleTranslateElement.selectedIndex = 0;
-          googleTranslateElement.value = '';
+          // Para voltar ao inglês - recarregar a página limpa
+          window.location.reload();
+          return;
         } else {
           // Para outros idiomas
           googleTranslateElement.value = language;
-          googleTranslateElement.selectedIndex = Array.from(googleTranslateElement.options).findIndex(option => option.value === language);
+          const targetIndex = Array.from(googleTranslateElement.options).findIndex(option => option.value === language);
+          if (targetIndex !== -1) {
+            googleTranslateElement.selectedIndex = targetIndex;
+          }
         }
 
         // Disparar evento de mudança
@@ -115,6 +128,13 @@ const Header = () => {
           cancelable: true 
         });
         googleTranslateElement.dispatchEvent(changeEvent);
+        
+        // Força a tradução após um pequeno delay
+        setTimeout(() => {
+          if (window.google && window.google.translate) {
+            window.google.translate.TranslateElement().showBanner(true);
+          }
+        }, 500);
         
         console.log('Tradução executada para:', language);
       } else {
@@ -227,7 +247,7 @@ const Header = () => {
                         onClick={() => translatePage('en', 'EN')}
                         style={{ background: 'none', border: 'none', cursor: 'pointer' }}
                       >
-                        <span className="ip-d-inline-block ip-text-center">EN</span>
+                        <span className="ip-d-inline-block ip-text-center notranslate">EN</span>
                         <span className={`ibc-c-language-switcher-flag ip-d-inline-block ip-my-0 ip-mx-1 flag-english ${styles.flagIcon}`}>🇺🇸</span>
                       </button>
                       <button
@@ -235,7 +255,7 @@ const Header = () => {
                         onClick={() => translatePage('pt', 'BR')}
                         style={{ background: 'none', border: 'none', cursor: 'pointer' }}
                       >
-                        <span className="ip-d-inline-block ip-text-center">BR</span>
+                        <span className="ip-d-inline-block ip-text-center notranslate">BR</span>
                         <span className={`ibc-c-language-switcher-flag ip-d-inline-block ip-my-0 ip-mx-1 flag-portuguese ${styles.flagIcon}`}>🇧🇷</span>
                       </button>
                       <button
@@ -243,7 +263,7 @@ const Header = () => {
                         onClick={() => translatePage('es', 'ES')}
                         style={{ background: 'none', border: 'none', cursor: 'pointer' }}
                       >
-                        <span className="ip-d-inline-block ip-text-center">ES</span>
+                        <span className="ip-d-inline-block ip-text-center notranslate">ES</span>
                         <span className={`ibc-c-language-switcher-flag ip-d-inline-block ip-my-0 ip-mx-1 flag-spanish ${styles.flagIcon}`}>🇪🇸</span>
                       </button>
                     </div>
