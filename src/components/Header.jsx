@@ -1,19 +1,17 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MdEmail, MdPhone } from 'react-icons/md';
+import { useTranslation } from 'react-i18next';
 import styles from './Header.module.css';
 import compassImg from '../assets/img/compas.png';
 import logoLight from '../assets/img/logo-dc.png';
 import logoDark from '../assets/img/logo-dcBlack.png';
 
 const Header = () => {
+  const { t, i18n } = useTranslation();
   const [scrolled, setScrolled] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState(null);
-  const [currentLanguage, setCurrentLanguage] = useState(() => {
-    return localStorage.getItem('selectedLanguage') || 'EN';
-  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,39 +20,7 @@ const Header = () => {
     };
 
     window.addEventListener('scroll', handleScroll);
-    
-    // Carregar Google Translate API
-    const loadGoogleTranslate = () => {
-      if (!window.google || !window.google.translate) {
-        const script = document.createElement('script');
-        script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-        script.async = true;
-        document.head.appendChild(script);
-        
-        window.googleTranslateElementInit = () => {
-          new window.google.translate.TranslateElement({
-            pageLanguage: 'en',
-            includedLanguages: 'en,pt,es',
-            layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
-            autoDisplay: false
-          }, 'google_translate_element');
-        };
-      }
-    };
-
-    loadGoogleTranslate();
-    
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    // Restaurar idioma quando a página carregar
-    const savedLanguage = localStorage.getItem('selectedLanguage');
-    if (savedLanguage && savedLanguage !== 'EN') {
-      setTimeout(() => {
-        translatePage(getLanguageCode(savedLanguage), savedLanguage);
-      }, 2000);
-    }
   }, []);
 
   const toggleMobileMenu = () => {
@@ -78,83 +44,15 @@ const Header = () => {
     }
   };
 
-  const getLanguageCode = (displayName) => {
-    switch (displayName) {
-      case 'BR': return 'pt';
-      case 'ES': return 'es';
-      case 'EN': return 'en';
-      default: return 'en';
-    }
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
   };
 
-  const translatePage = async (language, displayName) => {
-    setCurrentLanguage(displayName);
-    localStorage.setItem('selectedLanguage', displayName);
-
-    if (language === 'en') {
-      // Para inglês, remover tradução
-      const translatedElements = document.querySelectorAll('[data-translated="true"]');
-      translatedElements.forEach(element => {
-        if (element.dataset.originalText) {
-          element.textContent = element.dataset.originalText;
-          element.removeAttribute('data-translated');
-          element.removeAttribute('data-original-text');
-        }
-      });
-      return;
-    }
-
-    // Para outros idiomas, usar a API do Google Translate
-    try {
-      // Encontrar todos os elementos de texto
-      const textElements = document.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span, a, button, label, div[class*="text"], li');
-      
-      for (let element of textElements) {
-        // Pular elementos que já foram traduzidos ou que são especiais
-        if (element.dataset.translated === 'true' || 
-            element.classList.contains('notranslate') ||
-            element.closest('.notranslate') ||
-            element.closest('#google_translate_element') ||
-            !element.textContent.trim() ||
-            element.textContent.length < 3) {
-          continue;
-        }
-
-        const originalText = element.textContent.trim();
-        
-        // Salvar texto original
-        if (!element.dataset.originalText) {
-          element.dataset.originalText = originalText;
-        }
-
-        // Traduzir o texto
-        const translatedText = await translateText(originalText, language);
-        if (translatedText && translatedText !== originalText) {
-          element.textContent = translatedText;
-          element.dataset.translated = 'true';
-        }
-      }
-    } catch (error) {
-      console.error('Erro na tradução:', error);
-    }
-  };
-
-  const translateText = async (text, targetLanguage) => {
-    try {
-      // Usar a API gratuita do Google Translate (método alternativo)
-      const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${targetLanguage}&dt=t&q=${encodeURIComponent(text)}`;
-      
-      const response = await fetch(url);
-      const result = await response.json();
-      
-      if (result && result[0] && result[0][0] && result[0][0][0]) {
-        return result[0][0][0];
-      }
-      
-      return text;
-    } catch (error) {
-      console.error('Erro ao traduzir texto:', error);
-      return text;
+  const getCurrentLanguageDisplay = () => {
+    switch (i18n.language) {
+      case 'pt': return 'BR';
+      case 'es': return 'ES';
+      default: return 'EN';
     }
   };
 
@@ -232,28 +130,28 @@ const Header = () => {
                       <span className={`ibc-c-language-switcher-flag ip-d-inline-block ip-my-0 ip-mr-1 flag-english js-language-switcher-flag ${styles.flagIcon}`}>
                         <i className="fas fa-globe"></i>
                       </span>
-                      <span className={`ibc-c-language-switcher-label ip-mr-1 notranslate js-language-switcher-label ${styles.languageLabel}`}>{currentLanguage}</span>
+                      <span className={`ibc-c-language-switcher-label ip-mr-1 notranslate js-language-switcher-label ${styles.languageLabel}`}>{getCurrentLanguageDisplay()}</span>
                     </button>
                     <div className={`ibc-c-language-switcher-select ip-position-absolute js-language-switcher-select ${styles.languageSelect}`}>
                       <button
-                        className={`ibc-c-language-switcher-option ip-position-relative ip-d-flex ibc-u-align-items-center ibc-u-justify-content-center ip-w-full body-xs ip-text-uppercase notranslate js-language-switcher-option ${styles.languageOption} ${currentLanguage === 'EN' ? styles.active : ''}`}
-                        onClick={() => translatePage('en', 'EN')}
+                        className={`ibc-c-language-switcher-option ip-position-relative ip-d-flex ibc-u-align-items-center ibc-u-justify-content-center ip-w-full body-xs ip-text-uppercase notranslate js-language-switcher-option ${styles.languageOption} ${getCurrentLanguageDisplay() === 'EN' ? styles.active : ''}`}
+                        onClick={() => changeLanguage('en')}
                         style={{ background: 'none', border: 'none', cursor: 'pointer' }}
                       >
                         <span className="ip-d-inline-block ip-text-center notranslate">EN</span>
                         <span className={`ibc-c-language-switcher-flag ip-d-inline-block ip-my-0 ip-mx-1 flag-english ${styles.flagIcon}`}>🇺🇸</span>
                       </button>
                       <button
-                        className={`ibc-c-language-switcher-option ip-position-relative ip-d-flex ibc-u-align-items-center ibc-u-justify-content-center ip-w-full body-xs ip-text-uppercase notranslate js-language-switcher-option ${styles.languageOption} ${currentLanguage === 'BR' ? styles.active : ''}`}
-                        onClick={() => translatePage('pt', 'BR')}
+                        className={`ibc-c-language-switcher-option ip-position-relative ip-d-flex ibc-u-align-items-center ibc-u-justify-content-center ip-w-full body-xs ip-text-uppercase notranslate js-language-switcher-option ${styles.languageOption} ${getCurrentLanguageDisplay() === 'BR' ? styles.active : ''}`}
+                        onClick={() => changeLanguage('pt')}
                         style={{ background: 'none', border: 'none', cursor: 'pointer' }}
                       >
                         <span className="ip-d-inline-block ip-text-center notranslate">BR</span>
                         <span className={`ibc-c-language-switcher-flag ip-d-inline-block ip-my-0 ip-mx-1 flag-portuguese ${styles.flagIcon}`}>🇧🇷</span>
                       </button>
                       <button
-                        className={`ibc-c-language-switcher-option ip-position-relative ip-d-flex ibc-u-align-items-center ibc-u-justify-content-center ip-w-full body-xs ip-text-uppercase notranslate js-language-switcher-option ${styles.languageOption} ${currentLanguage === 'ES' ? styles.active : ''}`}
-                        onClick={() => translatePage('es', 'ES')}
+                        className={`ibc-c-language-switcher-option ip-position-relative ip-d-flex ibc-u-align-items-center ibc-u-justify-content-center ip-w-full body-xs ip-text-uppercase notranslate js-language-switcher-option ${styles.languageOption} ${getCurrentLanguageDisplay() === 'ES' ? styles.active : ''}`}
+                        onClick={() => changeLanguage('es')}
                         style={{ background: 'none', border: 'none', cursor: 'pointer' }}
                       >
                         <span className="ip-d-inline-block ip-text-center notranslate">ES</span>
@@ -292,12 +190,12 @@ const Header = () => {
                           <span className={`ip-login-icon idx-icon-user ${styles.ipLoginIcon}`}>
                             <i className="fas fa-user"></i>
                           </span>
-                          <span className={`ip-login-text ${styles.ipLoginText}`}>Login</span>
+                          <span className={`ip-login-text ${styles.ipLoginText}`}>{t('navigation.login')}</span>
                         </Link>
                       </li>
                       <li className={`ip-login-item register ibc-u-position-relative ip-pl-2 ${styles.ipLoginItem} ${styles.register}`} data-modal="modal_login" data-tab="tabRegister">
                         <Link to="/register" aria-label="Register" className={`lg-register ip-login-btn ${styles.ipLoginBtn}`}>
-                          <span className={`ip-login-text ${styles.ipLoginText}`}>Register</span>
+                          <span className={`ip-login-text ${styles.ipLoginText}`}>{t('navigation.register')}</span>
                         </Link>
                       </li>
                     </ul>
@@ -311,54 +209,54 @@ const Header = () => {
                   <ul className={`ip-menu ${styles.ipMenu}`}>
                     <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                       <Link to="/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                        Home
+                        {t('navigation.home')}
                       </Link>
                     </li>
 
                     <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
-                      <Link to="" className={`ip-menu-link ${styles.ipMenuLink}`}>Search properties</Link>
+                      <Link to="" className={`ip-menu-link ${styles.ipMenuLink}`}>{t('navigation.searchProperties')}</Link>
                       <ul className={`ip-submenu ${styles.ipSubmenu}`}>
                         <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                           <Link to="/new-developments/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                            New Developments
+                            {t('navigation.newDevelopments')}
                           </Link>
                         </li>
                         <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                           <Link to="/single-family-homes/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                            Single Family Homes
+                            {t('navigation.singleFamilyHomes')}
                           </Link>
                         </li>
                         <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                           <Link to="/luxury-condos/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                            Luxury Condos
+                            {t('navigation.luxuryCondos')}
                           </Link>
                         </li>
                         <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
-                          <Link to="" className={`ip-menu-link ${styles.ipMenuLink}`}>Neighborhoods</Link>
+                          <Link to="" className={`ip-menu-link ${styles.ipMenuLink}`}>{t('navigation.neighborhoods')}</Link>
                           <ul className={`ip-submenu ${styles.ipSubmenu}`}>
                             <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                               <Link to="/neighborhoods/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                                View All
+                                {t('navigation.viewAll')}
                               </Link>
                             </li>
                             <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                               <Link to="/brickell/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                                Brickell
+                                {t('navigation.brickell')}
                               </Link>
                             </li>
                             <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                               <Link to="/edgewater/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                                Edgewater
+                                {t('navigation.edgewater')}
                               </Link>
                             </li>
                             <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                               <Link to="/coconut-grove/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                                Coconut Grove
+                                {t('navigation.coconutGrove')}
                               </Link>
                             </li>
                             <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                               <Link to="/the-roads/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                                The Roads
+                                {t('navigation.theRoads')}
                               </Link>
                             </li>
                           </ul>
@@ -368,37 +266,37 @@ const Header = () => {
 
                     <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                       <Link to="/buy-sell" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                        Buy/Sell
+                        {t('navigation.buySell')}
                       </Link>
                     </li>
 
                     <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
-                      <Link to="" className={`ip-menu-link ${styles.ipMenuLink}`}>Advantages</Link>
+                      <Link to="" className={`ip-menu-link ${styles.ipMenuLink}`}>{t('navigation.advantages')}</Link>
                       <ul className={`ip-submenu ${styles.ipSubmenu}`}>
                         <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                           <Link to="/compass-concierge" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                            Compass Concierge
+                            {t('navigation.compassConcierge')}
                           </Link>
                         </li>
                         <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                           <Link to="/private-exclusive" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                            Private Exclusive
+                            {t('navigation.privateExclusive')}
                           </Link>
                         </li>
                       </ul>
                     </li>
 
                     <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
-                      <Link to="" className={`ip-menu-link ${styles.ipMenuLink}`}>About</Link>
+                      <Link to="" className={`ip-menu-link ${styles.ipMenuLink}`}>{t('navigation.about')}</Link>
                       <ul className={`ip-submenu ${styles.ipSubmenu}`}>
                         <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                           <Link to="/about" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                            About Dayanne
+                            {t('navigation.aboutDayanne')}
                           </Link>
                         </li>
                         <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                           <Link to="/about-team" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                            About Team
+                            {t('navigation.aboutTeam')}
                           </Link>
                         </li>
                       </ul>
@@ -406,7 +304,7 @@ const Header = () => {
 
                     <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                       <Link to="/contact" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                        Contact
+                        {t('navigation.contact')}
                       </Link>
                     </li>
                   </ul>
@@ -464,7 +362,7 @@ const Header = () => {
               <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
                   <Link to="/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                    Home
+                    {t('navigation.home')}
                   </Link>
                 </div>
               </li>
@@ -476,24 +374,24 @@ const Header = () => {
                     style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer' }}
                     onClick={() => toggleSubmenu('search')}
                   >
-                    <span style={{ flex: 1 }}>Search properties</span>
+                    <span style={{ flex: 1 }}>{t('navigation.searchProperties')}</span>
                     <span style={{ marginLeft: 'auto' }}>{openSubmenu === 'search' ? '−' : '+'}</span>
                   </button>
                 </div>
                 <ul className={`ip-submenu js-submenu ${styles.ipSubmenu} ${(openSubmenu === 'search' || openSubmenu === 'neighborhoods-mobile') ? styles.open : ''}`}>
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                     <Link to="/new-developments/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                      New Developments
+                      {t('navigation.newDevelopments')}
                     </Link>
                   </li>
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                     <Link to="/single-family-homes/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                      Single Family Homes
+                      {t('navigation.singleFamilyHomes')}
                     </Link>
                   </li>
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                     <Link to="/luxury-condos/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                      Luxury Condos
+                      {t('navigation.luxuryCondos')}
                     </Link>
                   </li>
                   <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
@@ -503,34 +401,34 @@ const Header = () => {
                         style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer' }}
                         onClick={() => toggleSubmenu('neighborhoods-mobile')}
                       >
-                        <span style={{ flex: 1 }}>Neighborhoods</span>
+                        <span style={{ flex: 1 }}>{t('navigation.neighborhoods')}</span>
                         <span style={{ marginLeft: 'auto' }}>{openSubmenu === 'neighborhoods-mobile' ? '−' : '+'}</span>
                       </button>
                     </div>
                   </li>
                   <li className={`ip-menu-item ${styles.ipMenuItem} ${openSubmenu === 'neighborhoods-mobile' ? styles.open : ''}`} style={{ display: openSubmenu === 'neighborhoods-mobile' ? 'block' : 'none' }}>
                     <Link to="/neighborhoods/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick} style={{ paddingLeft: '2rem', backgroundColor: '#e9ecef' }}>
-                      All Neighborhoods
+                      {t('navigation.viewAll')}
                     </Link>
                   </li>
                   <li className={`ip-menu-item ${styles.ipMenuItem} ${openSubmenu === 'neighborhoods-mobile' ? styles.open : ''}`} style={{ display: openSubmenu === 'neighborhoods-mobile' ? 'block' : 'none' }}>
                     <Link to="/brickell/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick} style={{ paddingLeft: '2rem', backgroundColor: '#e9ecef' }}>
-                      Brickell
+                      {t('navigation.brickell')}
                     </Link>
                   </li>
                   <li className={`ip-menu-item ${styles.ipMenuItem} ${openSubmenu === 'neighborhoods-mobile' ? styles.open : ''}`} style={{ display: openSubmenu === 'neighborhoods-mobile' ? 'block' : 'none' }}>
                     <Link to="/edgewater/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick} style={{ paddingLeft: '2rem', backgroundColor: '#e9ecef' }}>
-                      Edgewater
+                      {t('navigation.edgewater')}
                     </Link>
                   </li>
                   <li className={`ip-menu-item ${styles.ipMenuItem} ${openSubmenu === 'neighborhoods-mobile' ? styles.open : ''}`} style={{ display: openSubmenu === 'neighborhoods-mobile' ? 'block' : 'none' }}>
                     <Link to="/coconut-grove/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick} style={{ paddingLeft: '2rem', backgroundColor: '#e9ecef' }}>
-                      Coconut Grove
+                      {t('navigation.coconutGrove')}
                     </Link>
                   </li>
                   <li className={`ip-menu-item ${styles.ipMenuItem} ${openSubmenu === 'neighborhoods-mobile' ? styles.open : ''}`} style={{ display: openSubmenu === 'neighborhoods-mobile' ? 'block' : 'none' }}>
                     <Link to="/the-roads/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick} style={{ paddingLeft: '2rem', backgroundColor: '#e9ecef' }}>
-                      The Roads
+                      {t('navigation.theRoads')}
                     </Link>
                   </li>
                 </ul>
@@ -539,7 +437,7 @@ const Header = () => {
               <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
                   <Link to="/buy-sell" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                    Buy/Sell
+                    {t('navigation.buySell')}
                   </Link>
                 </div>
               </li>
@@ -551,19 +449,19 @@ const Header = () => {
                     style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer' }}
                     onClick={() => toggleSubmenu('advantages')}
                   >
-                    <span style={{ flex: 1 }}>Advantages</span>
+                    <span style={{ flex: 1 }}>{t('navigation.advantages')}</span>
                     <span style={{ marginLeft: 'auto' }}>{openSubmenu === 'advantages' ? '−' : '+'}</span>
                   </button>
                 </div>
                 <ul className={`ip-submenu js-submenu ${styles.ipSubmenu} ${openSubmenu === 'advantages' ? styles.open : ''}`}>
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                     <Link to="/compass-concierge" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                      Compass Concierge
+                      {t('navigation.compassConcierge')}
                     </Link>
                   </li>
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                     <Link to="/private-exclusive" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                      Private Exclusive
+                      {t('navigation.privateExclusive')}
                     </Link>
                   </li>
                 </ul>
@@ -576,19 +474,19 @@ const Header = () => {
                     style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer' }}
                     onClick={() => toggleSubmenu('about')}
                   >
-                    <span style={{ flex: 1 }}>About</span>
+                    <span style={{ flex: 1 }}>{t('navigation.about')}</span>
                     <span style={{ marginLeft: 'auto' }}>{openSubmenu === 'about' ? '−' : '+'}</span>
                   </button>
                 </div>
                 <ul className={`ip-submenu js-submenu ${styles.ipSubmenu} ${openSubmenu === 'about' ? styles.open : ''}`}>
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                     <Link to="/about" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                      About Dayanne
+                      {t('navigation.aboutDayanne')}
                     </Link>
                   </li>
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                     <Link to="/about-team" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                      About Team
+                      {t('navigation.aboutTeam')}
                     </Link>
                   </li>
                 </ul>
@@ -597,7 +495,7 @@ const Header = () => {
               <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
                   <Link to="/contact" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                    Contact
+                    {t('navigation.contact')}
                   </Link>
                 </div>
               </li>
@@ -688,7 +586,7 @@ const Header = () => {
                     onClick={handleNavClick}
                   >
                     <i className="fas fa-user" style={{ fontSize: '16px', width: '20px' }}></i>
-                    <span>Login</span>
+                    <span>{t('navigation.login')}</span>
                   </Link>
                 </div>
               </li>
@@ -703,7 +601,7 @@ const Header = () => {
                     onClick={handleNavClick}
                   >
                     <i className="fas fa-user-plus" style={{ fontSize: '16px', width: '20px' }}></i>
-                    <span>Register</span>
+                    <span>{t('navigation.register')}</span>
                   </Link>
                 </div>
               </li>
@@ -718,7 +616,7 @@ const Header = () => {
                   >
                     <span style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                       <i className="fas fa-globe" style={{ fontSize: '16px', width: '20px' }}></i>
-                      <span>Language</span>
+                      <span>{t('navigation.language')}</span>
                     </span>
                     <span style={{ marginLeft: 'auto' }}>{openSubmenu === 'language' ? '−' : '+'}</span>
                   </button>
@@ -726,41 +624,41 @@ const Header = () => {
                 <ul className={`ip-submenu js-submenu ${styles.ipSubmenu} ${openSubmenu === 'language' ? styles.open : ''}`}>
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                     <button
-                      className={`ip-menu-link ${styles.ipMenuLink} ${currentLanguage === 'EN' ? styles.active : ''}`}
+                      className={`ip-menu-link ${styles.ipMenuLink} ${getCurrentLanguageDisplay() === 'EN' ? styles.active : ''}`}
                       onClick={() => {
-                        translatePage('en', 'EN');
+                        changeLanguage('en');
                         handleNavClick();
                       }}
                       style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'none', border: 'none', cursor: 'pointer' }}
                     >
                       <span>🇺🇸</span>
-                      <span>English</span>
+                      <span>{t('common.english')}</span>
                     </button>
                   </li>
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                     <button
-                      className={`ip-menu-link ${styles.ipMenuLink} ${currentLanguage === 'BR' ? styles.active : ''}`}
+                      className={`ip-menu-link ${styles.ipMenuLink} ${getCurrentLanguageDisplay() === 'BR' ? styles.active : ''}`}
                       onClick={() => {
-                        translatePage('pt', 'BR');
+                        changeLanguage('pt');
                         handleNavClick();
                       }}
                       style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'none', border: 'none', cursor: 'pointer' }}
                     >
                       <span>🇧🇷</span>
-                      <span>Português</span>
+                      <span>{t('common.portuguese')}</span>
                     </button>
                   </li>
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                     <button
-                      className={`ip-menu-link ${styles.ipMenuLink} ${currentLanguage === 'ES' ? styles.active : ''}`}
+                      className={`ip-menu-link ${styles.ipMenuLink} ${getCurrentLanguageDisplay() === 'ES' ? styles.active : ''}`}
                       onClick={() => {
-                        translatePage('es', 'ES');
+                        changeLanguage('es');
                         handleNavClick();
                       }}
                       style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'none', border: 'none', cursor: 'pointer' }}
                     >
                       <span>🇪🇸</span>
-                      <span>Español</span>
+                      <span>{t('common.spanish')}</span>
                     </button>
                   </li>
                 </ul>
@@ -769,9 +667,6 @@ const Header = () => {
           </nav>
         </div>
       </div>
-      
-      {/* Google Translate Element - Mantido para compatibilidade */}
-      <div id="google_translate_element" style={{ position: 'absolute', left: '-9999px', opacity: 0 }}></div>
     </>
   );
 };
