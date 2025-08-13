@@ -435,11 +435,21 @@
   padding: 12px;
   border-bottom: 1px solid #f0f0f0;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
 }
 
 .mapPropertyCard:hover {
   background-color: #f8f9fa;
+}
+
+.mapPropertyCard.selectedProperty {
+  background-color: #e3f2fd;
+  border-left-color: #0066cc;
+}
+
+.mapPropertyCard.selectedProperty:hover {
+  background-color: #e3f2fd;
 }
 
 .mapPropertyImage {
@@ -487,6 +497,46 @@
   font-size: 11px;
   color: #888;
   font-style: italic;
+}
+
+.noCoordinates {
+  font-size: 11px;
+  color: #ff6b6b;
+  font-style: italic;
+  margin-top: 4px;
+}
+
+.noMapData {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(248, 249, 250, 0.95);
+  z-index: 10;
+}
+
+.noMapMessage {
+  text-align: center;
+  color: #666;
+}
+
+.noMapMessage .errorIcon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.noMapMessage h3 {
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.noMapMessage p {
+  margin-bottom: 4px;
+  font-size: 14px;
 }
 
 .mapContainer {

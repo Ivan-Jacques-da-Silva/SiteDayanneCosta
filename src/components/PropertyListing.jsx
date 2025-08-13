@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import styles from "./PropertyListing.module.css";
 import { buildApiUrl, getImageUrl } from "../config/api";
+import PropertyMap from './PropertyMap';
+import styles from "./PropertyListing.module.css";
+import placeholderImage from '../assets/img/testesImagens.jpeg';
 
 const PropertyListing = ({
   apiEndpoint = "/api/properties",
@@ -17,6 +19,7 @@ const PropertyListing = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
+  const [selectedPropertyId, setSelectedPropertyId] = useState(null);
   const [filters, setFilters] = useState({
     priceRange: [0, 50000000],
     bedrooms: "",
@@ -68,7 +71,7 @@ const PropertyListing = ({
 
       console.log("Fetching from URL:", url);
       console.log("Current filters:", filters);
-      
+
       const response = await fetch(url);
 
       if (!response.ok) {
@@ -97,7 +100,7 @@ const PropertyListing = ({
       // Transform property data to include image URL from images array
       propertiesData = propertiesData.map(property => ({
         ...property,
-        image: property.images && property.images.length > 0 
+        image: property.images && property.images.length > 0
           ? getImageUrl(property.images[0].url)
           : property.image || placeholderImage
       }));
@@ -235,6 +238,24 @@ const PropertyListing = ({
       </div>
     );
   };
+
+  const handlePropertyClick = (property) => {
+    navigate(`/property/${property.id}`, {
+      state: { property }
+    });
+  };
+
+  const handlePropertySelect = (propertyId) => {
+    setSelectedPropertyId(propertyId);
+  };
+
+  const handleMapPropertyClick = (propertyId) => {
+    const property = properties.find(p => p.id === propertyId);
+    if (property) {
+      handlePropertyClick(property);
+    }
+  };
+
 
   return (
     <div className={styles.propertyListing}>
@@ -423,6 +444,9 @@ const PropertyListing = ({
                             src={getImageUrl(property.image) || placeholderImage}
                             alt={`Property at ${property.address}`}
                             className={styles.propertyImage}
+                            onError={(e) => {
+                              e.target.src = placeholderImage;
+                            }}
                           />
                         </div>
                         <div className={styles.propertyContent}>
@@ -465,7 +489,7 @@ const PropertyListing = ({
                           </div>
 
                           <div className={styles.propertyActions}>
-                            <button 
+                            <button
                               className={styles.viewDetailsBtn}
                               onClick={() => handleViewDetails(property)}
                             >
@@ -561,12 +585,18 @@ const PropertyListing = ({
                         currentProperties.map((property, index) => (
                           <div
                             key={property.id || index}
-                            className={styles.mapPropertyCard}
+                            className={`${styles.mapPropertyCard} ${
+                              selectedPropertyId === property.id ? styles.selectedProperty : ''
+                            }`}
+                            onClick={() => handlePropertySelect(property.id)}
                           >
                             <div className={styles.mapPropertyImage}>
                               <img
                                 src={getImageUrl(property.image) || placeholderImage}
                                 alt={property.address}
+                                onError={(e) => {
+                                  e.target.src = placeholderImage;
+                                }}
                               />
                             </div>
                             <div className={styles.mapPropertyContent}>
@@ -574,19 +604,24 @@ const PropertyListing = ({
                                 {formatPrice(property.price)}
                               </div>
                               <div className={styles.mapPropertySpecs}>
-                                {property.bedrooms || property.beds} beds •{" "}
-                                {property.bathrooms || property.baths} baths •{" "}
-                                {property.sqft} Sq.Ft.
+                                {property.bedrooms || property.beds || 'N/A'} beds •{" "}
+                                {property.bathrooms || property.baths || 'N/A'} baths •{" "}
+                                {property.sqft ? `${property.sqft.toLocaleString()} sq ft` : 'N/A'}
                               </div>
                               <div className={styles.mapPropertyAddress}>
                                 {property.address}
                               </div>
                               <div className={styles.mapPropertyCity}>
-                                {property.city}
+                                {property.city}, {property.state} {property.zipCode}
                               </div>
                               {property.yearBuilt && (
                                 <div className={styles.mapPropertyYear}>
                                   Built: {property.yearBuilt}
+                                </div>
+                              )}
+                              {(!property.latitude || !property.longitude) && (
+                                <div className={styles.noCoordinates}>
+                                  📍 Location coordinates not available
                                 </div>
                               )}
                             </div>
@@ -604,16 +639,22 @@ const PropertyListing = ({
                     </div>
                   </div>
                   <div className={styles.mapContainer}>
-                    <div className={styles.mapPlaceholder}>
-                      <div className={styles.mapError}>
-                        <div className={styles.errorIcon}>🗺️</div>
-                        <h3>Map View</h3>
-                        <p>
-                          Interactive map with property locations and markers
-                          will be displayed here.
-                        </p>
+                    <PropertyMap
+                      properties={properties.filter(p => p.latitude && p.longitude)}
+                      selectedPropertyId={selectedPropertyId}
+                      onPropertySelect={handleMapPropertyClick}
+                    />
+                    {properties.filter(p => p.latitude && p.longitude).length === 0 && (
+                      <div className={styles.noMapData}>
+                        <div className={styles.noMapMessage}>
+                          <div className={styles.errorIcon}>📍</div>
+                          <h3>No Map Data Available</h3>
+                          <p>Properties need latitude and longitude coordinates to display on the map.</p>
+                          <p>Available properties: {properties.length}</p>
+                          <p>With coordinates: {properties.filter(p => p.latitude && p.longitude).length}</p>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               )}
