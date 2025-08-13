@@ -113,28 +113,11 @@ const Header = () => {
           // Para voltar ao inglês - recarregar a página limpa
           window.location.reload();
           return;
-        } else {
-          // Para outros idiomas
-          googleTranslateElement.value = language;
-          const targetIndex = Array.from(googleTranslateElement.options).findIndex(option => option.value === language);
-          if (targetIndex !== -1) {
-            googleTranslateElement.selectedIndex = targetIndex;
-          }
         }
 
-        // Disparar evento de mudança
-        const changeEvent = new Event('change', { 
-          bubbles: true, 
-          cancelable: true 
-        });
-        googleTranslateElement.dispatchEvent(changeEvent);
-        
-        // Força a tradução após um pequeno delay
-        setTimeout(() => {
-          if (window.google && window.google.translate) {
-            window.google.translate.TranslateElement().showBanner(true);
-          }
-        }, 500);
+        // Definir o valor e disparar evento
+        googleTranslateElement.value = language;
+        googleTranslateElement.dispatchEvent(new Event('change', { bubbles: true }));
         
         console.log('Tradução executada para:', language);
       } else {
