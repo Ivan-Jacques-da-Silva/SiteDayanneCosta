@@ -12,9 +12,9 @@ const detectarBaseUrl = () => {
     return `${protocol}//${projectName}-5000.${replitDomain}`;
   }
 
-  // Para produção dayannecosta.com - usar mesmo domínio com porta 5000
+  // Para produção dayannecosta.com - usar subdomínio api
   if (hostname === 'site.dayannecosta.com' || hostname === 'www.dayannecosta.com' || hostname === 'dayannecosta.com' || hostname.includes('dayannecosta.com')) {
-    return 'https://site.dayannecosta.com:5000';
+    return 'https://api.dayannecosta.com';
   }
 
   // Para VPS Hostinger - mesmo domínio mas com porta 5000
