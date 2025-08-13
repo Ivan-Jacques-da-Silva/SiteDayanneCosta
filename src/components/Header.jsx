@@ -6,6 +6,16 @@ import compassImg from '../assets/img/compas.png';
 import logoLight from '../assets/img/logo-dc.png';
 import logoDark from '../assets/img/logo-dcBlack.png';
 
+// Função de inicialização do Google Translate
+window.googleTranslateElementInit = function() {
+  new window.google.translate.TranslateElement({
+    pageLanguage: 'en',
+    includedLanguages: 'en,pt,es',
+    layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+    autoDisplay: false
+  }, 'google_translate_element');
+};
+
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -21,6 +31,16 @@ const Header = () => {
     };
 
     window.addEventListener('scroll', handleScroll);
+    
+    // Carregar o script do Google Translate
+    if (!document.querySelector('script[src*="translate.google.com"]')) {
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+      script.async = true;
+      document.getElementsByTagName('head')[0].appendChild(script);
+    }
+    
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -77,38 +97,28 @@ const Header = () => {
       const googleTranslateElement = document.querySelector('.goog-te-combo');
       
       if (googleTranslateElement) {
-        // Limpar seleção atual
-        googleTranslateElement.value = '';
+        console.log('Tentando traduzir para:', language);
         
         if (language === 'en') {
-          // Para voltar ao inglês, selecionar a primeira opção (Original)
+          // Para voltar ao inglês
           googleTranslateElement.selectedIndex = 0;
           googleTranslateElement.value = '';
         } else {
-          // Para outros idiomas, definir o valor correto
+          // Para outros idiomas
           googleTranslateElement.value = language;
+          googleTranslateElement.selectedIndex = Array.from(googleTranslateElement.options).findIndex(option => option.value === language);
         }
 
-        // Disparar evento de mudança com maior compatibilidade
+        // Disparar evento de mudança
         const changeEvent = new Event('change', { 
           bubbles: true, 
           cancelable: true 
         });
         googleTranslateElement.dispatchEvent(changeEvent);
         
-        // Backup: disparar também input event
-        const inputEvent = new Event('input', { 
-          bubbles: true, 
-          cancelable: true 
-        });
-        googleTranslateElement.dispatchEvent(inputEvent);
-        
-        // Forçar refresh se necessário
-        setTimeout(() => {
-          if (googleTranslateElement.value !== language && language !== 'en') {
-            window.location.reload();
-          }
-        }, 1000);
+        console.log('Tradução executada para:', language);
+      } else {
+        console.warn('Elemento Google Translate não encontrado');
       }
     };
 
@@ -116,23 +126,22 @@ const Header = () => {
     if (document.querySelector('.goog-te-combo')) {
       executeTranslation();
     } else {
-      // Aguardar o Google Translate carregar com verificação mais robusta
+      // Aguardar o Google Translate carregar
       let attempts = 0;
-      const maxAttempts = 100;
+      const maxAttempts = 50;
       
       const checkGoogleTranslate = setInterval(() => {
         attempts++;
         const element = document.querySelector('.goog-te-combo');
         
-        if (element || attempts >= maxAttempts) {
+        if (element) {
           clearInterval(checkGoogleTranslate);
-          if (element) {
-            executeTranslation();
-          } else {
-            console.warn('Google Translate não carregou após múltiplas tentativas');
-          }
+          executeTranslation();
+        } else if (attempts >= maxAttempts) {
+          clearInterval(checkGoogleTranslate);
+          console.warn('Google Translate não carregou após', maxAttempts, 'tentativas');
         }
-      }, 200);
+      }, 100);
     }
   };
 

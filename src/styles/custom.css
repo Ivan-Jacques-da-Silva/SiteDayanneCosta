@@ -1,6 +1,9 @@
 /* Hide Google Translate widget but keep functionality */
 #google_translate_element {
-  display: none !important;
+  position: absolute !important;
+  left: -9999px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 .goog-te-banner-frame {
@@ -15,8 +18,12 @@ body {
   top: 0 !important;
 }
 
+/* Keep combo visible but hidden - needed for functionality */
 .goog-te-combo {
-  display: none !important;
+  position: absolute !important;
+  left: -9999px !important;
+  opacity: 0 !important;
+  pointer-events: auto !important;
 }
 
 /* Hide Google Translate iframe */
@@ -25,6 +32,20 @@ body {
 }
 
 .goog-te-gadget {
+  display: none !important;
+}
+
+/* Hide Google Translate top bar */
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+
+/* Remove Google Translate margin from body */
+body {
+  top: 0px !important;
+}
+
+.goog-te-spinner-pos {
   display: none !important;
 }
 
