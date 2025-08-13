@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import styles from './HeroSection.module.css';
 import BackgroundCarousel from './BackgroundCarousel.jsx';
 import mulherFixa from '../assets/img/mulher.png';
@@ -8,6 +9,36 @@ import slide2 from '../assets/img/slide2.jpeg';
 import slide3 from '../assets/img/slide3.jpeg';
 
 const HeroSection = () => {
+  const [searchData, setSearchData] = useState({
+    propertyType: 'All',
+    price: 'Any',
+    beds: 'Any',
+    location: ''
+  });
+
+  const navigate = useNavigate();
+
+  const handleInputChange = (field, value) => {
+    setSearchData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    console.log('Search data:', searchData);
+    // Implementar lógica de busca
+  };
+
+  const handleBuyClick = () => {
+    navigate('/buy-sell?action=buy');
+  };
+
+  const handleSellClick = () => {
+    navigate('/buy-sell?action=sell');
+  };
+
   const carouselImages = [slide1, slide2, slide3];
 
   return (
@@ -31,12 +62,12 @@ const HeroSection = () => {
               <Col lg={8}>
                 <Row className="justify-content-center mb-4 g-2">
                   <Col xs={12} sm={6} md="auto">
-                    <Button variant="light" className={`${styles.heroButton} w-100 px-4 py-3 fw-bold`}>
+                    <Button variant="light" className={`${styles.heroButton} w-100 px-4 py-3 fw-bold`} onClick={handleBuyClick}>
                       I Want To Buy
                     </Button>
                   </Col>
                   <Col xs={12} sm={6} md="auto">
-                    <Button variant="light" className={`${styles.heroButton} w-100 px-4 py-3 fw-bold`}>
+                    <Button variant="light" className={`${styles.heroButton} w-100 px-4 py-3 fw-bold`} onClick={handleSellClick}>
                       I Want To Sell
                     </Button>
                   </Col>

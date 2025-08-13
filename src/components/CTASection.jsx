@@ -1,10 +1,21 @@
 import React from 'react';
 import { Container, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 // import styles from './BuySellSection.module.css';
 import bgSell from '../assets/img/bg-sell.jpeg';
 import bgBuy from '../assets/img/bg-buy.jpeg';
 
 const BuySellSection = () => {
+  const navigate = useNavigate(); // Initialize navigate
+
+  const handleBuyClick = () => {
+    navigate('/buy-sell?action=buy'); // Navigate to Buy/Sell with 'buy' action
+  };
+
+  const handleSellClick = () => {
+    navigate('/buy-sell?action=sell'); // Navigate to Buy/Sell with 'sell' action
+  };
+
   return (
     <div>
       <section
@@ -20,7 +31,11 @@ const BuySellSection = () => {
         <Container className="position-relative z-1">
           <h2 className="display-5 fw-bold">SELLING A HOME?</h2>
           <p className="lead">Find out the market value of your home.</p>
-          <Button variant="outline-light" className="mt-3 px-4 py-2 rounded-0 fw-bold">
+          <Button
+            variant="outline-light"
+            className="mt-3 px-4 py-2 rounded-0 fw-bold"
+            onClick={handleSellClick} // Add onClick handler
+          >
             I Want To Sell
           </Button>
         </Container>
@@ -39,7 +54,11 @@ const BuySellSection = () => {
         <Container className="position-relative z-1">
           <h2 className="display-5 fw-bold">BUYING A HOME?</h2>
           <p className="lead">Explore our gallery of beautiful properties available now!</p>
-          <Button variant="outline-light" className="mt-3 px-4 py-2 rounded-0 fw-bold">
+          <Button
+            variant="outline-light"
+            className="mt-3 px-4 py-2 rounded-0 fw-bold"
+            onClick={handleBuyClick} // Add onClick handler
+          >
             I Want To Buy
           </Button>
         </Container>

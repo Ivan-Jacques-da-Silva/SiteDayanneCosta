@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import styles from './BuySell.module.css';
@@ -17,6 +18,22 @@ const BuySell = () => {
     phone: '',
     comments: ''
   });
+  
+  const location = useLocation();
+
+  // Detectar parâmetros da URL e avançar automaticamente
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const actionParam = urlParams.get('action');
+    
+    if (actionParam === 'buy' || actionParam === 'sell') {
+      setFormData(prevData => ({
+        ...prevData,
+        action: actionParam
+      }));
+      setCurrentStep(1); // Pula para a próxima etapa
+    }
+  }, [location.search]);
 
   const handleNext = () => {
     setCurrentStep(currentStep + 1);

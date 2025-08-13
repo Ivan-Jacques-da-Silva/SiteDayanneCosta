@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { buildApiUrl, getImageUrl } from '../config/api';
 import DevelopmentCarousel from './DevelopmentCarousel';
 import styles from './FeaturedDevelopments.module.css';
 import fundoImg from '../assets/img/fundoImg.jpeg';
@@ -17,34 +18,12 @@ const FeaturedDevelopments = () => {
 
   const fetchNewDevelopments = async () => {
     try {
-      const response = await fetch('/api/properties-by-category?category=new_developments&limit=10');
+      const response = await fetch(buildApiUrl('/api/properties-by-category?category=new_developments&limit=10'));
       const data = await response.json();
       
       if (response.ok) {
         // Transformar os dados para o formato esperado pelo carrossel
         const formattedDevelopments = data.properties.map(property => {
-          // Função para construir URL da imagem corretamente
-          const getImageUrl = (url) => {
-            if (!url) return '/src/assets/img/testesImagens.jpeg';
-            
-            // Se já é uma URL completa, retorna como está
-            if (url.startsWith('http') || url.startsWith('https')) {
-              return url;
-            }
-            
-            // Se começa com uploads/, adiciona a base do backend
-            if (url.startsWith('uploads/')) {
-              return `http://localhost:5000/${url}`;
-            }
-            
-            // Se não começa com /, adiciona
-            if (!url.startsWith('/')) {
-              return `http://localhost:5000/uploads/properties/${url}`;
-            }
-            
-            return `http://localhost:5000${url}`;
-          };
-
           // Buscar imagem primária ou primeira imagem disponível
           let imageUrl = '/src/assets/img/testesImagens.jpeg'; // imagem padrão
           

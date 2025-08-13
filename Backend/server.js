@@ -210,6 +210,7 @@ async function testConnection() {
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Backend server running on port ${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🌐 Server accessible at: http://0.0.0.0:${PORT}`);
   testConnection();
 });
 
