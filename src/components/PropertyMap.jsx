@@ -1,186 +1,111 @@
 
-import React, { useEffect, useRef, useState } from 'react';
-import { Loader } from '@googlemaps/js-api-loader';
-import { MAPS_CONFIG, getGoogleMapsApiKey, isGoogleMapsConfigured } from '../config/maps';
+import React, { useEffect, useState } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import L from 'leaflet';
+import { MAPS_CONFIG } from '../config/maps';
 import styles from './PropertyMap.module.css';
+import 'leaflet/dist/leaflet.css';
+
+// Fix for default markers in Leaflet
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
+
+// Create custom icons
+const createCustomIcon = (isSelected = false) => {
+  const config = isSelected ? MAPS_CONFIG.MARKERS.SELECTED : MAPS_CONFIG.MARKERS.DEFAULT;
+  
+  return L.divIcon({
+    className: 'custom-marker',
+    html: `
+      <div style="
+        width: ${config.size}px;
+        height: ${config.size}px;
+        background-color: ${config.color};
+        border: 3px solid white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: ${config.size > 30 ? '14px' : '12px'};
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      ">$</div>
+    `,
+    iconSize: [config.size, config.size],
+    iconAnchor: [config.size / 2, config.size / 2],
+  });
+};
+
+// Component to handle map center changes
+const MapController = ({ center, zoom }) => {
+  const map = useMap();
+  
+  useEffect(() => {
+    if (center) {
+      map.setView(center, zoom);
+    }
+  }, [center, zoom, map]);
+  
+  return null;
+};
 
 const PropertyMap = ({ properties, selectedPropertyId, onPropertySelect }) => {
-  const mapRef = useRef(null);
-  const [map, setMap] = useState(null);
-  const [markers, setMarkers] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [mapCenter, setMapCenter] = useState(MAPS_CONFIG.DEFAULT_CENTER);
+  const [mapZoom, setMapZoom] = useState(MAPS_CONFIG.DEFAULT_ZOOM);
 
-  const GOOGLE_MAPS_API_KEY = getGoogleMapsApiKey();
-
-  useEffect(() => {
-    initializeMap();
-  }, []);
+  // Filter properties with valid coordinates
+  const validProperties = properties.filter(p => p.latitude && p.longitude);
 
   useEffect(() => {
-    if (map && properties.length > 0) {
-      updateMarkers();
-    }
-  }, [map, properties]);
-
-  useEffect(() => {
-    if (map && selectedPropertyId) {
-      centerOnSelectedProperty();
-    }
-  }, [selectedPropertyId, map]);
-
-  const initializeMap = async () => {
-    if (!mapRef.current) return;
-
-    try {
-      const loader = new Loader({
-        apiKey: GOOGLE_MAPS_API_KEY,
-        version: 'weekly',
-        libraries: ['places']
-      });
-
-      await loader.load();
-
-      const mapInstance = new window.google.maps.Map(mapRef.current, {
-        zoom: MAPS_CONFIG.DEFAULT_ZOOM,
-        center: MAPS_CONFIG.DEFAULT_CENTER,
-        mapTypeId: 'roadmap',
-        styles: MAPS_CONFIG.MAP_STYLES
-      });
-
-      setMap(mapInstance);
-      setIsLoading(false);
-    } catch (error) {
-      console.error('Error loading Google Maps:', error);
-      setIsLoading(false);
-    }
-  };
-
-  const updateMarkers = () => {
-    if (!map || !window.google) return;
-
-    // Clear existing markers
-    markers.forEach(marker => marker.setMap(null));
-    const newMarkers = [];
-
-    // Create bounds to fit all markers
-    const bounds = new window.google.maps.LatLngBounds();
-
-    properties.forEach(property => {
-      if (property.latitude && property.longitude) {
-        const position = {
-          lat: parseFloat(property.latitude),
-          lng: parseFloat(property.longitude)
-        };
-
-        const isSelected = property.id === selectedPropertyId;
-
-        const marker = new window.google.maps.Marker({
-          position,
-          map,
-          title: property.address,
-          icon: {
-            url: isSelected 
-              ? 'data:image/svg+xml;base64,' + btoa(`
-                <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="16" cy="16" r="12" fill="#ff0000" stroke="#ffffff" stroke-width="3"/>
-                  <text x="16" y="20" font-family="Arial" font-size="12" font-weight="bold" fill="white" text-anchor="middle">$</text>
-                </svg>
-              `)
-              : 'data:image/svg+xml;base64,' + btoa(`
-                <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="12" cy="12" r="8" fill="#0066cc" stroke="#ffffff" stroke-width="2"/>
-                  <text x="12" y="16" font-family="Arial" font-size="10" font-weight="bold" fill="white" text-anchor="middle">$</text>
-                </svg>
-              `),
-            scaledSize: new window.google.maps.Size(isSelected ? 32 : 24, isSelected ? 32 : 24)
-          },
-          zIndex: isSelected ? 1000 : 100
-        });
-
-        // Create info window
-        const infoWindow = new window.google.maps.InfoWindow({
-          content: `
-            <div class="${styles.infoWindow}">
-              <img src="${property.image || '/src/assets/img/testesImagens.jpeg'}" 
-                   alt="${property.address}" 
-                   class="${styles.infoImage}" />
-              <div class="${styles.infoContent}">
-                <div class="${styles.infoPrice}">
-                  ${property.price ? `$${property.price.toLocaleString()}` : 'Price on request'}
-                </div>
-                <div class="${styles.infoAddress}">${property.address}</div>
-                <div class="${styles.infoCity}">${property.city}, ${property.state}</div>
-                <div class="${styles.infoSpecs}">
-                  ${property.bedrooms || property.beds || 'N/A'} beds • 
-                  ${property.bathrooms || property.baths || 'N/A'} baths • 
-                  ${property.sqft ? `${property.sqft.toLocaleString()} sq ft` : 'N/A'}
-                </div>
-              </div>
-            </div>
-          `
-        });
-
-        marker.addListener('click', () => {
-          // Close all other info windows
-          markers.forEach(m => {
-            if (m.infoWindow) {
-              m.infoWindow.close();
-            }
-          });
-          
-          // Open this info window
-          infoWindow.open(map, marker);
-          
-          // Notify parent component
-          if (onPropertySelect) {
-            onPropertySelect(property.id);
-          }
-        });
-
-        marker.infoWindow = infoWindow;
-        newMarkers.push(marker);
-        bounds.extend(position);
+    if (selectedPropertyId) {
+      const selectedProperty = validProperties.find(p => p.id === selectedPropertyId);
+      if (selectedProperty) {
+        setMapCenter([parseFloat(selectedProperty.latitude), parseFloat(selectedProperty.longitude)]);
+        setMapZoom(MAPS_CONFIG.SELECTED_ZOOM);
       }
-    });
-
-    setMarkers(newMarkers);
-
-    // Fit map to show all markers
-    if (newMarkers.length > 0) {
-      if (newMarkers.length === 1) {
-        map.setCenter(newMarkers[0].getPosition());
-        map.setZoom(MAPS_CONFIG.SELECTED_ZOOM);
+    } else if (validProperties.length > 0) {
+      // Calculate bounds to fit all properties
+      if (validProperties.length === 1) {
+        const property = validProperties[0];
+        setMapCenter([parseFloat(property.latitude), parseFloat(property.longitude)]);
+        setMapZoom(MAPS_CONFIG.SELECTED_ZOOM);
       } else {
-        map.fitBounds(bounds);
-        const listener = window.google.maps.event.addListener(map, 'idle', () => {
-          if (map.getZoom() > 16) map.setZoom(16);
-          window.google.maps.event.removeListener(listener);
-        });
+        // Set center to Miami default and let the map auto-fit
+        setMapCenter(MAPS_CONFIG.DEFAULT_CENTER);
+        setMapZoom(MAPS_CONFIG.DEFAULT_ZOOM);
       }
     }
-  };
+  }, [selectedPropertyId, validProperties]);
 
-  const centerOnSelectedProperty = () => {
-    if (!map || !selectedPropertyId) return;
-
-    const selectedProperty = properties.find(p => p.id === selectedPropertyId);
-    if (selectedProperty && selectedProperty.latitude && selectedProperty.longitude) {
-      const position = {
-        lat: parseFloat(selectedProperty.latitude),
-        lng: parseFloat(selectedProperty.longitude)
-      };
-      
-      map.panTo(position);
-      map.setZoom(MAPS_CONFIG.SELECTED_ZOOM);
+  const handleMarkerClick = (property) => {
+    if (onPropertySelect) {
+      onPropertySelect(property.id);
     }
   };
 
-  if (isLoading) {
+  const formatPrice = (price) => {
+    if (!price) return 'Price on request';
+    const numericPrice = typeof price === 'string' ? parseInt(price.replace(/[$,]/g, '')) : price;
+    if (isNaN(numericPrice)) return 'Price on request';
+    return '$' + numericPrice.toLocaleString();
+  };
+
+  if (validProperties.length === 0) {
     return (
       <div className={styles.mapContainer}>
-        <div className={styles.loadingContainer}>
-          <div className={styles.spinner}></div>
-          <p>Loading map...</p>
+        <div className={styles.noMapData}>
+          <div className={styles.noMapMessage}>
+            <div className={styles.errorIcon}>📍</div>
+            <h3>No Map Data Available</h3>
+            <p>Properties need latitude and longitude coordinates to display on the map.</p>
+            <p>Available properties: {properties.length}</p>
+            <p>With coordinates: {validProperties.length}</p>
+          </div>
         </div>
       </div>
     );
@@ -188,14 +113,67 @@ const PropertyMap = ({ properties, selectedPropertyId, onPropertySelect }) => {
 
   return (
     <div className={styles.mapContainer}>
-      <div ref={mapRef} className={styles.map} />
-      {!isGoogleMapsConfigured() && (
-        <div className={styles.apiKeyWarning}>
-          <p>⚠️ Google Maps API key not configured</p>
-          <p>Add VITE_GOOGLE_MAPS_API_KEY to your environment variables</p>
-          <p>Get your API key at: console.cloud.google.com</p>
-        </div>
-      )}
+      <MapContainer
+        center={mapCenter}
+        zoom={mapZoom}
+        className={styles.map}
+        scrollWheelZoom={true}
+        zoomControl={true}
+      >
+        <TileLayer
+          url={MAPS_CONFIG.TILE_LAYER_URL}
+          attribution={MAPS_CONFIG.TILE_LAYER_ATTRIBUTION}
+          maxZoom={MAPS_CONFIG.MAX_ZOOM}
+        />
+        
+        <MapController center={mapCenter} zoom={mapZoom} />
+        
+        {validProperties.map((property) => {
+          const isSelected = property.id === selectedPropertyId;
+          const position = [parseFloat(property.latitude), parseFloat(property.longitude)];
+          
+          return (
+            <Marker
+              key={property.id}
+              position={position}
+              icon={createCustomIcon(isSelected)}
+              eventHandlers={{
+                click: () => handleMarkerClick(property)
+              }}
+              zIndexOffset={isSelected ? 1000 : 0}
+            >
+              <Popup>
+                <div className={styles.popupContent}>
+                  <img
+                    src={property.image || '/src/assets/img/testesImagens.jpeg'}
+                    alt={property.address}
+                    className={styles.popupImage}
+                    onError={(e) => {
+                      e.target.src = '/src/assets/img/testesImagens.jpeg';
+                    }}
+                  />
+                  <div className={styles.popupInfo}>
+                    <div className={styles.popupPrice}>
+                      {formatPrice(property.price)}
+                    </div>
+                    <div className={styles.popupAddress}>
+                      {property.address}
+                    </div>
+                    <div className={styles.popupCity}>
+                      {property.city}, {property.state}
+                    </div>
+                    <div className={styles.popupSpecs}>
+                      {property.bedrooms || property.beds || 'N/A'} beds •{' '}
+                      {property.bathrooms || property.baths || 'N/A'} baths •{' '}
+                      {property.sqft ? `${property.sqft.toLocaleString()} sq ft` : 'N/A'}
+                    </div>
+                  </div>
+                </div>
+              </Popup>
+            </Marker>
+          );
+        })}
+      </MapContainer>
     </div>
   );
 };

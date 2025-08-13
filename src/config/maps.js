@@ -1,25 +1,15 @@
-
-// Maps configuration
+// Leaflet + OpenStreetMap configuration
 export const MAPS_CONFIG = {
   // Default center for Miami area
-  DEFAULT_CENTER: { lat: 25.7617, lng: -80.1918 },
+  DEFAULT_CENTER: [25.7617, -80.1918], // [lat, lng] format for Leaflet
   DEFAULT_ZOOM: 12,
   SELECTED_ZOOM: 15,
-  
-  // Map styles
-  MAP_STYLES: [
-    {
-      featureType: 'poi',
-      elementType: 'labels',
-      stylers: [{ visibility: 'off' }]
-    },
-    {
-      featureType: 'transit',
-      elementType: 'labels',
-      stylers: [{ visibility: 'off' }]
-    }
-  ],
-  
+  MAX_ZOOM: 18,
+
+  // OpenStreetMap tile layer URL
+  TILE_LAYER_URL: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  TILE_LAYER_ATTRIBUTION: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+
   // Marker configurations
   MARKERS: {
     DEFAULT: {
@@ -33,13 +23,8 @@ export const MAPS_CONFIG = {
   }
 };
 
-// Check if Google Maps API key is configured
-export const isGoogleMapsConfigured = () => {
-  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-  return apiKey && !apiKey.includes('YOUR_API_KEY');
-};
+// No API key needed for OpenStreetMap
+export const isMapConfigured = () => true;
 
-// Get Google Maps API key
-export const getGoogleMapsApiKey = () => {
-  return import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '';
-};
+// No API key needed for Leaflet + OpenStreetMap
+export const getMapApiKey = () => null;
