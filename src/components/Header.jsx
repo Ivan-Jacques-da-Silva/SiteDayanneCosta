@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MdEmail, MdPhone } from 'react-icons/md';
@@ -5,17 +6,6 @@ import styles from './Header.module.css';
 import compassImg from '../assets/img/compas.png';
 import logoLight from '../assets/img/logo-dc.png';
 import logoDark from '../assets/img/logo-dcBlack.png';
-
-// Função de inicialização do Google Translate
-window.googleTranslateElementInit = function() {
-  new window.google.translate.TranslateElement({
-    pageLanguage: 'en',
-    includedLanguages: 'en,pt,es',
-    layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
-    autoDisplay: false,
-    multilanguagePage: true
-  }, 'google_translate_element');
-};
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -33,35 +23,37 @@ const Header = () => {
 
     window.addEventListener('scroll', handleScroll);
     
-    // Carregar o script do Google Translate
-    if (!document.querySelector('script[src*="translate.google.com"]')) {
-      const script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-      script.async = true;
-      script.onload = () => {
-        console.log('Google Translate script carregado');
-        // Aguardar um pouco antes de tentar inicializar
-        setTimeout(() => {
-          if (window.googleTranslateElementInit) {
-            window.googleTranslateElementInit();
-          }
-        }, 1000);
-      };
-      document.getElementsByTagName('head')[0].appendChild(script);
-    }
+    // Carregar Google Translate API
+    const loadGoogleTranslate = () => {
+      if (!window.google || !window.google.translate) {
+        const script = document.createElement('script');
+        script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+        script.async = true;
+        document.head.appendChild(script);
+        
+        window.googleTranslateElementInit = () => {
+          new window.google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: 'en,pt,es',
+            layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false
+          }, 'google_translate_element');
+        };
+      }
+    };
+
+    loadGoogleTranslate();
     
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
-    // Restaurar idioma salvo ao carregar a página
+    // Restaurar idioma quando a página carregar
     const savedLanguage = localStorage.getItem('selectedLanguage');
     if (savedLanguage && savedLanguage !== 'EN') {
-      // Aguardar mais tempo para garantir que o Google Translate carregue
       setTimeout(() => {
         translatePage(getLanguageCode(savedLanguage), savedLanguage);
-      }, 3000);
+      }, 2000);
     }
   }, []);
 
@@ -75,16 +67,13 @@ const Header = () => {
   };
 
   const toggleSubmenu = (menuName) => {
-    // Para submenus aninhados, precisamos manter o menu pai aberto
     if (menuName === 'neighborhoods-mobile') {
-      // Se estamos abrindo/fechando neighborhoods, mantemos search aberto
       if (openSubmenu === 'neighborhoods-mobile') {
-        setOpenSubmenu('search'); // Volta para mostrar apenas search
+        setOpenSubmenu('search');
       } else {
-        setOpenSubmenu('neighborhoods-mobile'); // Abre neighborhoods
+        setOpenSubmenu('neighborhoods-mobile');
       }
     } else {
-      // Para outros menus, comportamento normal
       setOpenSubmenu(openSubmenu === menuName ? null : menuName);
     }
   };
@@ -98,53 +87,74 @@ const Header = () => {
     }
   };
 
-  const translatePage = (language, displayName) => {
+  const translatePage = async (language, displayName) => {
     setCurrentLanguage(displayName);
     localStorage.setItem('selectedLanguage', displayName);
 
-    // Função para executar a tradução
-    const executeTranslation = () => {
-      const googleTranslateElement = document.querySelector('.goog-te-combo');
+    if (language === 'en') {
+      // Para inglês, remover tradução
+      const translatedElements = document.querySelectorAll('[data-translated="true"]');
+      translatedElements.forEach(element => {
+        if (element.dataset.originalText) {
+          element.textContent = element.dataset.originalText;
+          element.removeAttribute('data-translated');
+          element.removeAttribute('data-original-text');
+        }
+      });
+      return;
+    }
+
+    // Para outros idiomas, usar a API do Google Translate
+    try {
+      // Encontrar todos os elementos de texto
+      const textElements = document.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span, a, button, label, div[class*="text"], li');
       
-      if (googleTranslateElement) {
-        console.log('Tentando traduzir para:', language);
-        
-        if (language === 'en') {
-          // Para voltar ao inglês - recarregar a página limpa
-          window.location.reload();
-          return;
+      for (let element of textElements) {
+        // Pular elementos que já foram traduzidos ou que são especiais
+        if (element.dataset.translated === 'true' || 
+            element.classList.contains('notranslate') ||
+            element.closest('.notranslate') ||
+            element.closest('#google_translate_element') ||
+            !element.textContent.trim() ||
+            element.textContent.length < 3) {
+          continue;
         }
 
-        // Definir o valor e disparar evento
-        googleTranslateElement.value = language;
-        googleTranslateElement.dispatchEvent(new Event('change', { bubbles: true }));
+        const originalText = element.textContent.trim();
         
-        console.log('Tradução executada para:', language);
-      } else {
-        console.warn('Elemento Google Translate não encontrado');
+        // Salvar texto original
+        if (!element.dataset.originalText) {
+          element.dataset.originalText = originalText;
+        }
+
+        // Traduzir o texto
+        const translatedText = await translateText(originalText, language);
+        if (translatedText && translatedText !== originalText) {
+          element.textContent = translatedText;
+          element.dataset.translated = 'true';
+        }
       }
-    };
+    } catch (error) {
+      console.error('Erro na tradução:', error);
+    }
+  };
 
-    // Verificar se o Google Translate já está carregado
-    if (document.querySelector('.goog-te-combo')) {
-      executeTranslation();
-    } else {
-      // Aguardar o Google Translate carregar
-      let attempts = 0;
-      const maxAttempts = 50;
+  const translateText = async (text, targetLanguage) => {
+    try {
+      // Usar a API gratuita do Google Translate (método alternativo)
+      const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${targetLanguage}&dt=t&q=${encodeURIComponent(text)}`;
       
-      const checkGoogleTranslate = setInterval(() => {
-        attempts++;
-        const element = document.querySelector('.goog-te-combo');
-        
-        if (element) {
-          clearInterval(checkGoogleTranslate);
-          executeTranslation();
-        } else if (attempts >= maxAttempts) {
-          clearInterval(checkGoogleTranslate);
-          console.warn('Google Translate não carregou após', maxAttempts, 'tentativas');
-        }
-      }, 100);
+      const response = await fetch(url);
+      const result = await response.json();
+      
+      if (result && result[0] && result[0][0] && result[0][0][0]) {
+        return result[0][0][0];
+      }
+      
+      return text;
+    } catch (error) {
+      console.error('Erro ao traduzir texto:', error);
+      return text;
     }
   };
 
@@ -479,8 +489,7 @@ const Header = () => {
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                     <Link to="/single-family-homes/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
                       Single Family Homes
-
-        </Link>
+                    </Link>
                   </li>
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                     <Link to="/luxury-condos/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
@@ -584,8 +593,6 @@ const Header = () => {
                   </li>
                 </ul>
               </li>
-
-              
 
               <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
@@ -763,7 +770,7 @@ const Header = () => {
         </div>
       </div>
       
-      {/* Google Translate Element - Necessário mas oculto */}
+      {/* Google Translate Element - Mantido para compatibilidade */}
       <div id="google_translate_element" style={{ position: 'absolute', left: '-9999px', opacity: 0 }}></div>
     </>
   );
