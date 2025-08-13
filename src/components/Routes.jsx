@@ -26,6 +26,7 @@ import SingleFamilyHomes from '../pages/SingleFamilyHomes';
 import LuxuryCondos from '../pages/LuxuryCondos';
 import Neighborhoods from '../pages/Neighborhoods';
 import Neighborhood from '../pages/Neighborhood';
+import AllProperties from '../pages/AllProperties';
 import Brickell from '../pages/Brickell';
 import BrickellCondos from '../pages/BrickellCondos';
 import Edgewater from '../pages/Edgewater';
@@ -42,54 +43,55 @@ const AppRoutes = () => {
     <>
       <ScrollToTop />
       <RouterRoutes>
-      {/* Main Pages */}
-      <Route path="/" element={<Home />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/about-team" element={<AboutTeam />} />
-      <Route path="/contact" element={<Contact />} />
-      <Route path="/buy" element={<Buy />} />
-      <Route path="/buy-sell" element={<BuySell />} />
-      <Route path="/sell" element={<Sell />} />
-      <Route path="/search" element={<Search />} />
+        {/* Main Pages */}
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/about-team" element={<AboutTeam />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/buy" element={<Buy />} />
+        <Route path="/buy-sell" element={<BuySell />} />
+        <Route path="/sell" element={<Sell />} />
+        <Route path="/search" element={<Search />} />
 
-      {/* Property Types */}
-      <Route path="/single-family-homes" element={<SingleFamilyHomes />} />
-      <Route path="/luxury-condos" element={<LuxuryCondos />} />
-      <Route path="/new-developments" element={<NewDevelopments />} />
+        {/* Property Types */}
+        <Route path="/properties" element={<AllProperties />} />
+        <Route path="/single-family-homes" element={<SingleFamilyHomes />} />
+        <Route path="/luxury-condos" element={<LuxuryCondos />} />
+        <Route path="/new-developments" element={<NewDevelopments />} />
 
-      {/* Neighborhoods */}
-      <Route path="/neighborhoods" element={<Neighborhoods />} />
-      <Route path="/neighborhood/:slug" element={<Neighborhood />} />
-      <Route path="/brickell" element={<Brickell />} />
-      <Route path="/brickell-condos" element={<BrickellCondos />} />
-      <Route path="/edgewater" element={<Edgewater />} />
-      <Route path="/coconut-grove" element={<CoconutGrove />} />
-      <Route path="/the-roads" element={<TheRoads />} />
+        {/* Neighborhoods */}
+        <Route path="/neighborhoods" element={<Neighborhoods />} />
+        <Route path="/neighborhood/:slug" element={<Neighborhood />} />
+        <Route path="/brickell" element={<Brickell />} />
+        <Route path="/brickell-condos" element={<BrickellCondos />} />
+        <Route path="/edgewater" element={<Edgewater />} />
+        <Route path="/coconut-grove" element={<CoconutGrove />} />
+        <Route path="/the-roads" element={<TheRoads />} />
 
-      {/* Services */}
-      <Route path="/compass-concierge" element={<CompassConcierge />} />
-      <Route path="/private-exclusive" element={<PrivateExclusive />} />
+        {/* Services */}
+        <Route path="/compass-concierge" element={<CompassConcierge />} />
+        <Route path="/private-exclusive" element={<PrivateExclusive />} />
 
-      {/* Auth */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
+        {/* Auth */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
-      {/* Admin Routes */}
-      <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-      <Route path="/admin/dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-      <Route path="/admin/properties" element={<ProtectedRoute><AdminProperties /></ProtectedRoute>} />
-      <Route path="/admin/properties/new" element={<ProtectedRoute><AdminPropertyForm /></ProtectedRoute>} />
-      <Route path="/admin/properties/edit/:id" element={<ProtectedRoute><AdminPropertyForm /></ProtectedRoute>} />
-      <Route path="/admin/condominios" element={<ProtectedRoute><AdminCondominios /></ProtectedRoute>} />
-      <Route path="/admin/usuarios" element={<ProtectedRoute><AdminUsuarios /></ProtectedRoute>} />
-      <Route path="/admin/favoritos" element={<ProtectedRoute><AdminFavoritos /></ProtectedRoute>} />
-      <Route path="/admin/contacts" element={<ProtectedRoute><AdminContacts /></ProtectedRoute>} />
-      <Route path="/admin/formularios" element={<ProtectedRoute><AdminFormularios /></ProtectedRoute>} />
+        {/* Admin Routes */}
+        <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+        <Route path="/admin/dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+        <Route path="/admin/properties" element={<ProtectedRoute><AdminProperties /></ProtectedRoute>} />
+        <Route path="/admin/properties/new" element={<ProtectedRoute><AdminPropertyForm /></ProtectedRoute>} />
+        <Route path="/admin/properties/edit/:id" element={<ProtectedRoute><AdminPropertyForm /></ProtectedRoute>} />
+        <Route path="/admin/condominios" element={<ProtectedRoute><AdminCondominios /></ProtectedRoute>} />
+        <Route path="/admin/usuarios" element={<ProtectedRoute><AdminUsuarios /></ProtectedRoute>} />
+        <Route path="/admin/favoritos" element={<ProtectedRoute><AdminFavoritos /></ProtectedRoute>} />
+        <Route path="/admin/contacts" element={<ProtectedRoute><AdminContacts /></ProtectedRoute>} />
+        <Route path="/admin/formularios" element={<ProtectedRoute><AdminFormularios /></ProtectedRoute>} />
 
-      {/* Property Detail Route */}
-      <Route path="/property/:id" element={<PropertyDetailPage />} />
-    </RouterRoutes>
+        {/* Property Detail Route */}
+        <Route path="/property/:id" element={<PropertyDetailPage />} />
+      </RouterRoutes>
     </>
   );
 }

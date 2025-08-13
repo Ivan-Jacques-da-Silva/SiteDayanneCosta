@@ -28,9 +28,10 @@ const Header = () => {
     // Restaurar idioma salvo ao carregar a página
     const savedLanguage = localStorage.getItem('selectedLanguage');
     if (savedLanguage && savedLanguage !== 'EN') {
+      // Aguardar mais tempo para garantir que o Google Translate carregue
       setTimeout(() => {
         translatePage(getLanguageCode(savedLanguage), savedLanguage);
-      }, 2000); // Aguardar o Google Translate carregar
+      }, 3000);
     }
   }, []);
 
@@ -74,18 +75,40 @@ const Header = () => {
     // Função para executar a tradução
     const executeTranslation = () => {
       const googleTranslateElement = document.querySelector('.goog-te-combo');
-
+      
       if (googleTranslateElement) {
+        // Limpar seleção atual
+        googleTranslateElement.value = '';
+        
         if (language === 'en') {
           // Para voltar ao inglês, selecionar a primeira opção (Original)
           googleTranslateElement.selectedIndex = 0;
+          googleTranslateElement.value = '';
         } else {
+          // Para outros idiomas, definir o valor correto
           googleTranslateElement.value = language;
         }
 
-        // Disparar evento de mudança
-        const event = new Event('change', { bubbles: true });
-        googleTranslateElement.dispatchEvent(event);
+        // Disparar evento de mudança com maior compatibilidade
+        const changeEvent = new Event('change', { 
+          bubbles: true, 
+          cancelable: true 
+        });
+        googleTranslateElement.dispatchEvent(changeEvent);
+        
+        // Backup: disparar também input event
+        const inputEvent = new Event('input', { 
+          bubbles: true, 
+          cancelable: true 
+        });
+        googleTranslateElement.dispatchEvent(inputEvent);
+        
+        // Forçar refresh se necessário
+        setTimeout(() => {
+          if (googleTranslateElement.value !== language && language !== 'en') {
+            window.location.reload();
+          }
+        }, 1000);
       }
     };
 
@@ -93,18 +116,23 @@ const Header = () => {
     if (document.querySelector('.goog-te-combo')) {
       executeTranslation();
     } else {
-      // Aguardar o Google Translate carregar
+      // Aguardar o Google Translate carregar com verificação mais robusta
+      let attempts = 0;
+      const maxAttempts = 100;
+      
       const checkGoogleTranslate = setInterval(() => {
-        if (document.querySelector('.goog-te-combo')) {
+        attempts++;
+        const element = document.querySelector('.goog-te-combo');
+        
+        if (element || attempts >= maxAttempts) {
           clearInterval(checkGoogleTranslate);
-          executeTranslation();
+          if (element) {
+            executeTranslation();
+          } else {
+            console.warn('Google Translate não carregou após múltiplas tentativas');
+          }
         }
-      }, 100);
-
-      // Timeout de segurança
-      setTimeout(() => {
-        clearInterval(checkGoogleTranslate);
-      }, 10000);
+      }, 200);
     }
   };
 
@@ -283,36 +311,35 @@ const Header = () => {
                             Luxury Condos
                           </Link>
                         </li>
-                      </ul>
-                    </li>
-
-                    <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
-                      <Link to="" className={`ip-menu-link ${styles.ipMenuLink}`}>Neighborhoods</Link>
-                      <ul className={`ip-submenu ${styles.ipSubmenu}`}>
-                        <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                          <Link to="/brickell/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                            Brickell
-                          </Link>
-                        </li>
-                        <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                          <Link to="/edgewater/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                            Edgewater
-                          </Link>
-                        </li>
-                        <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                          <Link to="/coconut-grove/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                            Coconut Grove
-                          </Link>
-                        </li>
-                        <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                          <Link to="/the-roads/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                            The Roads
-                          </Link>
-                        </li>
-                        <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                          <Link to="/neighborhoods/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                            View All
-                          </Link>
+                        <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
+                          <Link to="" className={`ip-menu-link ${styles.ipMenuLink}`}>Neighborhoods</Link>
+                          <ul className={`ip-submenu ${styles.ipSubmenu}`}>
+                            <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                              <Link to="/neighborhoods/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                                View All
+                              </Link>
+                            </li>
+                            <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                              <Link to="/brickell/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                                Brickell
+                              </Link>
+                            </li>
+                            <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                              <Link to="/edgewater/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                                Edgewater
+                              </Link>
+                            </li>
+                            <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                              <Link to="/coconut-grove/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                                Coconut Grove
+                              </Link>
+                            </li>
+                            <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                              <Link to="/the-roads/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                                The Roads
+                              </Link>
+                            </li>
+                          </ul>
                         </li>
                       </ul>
                     </li>
@@ -440,6 +467,14 @@ const Header = () => {
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                     <Link to="/single-family-homes/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
                       Single Family Homes
+
+        </div>
+      </div>
+      
+      {/* Google Translate Element - Necessário mas oculto */}
+      <div id="google_translate_element" style={{ position: 'absolute', left: '-9999px', opacity: 0 }}></div>
+    </>
+
                     </Link>
                   </li>
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
