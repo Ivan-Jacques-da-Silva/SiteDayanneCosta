@@ -348,7 +348,7 @@ const Header = () => {
                                     View All
                                   </Link>
                                 </li>
-                              </ul>
+                              </ul> 
                             </li>
                           </ul>
                         </li>
