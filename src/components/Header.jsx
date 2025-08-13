@@ -477,14 +477,7 @@ const Header = () => {
                     <Link to="/single-family-homes/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
                       Single Family Homes
 
-        </div>
-      </div>
-      
-      {/* Google Translate Element - Necessário mas oculto */}
-      <div id="google_translate_element" style={{ position: 'absolute', left: '-9999px', opacity: 0 }}></div>
-    </>
-
-                    </Link>
+        </Link>
                   </li>
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                     <Link to="/luxury-condos/" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
@@ -766,6 +759,9 @@ const Header = () => {
           </nav>
         </div>
       </div>
+      
+      {/* Google Translate Element - Necessário mas oculto */}
+      <div id="google_translate_element" style={{ position: 'absolute', left: '-9999px', opacity: 0 }}></div>
     </>
   );
 };
