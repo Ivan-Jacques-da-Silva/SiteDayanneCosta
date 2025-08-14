@@ -84,14 +84,6 @@ export const getImageUrl = (imagePath) => {
   const baseUrl = API_CONFIG.BASE_URL.endsWith('/') ? API_CONFIG.BASE_URL.slice(0, -1) : API_CONFIG.BASE_URL;
   const fullUrl = `${baseUrl}/${finalPath}`;
   
-  console.log('Image URL constructed:', {
-    original: imagePath,
-    cleanPath,
-    finalPath,
-    baseUrl,
-    fullUrl
-  });
-  
   return fullUrl;
 };
 

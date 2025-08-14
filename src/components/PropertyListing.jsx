@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { buildApiUrl, getImageUrl } from "../config/api";
-import PropertyMap from './PropertyMap';
+import PropertyMap from "./PropertyMap";
 import styles from "./PropertyListing.module.css";
-import placeholderImage from '../assets/img/testesImagens.jpeg';
+import placeholderImage from "../assets/img/testesImagens.jpeg";
 
 const PropertyListing = ({
   apiEndpoint = "/api/properties",
@@ -24,9 +24,10 @@ const PropertyListing = ({
     priceRange: [0, 50000000],
     bedrooms: "",
     bathrooms: "",
-    sortBy: "price-desc",
+    sortBy: "newest-first",
     ...customFilters,
   });
+  const [maxPrice, setMaxPrice] = useState(50000000);
 
   const handleViewDetails = (property) => {
     navigate(`/property/${property.id}`, { state: { property } });
@@ -51,7 +52,9 @@ const PropertyListing = ({
           value &&
           value !== "" &&
           key !== "yearBuilt" &&
-          key !== "priceRange"
+          key !== "priceRange" &&
+          key !== "bedrooms" &&
+          key !== "bathrooms"
         ) {
           if (Array.isArray(value)) {
             url += `&${key}=${encodeURIComponent(value.join(","))}`;
@@ -65,27 +68,40 @@ const PropertyListing = ({
       if (filters.priceRange && filters.priceRange[0] > 0) {
         url += `&minPrice=${filters.priceRange[0]}`;
       }
-      if (filters.priceRange && filters.priceRange[1] < 50000000) {
+      if (filters.priceRange && filters.priceRange[1] < maxPrice) {
         url += `&maxPrice=${filters.priceRange[1]}`;
       }
 
-      console.log("Fetching from URL:", url);
-      console.log("Current filters:", filters);
+      // Add bedroom filter
+      if (filters.bedrooms) {
+        if (filters.bedrooms === "4+") {
+          url += `&minBedrooms=4`;
+        } else {
+          url += `&bedrooms=${filters.bedrooms}`;
+        }
+      }
+
+      // Add bathroom filter
+      if (filters.bathrooms) {
+        if (filters.bathrooms === "4+") {
+          url += `&minBathrooms=4`;
+        } else {
+          const b = parseInt(filters.bathrooms, 10);
+          url += `&minBathrooms=${b}&maxBathrooms=${b + 0.99}`;
+        }
+      }
 
       const response = await fetch(url);
 
       if (!response.ok) {
         const errorText = await response.text();
         console.error("HTTP Error Response:", errorText);
-        throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+        throw new Error(
+          `HTTP error! status: ${response.status} - ${errorText}`,
+        );
       }
 
       const data = await response.json();
-      console.log("API Response:", data);
-      console.log("Response type:", typeof data);
-      console.log("Is array:", Array.isArray(data));
-
-      // Handle different response structures
       let propertiesData = [];
       if (Array.isArray(data)) {
         propertiesData = data;
@@ -95,23 +111,45 @@ const PropertyListing = ({
         propertiesData = data.data;
       }
 
-      console.log("Processed properties data:", propertiesData);
-
       // Transform property data to include image URL from images array
-      propertiesData = propertiesData.map(property => ({
-        ...property,
-        image: property.images && property.images.length > 0
-          ? getImageUrl(property.images[0].url)
-          : property.image || placeholderImage
-      }));
+      propertiesData = propertiesData.map((p) => {
+        const primeira = p.images?.[0]?.url;
+        const imageUrl = primeira
+          ? getImageUrl(primeira)
+          : (p.image || urlImagemPadrao || imagemPadrao);
+        return { ...p, imageUrl };
+      });
+
+
+      // Calculate dynamic max price based on highest property price + 500,000 margin
+      if (propertiesData.length > 0) {
+        const prices = propertiesData.map(property => {
+          const price = typeof property.price === "string"
+            ? parseInt(property.price.replace(/[$,]/g, ""))
+            : property.price;
+          return isNaN(price) ? 0 : price;
+        });
+        const highestPrice = Math.max(...prices);
+        const dynamicMaxPrice = highestPrice + 500000;
+
+        // Update max price if it's different
+        if (dynamicMaxPrice !== maxPrice) {
+          setMaxPrice(dynamicMaxPrice);
+          // Update filters to use new max price if current max is at the old limit
+          setFilters(prev => ({
+            ...prev,
+            priceRange: [prev.priceRange[0], Math.min(prev.priceRange[1], dynamicMaxPrice)]
+          }));
+        }
+      }
 
       setProperties(propertiesData);
       setTotalPages(
         data.pagination?.totalPages ||
-          Math.ceil(
-            (data.pagination?.totalItems || propertiesData.length || 0) /
-              itemsPerPage,
-          ),
+        Math.ceil(
+          (data.pagination?.totalItems || propertiesData.length || 0) /
+          itemsPerPage,
+        ),
       );
     } catch (error) {
       console.error("Error fetching properties:", error);
@@ -164,11 +202,75 @@ const PropertyListing = ({
     return "$" + numericPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
+  // Apply client-side filtering for better responsiveness
+  const filteredProperties = properties.filter((property) => {
+    // Price range filter
+    const price =
+      typeof property.price === "string"
+        ? parseInt(property.price.replace(/[$,]/g, ""))
+        : property.price;
+    if (filters.priceRange) {
+      if (price < filters.priceRange[0] || price > filters.priceRange[1]) {
+        return false;
+      }
+    }
+
+    // Bedroom filter
+    if (filters.bedrooms) {
+      const bedrooms = property.bedrooms || property.beds || 0;
+      if (filters.bedrooms === "4+") {
+        if (bedrooms < 4) return false;
+      } else {
+        if (bedrooms !== parseInt(filters.bedrooms)) return false;
+      }
+    }
+
+    // Bathroom filter
+    if (filters.bathrooms) {
+      const bathrooms = property.bathrooms || property.baths || 0;
+      if (filters.bathrooms === "4+") {
+        if (bathrooms < 4) return false;
+      } else {
+        // Include properties with exact match or decimal values (e.g., filter 3 includes 3 and 3.5)
+        const selectedBathrooms = parseInt(filters.bathrooms);
+        if (bathrooms < selectedBathrooms || bathrooms >= selectedBathrooms + 1) return false;
+      }
+    }
+
+    return true;
+  });
+
+  // Apply sorting
+  const sortedProperties = [...filteredProperties].sort((a, b) => {
+    switch (filters.sortBy) {
+      case "price-desc":
+        const priceA = typeof a.price === "string" ? parseInt(a.price.replace(/[$,]/g, "")) : a.price;
+        const priceB = typeof b.price === "string" ? parseInt(b.price.replace(/[$,]/g, "")) : b.price;
+        return priceB - priceA;
+      case "price-asc":
+        const priceAsc = typeof a.price === "string" ? parseInt(a.price.replace(/[$,]/g, "")) : a.price;
+        const priceBsc = typeof b.price === "string" ? parseInt(b.price.replace(/[$,]/g, "")) : b.price;
+        return priceAsc - priceBsc;
+      case "sqft-desc":
+        return (b.sqft || 0) - (a.sqft || 0);
+      case "bedrooms-desc":
+        return (b.bedrooms || b.beds || 0) - (a.bedrooms || a.beds || 0);
+      case "newest-first":
+      default:
+        // Sort by listing date or creation date (newest first)
+        const dateA = new Date(a.listingDate || a.createdAt || a.id);
+        const dateB = new Date(b.listingDate || b.createdAt || b.id);
+        return dateB - dateA;
+    }
+  });
+
   // Pagination calculations
-  const totalPagesCalculated = Math.ceil(properties.length / itemsPerPage);
+  const totalPagesCalculated = Math.ceil(
+    sortedProperties.length / itemsPerPage,
+  );
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentProperties = properties.slice(startIndex, endIndex);
+  const currentProperties = sortedProperties.slice(startIndex, endIndex);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -231,8 +333,9 @@ const PropertyListing = ({
     return (
       <div className={styles.pagination}>
         <div className={styles.paginationInfo}>
-          Showing {startIndex + 1}-{Math.min(endIndex, properties.length)} of{" "}
-          {properties.length} properties
+          Showing {startIndex + 1}-
+          {Math.min(endIndex, sortedProperties.length)} of{" "}
+          {sortedProperties.length} properties
         </div>
         <div className={styles.paginationButtons}>{pages}</div>
       </div>
@@ -241,7 +344,7 @@ const PropertyListing = ({
 
   const handlePropertyClick = (property) => {
     navigate(`/property/${property.id}`, {
-      state: { property }
+      state: { property },
     });
   };
 
@@ -250,12 +353,11 @@ const PropertyListing = ({
   };
 
   const handleMapPropertyClick = (propertyId) => {
-    const property = properties.find(p => p.id === propertyId);
+    const property = sortedProperties.find((p) => p.id === propertyId);
     if (property) {
       handlePropertyClick(property);
     }
   };
-
 
   return (
     <div className={styles.propertyListing}>
@@ -274,7 +376,7 @@ const PropertyListing = ({
           <div className={styles.filtersRow}>
             <div className={styles.priceRangeGroup}>
               <label className={styles.priceRangeLabel}>
-                Price Range: {formatPrice(filters.priceRange[0])} -{" "}
+                Faixa de Preço: {formatPrice(filters.priceRange[0])} -{" "}
                 {formatPrice(filters.priceRange[1])}
               </label>
               <div className={styles.rangeSliders}>
@@ -282,7 +384,7 @@ const PropertyListing = ({
                   type="range"
                   name="priceMin"
                   min="0"
-                  max="50000000"
+                  max={maxPrice}
                   step="100000"
                   value={filters.priceRange[0]}
                   onChange={handlePriceRangeChange}
@@ -292,7 +394,7 @@ const PropertyListing = ({
                   type="range"
                   name="priceMax"
                   min="0"
-                  max="50000000"
+                  max={maxPrice}
                   step="100000"
                   value={filters.priceRange[1]}
                   onChange={handlePriceRangeChange}
@@ -309,10 +411,10 @@ const PropertyListing = ({
                 className={styles.filterSelect}
               >
                 <option value="">Any Bed(s)</option>
-                <option value="1">1+</option>
-                <option value="2">2+</option>
-                <option value="3">3+</option>
-                <option value="4">4+</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4+">4+</option>
               </select>
             </div>
 
@@ -324,9 +426,10 @@ const PropertyListing = ({
                 className={styles.filterSelect}
               >
                 <option value="">Any Bath(s)</option>
-                <option value="2">2+</option>
-                <option value="3">3+</option>
-                <option value="4">4+</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4+">4+</option>
               </select>
             </div>
 
@@ -378,8 +481,8 @@ const PropertyListing = ({
 
           <div className={styles.resultsBar}>
             <div className={styles.resultsCount}>
-              Showing {currentProperties.length} of {properties.length}{" "}
-              Properties (Page {currentPage} of {totalPages})
+              Showing {currentProperties.length} of {sortedProperties.length}{" "}
+              Properties (Page {currentPage} of {totalPagesCalculated || 1})
             </div>
             <div className={styles.sortControls}>
               <div className={styles.sortGroup}>
@@ -389,6 +492,7 @@ const PropertyListing = ({
                   onChange={handleFilterChange}
                   className={styles.sortSelect}
                 >
+                  <option value="newest-first">Recently Listed</option>
                   <option value="price-desc">Highest Price</option>
                   <option value="price-asc">Lowest Price</option>
                   <option value="sqft-desc">Largest First</option>
@@ -441,12 +545,10 @@ const PropertyListing = ({
                       >
                         <div className={styles.propertyImageContainer}>
                           <img
-                            src={getImageUrl(property.image) || placeholderImage}
+                            src={property.imageUrl || urlImagemPadrao || imagemPadrao}
                             alt={`Property at ${property.address}`}
                             className={styles.propertyImage}
-                            onError={(e) => {
-                              e.target.src = placeholderImage;
-                            }}
+                            onError={(e) => { e.target.src = urlImagemPadrao || imagemPadrao; }}
                           />
                         </div>
                         <div className={styles.propertyContent}>
@@ -578,25 +680,24 @@ const PropertyListing = ({
                 <div className={styles.mapView}>
                   <div className={styles.mapPropertiesList}>
                     <div className={styles.propertiesListHeader}>
-                      <h3>Properties ({properties.length})</h3>
+                      <h3>Properties ({sortedProperties.length})</h3>
                     </div>
                     <div className={styles.mapPropertiesScroll}>
                       {currentProperties.length > 0 ? (
                         currentProperties.map((property, index) => (
                           <div
                             key={property.id || index}
-                            className={`${styles.mapPropertyCard} ${
-                              selectedPropertyId === property.id ? styles.selectedProperty : ''
-                            }`}
+                            className={`${styles.mapPropertyCard} ${selectedPropertyId === property.id
+                              ? styles.selectedProperty
+                              : ""
+                              }`}
                             onClick={() => handlePropertySelect(property.id)}
                           >
                             <div className={styles.mapPropertyImage}>
                               <img
-                                src={getImageUrl(property.image) || placeholderImage}
+                                src={property.imageUrl || urlImagemPadrao || imagemPadrao}
                                 alt={property.address}
-                                onError={(e) => {
-                                  e.target.src = placeholderImage;
-                                }}
+                                onError={(e) => { e.target.src = urlImagemPadrao || imagemPadrao; }}
                               />
                             </div>
                             <div className={styles.mapPropertyContent}>
@@ -604,15 +705,20 @@ const PropertyListing = ({
                                 {formatPrice(property.price)}
                               </div>
                               <div className={styles.mapPropertySpecs}>
-                                {property.bedrooms || property.beds || 'N/A'} beds •{" "}
-                                {property.bathrooms || property.baths || 'N/A'} baths •{" "}
-                                {property.sqft ? `${property.sqft.toLocaleString()} sq ft` : 'N/A'}
+                                {property.bedrooms || property.beds || "N/A"}{" "}
+                                beds •{" "}
+                                {property.bathrooms || property.baths || "N/A"}{" "}
+                                baths •{" "}
+                                {property.sqft
+                                  ? `${property.sqft.toLocaleString()} sq ft`
+                                  : "N/A"}
                               </div>
                               <div className={styles.mapPropertyAddress}>
                                 {property.address}
                               </div>
                               <div className={styles.mapPropertyCity}>
-                                {property.city}, {property.state} {property.zipCode}
+                                {property.city}, {property.state}{" "}
+                                {property.zipCode}
                               </div>
                               {property.yearBuilt && (
                                 <div className={styles.mapPropertyYear}>
@@ -640,21 +746,36 @@ const PropertyListing = ({
                   </div>
                   <div className={styles.mapContainer}>
                     <PropertyMap
-                      properties={properties.filter(p => p.latitude && p.longitude)}
+                      properties={sortedProperties.filter(
+                        (p) => p.latitude && p.longitude,
+                      )}
                       selectedPropertyId={selectedPropertyId}
                       onPropertySelect={handleMapPropertyClick}
                     />
-                    {properties.filter(p => p.latitude && p.longitude).length === 0 && (
-                      <div className={styles.noMapData}>
-                        <div className={styles.noMapMessage}>
-                          <div className={styles.errorIcon}>📍</div>
-                          <h3>No Map Data Available</h3>
-                          <p>Properties need latitude and longitude coordinates to display on the map.</p>
-                          <p>Available properties: {properties.length}</p>
-                          <p>With coordinates: {properties.filter(p => p.latitude && p.longitude).length}</p>
+                    {sortedProperties.filter((p) => p.latitude && p.longitude)
+                      .length === 0 && (
+                        <div className={styles.noMapData}>
+                          <div className={styles.noMapMessage}>
+                            <div className={styles.errorIcon}>📍</div>
+                            <h3>No Map Data Available</h3>
+                            <p>
+                              Properties need latitude and longitude coordinates
+                              to display on the map.
+                            </p>
+                            <p>
+                              Available properties: {sortedProperties.length}
+                            </p>
+                            <p>
+                              With coordinates:{" "}
+                              {
+                                sortedProperties.filter(
+                                  (p) => p.latitude && p.longitude,
+                                ).length
+                              }
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
                   </div>
                 </div>
               )}

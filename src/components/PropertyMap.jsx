@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { MAPS_CONFIG } from '../config/maps';
@@ -14,30 +14,42 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
-// Create custom icons
-const createCustomIcon = (isSelected = false) => {
-  const config = isSelected ? MAPS_CONFIG.MARKERS.SELECTED : MAPS_CONFIG.MARKERS.DEFAULT;
+// Create custom icons - memoized to prevent recreation
+const createCustomIcon = (isSelected = false, propertyImage = null) => {
+  const size = isSelected ? 32 : 26;
+  const borderColor = isSelected ? '#dc2626' : '#ef4444'; // Vermelho forte quando selecionado, vermelho normal quando não
+  const borderWidth = isSelected ? 3 : 2;
   
   return L.divIcon({
     className: 'custom-marker',
     html: `
       <div style="
-        width: ${config.size}px;
-        height: ${config.size}px;
-        background-color: ${config.color};
-        border: 3px solid white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: bold;
-        font-size: ${config.size > 30 ? '14px' : '12px'};
-        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-      ">$</div>
+        width: ${size}px;
+        height: ${size}px;
+        border: ${borderWidth}px solid ${borderColor};
+        border-radius: 50% 50% 50% 0;
+        transform: rotate(-45deg);
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        position: relative;
+        background-color: white;
+      ">
+        <img 
+          src="${propertyImage || '/src/assets/img/testesImagens.jpeg'}" 
+          alt="Property" 
+          style="
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: rotate(45deg) scale(1.4);
+            transform-origin: center;
+          "
+          onerror="this.src='/src/assets/img/testesImagens.jpeg';"
+        />
+      </div>
     `,
-    iconSize: [config.size, config.size],
-    iconAnchor: [config.size / 2, config.size / 2],
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size],
   });
 };
 
@@ -46,7 +58,7 @@ const MapController = ({ center, zoom }) => {
   const map = useMap();
   
   useEffect(() => {
-    if (center) {
+    if (center && center.length === 2 && !isNaN(center[0]) && !isNaN(center[1])) {
       map.setView(center, zoom);
     }
   }, [center, zoom, map]);
@@ -54,46 +66,54 @@ const MapController = ({ center, zoom }) => {
   return null;
 };
 
-const PropertyMap = ({ properties, selectedPropertyId, onPropertySelect }) => {
+const PropertyMap = ({ properties = [], selectedPropertyId, onPropertySelect }) => {
   const [mapCenter, setMapCenter] = useState(MAPS_CONFIG.DEFAULT_CENTER);
   const [mapZoom, setMapZoom] = useState(MAPS_CONFIG.DEFAULT_ZOOM);
 
-  // Filter properties with valid coordinates
-  const validProperties = properties.filter(p => p.latitude && p.longitude);
+  // Memoize valid properties to prevent recalculation on every render
+  const validProperties = useMemo(() => {
+    if (!Array.isArray(properties)) return [];
+    return properties.filter(p => 
+      p && 
+      p.latitude && 
+      p.longitude && 
+      !isNaN(parseFloat(p.latitude)) && 
+      !isNaN(parseFloat(p.longitude))
+    );
+  }, [properties]);
 
+  // Update map center and zoom when selectedPropertyId changes
   useEffect(() => {
-    if (selectedPropertyId) {
+    if (selectedPropertyId && validProperties.length > 0) {
       const selectedProperty = validProperties.find(p => p.id === selectedPropertyId);
       if (selectedProperty) {
-        setMapCenter([parseFloat(selectedProperty.latitude), parseFloat(selectedProperty.longitude)]);
+        const newCenter = [parseFloat(selectedProperty.latitude), parseFloat(selectedProperty.longitude)];
+        setMapCenter(newCenter);
         setMapZoom(MAPS_CONFIG.SELECTED_ZOOM);
       }
-    } else if (validProperties.length > 0) {
-      // Calculate bounds to fit all properties
-      if (validProperties.length === 1) {
-        const property = validProperties[0];
-        setMapCenter([parseFloat(property.latitude), parseFloat(property.longitude)]);
-        setMapZoom(MAPS_CONFIG.SELECTED_ZOOM);
-      } else {
-        // Set center to Miami default and let the map auto-fit
-        setMapCenter(MAPS_CONFIG.DEFAULT_CENTER);
-        setMapZoom(MAPS_CONFIG.DEFAULT_ZOOM);
-      }
+    } else if (validProperties.length === 1) {
+      const property = validProperties[0];
+      const newCenter = [parseFloat(property.latitude), parseFloat(property.longitude)];
+      setMapCenter(newCenter);
+      setMapZoom(MAPS_CONFIG.SELECTED_ZOOM);
+    } else if (validProperties.length === 0) {
+      setMapCenter(MAPS_CONFIG.DEFAULT_CENTER);
+      setMapZoom(MAPS_CONFIG.DEFAULT_ZOOM);
     }
-  }, [selectedPropertyId, validProperties]);
+  }, [selectedPropertyId, validProperties.length]);
 
-  const handleMarkerClick = (property) => {
-    if (onPropertySelect) {
+  const handleMarkerClick = useCallback((property) => {
+    if (onPropertySelect && property && property.id) {
       onPropertySelect(property.id);
     }
-  };
+  }, [onPropertySelect]);
 
-  const formatPrice = (price) => {
+  const formatPrice = useCallback((price) => {
     if (!price) return 'Price on request';
     const numericPrice = typeof price === 'string' ? parseInt(price.replace(/[$,]/g, '')) : price;
     if (isNaN(numericPrice)) return 'Price on request';
     return '$' + numericPrice.toLocaleString();
-  };
+  }, []);
 
   if (validProperties.length === 0) {
     return (
@@ -134,9 +154,9 @@ const PropertyMap = ({ properties, selectedPropertyId, onPropertySelect }) => {
           
           return (
             <Marker
-              key={property.id}
+              key={`marker-${property.id}`}
               position={position}
-              icon={createCustomIcon(isSelected)}
+              icon={createCustomIcon(isSelected, property.image)}
               eventHandlers={{
                 click: () => handleMarkerClick(property)
               }}
@@ -146,7 +166,7 @@ const PropertyMap = ({ properties, selectedPropertyId, onPropertySelect }) => {
                 <div className={styles.popupContent}>
                   <img
                     src={property.image || '/src/assets/img/testesImagens.jpeg'}
-                    alt={property.address}
+                    alt={property.address || 'Property'}
                     className={styles.popupImage}
                     onError={(e) => {
                       e.target.src = '/src/assets/img/testesImagens.jpeg';
@@ -157,10 +177,10 @@ const PropertyMap = ({ properties, selectedPropertyId, onPropertySelect }) => {
                       {formatPrice(property.price)}
                     </div>
                     <div className={styles.popupAddress}>
-                      {property.address}
+                      {property.address || 'Address not available'}
                     </div>
                     <div className={styles.popupCity}>
-                      {property.city}, {property.state}
+                      {property.city || 'City'}, {property.state || 'State'}
                     </div>
                     <div className={styles.popupSpecs}>
                       {property.bedrooms || property.beds || 'N/A'} beds •{' '}
