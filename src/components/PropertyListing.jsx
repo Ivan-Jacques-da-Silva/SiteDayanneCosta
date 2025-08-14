@@ -11,6 +11,8 @@ const PropertyListing = ({
   breadcrumbPath = "Properties",
   filters: customFilters = {},
   placeholderImage = "https://via.placeholder.com/400x300?text=Property",
+  showCategoryFilter = false,
+  showNeighborhoodFilter = false,
 }) => {
   const navigate = useNavigate();
   const [properties, setProperties] = useState([]);
@@ -25,9 +27,12 @@ const PropertyListing = ({
     bedrooms: "",
     bathrooms: "",
     sortBy: "newest-first",
+    category: "",
     ...customFilters,
   });
   const [maxPrice, setMaxPrice] = useState(50000000);
+  const [availableCategories, setAvailableCategories] = useState([]);
+  const [availableNeighborhoods, setAvailableNeighborhoods] = useState([]);
 
   const handleViewDetails = (property) => {
     navigate(`/property/${property.id}`, { state: { property } });
@@ -39,7 +44,70 @@ const PropertyListing = ({
 
   useEffect(() => {
     fetchProperties();
-  }, [filters, apiEndpoint, currentPage]);
+    if (showCategoryFilter) {
+      fetchAvailableCategories();
+    }
+    if (showNeighborhoodFilter) {
+      fetchAvailableNeighborhoods();
+    }
+  }, [filters, apiEndpoint, currentPage, showCategoryFilter, showNeighborhoodFilter]);
+
+  const fetchAvailableCategories = async () => {
+    try {
+      const response = await fetch(buildApiUrl('/api/properties'));
+      if (response.ok) {
+        const data = await response.json();
+        let propertiesData = [];
+        if (Array.isArray(data)) {
+          propertiesData = data;
+        } else if (data.properties && Array.isArray(data.properties)) {
+          propertiesData = data.properties;
+        } else if (data.data && Array.isArray(data.data)) {
+          propertiesData = data.data;
+        }
+
+        // Extract unique categories from properties
+        const categories = [...new Set(
+          propertiesData
+            .map(property => property.categoria || property.category)
+            .filter(Boolean)
+        )];
+        
+        setAvailableCategories(categories);
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
+  const fetchAvailableNeighborhoods = async () => {
+    try {
+      const response = await fetch(buildApiUrl('/api/properties-by-category?category=NEIGHBORHOODS'));
+      if (response.ok) {
+        const data = await response.json();
+        let propertiesData = [];
+        if (Array.isArray(data)) {
+          propertiesData = data;
+        } else if (data.properties && Array.isArray(data.properties)) {
+          propertiesData = data.properties;
+        } else if (data.data && Array.isArray(data.data)) {
+          propertiesData = data.data;
+        }
+
+        // Extract unique neighborhoods from properties
+        const neighborhoods = [...new Set(
+          propertiesData
+            .map(property => property.bairro)
+            .filter(Boolean)
+        )];
+        
+        console.log('Available neighborhoods:', neighborhoods); // Debug log
+        setAvailableNeighborhoods(neighborhoods);
+      }
+    } catch (error) {
+      console.error('Error fetching neighborhoods:', error);
+    }
+  };
 
   const fetchProperties = async () => {
     try {
@@ -91,6 +159,16 @@ const PropertyListing = ({
         }
       }
 
+      // Add category filter
+      if (filters.category) {
+        url += `&categoryName=${encodeURIComponent(filters.category)}`;
+      }
+
+      // Add neighborhood filter
+      if (filters.bairro) {
+        url += `&bairro=${encodeURIComponent(filters.bairro)}`;
+      }
+
       const response = await fetch(url);
 
       if (!response.ok) {
@@ -116,17 +194,17 @@ const PropertyListing = ({
         const primeira = p.images?.[0]?.url;
         const imageUrl = primeira
           ? getImageUrl(primeira)
-          : (p.image || urlImagemPadrao || imagemPadrao);
+          : p.image || urlImagemPadrao || imagemPadrao;
         return { ...p, imageUrl };
       });
 
-
       // Calculate dynamic max price based on highest property price + 500,000 margin
       if (propertiesData.length > 0) {
-        const prices = propertiesData.map(property => {
-          const price = typeof property.price === "string"
-            ? parseInt(property.price.replace(/[$,]/g, ""))
-            : property.price;
+        const prices = propertiesData.map((property) => {
+          const price =
+            typeof property.price === "string"
+              ? parseInt(property.price.replace(/[$,]/g, ""))
+              : property.price;
           return isNaN(price) ? 0 : price;
         });
         const highestPrice = Math.max(...prices);
@@ -136,9 +214,12 @@ const PropertyListing = ({
         if (dynamicMaxPrice !== maxPrice) {
           setMaxPrice(dynamicMaxPrice);
           // Update filters to use new max price if current max is at the old limit
-          setFilters(prev => ({
+          setFilters((prev) => ({
             ...prev,
-            priceRange: [prev.priceRange[0], Math.min(prev.priceRange[1], dynamicMaxPrice)]
+            priceRange: [
+              prev.priceRange[0],
+              Math.min(prev.priceRange[1], dynamicMaxPrice),
+            ],
           }));
         }
       }
@@ -146,10 +227,10 @@ const PropertyListing = ({
       setProperties(propertiesData);
       setTotalPages(
         data.pagination?.totalPages ||
-        Math.ceil(
-          (data.pagination?.totalItems || propertiesData.length || 0) /
-          itemsPerPage,
-        ),
+          Math.ceil(
+            (data.pagination?.totalItems || propertiesData.length || 0) /
+              itemsPerPage,
+          ),
       );
     } catch (error) {
       console.error("Error fetching properties:", error);
@@ -233,7 +314,8 @@ const PropertyListing = ({
       } else {
         // Include properties with exact match or decimal values (e.g., filter 3 includes 3 and 3.5)
         const selectedBathrooms = parseInt(filters.bathrooms);
-        if (bathrooms < selectedBathrooms || bathrooms >= selectedBathrooms + 1) return false;
+        if (bathrooms < selectedBathrooms || bathrooms >= selectedBathrooms + 1)
+          return false;
       }
     }
 
@@ -244,12 +326,24 @@ const PropertyListing = ({
   const sortedProperties = [...filteredProperties].sort((a, b) => {
     switch (filters.sortBy) {
       case "price-desc":
-        const priceA = typeof a.price === "string" ? parseInt(a.price.replace(/[$,]/g, "")) : a.price;
-        const priceB = typeof b.price === "string" ? parseInt(b.price.replace(/[$,]/g, "")) : b.price;
+        const priceA =
+          typeof a.price === "string"
+            ? parseInt(a.price.replace(/[$,]/g, ""))
+            : a.price;
+        const priceB =
+          typeof b.price === "string"
+            ? parseInt(b.price.replace(/[$,]/g, ""))
+            : b.price;
         return priceB - priceA;
       case "price-asc":
-        const priceAsc = typeof a.price === "string" ? parseInt(a.price.replace(/[$,]/g, "")) : a.price;
-        const priceBsc = typeof b.price === "string" ? parseInt(b.price.replace(/[$,]/g, "")) : b.price;
+        const priceAsc =
+          typeof a.price === "string"
+            ? parseInt(a.price.replace(/[$,]/g, ""))
+            : a.price;
+        const priceBsc =
+          typeof b.price === "string"
+            ? parseInt(b.price.replace(/[$,]/g, ""))
+            : b.price;
         return priceAsc - priceBsc;
       case "sqft-desc":
         return (b.sqft || 0) - (a.sqft || 0);
@@ -333,9 +427,8 @@ const PropertyListing = ({
     return (
       <div className={styles.pagination}>
         <div className={styles.paginationInfo}>
-          Showing {startIndex + 1}-
-          {Math.min(endIndex, sortedProperties.length)} of{" "}
-          {sortedProperties.length} properties
+          Showing {startIndex + 1}-{Math.min(endIndex, sortedProperties.length)}{" "}
+          of {sortedProperties.length} properties
         </div>
         <div className={styles.paginationButtons}>{pages}</div>
       </div>
@@ -455,26 +548,41 @@ const PropertyListing = ({
               </div>
             )}
 
-            <div className={styles.filterGroup}>
-              <select
-                name="category"
-                value={filters.category || filters.categoryName || ""}
-                onChange={handleFilterChange}
-                className={styles.filterSelect}
-              >
-                <option value="">All Categories</option>
-                <option value="New Developments">New Developments</option>
-                <option value="Luxury Condos">Luxury Condos</option>
-                <option value="Single Family Homes">Single Family Homes</option>
-                <option value="Waterfront Properties">
-                  Waterfront Properties
-                </option>
-                <option value="Golf Course Properties">
-                  Golf Course Properties
-                </option>
-                <option value="Private & Exclusive">Private & Exclusive</option>
-              </select>
-            </div>
+            {showCategoryFilter && (
+              <div className={styles.filterGroup}>
+                <select
+                  name="category"
+                  value={filters.category || ""}
+                  onChange={handleCategoryChange}
+                  className={styles.filterSelect}
+                >
+                  <option value="">All Categories</option>
+                  {availableCategories.map((category, index) => (
+                    <option key={index} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {showNeighborhoodFilter && (
+              <div className={styles.filterGroup}>
+                <select
+                  name="bairro"
+                  value={filters.bairro || ""}
+                  onChange={handleFilterChange}
+                  className={styles.filterSelect}
+                >
+                  <option value="">All Neighborhoods</option>
+                  {availableNeighborhoods.map((neighborhood, index) => (
+                    <option key={index} value={neighborhood}>
+                      {neighborhood.charAt(0) + neighborhood.slice(1).toLowerCase().replace('_', ' ')}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <button className={styles.saveSearchBtn}>SAVE SEARCH</button>
           </div>
@@ -545,10 +653,16 @@ const PropertyListing = ({
                       >
                         <div className={styles.propertyImageContainer}>
                           <img
-                            src={property.imageUrl || urlImagemPadrao || imagemPadrao}
+                            src={
+                              property.imageUrl ||
+                              urlImagemPadrao ||
+                              imagemPadrao
+                            }
                             alt={`Property at ${property.address}`}
                             className={styles.propertyImage}
-                            onError={(e) => { e.target.src = urlImagemPadrao || imagemPadrao; }}
+                            onError={(e) => {
+                              e.target.src = urlImagemPadrao || imagemPadrao;
+                            }}
                           />
                         </div>
                         <div className={styles.propertyContent}>
@@ -687,17 +801,25 @@ const PropertyListing = ({
                         currentProperties.map((property, index) => (
                           <div
                             key={property.id || index}
-                            className={`${styles.mapPropertyCard} ${selectedPropertyId === property.id
-                              ? styles.selectedProperty
-                              : ""
-                              }`}
+                            className={`${styles.mapPropertyCard} ${
+                              selectedPropertyId === property.id
+                                ? styles.selectedProperty
+                                : ""
+                            }`}
                             onClick={() => handlePropertySelect(property.id)}
                           >
                             <div className={styles.mapPropertyImage}>
                               <img
-                                src={property.imageUrl || urlImagemPadrao || imagemPadrao}
+                                src={
+                                  property.imageUrl ||
+                                  urlImagemPadrao ||
+                                  imagemPadrao
+                                }
                                 alt={property.address}
-                                onError={(e) => { e.target.src = urlImagemPadrao || imagemPadrao; }}
+                                onError={(e) => {
+                                  e.target.src =
+                                    urlImagemPadrao || imagemPadrao;
+                                }}
                               />
                             </div>
                             <div className={styles.mapPropertyContent}>
@@ -754,28 +876,26 @@ const PropertyListing = ({
                     />
                     {sortedProperties.filter((p) => p.latitude && p.longitude)
                       .length === 0 && (
-                        <div className={styles.noMapData}>
-                          <div className={styles.noMapMessage}>
-                            <div className={styles.errorIcon}>📍</div>
-                            <h3>No Map Data Available</h3>
-                            <p>
-                              Properties need latitude and longitude coordinates
-                              to display on the map.
-                            </p>
-                            <p>
-                              Available properties: {sortedProperties.length}
-                            </p>
-                            <p>
-                              With coordinates:{" "}
-                              {
-                                sortedProperties.filter(
-                                  (p) => p.latitude && p.longitude,
-                                ).length
-                              }
-                            </p>
-                          </div>
+                      <div className={styles.noMapData}>
+                        <div className={styles.noMapMessage}>
+                          <div className={styles.errorIcon}>📍</div>
+                          <h3>No Map Data Available</h3>
+                          <p>
+                            Properties need latitude and longitude coordinates
+                            to display on the map.
+                          </p>
+                          <p>Available properties: {sortedProperties.length}</p>
+                          <p>
+                            With coordinates:{" "}
+                            {
+                              sortedProperties.filter(
+                                (p) => p.latitude && p.longitude,
+                              ).length
+                            }
+                          </p>
                         </div>
-                      )}
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

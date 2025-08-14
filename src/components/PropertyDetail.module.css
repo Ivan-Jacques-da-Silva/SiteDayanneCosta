@@ -493,7 +493,21 @@
 }
 
 .mapWrapper {
-  margin-top: 20px;
+  height: 400px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f8f9fa;
+}
+
+.mapWrapper .mapContainer {
+  height: 100%;
+  width: 100%;
+}
+
+.mapWrapper .map {
+  height: 100% !important;
+  width: 100% !important;
+  border-radius: 8px;
 }
 
 .mapContent {

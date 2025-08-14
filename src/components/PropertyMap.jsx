@@ -15,11 +15,43 @@ L.Icon.Default.mergeOptions({
 });
 
 // Create custom icons - memoized to prevent recreation
-const createCustomIcon = (isSelected = false, propertyImage = null) => {
+const createCustomIcon = (isSelected = false, propertyImage = null, useSimpleMarker = false) => {
   const size = isSelected ? 32 : 26;
   const borderColor = isSelected ? '#dc2626' : '#ef4444'; // Vermelho forte quando selecionado, vermelho normal quando não
   const borderWidth = isSelected ? 3 : 2;
-  
+
+  // Simple red marker with white dot
+  if (useSimpleMarker) {
+    return L.divIcon({
+      className: 'simple-marker',
+      html: `
+        <div style="
+          width: ${size}px;
+          height: ${size}px;
+          background-color: #dc2626;
+          border: 2px solid white;
+          border-radius: 50% 50% 50% 0;
+          transform: rotate(-45deg);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+          position: relative;
+        ">
+          <div style="
+            width: 8px;
+            height: 8px;
+            background-color: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(45deg);
+          "></div>
+        </div>
+      `,
+      iconSize: [size, size],
+      iconAnchor: [size / 2, size],
+    });
+  }
+
   return L.divIcon({
     className: 'custom-marker',
     html: `
@@ -56,17 +88,17 @@ const createCustomIcon = (isSelected = false, propertyImage = null) => {
 // Component to handle map center changes
 const MapController = ({ center, zoom }) => {
   const map = useMap();
-  
+
   useEffect(() => {
     if (center && center.length === 2 && !isNaN(center[0]) && !isNaN(center[1])) {
       map.setView(center, zoom);
     }
   }, [center, zoom, map]);
-  
+
   return null;
 };
 
-const PropertyMap = ({ properties = [], selectedPropertyId, onPropertySelect }) => {
+const PropertyMap = ({ properties = [], selectedPropertyId, onPropertySelect, useSimpleMarker = false }) => {
   const [mapCenter, setMapCenter] = useState(MAPS_CONFIG.DEFAULT_CENTER);
   const [mapZoom, setMapZoom] = useState(MAPS_CONFIG.DEFAULT_ZOOM);
 
@@ -145,18 +177,18 @@ const PropertyMap = ({ properties = [], selectedPropertyId, onPropertySelect }) 
           attribution={MAPS_CONFIG.TILE_LAYER_ATTRIBUTION}
           maxZoom={MAPS_CONFIG.MAX_ZOOM}
         />
-        
+
         <MapController center={mapCenter} zoom={mapZoom} />
-        
+
         {validProperties.map((property) => {
           const isSelected = property.id === selectedPropertyId;
           const position = [parseFloat(property.latitude), parseFloat(property.longitude)];
-          
+
           return (
             <Marker
               key={`marker-${property.id}`}
               position={position}
-              icon={createCustomIcon(isSelected, property.image)}
+              icon={createCustomIcon(isSelected, property.imageUrl, useSimpleMarker)}
               eventHandlers={{
                 click: () => handleMarkerClick(property)
               }}
@@ -165,7 +197,7 @@ const PropertyMap = ({ properties = [], selectedPropertyId, onPropertySelect }) 
               <Popup>
                 <div className={styles.popupContent}>
                   <img
-                    src={property.image || '/src/assets/img/testesImagens.jpeg'}
+                    src={property.imageUrl || '/src/assets/img/testesImagens.jpeg'}
                     alt={property.address || 'Property'}
                     className={styles.popupImage}
                     onError={(e) => {

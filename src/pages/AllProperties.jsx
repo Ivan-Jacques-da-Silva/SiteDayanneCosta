@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -16,7 +15,7 @@ const AllProperties = () => {
     heroImage: "/src/assets/img/testesImagens.jpeg",
     sections: [
       {
-        title: "Complete Property Portfolio", 
+        title: "Complete Property Portfolio",
         subtitle: "Find Your Perfect Match",
         content: "Discover our comprehensive collection of luxury condos, single-family homes, new developments, and neighborhood properties across Miami."
       },
@@ -40,13 +39,15 @@ const AllProperties = () => {
   return (
     <div>
       <Header />
-      <PropertyListing 
-        apiEndpoint="/api/properties"
+      <PropertyListing
+        apiEndpoint="/api/properties-by-category"
         title={pageData.title}
         breadcrumbPath="All Properties"
-        filters={{}}
+        filters={{ category: 'NEIGHBORHOODS' }}
         placeholderImage="/src/assets/img/testesImagens.jpeg"
         pageData={pageData}
+        showNeighborhoodFilter={true}
+        showCategoryFilter={false}
       />
       <Footer />
     </div>

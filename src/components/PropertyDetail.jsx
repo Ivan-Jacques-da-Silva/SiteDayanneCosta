@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./PropertyDetail.module.css";
 import { getImageUrl } from "../config/api";
+import PropertyMap from "./PropertyMap";
 
 const PropertyDetail = ({ propertyId, propertyData = null }) => {
   const navigate = useNavigate();
@@ -587,22 +588,26 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                   </span>
                 </div>
                 <div className={styles.mapWrapper}>
-                  <div className={styles.mapPlaceholder}>
-                    <div className={styles.mapContent}>
-                      <div className={styles.errorIcon}>🗺️</div>
-                      <h3>Map View</h3>
-                      <p>
-                        Interactive map with property location and markers will
-                        be displayed here.
-                      </p>
-                      {property.coordinates && (
+                  {property.latitude && property.longitude ? (
+                    <PropertyMap
+                      properties={[{
+                        ...property,
+                        imageUrl: images[0] || "/placeholder-image.jpg"
+                      }]}
+                      selectedPropertyId={property.id}
+                      useSimpleMarker={true}
+                    />
+                  ) : (
+                    <div className={styles.mapPlaceholder}>
+                      <div className={styles.mapContent}>
+                        <div className={styles.errorIcon}>🗺️</div>
+                        <h3>Map View</h3>
                         <p>
-                          Location: {property.coordinates.lat},{" "}
-                          {property.coordinates.lng}
+                          Location coordinates not available for this property.
                         </p>
-                      )}
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
 
