@@ -1,19 +1,20 @@
 const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 // Email configuration
 const EMAIL_CONFIG = {
-  service: 'gmail', // or another provider
-  host: 'smtp.gmail.com', // or Compass SMTP if available
-  port: 587,
+  service: 'gmail',
+  host: process.env.SMTP_HOST || 'smtp.gmail.com',
+  port: parseInt(process.env.SMTP_PORT) || 587,
   secure: false, // true for 465, false for other ports
   auth: {
-    user: 'site@compass.com', // email to be used
-    pass: 'y0?AYF8tK.@31pj?w@A(' // provided password
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS
   }
 };
 
 // Create transporter
-const transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({ 
   ...EMAIL_CONFIG,
   tls: {
     rejectUnauthorized: false
@@ -24,24 +25,25 @@ const transporter = nodemailer.createTransport({
 const emailTemplates = {
   contactForm: (data) => ({
     from: EMAIL_CONFIG.auth.user,
-    to: 'dayannecosta@compass.com',
+    // to: 'dayannecosta@compass.com',
+    to: 'ivanjacques1997@gmail.com',
     subject: `New contact message - ${data.firstName} ${data.lastName}`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #333;">New Contact Message</h2>
-        
+
         <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h3 style="color: #555; margin-top: 0;">Contact Information</h3>
           <p><strong>Name:</strong> ${data.firstName} ${data.lastName}</p>
           <p><strong>Email:</strong> ${data.email}</p>
           <p><strong>Phone:</strong> ${data.phone}</p>
         </div>
-        
+
         <div style="background: #fff; padding: 20px; border-left: 4px solid #007bff; margin: 20px 0;">
           <h3 style="color: #555; margin-top: 0;">Message</h3>
           <p style="line-height: 1.6;">${data.message}</p>
         </div>
-        
+
         <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin: 20px 0;">
           <p style="margin: 0; color: #666; font-size: 14px;">
             <strong>Source:</strong> Contact Form — Dayanne Costa Website<br>
@@ -54,19 +56,20 @@ const emailTemplates = {
 
   propertyInquiry: (data, property) => ({
     from: EMAIL_CONFIG.auth.user,
-    to: 'dayannecosta@compass.com',
+    // to: 'dayannecosta@compass.com',
+    to: 'ivanjacques1997@gmail.com',
     subject: `Property Inquiry — ${property.address}`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #333;">Property Inquiry</h2>
-        
+
         <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h3 style="color: #555; margin-top: 0;">Client Information</h3>
           <p><strong>Name:</strong> ${data.firstName} ${data.lastName}</p>
           <p><strong>Email:</strong> ${data.email}</p>
           <p><strong>Phone:</strong> ${data.phone}</p>
         </div>
-        
+
         <div style="background: #e8f5e8; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h3 style="color: #555; margin-top: 0;">Interested Property</h3>
           <p><strong>Address:</strong> ${property.address}</p>
@@ -77,12 +80,12 @@ const emailTemplates = {
           <p><strong>Area:</strong> ${property.sqft ? new Intl.NumberFormat('en-US').format(property.sqft) : 'N/A'} sq ft</p>
           ${property.mlsId ? `<p><strong>MLS #:</strong> ${property.mlsId}</p>` : ''}
         </div>
-        
+
         <div style="background: #fff; padding: 20px; border-left: 4px solid #28a745; margin: 20px 0;">
           <h3 style="color: #555; margin-top: 0;">Client Comments</h3>
           <p style="line-height: 1.6;">${data.message}</p>
         </div>
-        
+
         <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin: 20px 0;">
           <p style="margin: 0; color: #666; font-size: 14px;">
             <strong>Source:</strong> Property Form — Dayanne Costa Website<br>
