@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { buildApiUrl } from '../config/api';
 import styles from './Contact.module.css';
 
 const Contact = () => {
@@ -52,7 +53,7 @@ const Contact = () => {
 
       let data;
       try {
-        const resp = await fetch('/api/emails/contact', {
+        const resp = await fetch(buildApiUrl('/api/emails/contact'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

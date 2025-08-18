@@ -1,4 +1,3 @@
-
 const express = require('express');
 const { sendEmail, testConnection } = require('../config/email');
 const { PrismaClient } = require('@prisma/client');
@@ -39,7 +38,7 @@ router.post('/contact', async (req, res) => {
     if (!firstName || !lastName || !email || !phone) {
       return res.status(400).json({ 
         success: false, 
-        message: 'Todos os campos obrigatórios devem ser preenchidos' 
+        message: 'All required fields must be filled in' 
       });
     }
 
@@ -54,7 +53,7 @@ router.post('/contact', async (req, res) => {
             message: message || '',
             source: 'CONTACT_PAGE',
             status: 'NEW',
-            userId: 'system' // ou usar um ID padrão
+            userId: 'system' // or use a default ID
           }
         });
       } catch (dbError) {
@@ -71,18 +70,18 @@ router.post('/contact', async (req, res) => {
       lastName,
       email,
       phone,
-      message: message || 'Nenhuma mensagem adicional'
+      message: message || 'No additional message'
     });
 
     if (emailResult.success) {
       res.json({ 
         success: true, 
-        message: 'Mensagem enviada com sucesso!' 
+        message: 'Message sent successfully!' 
       });
     } else {
       res.status(500).json({ 
         success: false, 
-        message: 'Erro ao enviar email', 
+        message: 'Failed to send email', 
         error: emailResult.error 
       });
     }
@@ -90,7 +89,7 @@ router.post('/contact', async (req, res) => {
     console.error('Error in contact route:', error);
     res.status(500).json({ 
       success: false, 
-      message: 'Erro interno do servidor',
+      message: 'Internal server error',
       error: error.message 
     });
   }
@@ -105,7 +104,7 @@ router.post('/property-inquiry', async (req, res) => {
     if (!firstName || !lastName || !email || !phone || !propertyId) {
       return res.status(400).json({ 
         success: false, 
-        message: 'Todos os campos obrigatórios devem ser preenchidos' 
+        message: 'All required fields must be filled in' 
       });
     }
 
@@ -132,8 +131,8 @@ router.post('/property-inquiry', async (req, res) => {
       property = {
         id: propertyId,
         address: 'Property Address Not Available',
-        city: 'N/A',
-        state: 'N/A',
+        city: 'Miami',
+        state: 'FL',
         zipCode: 'N/A',
         price: null,
         beds: 'N/A',
@@ -156,7 +155,7 @@ router.post('/property-inquiry', async (req, res) => {
             source: 'PROPERTY_INQUIRY',
             status: 'NEW',
             propertyId: propertyId,
-            userId: 'system' // ou usar um ID padrão
+            userId: 'system' // or use a default ID
           }
         });
       } catch (dbError) {
@@ -173,18 +172,18 @@ router.post('/property-inquiry', async (req, res) => {
       lastName,
       email,
       phone,
-      message: message || 'Interesse na propriedade'
+      message: message || 'Interest in property'
     }, property);
 
     if (emailResult.success) {
       res.json({ 
         success: true, 
-        message: 'Interesse enviado com sucesso!' 
+        message: 'Inquiry sent successfully!' 
       });
     } else {
       res.status(500).json({ 
         success: false, 
-        message: 'Erro ao enviar email', 
+        message: 'Failed to send email', 
         error: emailResult.error 
       });
     }
@@ -192,7 +191,7 @@ router.post('/property-inquiry', async (req, res) => {
     console.error('Error in property inquiry route:', error);
     res.status(500).json({ 
       success: false, 
-      message: 'Erro interno do servidor',
+      message: 'Internal server error',
       error: error.message 
     });
   }

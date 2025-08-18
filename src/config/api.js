@@ -12,8 +12,8 @@ const detectarBaseUrl = () => {
     return `${protocol}//${projectName}-5000.${replitDomain}`;
   }
 
-  // Para produção dayannecosta.com - usar subdomínio api
-  if (hostname === 'site.dayannecosta.com' || hostname === 'www.dayannecosta.com' || hostname === 'dayannecosta.com' || hostname.includes('dayannecosta.com')) {
+  // Para qualquer domínio dayannecosta.com - sempre usar subdomínio api
+  if (hostname.includes('dayannecosta.com')) {
     return 'https://api.dayannecosta.com';
   }
 
