@@ -3,18 +3,18 @@ require('dotenv').config();
 
 // Email configuration
 const EMAIL_CONFIG = {
-  service: 'gmail',
-  host: process.env.SMTP_HOST || 'smtp.gmail.com',
+  host: process.env.SMTP_HOST || 'smtp.zoho.com',
   port: parseInt(process.env.SMTP_PORT) || 587,
-  secure: false, // true for 465, false for other ports
+  secure: false, // Zoho usa STARTTLS no 587
   auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS
+    user: process.env.SMTP_USER || 'sitedayanne@zohomail.com',
+    pass: process.env.SMTP_PASS || 'y0?AYF8tK.@31pj?w@A('
   }
 };
 
+
 // Create transporter
-const transporter = nodemailer.createTransport({ 
+const transporter = nodemailer.createTransport({
   ...EMAIL_CONFIG,
   tls: {
     rejectUnauthorized: false
