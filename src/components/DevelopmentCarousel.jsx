@@ -76,7 +76,7 @@ const DevelopmentCarousel = ({ developments = [], onPropertyClick }) => {
   };
 
   return (
-    <div style={{ position: 'relative', overflow: 'hidden' }}>
+    <div style={{ position: 'relative', overflow: 'hidden', padding: '0 60px' }}>
       {/* Navigation Arrows */}
       {totalSlides > 1 && (
         <>
@@ -84,21 +84,31 @@ const DevelopmentCarousel = ({ developments = [], onPropertyClick }) => {
             onClick={goToPrevious}
             style={{
               position: 'absolute',
-              left: '-20px',
+              left: '10px',
               top: '50%',
               transform: 'translateY(-50%)',
-              background: 'rgba(255, 255, 255, 0.8)',
+              background: 'rgba(255, 255, 255, 0.9)',
               border: 'none',
               borderRadius: '50%',
-              width: '40px',
-              height: '40px',
+              width: '45px',
+              height: '45px',
               cursor: 'pointer',
               zIndex: 10,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '18px',
-              color: '#000'
+              fontSize: '20px',
+              color: '#000',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.background = 'rgba(255, 255, 255, 1)';
+              e.target.style.transform = 'translateY(-50%) scale(1.1)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.background = 'rgba(255, 255, 255, 0.9)';
+              e.target.style.transform = 'translateY(-50%) scale(1)';
             }}
           >
             ‹
@@ -107,21 +117,31 @@ const DevelopmentCarousel = ({ developments = [], onPropertyClick }) => {
             onClick={goToNext}
             style={{
               position: 'absolute',
-              right: '-20px',
+              right: '10px',
               top: '50%',
               transform: 'translateY(-50%)',
-              background: 'rgba(255, 255, 255, 0.8)',
+              background: 'rgba(255, 255, 255, 0.9)',
               border: 'none',
               borderRadius: '50%',
-              width: '40px',
-              height: '40px',
+              width: '45px',
+              height: '45px',
               cursor: 'pointer',
               zIndex: 10,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '18px',
-              color: '#000'
+              fontSize: '20px',
+              color: '#000',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.background = 'rgba(255, 255, 255, 1)';
+              e.target.style.transform = 'translateY(-50%) scale(1.1)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.background = 'rgba(255, 255, 255, 0.9)';
+              e.target.style.transform = 'translateY(-50%) scale(1)';
             }}
           >
             ›
@@ -136,7 +156,8 @@ const DevelopmentCarousel = ({ developments = [], onPropertyClick }) => {
                             window.innerWidth <= 768 ? 'repeat(2, 1fr)' : 
                             'repeat(3, 1fr)', 
         gap: window.innerWidth <= 480 ? '20px' : '30px', 
-        marginBottom: '40px' 
+        marginBottom: '40px',
+        margin: '0 auto'
       }}>
         {visibleDevelopments.map((item, index) => (
           <div 
