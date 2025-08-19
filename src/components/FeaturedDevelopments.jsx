@@ -25,7 +25,7 @@ const FeaturedDevelopments = () => {
         // Transformar os dados para o formato esperado pelo carrossel
         const formattedDevelopments = data.properties.map(property => {
           // Buscar imagem primária ou primeira imagem disponível
-          let imageUrl = '/src/assets/img/testesImagens.jpeg'; // imagem padrão
+          let imageUrl = '/default.png'; // imagem padrão
           
           if (property.images && property.images.length > 0) {
             // Primeiro tenta encontrar a imagem primária
