@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { getImageUrl } from '../config/api';
 import styles from './HeroSection.module.css';
 import BackgroundCarousel from './BackgroundCarousel.jsx';
 import mulherFixa from '../assets/img/mulher.png';
+
 import slide1 from '../assets/img/slide1.jpeg';
 import slide2 from '../assets/img/slide2.jpeg';
 import slide3 from '../assets/img/slide3.jpeg';
@@ -85,8 +87,8 @@ const HeroSection = () => {
                         placeholder="Enter an address, city, zip code or MLS number"
                         className="py-3"
                       />
-                      <Button 
-                        variant="outline-dark" 
+                      <Button
+                        variant="outline-dark"
                         className="px-4 bg-white"
                         style={{ border: '1px solid #ccc' }}
                       >
@@ -111,7 +113,7 @@ const HeroSection = () => {
         style={{
           maxHeight: '90%',
           zIndex: 1,
-          width: 'auto' 
+          width: 'auto'
         }}
       />
     </section>

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import styles from './BackgroundCarousel.module.css';
 
@@ -9,9 +8,9 @@ const BackgroundCarousel = ({ images = [], interval = 5000, children }) => {
     if (!images || images.length === 0) return;
 
     const timer = setInterval(() => {
-      setCurrentIndex((prevIndex) => 
+      setCurrentIndex((prevIndex) =>
         prevIndex === images.length - 1 ? 0 : prevIndex + 1
-      ); 
+      );
     }, interval);
 
     return () => clearInterval(timer);

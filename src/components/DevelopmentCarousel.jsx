@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 
 const DevelopmentCarousel = ({ developments = [], onPropertyClick }) => {
@@ -168,7 +167,7 @@ const DevelopmentCarousel = ({ developments = [], onPropertyClick }) => {
                   transition: 'transform 0.3s ease'
                 }}
                 onError={(e) => {
-                  e.target.src = '/src/assets/img/testesImagens.jpeg';
+                  e.target.src = '/default.png';
                 }}
               />
               <div style={{

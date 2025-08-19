@@ -97,14 +97,18 @@ const AdminProperties = () => {
   };
 
   const getImageUrl = (url) => {
-    if (!url) return null;
+    if (!url) return '/default.png';
     // If it's already a full URL or starts with http, return as is
     if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('//')) return url;
-    // If it starts with /uploads, prepend the backend URL
-    if (url.startsWith('uploads')) {
+    // If it starts with uploads/ (without leading slash)
+    if (url.startsWith('uploads/')) {
+      return `http://localhost:5000/${url}`;
+    }
+    // If it starts with /uploads
+    if (url.startsWith('/uploads')) {
       return `http://localhost:5000${url}`;
     }
-    // Otherwise, assume it's a relative path and prepend the backend URL with '/properties/'
+    // Otherwise, assume it's a relative path and prepend the backend URL
     return `http://localhost:5000/uploads/properties/${url}`;
   };
 
@@ -328,24 +332,14 @@ const AdminProperties = () => {
                 {properties.map(property => (
                   <tr key={property.id}>
                     <td>
-                      {property.images && property.images.length > 0 ? (
-                        <img 
-                          src={getImageUrl(property.images.find(img => img.isPrimary)?.url || property.images[0]?.url)} 
-                          alt={property.title}
-                          className={styles.propertyImage}
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                            // Show a fallback or placeholder if image fails to load
-                            if (e.target.nextSibling) {
-                              e.target.nextSibling.style.display = 'flex';
-                            }
-                          }}
-                        />
-                      ) : (
-                        <div className={styles.noImage}>No Image</div>
-                      )}
-                      {/* Fallback div for broken image links */}
-                      <div className={styles.noImage} style={{ display: property.images && property.images.length > 0 ? 'none' : 'flex' }}>No Image</div>
+                      <img 
+                        src={getImageUrl(property.images?.find(img => img.isPrimary)?.url || property.images?.[0]?.url)} 
+                        alt={property.title}
+                        className={styles.propertyImage}
+                        onError={(e) => {
+                          e.target.src = '/default.png';
+                        }}
+                      />
                     </td>
                     <td>{property.title}</td>
                     <td>{property.address}, {property.city}</td>
@@ -592,19 +586,6 @@ const PropertyEditModal = ({ property, onClose, onSave, showNotification }) => {
     }
   };
 
-  const getImageUrl = (url) => {
-    if (!url) return null;
-    // If it's already a full URL or starts with http, return as is
-    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('//')) return url;
-    // If it starts with /uploads, prepend the backend URL
-    if (url.startsWith('uploads')) {
-      return `http://localhost:5000${url}`;
-    }
-    // Otherwise, assume it's a relative path and prepend the backend URL with '/properties/'
-    return `http://localhost:5000/uploads/properties/${url}`;
-  };
-
-
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modal}>
@@ -781,9 +762,12 @@ const PropertyEditModal = ({ property, onClose, onSave, showNotification }) => {
                 <div className={styles.currentImage}>
                   <p><strong>Current Primary Image:</strong></p>
                   <img 
-                    src={getImageUrl(property.images.find(img => img.isPrimary)?.url) || '/no-image.png'} 
+                    src={getImageUrl(property.images.find(img => img.isPrimary)?.url)} 
                     alt="Primary" 
                     className={styles.previewImage}
+                    onError={(e) => {
+                      e.target.src = '/default.png';
+                    }}
                   />
                 </div>
               )}
@@ -807,6 +791,9 @@ const PropertyEditModal = ({ property, onClose, onSave, showNotification }) => {
                         src={getImageUrl(img.url)} 
                         alt={`Gallery ${index + 1}`} 
                         className={styles.previewImageSmall}
+                        onError={(e) => {
+                          e.target.src = '/default.png';
+                        }}
                       />
                     ))}
                   </div>

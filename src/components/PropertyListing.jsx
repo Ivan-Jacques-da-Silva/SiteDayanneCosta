@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { buildApiUrl, getImageUrl } from "../config/api";
 import PropertyMap from "./PropertyMap";
 import styles from "./PropertyListing.module.css";
-import placeholderImage from "../assets/img/testesImagens.jpeg";
+import placeholderImage from "../assets/img/default.png";
 
 const PropertyListing = ({
   apiEndpoint = "/api/properties",

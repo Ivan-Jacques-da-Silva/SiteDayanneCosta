@@ -2,9 +2,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import styles from './Listings.module.css';
-import img1 from '../assets/img/testesImagens.jpeg';
-import img2 from '../assets/img/testesImagens.jpeg';
-import img3 from '../assets/img/testesImagens.jpeg';
 
 const Listings = () => {
   const navigate = useNavigate();
@@ -17,7 +14,7 @@ const Listings = () => {
       status: "NEW - 07 HOURS AGO",
       address: "1425 Brickell Ave #PH4BCD",
       city: "Miami, FL 33131",
-      image: img1,
+      image: '/default.png',
       beds: 2,
       baths: 2,
       sqft: 5798
@@ -29,7 +26,7 @@ const Listings = () => {
       status: "NEW - 09 HOURS AGO",
       address: "1000 Brickell Plz #3501",
       city: "Miami, FL 33131",
-      image: img2,
+      image: '/default.png',
       beds: 2,
       baths: 2,
       sqft: 1286
@@ -41,7 +38,7 @@ const Listings = () => {
       status: "NEW - 11 HOURS AGO",
       address: "2127 Brickell Ave #2104",
       city: "Miami, FL 33129",
-      image: img3,
+      image: '/default.png',
       beds: 2,
       baths: 2,
       sqft: 2070
