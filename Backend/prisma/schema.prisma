@@ -80,6 +80,9 @@ model Property {
   // Categorias simplificadas
   categoria Categoria @default(NEW_DEVELOPMENTS)
   bairro    Bairro?
+  
+  // Featured listing flag
+  isFeatured Boolean @default(false)
 
   images            PropertyImage[]
   videos            PropertyVideo[]

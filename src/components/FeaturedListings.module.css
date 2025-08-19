@@ -1,0 +1,109 @@
+
+.featuredSection {
+  background-color: #f8f9fa;
+}
+
+.propertyCard {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 0 !important;
+  overflow: hidden;
+}
+
+.propertyCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+}
+
+.imageContainer {
+  position: relative;
+  overflow: hidden;
+  height: 250px;
+}
+
+.propertyImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.propertyCard:hover .propertyImage {
+  transform: scale(1.05);
+}
+
+.featuredBadge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #dc3545;
+  color: white;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-radius: 3px;
+  z-index: 2;
+}
+
+.propertyTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.propertyPrice {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 15px;
+}
+
+.propertyDetails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.detailItem {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.detailItem i {
+  color: #adb5bd;
+  width: 14px;
+}
+
+.propertyLocation {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.propertyLocation i {
+  color: #adb5bd;
+  width: 14px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .propertyDetails {
+    gap: 10px;
+  }
+  
+  .detailItem {
+    font-size: 0.8rem;
+  }
+  
+  .propertyPrice {
+    font-size: 1.3rem;
+  }
+}

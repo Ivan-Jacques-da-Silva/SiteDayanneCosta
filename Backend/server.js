@@ -53,6 +53,7 @@ const favoriteRoutes = require('./routes/favorites');
 const amenityRoutes = require('./routes/amenities');
 const featureRoutes = require('./routes/features');
 const adminRoutes = require('./routes/admin');
+const featuredListingsRoutes = require('./routes/featured-listings');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -165,6 +166,7 @@ app.use('/api/features', featureRoutes);
 app.use('/api/categories', require('./routes/categories'));
 app.use('/api/admin', adminRoutes);
 app.use('/api/emails', require('./routes/emails'));
+app.use('/api/featured-listings', featuredListingsRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

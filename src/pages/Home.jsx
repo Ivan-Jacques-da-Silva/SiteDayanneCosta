@@ -2,7 +2,7 @@
 import React from 'react';
 import Header from '../components/Header';
 import HeroSection from '../components/HeroSection';
-import Listings from '../components/Listings';
+import FeaturedListings from '../components/FeaturedListings';
 import FeaturedDevelopments from '../components/FeaturedDevelopments';
 import AboutSection from '../components/AboutSection';
 import BenMossGroup from '../components/BenMossGroup';
@@ -18,7 +18,7 @@ function Home() {
       <Header />
       <main>
         <HeroSection />
-        <Listings />
+        <FeaturedListings />
         <FeaturedDevelopments />
         <AboutSection />
         <BenMossGroup />

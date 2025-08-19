@@ -1,4 +1,3 @@
-
 // Dados extraídos do HTML da propriedade 2101 Brickell Ave #1803
 export const propertyExampleData = {
   // Informações básicas
@@ -32,8 +31,9 @@ export const propertyExampleData = {
   parking: 0,
   pool: true, // Mencionado nas amenidades
   waterfront: true, // Vista da Biscayne Bay
-  furnished: false,
-  petFriendly: true, // Dog park mencionado
+  furnished: true,
+  petFriendly: false,
+  isFeatured: false,
 
   // Localização
   latitude: 25.752407,
@@ -196,8 +196,9 @@ export const convertToApiFormat = (data, userId) => {
     parking: data.parking,
     pool: data.pool,
     waterfront: data.waterfront,
-    furnished: data.furnished,
-    petFriendly: data.petFriendly,
+    furnished: data.furnished || false,
+    petFriendly: data.petFriendly || false,
+    isFeatured: data.isFeatured || false,
     latitude: data.latitude,
     longitude: data.longitude,
     neighborhood: data.neighborhood,

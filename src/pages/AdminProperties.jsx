@@ -480,7 +480,8 @@ const PropertyEditModal = ({ property, onClose, onSave, showNotification }) => {
     pool: property?.pool || false,
     waterfront: property?.waterfront || false,
     furnished: property?.furnished || false,
-    petFriendly: property?.petFriendly || false
+    petFriendly: property?.petFriendly || false,
+    isFeatured: property?.isFeatured || false
   });
 
   const [primaryImage, setPrimaryImage] = useState(null);
@@ -840,7 +841,17 @@ const PropertyEditModal = ({ property, onClose, onSave, showNotification }) => {
                 checked={formData.petFriendly}
                 onChange={handleInputChange}
               />
-              Pet-friendly
+              Pet Friendly
+            </label>
+            
+            <label>
+              <input
+                type="checkbox"
+                name="isFeatured"
+                checked={formData.isFeatured}
+                onChange={handleInputChange}
+              />
+              Featured Listing
             </label>
           </div>
 
