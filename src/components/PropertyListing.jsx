@@ -10,7 +10,7 @@ const PropertyListing = ({
   title = "Properties",
   breadcrumbPath = "Properties",
   filters: customFilters = {},
-  placeholderImage = "https://via.placeholder.com/400x300?text=Property",
+  placeholderImage: propPlaceholderImage = "https://via.placeholder.com/400x300?text=Property",
   showCategoryFilter = false,
   showNeighborhoodFilter = false,
 }) => {
@@ -72,7 +72,7 @@ const PropertyListing = ({
             .map(property => property.categoria || property.category)
             .filter(Boolean)
         )];
-        
+
         setAvailableCategories(categories);
       }
     } catch (error) {
@@ -100,7 +100,7 @@ const PropertyListing = ({
             .map(property => property.bairro)
             .filter(Boolean)
         )];
-        
+
         console.log('Available neighborhoods:', neighborhoods); // Debug log
         setAvailableNeighborhoods(neighborhoods);
       }
@@ -194,7 +194,7 @@ const PropertyListing = ({
         const primeira = p.images?.[0]?.url;
         const imageUrl = primeira
           ? getImageUrl(primeira)
-          : p.image || urlImagemPadrao || imagemPadrao;
+          : p.image || propPlaceholderImage || '/default.png';
         return { ...p, imageUrl };
       });
 
@@ -655,13 +655,12 @@ const PropertyListing = ({
                           <img
                             src={
                               property.imageUrl ||
-                              urlImagemPadrao ||
-                              imagemPadrao
+                              '/default.png'
                             }
                             alt={`Property at ${property.address}`}
                             className={styles.propertyImage}
                             onError={(e) => {
-                              e.target.src = urlImagemPadrao || imagemPadrao;
+                              e.target.src = '/default.png';
                             }}
                           />
                         </div>
@@ -812,13 +811,12 @@ const PropertyListing = ({
                               <img
                                 src={
                                   property.imageUrl ||
-                                  urlImagemPadrao ||
-                                  imagemPadrao
+                                  propPlaceholderImage ||
+                                  placeholderImage
                                 }
                                 alt={property.address}
                                 onError={(e) => {
-                                  e.target.src =
-                                    urlImagemPadrao || imagemPadrao;
+                                  e.target.src = '/default.png';
                                 }}
                               />
                             </div>

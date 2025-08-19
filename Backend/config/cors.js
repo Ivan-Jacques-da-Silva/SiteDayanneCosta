@@ -28,7 +28,7 @@ const corsConfig = {
     "https://site.dayannecosta.com",
     "https://dayannecosta.com",
     "https://www.dayannecosta.com",
-    "https://api.dayannecosta.com",
+    "https://api.dayannecosta.com", 
   ],
 
   // Configurações do CORS

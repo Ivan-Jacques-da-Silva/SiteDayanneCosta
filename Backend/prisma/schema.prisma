@@ -201,6 +201,7 @@ model Contact {
   message String?
   type    ContactType   @default(INQUIRY)
   status  ContactStatus @default(NEW)
+  source  String?       // Changed from enum to string to allow flexible source tracking
 
   propertyId String?
   property   Property? @relation(fields: [propertyId], references: [id])

@@ -1,32 +1,34 @@
-
-import React, { useState } from 'react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import { buildApiUrl } from '../config/api';
-import styles from './Contact.module.css';
+import React, { useState } from "react";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import { buildApiUrl } from "../config/api";
+import styles from "./Contact.module.css";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
-    firstName: '', lastName: '', email: '', phone: '', message: '',
-    preferenciaHorario: '' // '', 'AM' ou 'PM'
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    message: "",
+    preferenciaHorario: "", // '', 'AM' ou 'PM'
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState('');
+  const [submitMessage, setSubmitMessage] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setSubmitMessage('');
+    setSubmitMessage("");
 
     try {
       const nome = `${formData.firstName}`.trim();
@@ -36,12 +38,12 @@ const Contact = () => {
       const msg = `${formData.message}`.trim();
 
       if (!nome || !sobrenome || !email || !telefone || !msg) {
-        setSubmitMessage('Please fill in all required fields.');
+        setSubmitMessage("Please fill in all required fields.");
         setIsSubmitting(false);
         return;
       }
       if (!/^\S+@\S+\.\S+$/.test(email)) {
-        setSubmitMessage('Invalid email address.');
+        setSubmitMessage("Invalid email address.");
         setIsSubmitting(false);
         return;
       }
@@ -50,49 +52,49 @@ const Contact = () => {
         ? `${msg}\n\nBest time to contact you: ${formData.preferenciaHorario}`
         : msg;
 
-
       let data;
       try {
-        const resp = await fetch(buildApiUrl('/api/emails/contact'), {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const resp = await fetch(buildApiUrl("/api/emails/contact"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             firstName: nome,
             lastName: sobrenome,
             email,
             phone: telefone,
-            message: mensagemFinal
+            message: mensagemFinal,
           }),
         });
 
         if (!resp.ok) {
-          const texto = await resp.text().catch(() => '');
+          const texto = await resp.text().catch(() => "");
           throw new Error(texto || `HTTP ${resp.status}`);
         }
         data = await resp.json().catch(() => ({}));
       } catch (err) {
-        setSubmitMessage('Failed to send the message. Please try again.');
-        console.error('Erro no envio:', err);
+        setSubmitMessage("Failed to send the message. Please try again.");
+        console.error("Erro no envio:", err);
         return;
       }
 
       if (data?.success) {
-        setSubmitMessage('Mensagem enviada com sucesso! Entraremos em contato em breve.');
+        setSubmitMessage("Message sent successfully! We’ll contact you soon.");
         setFormData({
-          firstName: '',
-          lastName: '',
-          email: '',
-          phone: '',
-          message: '',
-          preferenciaHorario: ''
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          message: "",
+          preferenciaHorario: "",
         });
       } else {
-        setSubmitMessage('Error sending message.' + (data?.message ? ` ${data.message}` : ''));
+        setSubmitMessage(
+          "Error sending message." + (data?.message ? ` ${data.message}` : ""),
+        );
       }
-
     } catch (error) {
-      setSubmitMessage('Failed to send the message. Please try again.');
-      console.error('Error submitting form:', error);
+      setSubmitMessage("Failed to send the message. Please try again.");
+      console.error("Error submitting form:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -127,11 +129,15 @@ const Contact = () => {
                 </div>
 
                 <div className={styles.contactItem}>
-                  <span className={styles.contactValue}>dayannecosta@compass.com</span>
+                  <span className={styles.contactValue}>
+                    dayannecosta@compass.com
+                  </span>
                 </div>
 
                 <div className={styles.contactItem}>
-                  <span className={styles.contactValue}>2550 South Bayshore Drive, Suite 106, Miami, FL 33133</span>
+                  <span className={styles.contactValue}>
+                    2550 South Bayshore Drive, Suite 106, Miami, FL 33133
+                  </span>
                 </div>
               </div>
 
@@ -211,32 +217,44 @@ const Contact = () => {
                   </div>
 
                   <div className={styles.checkboxGroup}>
-                    <label className={styles.checkboxLabel}>Best Time to Reach You</label>
+                    <label className={styles.checkboxLabel}>
+                      Best Time to Reach You
+                    </label>
                     <div className={styles.checkboxOptions}>
                       <label className={styles.checkboxOption}>
                         <input
                           type="radio"
                           name="preferenciaHorario"
                           value="AM"
-                          checked={formData.preferenciaHorario === 'AM'}
+                          checked={formData.preferenciaHorario === "AM"}
                           onChange={handleInputChange}
-                        /> am
+                        />{" "}
+                        am
                       </label>
                       <label className={styles.checkboxOption}>
                         <input
                           type="radio"
                           name="preferenciaHorario"
                           value="PM"
-                          checked={formData.preferenciaHorario === 'PM'}
+                          checked={formData.preferenciaHorario === "PM"}
                           onChange={handleInputChange}
-                        /> pm
+                        />{" "}
+                        pm
                       </label>
                     </div>
                   </div>
 
-
                   {submitMessage && (
-                    <div className={styles.submitMessage}>
+                    <div 
+                      className={styles.submitMessage}
+                      data-type={
+                        submitMessage.includes('successfully') || submitMessage.includes('**Success**') 
+                          ? 'success' 
+                          : submitMessage.includes('**Failed**') || submitMessage.includes('Failed') || submitMessage.includes('Error')
+                          ? 'error'
+                          : ''
+                      }
+                    >
                       {submitMessage}
                     </div>
                   )}
@@ -247,9 +265,8 @@ const Contact = () => {
                     disabled={isSubmitting}
                     aria-busy={isSubmitting}
                   >
-                    {isSubmitting ? 'Submitting...' : 'Submit'}
+                    {isSubmitting ? "Submitting..." : "Submit"}
                   </button>
-
                 </form>
               </div>
             </div>

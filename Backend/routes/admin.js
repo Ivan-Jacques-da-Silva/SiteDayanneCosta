@@ -44,7 +44,7 @@ const upload = multer({
 });
 
 
-// Aplicar middlewares de autenticação e admin a todas as rotas
+// Apply authentication and admin middleware to all routes
 router.use(authenticateToken);
 router.use(requireAdmin);
 

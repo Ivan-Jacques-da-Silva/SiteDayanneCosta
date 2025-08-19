@@ -62,7 +62,7 @@ export const getBaseUrl = () => {
 };
 
 export const getImageUrl = (imagePath) => {
-  if (!imagePath) return '/no-image.png';
+  if (!imagePath) return '/default.png';
   
   // Se a imagem já tem protocolo, retorna como está
   if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {

@@ -6,12 +6,29 @@ const router = express.Router();
 
 let prisma;
 try {
+  // Check if DATABASE_URL exists, if not, construct it from individual variables
+  let databaseUrl = process.env.DATABASE_URL;
+  
+  if (!databaseUrl) {
+    // Construct DATABASE_URL from individual environment variables
+    const host = process.env.DB_HOST || 'localhost';
+    const port = process.env.DB_PORT || '5432';
+    const database = process.env.DB_NAME || 'real_estate_db';
+    const username = process.env.DB_USER || 'postgres';
+    const password = process.env.DB_PASSWORD || 'admin';
+    
+    databaseUrl = `postgresql://${username}:${password}@${host}:${port}/${database}`;
+    process.env.DATABASE_URL = databaseUrl;
+  }
+
   prisma = new PrismaClient({
-    errorFormat: 'minimal',
-    log: ['error'],
+    errorFormat: 'pretty',
+    log: ['error', 'warn'],
   });
+
+  console.log('✅ Prisma Client initialized successfully in emails.js');
 } catch (error) {
-  console.error('Failed to initialize Prisma Client:', error);
+  console.error('❌ Failed to initialize Prisma Client in emails.js:', error.message);
   prisma = null;
 }
 
@@ -42,7 +59,7 @@ router.post('/contact', async (req, res) => {
       });
     }
 
-    // Save to database (optional)
+    // Save to database
     if (prisma) {
       try {
         await prisma.contact.create({
@@ -51,17 +68,27 @@ router.post('/contact', async (req, res) => {
             email,
             phone,
             message: message || '',
+            type: 'INQUIRY',
             source: 'CONTACT_PAGE',
             status: 'NEW',
-            userId: 'system' // or use a default ID
+            userId: null // Explicitly set as null for anonymous contacts
           }
         });
+        console.log('Contact saved to database successfully');
       } catch (dbError) {
         console.error('Error saving contact to database:', dbError);
-        // Continue even if DB save fails
+        return res.status(500).json({ 
+          success: false, 
+          message: 'Failed to save contact to database',
+          error: dbError.message 
+        });
       }
     } else {
-      console.warn('Database not available, skipping contact save');
+      console.error('Database not available');
+      return res.status(500).json({ 
+        success: false, 
+        message: '**Failed** - Database connection not available' 
+      });
     }
 
     // Send email
@@ -81,7 +108,7 @@ router.post('/contact', async (req, res) => {
     } else {
       res.status(500).json({ 
         success: false, 
-        message: 'Failed to send email', 
+        message: '**Failed** to send email', 
         error: emailResult.error 
       });
     }
@@ -89,7 +116,7 @@ router.post('/contact', async (req, res) => {
     console.error('Error in contact route:', error);
     res.status(500).json({ 
       success: false, 
-      message: 'Internal server error',
+      message: '**Failed** - Internal server error',
       error: error.message 
     });
   }
@@ -143,7 +170,7 @@ router.post('/property-inquiry', async (req, res) => {
       console.warn('Property not found in database, using fallback data');
     }
 
-    // Save to database (optional)
+    // Save to database
     if (prisma) {
       try {
         await prisma.contact.create({
@@ -152,18 +179,28 @@ router.post('/property-inquiry', async (req, res) => {
             email,
             phone,
             message: message || '',
+            type: 'INQUIRY',
             source: 'PROPERTY_INQUIRY',
             status: 'NEW',
             propertyId: propertyId,
-            userId: 'system' // or use a default ID
+            userId: null // Explicitly set as null for anonymous contacts
           }
         });
+        console.log('Property inquiry saved to database successfully');
       } catch (dbError) {
         console.error('Error saving property inquiry to database:', dbError);
-        // Continue even if DB save fails
+        return res.status(500).json({ 
+          success: false, 
+          message: 'Failed to save inquiry to database',
+          error: dbError.message 
+        });
       }
     } else {
-      console.warn('Database not available, skipping inquiry save');
+      console.error('Database not available');
+      return res.status(500).json({ 
+        success: false, 
+        message: '**Failed** - Database connection not available' 
+      });
     }
 
     // Send email
@@ -183,7 +220,7 @@ router.post('/property-inquiry', async (req, res) => {
     } else {
       res.status(500).json({ 
         success: false, 
-        message: 'Failed to send email', 
+        message: '**Failed** to send email', 
         error: emailResult.error 
       });
     }
@@ -191,7 +228,7 @@ router.post('/property-inquiry', async (req, res) => {
     console.error('Error in property inquiry route:', error);
     res.status(500).json({ 
       success: false, 
-      message: 'Internal server error',
+      message: '**Failed** - Internal server error',
       error: error.message 
     });
   }

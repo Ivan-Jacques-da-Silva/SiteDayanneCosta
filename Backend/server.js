@@ -7,16 +7,41 @@ const path = require('path');
 const fs = require('fs');
 require('dotenv').config();
 
+// Debug environment variables
+console.log('🔍 Environment Variables Check:');
+console.log('   DATABASE_URL:', process.env.DATABASE_URL ? '✅ Set' : '❌ Missing');
+console.log('   NODE_ENV:', process.env.NODE_ENV || 'undefined');
+console.log('   PORT:', process.env.PORT || 'undefined');
+
 const { PrismaClient } = require('@prisma/client');
 
 let prisma;
 try {
+  // Check if DATABASE_URL exists, if not, construct it from individual variables
+  let databaseUrl = process.env.DATABASE_URL;
+
+  if (!databaseUrl) {
+    // Construct DATABASE_URL from individual environment variables
+    const host = process.env.DB_HOST || 'localhost';
+    const port = process.env.DB_PORT || '5432';
+    const database = process.env.DB_NAME || 'real_estate_db';
+    const username = process.env.DB_USER || 'postgres';
+    const password = process.env.DB_PASSWORD || 'admin';
+
+    databaseUrl = `postgresql://${username}:${password}@${host}:${port}/${database}`;
+    process.env.DATABASE_URL = databaseUrl;
+    console.log('🔧 Constructed DATABASE_URL from individual variables');
+  }
+
+  console.log('🔗 Attempting to initialize Prisma Client...');
   prisma = new PrismaClient({
-    log: ['error'],
-    errorFormat: 'minimal',
+    log: ['error', 'warn'],
+    errorFormat: 'pretty',
   });
+  console.log('✅ Prisma Client initialized successfully');
 } catch (error) {
   console.error('❌ Failed to initialize Prisma Client:', error.message);
+  console.error('💡 Check your database configuration variables');
   prisma = null;
 }
 
@@ -207,11 +232,20 @@ async function testConnection() {
   }
 }
 
-app.listen(PORT, '0.0.0.0', () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Backend server running on port ${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🌐 Server accessible at: http://0.0.0.0:${PORT}`);
   testConnection();
+});
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.log(`❌ Port ${PORT} is already in use. Trying port ${PORT + 1}...`);
+    server.listen(PORT + 1, '0.0.0.0');
+  } else {
+    console.error('Server error:', err);
+  }
 });
 
 module.exports = app;

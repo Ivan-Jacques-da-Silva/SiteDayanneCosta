@@ -197,15 +197,40 @@
   cursor: not-allowed;
 }
 
+/* Submit Message styles */
 .submitMessage {
-  margin: 16px 0;
-  padding: 12px;
-  border-radius: 4px;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 15px 0;
   font-size: 14px;
+  border: 1px solid;
   text-align: center;
+  font-weight: normal;
+}
+
+/* Success messages (green background) */
+.submitMessage:has-text("successfully"), 
+.submitMessage:has-text("**Success**"),
+.submitMessage[data-type="success"] {
   background-color: #d4edda;
+  border-color: #c3e6cb;
   color: #155724;
-  border: 1px solid #c3e6cb;
+}
+
+/* Error/Failed messages (red background) */
+.submitMessage:has-text("**Failed**"),
+.submitMessage:has-text("Failed"),
+.submitMessage:has-text("Error"),
+.submitMessage[data-type="error"] {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+}
+
+/* Bold text styling for Success/Failed words */
+.submitMessage strong,
+.submitMessage b {
+  font-weight: bold;
 }
 
 @media (max-width: 768px) {
