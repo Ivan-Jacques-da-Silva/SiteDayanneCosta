@@ -106,14 +106,38 @@
 .checkbox {
   display: flex;
   align-items: center;
-  cursor: pointer;
-  font-size: 14px;
+  gap: 8px;
+  margin: 8px 0;
 }
 
-.checkbox input[type="checkbox"] {
-  margin-right: 8px;
-  width: 16px;
-  height: 16px;
+.starCheckbox {
+  cursor: pointer;
+  position: relative;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.starCheckbox:hover {
+  background-color: #f8f9fa;
+}
+
+.starInput {
+  display: none;
+}
+
+.starIcon {
+  font-size: 20px;
+  transition: all 0.3s ease;
+  filter: grayscale(100%);
+  opacity: 0.5;
+}
+
+.starChecked {
+  filter: grayscale(0%);
+  opacity: 1;
+  transform: scale(1.2);
+  text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
 }
 
 .amenitiesList {

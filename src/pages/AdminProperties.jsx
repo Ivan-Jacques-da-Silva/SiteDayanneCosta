@@ -844,13 +844,17 @@ const PropertyEditModal = ({ property, onClose, onSave, showNotification }) => {
               Pet Friendly
             </label>
             
-            <label>
+            <label className={styles.starCheckbox}>
               <input
                 type="checkbox"
                 name="isFeatured"
                 checked={formData.isFeatured}
                 onChange={handleInputChange}
+                className={styles.starInput}
               />
+              <span className={`${styles.starIcon} ${formData.isFeatured ? styles.starChecked : ''}`}>
+                ⭐
+              </span>
               Featured Listing
             </label>
           </div>

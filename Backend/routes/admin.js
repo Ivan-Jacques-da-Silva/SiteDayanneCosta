@@ -340,7 +340,8 @@ router.post('/properties', upload.fields([
       shortSale,
       newConstruction,
       petFriendly,
-      userId
+      userId,
+      isFeatured // Added isFeatured to destructuring
     } = req.body;
 
     const property = await prisma.property.create({
@@ -390,6 +391,7 @@ router.post('/properties', upload.fields([
         shortSale: shortSale || 'Regular Sale',
         newConstruction: newConstruction === 'true' || newConstruction === true,
         petFriendly: petFriendly === 'true' || petFriendly === true,
+        isFeatured: isFeatured === 'true' || isFeatured === true, // Handle isFeatured boolean
         userId: userId || req.user.userId,
         country: 'USA',
         images: {
@@ -529,11 +531,19 @@ router.put('/properties/:id', upload.fields([
     if (updateData.longitude) updateData.longitude = parseFloat(updateData.longitude);
 
     // Convert boolean fields
-    if (updateData.furnished !== undefined) updateData.furnished = updateData.furnished === 'true' || updateData.furnished === true;
-    if (updateData.waterfront !== undefined) updateData.waterfront = updateData.waterfront === 'true' || updateData.waterfront === true;
-    if (updateData.pool !== undefined) updateData.pool = updateData.pool === 'true' || updateData.pool === true;
-    if (updateData.newConstruction !== undefined) updateData.newConstruction = updateData.newConstruction === 'true' || updateData.newConstruction === true;
-    if (updateData.petFriendly !== undefined) updateData.petFriendly = updateData.petFriendly === 'true' || updateData.petFriendly === true;
+    // Convert string booleans to actual booleans
+        ['pool', 'waterfront', 'furnished', 'petFriendly', 'newConstruction'].forEach(field => {
+          if (updateData[field] !== undefined) {
+            updateData[field] = updateData[field] === 'true' || updateData[field] === true;
+          }
+        });
+
+    // Convert string booleans to actual booleans
+        ['pool', 'waterfront', 'furnished', 'petFriendly', 'newConstruction', 'isFeatured'].forEach(field => {
+          if (updateData[field] !== undefined) {
+            updateData[field] = updateData[field] === 'true' || updateData[field] === true;
+          }
+        });
 
     // Convert parking to Int - parking field expects an integer, not boolean
     if (updateData.parking !== undefined) {

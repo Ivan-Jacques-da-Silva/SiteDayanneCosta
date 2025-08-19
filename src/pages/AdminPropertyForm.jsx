@@ -335,13 +335,17 @@ const AdminPropertyForm = () => {
               Pet Friendly
             </label>
 
-            <label className={styles.checkbox}>
+            <label className={`${styles.checkbox} ${styles.starCheckbox}`}>
               <input
                 type="checkbox"
                 name="isFeatured"
                 checked={formData.isFeatured || false}
                 onChange={handleInputChange}
+                className={styles.starInput}
               />
+              <span className={`${styles.starIcon} ${formData.isFeatured ? styles.starChecked : ''}`}>
+                ⭐
+              </span>
               Featured Listing
             </label>
           </div>
