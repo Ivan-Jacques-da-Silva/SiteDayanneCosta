@@ -1,0 +1,85 @@
+C:\Users\Notebook\Downloads\SiteDayanneCosta\Backend\routes\admin.js:570:44
+
+  567 delete updateData.waterfrontDescription;
+  568
+  569 // Update the property
+→ 570 const property = await prisma.property.update({
+        where: {
+          id: "cmeixygw9002lvz2s47tptwst"
+        },
+        data: {
+          mlsId: "A12345707",
+          title: "Downtown Loft Collection",
+          description: "Industrial chic loft in converted warehouse building in Downtown Miami. Features exposed brick walls, high ceilings, concrete floors, modern kitchen, and rooftop terrace with city views.",
+          address: "133 NE 2nd Ave #801",
+          city: "Miami",
+          state: "FL",
+          zipCode: "33132",
+          country: "USA",
+          subdivision: "Downtown Lofts",
+          propertyType: "CONDO",
+          propertySubType: "Industrial Loft",
+          status: "ACTIVE",
+          price: 975000,
+          pricePerSqft: 650,
+          bedrooms: 2,
+          bathrooms: 2,
+          halfBaths: 0,
+          sqft: 1500,
+          adjustedSqft: 1500,
+          yearBuilt: 2020,
+          parking: 1,
+          parkingSpaces: 1,
+          parkingDescription: "One assigned parking space",
+          pool: false,
+          waterfront: false,
+          furnished: false,
+          petFriendly: true,
+          newConstruction: false,
+          latitude: 25.7768,
+          longitude: -80.1918,
+          listingDate: "2025-08-19T19:33:09.476Z",
+          daysOnMarket: 22,
+          virtualTour: "https://example.com/virtual-tour-downtown-loft",
+          amenities: "Rooftop terrace, Fitness area, Art studio, Bike storage",
+          interiorFeatures: "Exposed brick walls, High ceilings, Concrete floors, Modern kitchen, Industrial design",
+          exteriorFeatures: "Rooftop access, City views, Historic building character",
+          hoaFees: 450,
+          taxAmount: 9750,
+          taxYear: 2024,
+          listingCourtesy: "Downtown Loft Specialists",
+          listingAgent: "Michael Davis",
+          listingOffice: "Compass",
+          shortSale: "Regular Sale",
+          categoria: "NEIGHBORHOODS",
+          bairro: "BRICKELL",
+          isFeatured: "false"
+                      ~~~~~~~
+        },
+        include: {
+          user: {
+            select: {
+              name: true,
+              email: true
+            }
+          },
+          images: {
+            orderBy: {
+              order: "asc"
+            }
+          }
+        }
+      })
+
+Argument `isFeatured`: Invalid value provided. Expected Boolean or BoolFieldUpdateOperationsInput, provided String.
+    at _n (C:\Users\Notebook\Downloads\SiteDayanneCosta\Backend\node_modules\@prisma\client\runtime\library.js:29:1363)
+    at ri.handleRequestError (C:\Users\Notebook\Downloads\SiteDayanneCosta\Backend\node_modules\@prisma\client\runtime\library.js:121:7102)
+    at ri.handleAndLogRequestError (C:\Users\Notebook\Downloads\SiteDayanneCosta\Backend\node_modules\@prisma\client\runtime\library.js:121:6784)
+    at ri.request (C:\Users\Notebook\Downloads\SiteDayanneCosta\Backend\node_modules\@prisma\client\runtime\library.js:121:6491)
+    at async l (C:\Users\Notebook\Downloads\SiteDayanneCosta\Backend\node_modules\@prisma\client\runtime\library.js:130:9812)
+    at async C:\Users\Notebook\Downloads\SiteDayanneCosta\Backend\routes\admin.js:570:22 {
+  clientVersion: '6.13.0'
+}
+PUT /api/admin/properties/cmeixygw9002lvz2s47tptwst 400 29.665 ms - 2826
+
+
