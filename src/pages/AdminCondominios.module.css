@@ -545,15 +545,48 @@
 }
 
 .checkbox input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  margin: 0;
+  margin-right: 8px;
 }
 
-.checkbox span {
-  font-size: 14px;
-  color: #374151;
-  font-weight: 500;
+.starCheckbox {
+  cursor: pointer;
+  position: relative;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.starCheckbox:hover {
+  background-color: #f8f9fa;
+}
+
+.starInput {
+  display: none;
+}
+
+.starIcon {
+  font-size: 20px;
+  transition: all 0.3s ease;
+  filter: grayscale(100%);
+  opacity: 0.5;
+  margin-right: 8px;
+}
+
+.starChecked {
+  filter: grayscale(0%);
+  opacity: 1;
+  transform: scale(1.2);
+  text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+}
+
+.checkboxGrid .formGroup {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkboxGrid label {
+  margin-bottom: 0;
 }
 
 .formActions {

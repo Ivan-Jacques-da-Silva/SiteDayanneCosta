@@ -17,40 +17,10 @@ L.Icon.Default.mergeOptions({
 // Create custom icons - memoized to prevent recreation
 const createCustomIcon = (isSelected = false, propertyImage = null, useSimpleMarker = false) => {
   const size = isSelected ? 32 : 26;
-  const borderColor = isSelected ? '#dc2626' : '#ef4444'; // Vermelho forte quando selecionado, vermelho normal quando não
+  const backgroundColor = '#1e3a8a'; // Azul escuro
+  const borderColor = isSelected ? '#1e40af' : '#1e3a8a'; // Azul mais claro quando selecionado
   const borderWidth = isSelected ? 3 : 2;
-
-  // Simple red marker with white dot
-  if (useSimpleMarker) {
-    return L.divIcon({
-      className: 'simple-marker',
-      html: `
-        <div style="
-          width: ${size}px;
-          height: ${size}px;
-          background-color: #dc2626;
-          border: 2px solid white;
-          border-radius: 50% 50% 50% 0;
-          transform: rotate(-45deg);
-          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-          position: relative;
-        ">
-          <div style="
-            width: 8px;
-            height: 8px;
-            background-color: white;
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(45deg);
-          "></div>
-        </div>
-      `,
-      iconSize: [size, size],
-      iconAnchor: [size / 2, size],
-    });
-  }
+  const dotSize = isSelected ? 10 : 8; // Bolinha menor
 
   return L.divIcon({
     className: 'custom-marker',
@@ -58,26 +28,23 @@ const createCustomIcon = (isSelected = false, propertyImage = null, useSimpleMar
       <div style="
         width: ${size}px;
         height: ${size}px;
-        border: ${borderWidth}px solid ${borderColor};
+        background-color: ${backgroundColor};
+        border: ${borderWidth}px solid white;
         border-radius: 50% 50% 50% 0;
         transform: rotate(-45deg);
-        overflow: hidden;
         box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         position: relative;
-        background-color: white;
       ">
-        <img 
-          src="${propertyImage || '/src/assets/img/testesImagens.jpeg'}" 
-          alt="Property" 
-          style="
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transform: rotate(45deg) scale(1.4);
-            transform-origin: center;
-          "
-          onerror="this.src='/src/assets/img/testesImagens.jpeg';"
-        />
+        <div style="
+          width: ${dotSize}px;
+          height: ${dotSize}px;
+          background-color: white;
+          border-radius: 50%;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%) rotate(45deg);
+        "></div>
       </div>
     `,
     iconSize: [size, size],
@@ -101,6 +68,10 @@ const MapController = ({ center, zoom }) => {
 const PropertyMap = ({ properties = [], selectedPropertyId, onPropertySelect, useSimpleMarker = false }) => {
   const [mapCenter, setMapCenter] = useState(MAPS_CONFIG.DEFAULT_CENTER);
   const [mapZoom, setMapZoom] = useState(MAPS_CONFIG.DEFAULT_ZOOM);
+  const [showPropertyPopup, setShowPropertyPopup] = useState(false);
+  const [popupProperty, setPopupProperty] = useState(null);
+  const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
+  const [selectedId, setSelectedId] = useState(selectedPropertyId);
 
   // Memoize valid properties to prevent recalculation on every render
   const validProperties = useMemo(() => {
@@ -114,10 +85,15 @@ const PropertyMap = ({ properties = [], selectedPropertyId, onPropertySelect, us
     );
   }, [properties]);
 
-  // Update map center and zoom when selectedPropertyId changes
+  // Update selectedId when prop changes
   useEffect(() => {
-    if (selectedPropertyId && validProperties.length > 0) {
-      const selectedProperty = validProperties.find(p => p.id === selectedPropertyId);
+    setSelectedId(selectedPropertyId);
+  }, [selectedPropertyId]);
+
+  // Update map center and zoom when selectedId changes
+  useEffect(() => {
+    if (selectedId && validProperties.length > 0) {
+      const selectedProperty = validProperties.find(p => p.id === selectedId);
       if (selectedProperty) {
         const newCenter = [parseFloat(selectedProperty.latitude), parseFloat(selectedProperty.longitude)];
         setMapCenter(newCenter);
@@ -132,13 +108,36 @@ const PropertyMap = ({ properties = [], selectedPropertyId, onPropertySelect, us
       setMapCenter(MAPS_CONFIG.DEFAULT_CENTER);
       setMapZoom(MAPS_CONFIG.DEFAULT_ZOOM);
     }
-  }, [selectedPropertyId, validProperties.length]);
+  }, [selectedId, validProperties.length]);
 
-  const handleMarkerClick = useCallback((property) => {
+  const handleMarkerClick = useCallback((property, event) => {
+    if (property && property.id) {
+      setPopupProperty(property);
+      setSelectedId(property.id);
+      
+      // Get mouse/click position for popup placement
+      if (event && event.containerPoint) {
+        setPopupPosition({
+          x: event.containerPoint.x,
+          y: event.containerPoint.y
+        });
+      }
+      
+      setShowPropertyPopup(true);
+    }
+  }, []);
+
+  const handleViewDetails = useCallback((property) => {
     if (onPropertySelect && property && property.id) {
       onPropertySelect(property.id);
+      setShowPropertyPopup(false);
     }
   }, [onPropertySelect]);
+
+  const handleClosePopup = useCallback(() => {
+    setShowPropertyPopup(false);
+    setPopupProperty(null);
+  }, []);
 
   const formatPrice = useCallback((price) => {
     if (!price) return 'Price on request';
@@ -181,51 +180,107 @@ const PropertyMap = ({ properties = [], selectedPropertyId, onPropertySelect, us
         <MapController center={mapCenter} zoom={mapZoom} />
 
         {validProperties.map((property) => {
-          const isSelected = property.id === selectedPropertyId;
+          const isSelected = property.id === selectedId;
           const position = [parseFloat(property.latitude), parseFloat(property.longitude)];
 
           return (
             <Marker
               key={`marker-${property.id}`}
               position={position}
-              icon={createCustomIcon(isSelected, property.imageUrl, useSimpleMarker)}
+              icon={createCustomIcon(isSelected, null, useSimpleMarker)}
               eventHandlers={{
-                click: () => handleMarkerClick(property)
+                click: (e) => handleMarkerClick(property, e)
               }}
               zIndexOffset={isSelected ? 1000 : 0}
-            >
-              <Popup>
-                <div className={styles.popupContent}>
-                  <img
-                    src={property.imageUrl || '/src/assets/img/testesImagens.jpeg'}
-                    alt={property.address || 'Property'}
-                    className={styles.popupImage}
-                    onError={(e) => {
-                      e.target.src = '/src/assets/img/testesImagens.jpeg';
-                    }}
-                  />
-                  <div className={styles.popupInfo}>
-                    <div className={styles.popupPrice}>
-                      {formatPrice(property.price)}
-                    </div>
-                    <div className={styles.popupAddress}>
-                      {property.address || 'Address not available'}
-                    </div>
-                    <div className={styles.popupCity}>
-                      {property.city || 'City'}, {property.state || 'State'}
-                    </div>
-                    <div className={styles.popupSpecs}>
-                      {property.bedrooms || property.beds || 'N/A'} beds •{' '}
-                      {property.bathrooms || property.baths || 'N/A'} baths •{' '}
-                      {property.sqft ? `${property.sqft.toLocaleString()} sq ft` : 'N/A'}
-                    </div>
-                  </div>
-                </div>
-              </Popup>
-            </Marker>
+            />
           );
         })}
       </MapContainer>
+
+      {/* Floating Property Popup */}
+      {showPropertyPopup && popupProperty && (
+        <div 
+          className={styles.floatingPopup}
+          style={{
+            left: `${popupPosition.x}px`,
+            top: `${popupPosition.y - 20}px`,
+            transform: 'translate(-50%, -100%)'
+          }}
+        >
+          <button 
+            className={styles.closePopupBtn}
+            onClick={handleClosePopup}
+          >
+            ×
+          </button>
+          
+          <div className={styles.floatingPopupContent}>
+            <div className={styles.popupImageContainer}>
+              <img
+                src={popupProperty.imageUrl || popupProperty.image || '/default.png'}
+                alt={popupProperty.title || popupProperty.address || 'Property'}
+                className={styles.floatingPopupImage}
+                onError={(e) => {
+                  e.target.src = '/default.png';
+                }}
+              />
+              {popupProperty.featured && (
+                <div className={styles.featuredBadge}>⭐ Featured</div>
+              )}
+            </div>
+            
+            <div className={styles.floatingPopupInfo}>
+              <div className={styles.floatingPopupPrice}>
+                {formatPrice(popupProperty.price)}
+              </div>
+              
+              {popupProperty.title && (
+                <div className={styles.floatingPopupTitle}>
+                  {popupProperty.title}
+                </div>
+              )}
+              
+              <div className={styles.floatingPopupAddress}>
+                {popupProperty.address || 'Address not available'}
+              </div>
+              
+              <div className={styles.floatingPopupCity}>
+                {popupProperty.city || 'City'}, {popupProperty.state || 'State'} {popupProperty.zipCode || ''}
+              </div>
+              
+              <div className={styles.floatingPopupSpecs}>
+                {popupProperty.bedrooms || popupProperty.beds || 'N/A'} beds •{' '}
+                {popupProperty.bathrooms || popupProperty.baths || 'N/A'} baths •{' '}
+                {popupProperty.sqft ? `${popupProperty.sqft.toLocaleString()} sq ft` : 'N/A'}
+                {popupProperty.yearBuilt && ` • Built ${popupProperty.yearBuilt}`}
+              </div>
+              
+              {popupProperty.propertyType && (
+                <div className={styles.floatingPopupType}>
+                  Type: {popupProperty.propertyType}
+                </div>
+              )}
+              
+              {popupProperty.description && (
+                <div className={styles.floatingPopupDescription}>
+                  {popupProperty.description.substring(0, 120)}
+                  {popupProperty.description.length > 120 && '...'}
+                </div>
+              )}
+              
+              <button 
+                className={styles.viewDetailsButton}
+                onClick={() => handleViewDetails(popupProperty)}
+              >
+                View Details
+              </button>
+            </div>
+          </div>
+          
+          {/* Popup arrow */}
+          <div className={styles.popupArrow}></div>
+        </div>
+      )}
     </div>
   );
 };

@@ -192,9 +192,16 @@ const PropertyListing = ({
       // Transform property data to include image URL from images array
       propertiesData = propertiesData.map((p) => {
         const primeira = p.images?.[0]?.url;
-        const imageUrl = primeira
-          ? getImageUrl(primeira)
-          : p.image || propPlaceholderImage || '/default.png';
+        let imageUrl;
+        
+        if (primeira) {
+          imageUrl = getImageUrl(primeira);
+        } else if (p.image && p.image !== propPlaceholderImage) {
+          imageUrl = p.image;
+        } else {
+          imageUrl = '/default.png';
+        }
+        
         return { ...p, imageUrl };
       });
 
@@ -654,8 +661,9 @@ const PropertyListing = ({
                         <div className={styles.propertyImageContainer}>
                           <img
                             src={
-                              property.imageUrl ||
-                              '/default.png'
+                              property.imageUrl && property.imageUrl !== propPlaceholderImage 
+                                ? property.imageUrl 
+                                : '/default.png'
                             }
                             alt={`Property at ${property.address}`}
                             className={styles.propertyImage}
@@ -810,9 +818,9 @@ const PropertyListing = ({
                             <div className={styles.mapPropertyImage}>
                               <img
                                 src={
-                                  property.imageUrl ||
-                                  propPlaceholderImage ||
-                                  placeholderImage
+                                  property.imageUrl && property.imageUrl !== propPlaceholderImage
+                                    ? property.imageUrl
+                                    : '/default.png'
                                 }
                                 alt={property.address}
                                 onError={(e) => {

@@ -4,7 +4,53 @@ import { buildApiUrl } from '../config/api';
 import styles from './AdminPropertyForm.module.css';
 
 const AdminPropertyForm = () => {
-  const [formData, setFormData] = useState(propertyExampleData);
+  const [formData, setFormData] = useState(() => {
+    // Ensure all form fields have default values to prevent null errors
+    const defaultData = {
+      mlsId: '',
+      title: '',
+      description: '',
+      address: '',
+      city: '',
+      state: '',
+      zipCode: '',
+      neighborhood: '',
+      propertyType: '',
+      status: 'ACTIVE',
+      price: '',
+      pricePerSqft: '',
+      bedrooms: '',
+      bathrooms: '',
+      sqft: '',
+      pool: false,
+      waterfront: false,
+      furnished: false,
+      petFriendly: false,
+      isFeatured: false,
+      latitude: '',
+      longitude: '',
+      virtualTour: '',
+      amenities: []
+    };
+    
+    // Merge with example data, ensuring no null values
+    const mergedData = { ...defaultData, ...propertyExampleData };
+    
+    // Convert null values to empty strings for text inputs
+    Object.keys(mergedData).forEach(key => {
+      if (mergedData[key] === null || mergedData[key] === undefined) {
+        if (typeof defaultData[key] === 'string') {
+          mergedData[key] = '';
+        } else if (typeof defaultData[key] === 'boolean') {
+          mergedData[key] = false;
+        } else if (typeof defaultData[key] === 'number') {
+          mergedData[key] = '';
+        }
+      }
+    });
+    
+    return mergedData;
+  });
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState({ show: false, type: '', message: '' });
 
@@ -89,7 +135,7 @@ const AdminPropertyForm = () => {
               type="text"
               id="mlsId"
               name="mlsId"
-              value={formData.mlsId || ''}
+              value={formData.mlsId ?? ''}
               onChange={handleInputChange}
             />
           </div>
@@ -100,7 +146,7 @@ const AdminPropertyForm = () => {
               type="text"
               id="title"
               name="title"
-              value={formData.title || ''}
+              value={formData.title ?? ''}
               onChange={handleInputChange}
               required
             />
@@ -111,7 +157,7 @@ const AdminPropertyForm = () => {
             <textarea
               id="description"
               name="description"
-              value={formData.description || ''}
+              value={formData.description ?? ''}
               onChange={handleInputChange}
               rows={4}
             />
@@ -129,7 +175,7 @@ const AdminPropertyForm = () => {
                 type="text"
                 id="address"
                 name="address"
-                value={formData.address || ''}
+                value={formData.address ?? ''}
                 onChange={handleInputChange}
                 required
               />
@@ -141,7 +187,7 @@ const AdminPropertyForm = () => {
                 type="text"
                 id="city"
                 name="city"
-                value={formData.city || ''}
+                value={formData.city ?? ''}
                 onChange={handleInputChange}
                 required
               />
@@ -155,7 +201,7 @@ const AdminPropertyForm = () => {
                 type="text"
                 id="state"
                 name="state"
-                value={formData.state || ''}
+                value={formData.state ?? ''}
                 onChange={handleInputChange}
                 required
               />
@@ -167,7 +213,7 @@ const AdminPropertyForm = () => {
                 type="text"
                 id="zipCode"
                 name="zipCode"
-                value={formData.zipCode || ''}
+                value={formData.zipCode ?? ''}
                 onChange={handleInputChange}
                 required
               />
@@ -181,7 +227,7 @@ const AdminPropertyForm = () => {
                 type="text"
                 id="neighborhood"
                 name="neighborhood"
-                value={formData.neighborhood || ''}
+                value={formData.neighborhood ?? ''}
                 onChange={handleInputChange}
               />
             </div>
@@ -198,7 +244,7 @@ const AdminPropertyForm = () => {
               <select
                 id="propertyType"
                 name="propertyType"
-                value={formData.propertyType || ''}
+                value={formData.propertyType ?? ''}
                 onChange={handleInputChange}
                 required
               >
@@ -216,7 +262,7 @@ const AdminPropertyForm = () => {
               <select
                 id="status"
                 name="status"
-                value={formData.status || ''}
+                value={formData.status ?? 'ACTIVE'}
                 onChange={handleInputChange}
                 required
               >
@@ -235,7 +281,7 @@ const AdminPropertyForm = () => {
                 type="number"
                 id="price"
                 name="price"
-                value={formData.price || ''}
+                value={formData.price ?? ''}
                 onChange={handleInputChange}
                 required
               />
@@ -247,7 +293,7 @@ const AdminPropertyForm = () => {
                 type="number"
                 id="pricePerSqft"
                 name="pricePerSqft"
-                value={formData.pricePerSqft || ''}
+                value={formData.pricePerSqft ?? ''}
                 onChange={handleInputChange}
               />
             </div>
@@ -260,7 +306,7 @@ const AdminPropertyForm = () => {
                 type="number"
                 id="bedrooms"
                 name="bedrooms"
-                value={formData.bedrooms || ''}
+                value={formData.bedrooms ?? ''}
                 onChange={handleInputChange}
               />
             </div>
@@ -272,7 +318,7 @@ const AdminPropertyForm = () => {
                 step="0.5"
                 id="bathrooms"
                 name="bathrooms"
-                value={formData.bathrooms || ''}
+                value={formData.bathrooms ?? ''}
                 onChange={handleInputChange}
               />
             </div>
@@ -283,7 +329,7 @@ const AdminPropertyForm = () => {
                 type="number"
                 id="sqft"
                 name="sqft"
-                value={formData.sqft || ''}
+                value={formData.sqft ?? ''}
                 onChange={handleInputChange}
               />
             </div>
@@ -363,7 +409,7 @@ const AdminPropertyForm = () => {
                 step="any"
                 id="latitude"
                 name="latitude"
-                value={formData.latitude || ''}
+                value={formData.latitude ?? ''}
                 onChange={handleInputChange}
               />
             </div>
@@ -375,7 +421,7 @@ const AdminPropertyForm = () => {
                 step="any"
                 id="longitude"
                 name="longitude"
-                value={formData.longitude || ''}
+                value={formData.longitude ?? ''}
                 onChange={handleInputChange}
               />
             </div>
@@ -392,7 +438,7 @@ const AdminPropertyForm = () => {
               type="url"
               id="virtualTour"
               name="virtualTour"
-              value={formData.virtualTour || ''}
+              value={formData.virtualTour ?? ''}
               onChange={handleInputChange}
             />
           </div>

@@ -448,7 +448,8 @@ const AdminCondominios = () => {
       listingOffice: '',
       shortSale: 'Regular Sale',
       newConstruction: false,
-      petFriendly: false
+      petFriendly: false,
+      isFeatured: false
     });
 
     // Clear image previews
@@ -469,7 +470,8 @@ const AdminCondominios = () => {
       primaryImage: null,     // reset input de arquivo
       galleryImages: [],      // reset input de arquivo
       categoria: condominio.categoria || '',
-      bairro: condominio.bairro || ''
+      bairro: condominio.bairro || '',
+      isFeatured: condominio.isFeatured || false // Ensure isFeatured is loaded
     };
     setFormData(initialFormData);
 
@@ -552,7 +554,7 @@ const AdminCondominios = () => {
       setShowNotification(true);
       return;
     }
-    
+
     setCurrentPage(1); // Reset to first page when filters change
     loadCondominios(1);
   };
@@ -665,28 +667,30 @@ const AdminCondominios = () => {
                 condominios.map((condominio) => (
                   <div key={condominio.id} className={styles.condominioCard}>
                     {/* Property Image */}
-                    {condominio.images && condominio.images.length > 0 && (
-                      <div style={{
-                        width: '100%',
-                        height: '200px',
-                        overflow: 'hidden',
-                        borderRadius: '8px 8px 0 0',
-                        marginBottom: '16px'
-                      }}>
-                        <img
-                          src={condominio.images.find(img => img.isPrimary)?.url || condominio.images[0]?.url}
-                          alt={condominio.title}
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover'
-                          }}
-                          onError={(e) => {
-                            e.target.src = '/placeholder-image.jpg'; // Fallback image
-                          }}
-                        />
-                      </div>
-                    )}
+                    <div style={{
+                      width: '100%',
+                      height: '200px',
+                      overflow: 'hidden',
+                      borderRadius: '8px 8px 0 0',
+                      marginBottom: '16px'
+                    }}>
+                      <img
+                        src={
+                          condominio.images && condominio.images.length > 0
+                            ? (condominio.images.find(img => img.isPrimary)?.url || condominio.images[0]?.url)
+                            : '/default.png'
+                        }
+                        alt={condominio.title}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover'
+                        }}
+                        onError={(e) => {
+                          e.target.src = '/default.png'; // Fallback para imagem padrão
+                        }}
+                      />
+                    </div>
 
                     <div className={styles.cardHeader}>
                       <div>
@@ -742,13 +746,12 @@ const AdminCondominios = () => {
                         {condominio.pool && <span className={styles.feature}>Pool</span>}
                         {condominio.parking && <span className={styles.feature}>Parking</span>}
                         {condominio.petFriendly && <span className={styles.feature}>Pet Friendly</span>}
+                        {condominio.isFeatured && <span className={styles.feature}>Featured</span>}
                       </div>
 
-                      {condominio.images && condominio.images.length > 0 && (
-                        <div className={styles.imageCount}>
-                          <i className="fas fa-camera"></i> {condominio.images.length} image{condominio.images.length !== 1 ? 's' : ''}
-                        </div>
-                      )}
+                      <div className={styles.imageCount}>
+                        <i className="fas fa-camera"></i> {condominio.images?.length || 0} image{(condominio.images?.length || 0) !== 1 ? 's' : ''}
+                      </div>
 
                       <div className={styles.cardMeta}>
                         <small>Created: {new Date(condominio.createdAt).toLocaleDateString()}</small>
@@ -1252,14 +1255,18 @@ const AdminCondominios = () => {
                     <span>Pet Friendly</span>
                   </label>
 
-                  <label className={styles.checkbox}>
+                  <label className={`${styles.checkbox} ${styles.starCheckbox}`}>
                     <input
                       type="checkbox"
-                      name="newConstruction"
-                      checked={formData.newConstruction || false}
+                      name="isFeatured"
+                      checked={formData.isFeatured || false}
                       onChange={handleInputChange}
+                      className={styles.starInput}
                     />
-                    <span>New Construction</span>
+                    <span className={`${styles.starIcon} ${formData.isFeatured ? styles.starChecked : ''}`}>
+                      ⭐
+                    </span>
+                    Featured Listing
                   </label>
                 </div>
 
