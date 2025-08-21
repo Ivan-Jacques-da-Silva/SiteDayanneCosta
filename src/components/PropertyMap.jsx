@@ -1,10 +1,21 @@
-
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { MAPS_CONFIG } from '../config/maps';
 import styles from './PropertyMap.module.css';
 import 'leaflet/dist/leaflet.css';
+
+// Force CSS load check
+if (typeof window !== 'undefined') {
+  // Ensure leaflet CSS is properly loaded
+  const leafletCSS = document.querySelector('link[href*="leaflet"]');
+  if (!leafletCSS) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+    document.head.appendChild(link);
+  }
+}
 
 // Fix for default markers in Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -65,7 +76,7 @@ const MapController = ({ center, zoom }) => {
   return null;
 };
 
-const PropertyMap = ({ properties = [], selectedPropertyId, onPropertySelect, useSimpleMarker = false }) => {
+const PropertyMap = ({ properties = [], selectedPropertyId, onPropertySelect, useSimpleMarker = false, hidePopup = false, onListPropertyClick }) => {
   const [mapCenter, setMapCenter] = useState(MAPS_CONFIG.DEFAULT_CENTER);
   const [mapZoom, setMapZoom] = useState(MAPS_CONFIG.DEFAULT_ZOOM);
   const [showPropertyPopup, setShowPropertyPopup] = useState(false);
@@ -73,14 +84,28 @@ const PropertyMap = ({ properties = [], selectedPropertyId, onPropertySelect, us
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
   const [selectedId, setSelectedId] = useState(selectedPropertyId);
 
+  // Detectar automaticamente se estamos em uma página de detalhes
+  const isDetailPage = useMemo(() => {
+    if (hidePopup) return true;
+
+    // Detectar pela URL se estamos na página de detalhes
+    const currentPath = window.location.pathname;
+    const isOnDetailPage = currentPath.includes('/property/');
+
+    // Ou detectar se temos apenas uma propriedade (página de detalhes)
+    const isSingleProperty = properties.length === 1;
+
+    return isOnDetailPage || isSingleProperty;
+  }, [hidePopup, properties.length]);
+
   // Memoize valid properties to prevent recalculation on every render
   const validProperties = useMemo(() => {
     if (!Array.isArray(properties)) return [];
-    return properties.filter(p => 
-      p && 
-      p.latitude && 
-      p.longitude && 
-      !isNaN(parseFloat(p.latitude)) && 
+    return properties.filter(p =>
+      p &&
+      p.latitude &&
+      p.longitude &&
+      !isNaN(parseFloat(p.latitude)) &&
       !isNaN(parseFloat(p.longitude))
     );
   }, [properties]);
@@ -111,21 +136,54 @@ const PropertyMap = ({ properties = [], selectedPropertyId, onPropertySelect, us
   }, [selectedId, validProperties.length]);
 
   const handleMarkerClick = useCallback((property, event) => {
-    if (property && property.id) {
-      setPopupProperty(property);
-      setSelectedId(property.id);
-      
-      // Get mouse/click position for popup placement
-      if (event && event.containerPoint) {
-        setPopupPosition({
-          x: event.containerPoint.x,
-          y: event.containerPoint.y
-        });
+    if (property && property.id && !isDetailPage) {
+      // Se já há um popup aberto e é de uma propriedade diferente, feche primeiro
+      if (showPropertyPopup && popupProperty && popupProperty.id !== property.id) {
+        setShowPropertyPopup(false);
+        setPopupProperty(null);
+        // Pequeno delay para a animação de fechamento
+        setTimeout(() => {
+          setPopupProperty(property);
+          setSelectedId(property.id);
+          setShowPropertyPopup(true);
+        }, 100);
+      } else {
+        setPopupProperty(property);
+        setSelectedId(property.id);
+        setShowPropertyPopup(true);
       }
-      
-      setShowPropertyPopup(true);
+
+      // Get marker position for popup placement with boundary checking
+      if (event && event.containerPoint) {
+        const containerPoint = event.containerPoint;
+        const mapContainer = event.target._map.getContainer();
+        const containerWidth = mapContainer.clientWidth;
+        const containerHeight = mapContainer.clientHeight;
+
+        // Popup dimensions (approximate)
+        const popupWidth = window.innerWidth <= 768 ? 320 : 400;
+        const popupHeight = window.innerWidth <= 768 ? 120 : 140;
+
+        // Calculate position with boundaries - mais próximo do marcador (10px acima)
+        let x = containerPoint.x;
+        let y = containerPoint.y - popupHeight - 10; // 10px acima do marcador (mais próximo)
+
+        // Adjust horizontal position if popup would go off screen
+        if (x - popupWidth / 2 < 10) {
+          x = popupWidth / 2 + 10;
+        } else if (x + popupWidth / 2 > containerWidth - 10) {
+          x = containerWidth - popupWidth / 2 - 10;
+        }
+
+        // Adjust vertical position if popup would go off top
+        if (y < 10) {
+          y = containerPoint.y + 40; // Show below marker instead (mais próximo)
+        }
+
+        setPopupPosition({ x, y });
+      }
     }
-  }, []);
+  }, [isDetailPage, showPropertyPopup, popupProperty]);
 
   const handleViewDetails = useCallback((property) => {
     if (onPropertySelect && property && property.id) {
@@ -145,6 +203,66 @@ const PropertyMap = ({ properties = [], selectedPropertyId, onPropertySelect, us
     if (isNaN(numericPrice)) return 'Price on request';
     return '$' + numericPrice.toLocaleString();
   }, []);
+
+  const handlePropertySelect = (propertyId) => {
+    setSelectedPropertyId(propertyId);
+  };
+
+  // Nova função para lidar com clique nas propriedades da lista
+  const handleListPropertyClick = useCallback((property) => {
+    if (property && property.id && !isDetailPage) {
+      // Feche o popup atual se estiver aberto
+      if (showPropertyPopup) {
+        setShowPropertyPopup(false);
+        setPopupProperty(null);
+      }
+
+      // Atualize a propriedade selecionada
+      setSelectedId(property.id);
+
+      // Centralize o mapa na nova propriedade
+      const newCenter = [parseFloat(property.latitude), parseFloat(property.longitude)];
+      setMapCenter(newCenter);
+      setMapZoom(MAPS_CONFIG.SELECTED_ZOOM);
+
+      // Pequeno delay para permitir que o mapa atualize e depois abra o novo popup
+      setTimeout(() => {
+        setPopupProperty(property);
+        setShowPropertyPopup(true);
+
+        // Calcule uma posição aproximada para o popup baseada no centro do mapa
+        const mapContainer = document.querySelector('.leaflet-container');
+        if (mapContainer) {
+          const containerWidth = mapContainer.clientWidth;
+          const containerHeight = mapContainer.clientHeight;
+          const centerX = containerWidth / 2;
+          const centerY = containerHeight / 2;
+
+          // Popup dimensions
+          const popupWidth = window.innerWidth <= 768 ? 320 : 400;
+          const popupHeight = window.innerWidth <= 768 ? 120 : 140;
+
+          // Position popup above center (where marker should be)
+          let x = centerX;
+          let y = centerY - popupHeight - 10;
+
+          // Boundary checks
+          if (x - popupWidth / 2 < 10) {
+            x = popupWidth / 2 + 10;
+          } else if (x + popupWidth / 2 > containerWidth - 10) {
+            x = containerWidth - popupWidth / 2 - 10;
+          }
+
+          if (y < 10) {
+            y = centerY + 40;
+          }
+
+          setPopupPosition({ x, y });
+        }
+      }, 300);
+    }
+  }, [isDetailPage, showPropertyPopup]);
+
 
   if (validProperties.length === 0) {
     return (
@@ -170,6 +288,10 @@ const PropertyMap = ({ properties = [], selectedPropertyId, onPropertySelect, us
         className={styles.map}
         scrollWheelZoom={true}
         zoomControl={true}
+        style={{ height: '100%', width: '100%', minHeight: '400px' }}
+        whenReady={() => {
+          console.log('Map is ready');
+        }}
       >
         <TileLayer
           url={MAPS_CONFIG.TILE_LAYER_URL}
@@ -198,22 +320,24 @@ const PropertyMap = ({ properties = [], selectedPropertyId, onPropertySelect, us
       </MapContainer>
 
       {/* Floating Property Popup */}
-      {showPropertyPopup && popupProperty && (
-        <div 
+      {showPropertyPopup && popupProperty && !isDetailPage && (
+        <div
           className={styles.floatingPopup}
           style={{
             left: `${popupPosition.x}px`,
-            top: `${popupPosition.y - 20}px`,
-            transform: 'translate(-50%, -100%)'
+            top: `${popupPosition.y}px`,
+            transform: 'translateX(-50%)'
           }}
+          onClick={(e) => e.stopPropagation()}
         >
-          <button 
+          <button
             className={styles.closePopupBtn}
             onClick={handleClosePopup}
+            title="Fechar"
           >
             ×
           </button>
-          
+
           <div className={styles.floatingPopupContent}>
             <div className={styles.popupImageContainer}>
               <img
@@ -224,51 +348,18 @@ const PropertyMap = ({ properties = [], selectedPropertyId, onPropertySelect, us
                   e.target.src = '/default.png';
                 }}
               />
-              {popupProperty.featured && (
-                <div className={styles.featuredBadge}>⭐ Featured</div>
-              )}
             </div>
-            
+
             <div className={styles.floatingPopupInfo}>
               <div className={styles.floatingPopupPrice}>
                 {formatPrice(popupProperty.price)}
               </div>
-              
-              {popupProperty.title && (
-                <div className={styles.floatingPopupTitle}>
-                  {popupProperty.title}
-                </div>
-              )}
-              
-              <div className={styles.floatingPopupAddress}>
-                {popupProperty.address || 'Address not available'}
+
+              <div className={styles.floatingPopupDescription}>
+                {popupProperty.bedrooms || popupProperty.beds || 'N/A'} beds • {popupProperty.bathrooms || popupProperty.baths || 'N/A'} baths • {popupProperty.sqft ? `${popupProperty.sqft.toLocaleString()} sq ft` : 'N/A'}
               </div>
-              
-              <div className={styles.floatingPopupCity}>
-                {popupProperty.city || 'City'}, {popupProperty.state || 'State'} {popupProperty.zipCode || ''}
-              </div>
-              
-              <div className={styles.floatingPopupSpecs}>
-                {popupProperty.bedrooms || popupProperty.beds || 'N/A'} beds •{' '}
-                {popupProperty.bathrooms || popupProperty.baths || 'N/A'} baths •{' '}
-                {popupProperty.sqft ? `${popupProperty.sqft.toLocaleString()} sq ft` : 'N/A'}
-                {popupProperty.yearBuilt && ` • Built ${popupProperty.yearBuilt}`}
-              </div>
-              
-              {popupProperty.propertyType && (
-                <div className={styles.floatingPopupType}>
-                  Type: {popupProperty.propertyType}
-                </div>
-              )}
-              
-              {popupProperty.description && (
-                <div className={styles.floatingPopupDescription}>
-                  {popupProperty.description.substring(0, 120)}
-                  {popupProperty.description.length > 120 && '...'}
-                </div>
-              )}
-              
-              <button 
+
+              <button
                 className={styles.viewDetailsButton}
                 onClick={() => handleViewDetails(popupProperty)}
               >
@@ -276,8 +367,7 @@ const PropertyMap = ({ properties = [], selectedPropertyId, onPropertySelect, us
               </button>
             </div>
           </div>
-          
-          {/* Popup arrow */}
+
           <div className={styles.popupArrow}></div>
         </div>
       )}

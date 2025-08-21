@@ -22,6 +22,7 @@ const PropertyListing = ({
   const [itemsPerPage] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
   const [selectedPropertyId, setSelectedPropertyId] = useState(null);
+  const [mapTrigger, setMapTrigger] = useState(null);
   const [filters, setFilters] = useState({
     priceRange: [0, 50000000],
     bedrooms: "",
@@ -813,7 +814,10 @@ const PropertyListing = ({
                                 ? styles.selectedProperty
                                 : ""
                             }`}
-                            onClick={() => handlePropertySelect(property.id)}
+                            onClick={() => {
+                              handlePropertySelect(property.id);
+                              setMapTrigger({ property, timestamp: Date.now() });
+                            }}
                           >
                             <div className={styles.mapPropertyImage}>
                               <img
@@ -879,6 +883,7 @@ const PropertyListing = ({
                       )}
                       selectedPropertyId={selectedPropertyId}
                       onPropertySelect={handleMapPropertyClick}
+                      listClickTrigger={mapTrigger}
                     />
                     {sortedProperties.filter((p) => p.latitude && p.longitude)
                       .length === 0 && (

@@ -1,16 +1,18 @@
-
 .mapContainer {
   position: relative;
   width: 100%;
   height: 100%;
   min-height: 400px;
+  background: #f8f9fa;
 }
 
 .map {
-  width: 100%;
-  height: 100%;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 400px !important;
   border-radius: 8px;
   z-index: 1;
+  background: #e9ecef;
 }
 
 .noMapData {
@@ -94,6 +96,31 @@
   border: none !important;
 }
 
+/* Leaflet map container fixes */
+:global(.leaflet-container) {
+  height: 100% !important;
+  width: 100% !important;
+  min-height: 400px !important;
+  background: #e9ecef !important;
+}
+
+:global(.leaflet-tile-pane) {
+  opacity: 1 !important;
+}
+
+:global(.leaflet-tile) {
+  opacity: 1 !important;
+}
+
+/* Mobile touch fixes */
+:global(.leaflet-touch .leaflet-control-layers) {
+  border: 2px solid rgba(0,0,0,0.2);
+}
+
+:global(.leaflet-touch .leaflet-control-attribution) {
+  background: rgba(255, 255, 255, 0.7);
+}
+
 /* Leaflet popup customization */
 :global(.leaflet-popup-content-wrapper) {
   border-radius: 8px;
@@ -132,23 +159,246 @@
 
 /* Container responsiveness */
 @media (max-width: 768px) {
+  .mapContainer {
+    min-height: 350px;
+    height: 350px;
+  }
+  
+  .map {
+    min-height: 350px !important;
+    height: 350px !important;
+  }
+  
+  :global(.leaflet-container) {
+    min-height: 350px !important;
+    height: 350px !important;
+  }
+
   .popupContent {
     width: 240px;
   }
-  
+
   .popupImage {
     height: 100px;
   }
-  
+
   .popupPrice {
     font-size: 16px;
   }
-  
+
   .popupAddress {
     font-size: 13px;
   }
-  
+
   .popupSpecs {
     font-size: 11px;
   }
+  
+  /* Mobile popup adjustments */
+  .floatingPopup {
+    min-width: 280px;
+    max-width: 320px;
+    height: auto;
+    min-height: 110px;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    margin: 0 10px;
+    box-sizing: border-box;
+  }
+  
+  .floatingPopupContent {
+    flex-direction: column;
+    height: auto;
+  }
+  
+  .popupImageContainer {
+    width: 100%;
+    height: 80px;
+    min-height: 80px;
+    order: 1;
+  }
+  
+  .floatingPopupInfo {
+    padding: 12px;
+    order: 2;
+    gap: 8px;
+  }
+  
+  .floatingPopupPrice {
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+  
+  .floatingPopupDescription {
+    font-size: 12px;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  
+  .viewDetailsButton {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+  
+  .closePopupBtn {
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+    top: 6px;
+    right: 6px;
+  }
+}
+
+/* Tablet adjustments */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .floatingPopup {
+    min-width: 320px;
+    max-width: 350px;
+  }
+  
+  .floatingPopupPrice {
+    font-size: 17px;
+  }
+  
+  .floatingPopupDescription {
+    font-size: 13px;
+  }
+}
+
+/* Simplified horizontal popup styles */
+.floatingPopup {
+  position: absolute;
+  background: white;
+  border: none;
+  border-radius: 10px;
+  padding: 0;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  z-index: 10000;
+  pointer-events: auto;
+  overflow: hidden;
+  min-width: 350px;
+  max-width: 400px;
+  height: 140px;
+  animation: popupFadeIn 0.2s ease-out;
+  max-width: calc(100vw - 20px);
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+
+@keyframes popupFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.closePopupBtn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #666;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  z-index: 10;
+  transition: all 0.2s ease;
+}
+
+.closePopupBtn:hover {
+  background: rgba(255, 255, 255, 1);
+  color: #333;
+}
+
+.floatingPopupContent {
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  height: 100%;
+}
+
+.popupImageContainer {
+  position: relative;
+  width: 140px;
+  height: 100%;
+  min-height: 140px;
+  overflow: hidden;
+  background: #f0f0f0;
+  flex-shrink: 0;
+  display: flex;
+  align-items: stretch;
+}
+
+.floatingPopupImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  flex: 1;
+}
+
+.floatingPopupInfo {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.floatingPopupPrice {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin-bottom: 8px;
+}
+
+.floatingPopupDescription {
+  font-size: 14px;
+  color: #4a5568;
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+
+.viewDetailsButton {
+  background: #1e3a8a;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.viewDetailsButton:hover {
+  background: #1e40af;
+}
+
+.popupArrow {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid white;
 }
