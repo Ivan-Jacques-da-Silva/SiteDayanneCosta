@@ -76,7 +76,7 @@ const MapController = ({ center, zoom }) => {
   return null;
 };
 
-const PropertyMap = ({ properties = [], selectedPropertyId, onPropertySelect, useSimpleMarker = false, hidePopup = false, onListPropertyClick }) => {
+const PropertyMap = ({ properties = [], selectedPropertyId, onPropertySelect, useSimpleMarker = false, hidePopup = false, listClickTrigger }) => {
   const [mapCenter, setMapCenter] = useState(MAPS_CONFIG.DEFAULT_CENTER);
   const [mapZoom, setMapZoom] = useState(MAPS_CONFIG.DEFAULT_ZOOM);
   const [showPropertyPopup, setShowPropertyPopup] = useState(false);
@@ -137,23 +137,15 @@ const PropertyMap = ({ properties = [], selectedPropertyId, onPropertySelect, us
 
   const handleMarkerClick = useCallback((property, event) => {
     if (property && property.id && !isDetailPage) {
-      // Se já há um popup aberto e é de uma propriedade diferente, feche primeiro
-      if (showPropertyPopup && popupProperty && popupProperty.id !== property.id) {
-        setShowPropertyPopup(false);
-        setPopupProperty(null);
-        // Pequeno delay para a animação de fechamento
-        setTimeout(() => {
-          setPopupProperty(property);
-          setSelectedId(property.id);
-          setShowPropertyPopup(true);
-        }, 100);
-      } else {
-        setPopupProperty(property);
-        setSelectedId(property.id);
-        setShowPropertyPopup(true);
-      }
+      // Feche o popup atual imediatamente
+      setShowPropertyPopup(false);
+      setPopupProperty(null);
+      
+      // Atualize a propriedade selecionada
+      setSelectedId(property.id);
 
       // Get marker position for popup placement with boundary checking
+      let popupPos = { x: 0, y: 0 };
       if (event && event.containerPoint) {
         const containerPoint = event.containerPoint;
         const mapContainer = event.target._map.getContainer();
@@ -180,10 +172,15 @@ const PropertyMap = ({ properties = [], selectedPropertyId, onPropertySelect, us
           y = containerPoint.y + 40; // Show below marker instead (mais próximo)
         }
 
-        setPopupPosition({ x, y });
+        popupPos = { x, y };
       }
+
+      // Abra o novo popup imediatamente
+      setPopupProperty(property);
+      setPopupPosition(popupPos);
+      setShowPropertyPopup(true);
     }
-  }, [isDetailPage, showPropertyPopup, popupProperty]);
+  }, [isDetailPage]);
 
   const handleViewDetails = useCallback((property) => {
     if (onPropertySelect && property && property.id) {
@@ -211,11 +208,9 @@ const PropertyMap = ({ properties = [], selectedPropertyId, onPropertySelect, us
   // Nova função para lidar com clique nas propriedades da lista
   const handleListPropertyClick = useCallback((property) => {
     if (property && property.id && !isDetailPage) {
-      // Feche o popup atual se estiver aberto
-      if (showPropertyPopup) {
-        setShowPropertyPopup(false);
-        setPopupProperty(null);
-      }
+      // Feche o popup atual imediatamente
+      setShowPropertyPopup(false);
+      setPopupProperty(null);
 
       // Atualize a propriedade selecionada
       setSelectedId(property.id);
@@ -225,43 +220,51 @@ const PropertyMap = ({ properties = [], selectedPropertyId, onPropertySelect, us
       setMapCenter(newCenter);
       setMapZoom(MAPS_CONFIG.SELECTED_ZOOM);
 
-      // Pequeno delay para permitir que o mapa atualize e depois abra o novo popup
-      setTimeout(() => {
-        setPopupProperty(property);
-        setShowPropertyPopup(true);
+      // Calcule a posição do popup baseada no centro do mapa
+      const mapContainer = document.querySelector('.leaflet-container');
+      let popupPos = { x: 0, y: 0 };
+      
+      if (mapContainer) {
+        const containerWidth = mapContainer.clientWidth;
+        const containerHeight = mapContainer.clientHeight;
+        const centerX = containerWidth / 2;
+        const centerY = containerHeight / 2;
 
-        // Calcule uma posição aproximada para o popup baseada no centro do mapa
-        const mapContainer = document.querySelector('.leaflet-container');
-        if (mapContainer) {
-          const containerWidth = mapContainer.clientWidth;
-          const containerHeight = mapContainer.clientHeight;
-          const centerX = containerWidth / 2;
-          const centerY = containerHeight / 2;
+        // Popup dimensions
+        const popupWidth = window.innerWidth <= 768 ? 320 : 400;
+        const popupHeight = window.innerWidth <= 768 ? 120 : 140;
 
-          // Popup dimensions
-          const popupWidth = window.innerWidth <= 768 ? 320 : 400;
-          const popupHeight = window.innerWidth <= 768 ? 120 : 140;
+        // Position popup above center (where marker should be)
+        let x = centerX;
+        let y = centerY - popupHeight - 10;
 
-          // Position popup above center (where marker should be)
-          let x = centerX;
-          let y = centerY - popupHeight - 10;
-
-          // Boundary checks
-          if (x - popupWidth / 2 < 10) {
-            x = popupWidth / 2 + 10;
-          } else if (x + popupWidth / 2 > containerWidth - 10) {
-            x = containerWidth - popupWidth / 2 - 10;
-          }
-
-          if (y < 10) {
-            y = centerY + 40;
-          }
-
-          setPopupPosition({ x, y });
+        // Boundary checks
+        if (x - popupWidth / 2 < 10) {
+          x = popupWidth / 2 + 10;
+        } else if (x + popupWidth / 2 > containerWidth - 10) {
+          x = containerWidth - popupWidth / 2 - 10;
         }
-      }, 300);
+
+        if (y < 10) {
+          y = centerY + 40;
+        }
+
+        popupPos = { x, y };
+      }
+
+      // Abra o novo popup imediatamente com a nova propriedade
+      setPopupProperty(property);
+      setPopupPosition(popupPos);
+      setShowPropertyPopup(true);
     }
-  }, [isDetailPage, showPropertyPopup]);
+  }, [isDetailPage]);
+
+  // Effect to handle listClickTrigger from PropertyListing
+  useEffect(() => {
+    if (listClickTrigger && listClickTrigger.property && listClickTrigger.timestamp) {
+      handleListPropertyClick(listClickTrigger.property);
+    }
+  }, [listClickTrigger, handleListPropertyClick]);
 
 
   if (validProperties.length === 0) {
