@@ -1,30 +1,13 @@
 // Função para detectar ambiente
 const detectarBaseUrl = () => {
   const hostname = window.location.hostname;
-  const port = window.location.port;
   const protocol = window.location.protocol;
   
-  // Para Replit, usar a URL base do replit mas com porta 5000
-  if (hostname.includes('replit.dev') || hostname.includes('replit.co')) {
-    // Pegar o nome do projeto do replit e criar URL da porta 5000
-    const projectName = hostname.split('.')[0];
-    const replitDomain = hostname.split('.').slice(1).join('.');
-    return `${protocol}//${projectName}-5000.${replitDomain}`;
-  }
-
+  console.log('🔍 Detecting API URL:', { hostname, protocol });
+  
   // Para qualquer domínio dayannecosta.com - sempre usar subdomínio api
   if (hostname.includes('dayannecosta.com')) {
     return 'https://api.dayannecosta.com';
-  }
-
-  // Para VPS Hostinger - mesmo domínio mas com porta 5000
-  if (hostname && !hostname.includes('localhost') && !hostname.includes('127.0.0.1') && !hostname.includes('replit')) {
-    // Se está em produção (HTTPS), usar HTTPS na porta 5000
-    if (protocol === 'https:') {
-      return `https://${hostname}:5000`;
-    }
-    // Se está em desenvolvimento no VPS (HTTP), usar HTTP na porta 5000
-    return `http://${hostname}:5000`;
   }
 
   // Para desenvolvimento local - sempre usar porta 5000 para backend
@@ -32,9 +15,14 @@ const detectarBaseUrl = () => {
     return 'http://localhost:5000';
   }
 
-  // Default para desenvolvimento
-  return 'http://localhost:5000';
+  // Default para desenvolvimento (incluindo Replit)
+  const fallbackUrl = 'https://api.dayannecosta.com';
+  console.log('🔍 Final API URL:', fallbackUrl);
+  return fallbackUrl;
 };
+
+// Log the detected base URL when the module loads
+console.log('🔍 API Base URL detected as:', detectarBaseUrl());
 
 const API_CONFIG = {
   BASE_URL: detectarBaseUrl(),

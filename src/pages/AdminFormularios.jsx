@@ -3,6 +3,38 @@ import React, { useState, useEffect } from 'react';
 import AdminLayout from '../components/AdminLayout';
 import styles from './AdminFormularios.module.css';
 
+import { buildApiUrl } from '../config/api';
+
+// Delete Confirmation Modal Component
+const DeleteConfirmationModal = ({ onConfirm, onCancel, formData }) => {
+  return (
+    <div className={styles.modalOverlay}>
+      <div className={styles.confirmModal}>
+        <div className={styles.modalBody}>
+          <h3>Confirm Deletion</h3>
+          <p>Are you sure you want to delete this form submission?</p>
+          <p><strong>Contact:</strong> {formData?.name} ({formData?.email})</p>
+          <p><strong>Type:</strong> {formData?.type === 'PROPERTY_INQUIRY' ? 'Property Inquiry' : 'General Contact'}</p>
+          <div className={styles.modalActions}>
+            <button 
+              onClick={onCancel}
+              className={styles.cancelBtn}
+            >
+              Cancel
+            </button>
+            <button 
+              onClick={onConfirm}
+              className={styles.confirmBtn}
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const AdminFormularios = () => {
   const [formularios, setFormularios] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,6 +44,7 @@ const AdminFormularios = () => {
   const [statusFilter, setStatusFilter] = useState('');
   const [selectedForm, setSelectedForm] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(null);
 
   useEffect(() => {
     loadFormularios();
@@ -28,7 +61,7 @@ const AdminFormularios = () => {
         ...(statusFilter && { status: statusFilter })
       });
 
-      const response = await fetch(`http://0.0.0.0:5000/api/admin/contacts?${params}`, {
+      const response = await fetch(`${buildApiUrl('/api/admin/contacts')}?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -53,7 +86,7 @@ const AdminFormularios = () => {
   const handleUpdateStatus = async (id, newStatus) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://0.0.0.0:5000/api/admin/contacts/${id}`, {
+      const response = await fetch(buildApiUrl(`/api/admin/contacts/${id}`), {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -73,26 +106,31 @@ const AdminFormularios = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this form submission?')) {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`http://0.0.0.0:5000/api/admin/contacts/${id}`, {
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
+  const handleDelete = (form) => {
+    setShowDeleteModal(form);
+  };
 
-        if (response.ok) {
-          loadFormularios();
-        } else {
-          throw new Error('Failed to delete contact');
+  const confirmDelete = async () => {
+    if (!showDeleteModal) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(buildApiUrl(`/api/admin/contacts/${showDeleteModal.id}`), {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
         }
-      } catch (error) {
-        console.error('Error deleting form:', error);
-        alert('Failed to delete contact');
+      });
+
+      if (response.ok) {
+        setShowDeleteModal(null);
+        loadFormularios();
+      } else {
+        throw new Error('Failed to delete contact');
       }
+    } catch (error) {
+      console.error('Error deleting form:', error);
+      alert('Failed to delete contact');
     }
   };
 
@@ -121,6 +159,16 @@ const AdminFormularios = () => {
     switch (type) {
       case 'INQUIRY': return 'General Contact';
       case 'PROPERTY_INQUIRY': return 'Property Inquiry';
+      case 'CONTACT_PAGE': return 'Contact Page';
+      default: return type;
+    }
+  };
+
+  const formatTypeForModal = (type) => {
+    switch (type) {
+      case 'PROPERTY_INQUIRY': return 'Property Inquiry';
+      case 'CONTACT_PAGE': return 'Contact Page';
+      case 'INQUIRY': return 'General Contact';
       default: return type;
     }
   };
@@ -135,9 +183,14 @@ const AdminFormularios = () => {
     }).format(price);
   };
 
-  const openDetails = (form) => {
+  const openDetails = async (form) => {
     setSelectedForm(form);
     setShowDetails(true);
+
+    // Auto-update status to CONTACTED when viewing details (only if it's NEW)
+    if (form.status === 'NEW') {
+      await handleUpdateStatus(form.id, 'CONTACTED');
+    }
   };
 
   if (loading) {
@@ -166,7 +219,7 @@ const AdminFormularios = () => {
           >
             <option value="">All Types</option>
             <option value="INQUIRY">General Contact</option>
-            <option value="PROPERTY_INQUIRY">Property Inquiries</option>
+            <option value="PROPERTY_INQUIRY">Property Inquiry</option>
           </select>
 
           <select 
@@ -203,13 +256,13 @@ const AdminFormularios = () => {
               </div>
 
               <div className={styles.typeCell}>
-                <span className={styles.typeTag}>
+                <span className={`${styles.typeTag} ${form.type === 'PROPERTY_INQUIRY' ? styles.propertyType : styles.contactType}`}>
                   {getTypeLabel(form.type)}
                 </span>
               </div>
 
               <div className={styles.propertyCell}>
-                {form.property ? (
+                {form.property && form.type === 'PROPERTY_INQUIRY' ? (
                   <div>
                     <span className={styles.propertyTitle}>{form.property.title}</span>
                     <span className={styles.propertyAddress}>
@@ -218,7 +271,9 @@ const AdminFormularios = () => {
                     <span className={styles.propertyPrice}>{formatPrice(form.property.price)}</span>
                   </div>
                 ) : (
-                  <span className={styles.noProperty}>-</span>
+                  <span className={styles.noProperty}>
+                    {form.type === 'INQUIRY' ? 'General Contact Form' : '-'}
+                  </span>
                 )}
               </div>
 
@@ -249,7 +304,7 @@ const AdminFormularios = () => {
                   <i className="fas fa-eye"></i>
                 </button>
                 <button 
-                  onClick={() => handleDelete(form.id)}
+                  onClick={() => handleDelete(form)}
                   className={styles.deleteBtn}
                   title="Delete"
                 >
@@ -293,8 +348,8 @@ const AdminFormularios = () => {
 
         {/* Details Modal */}
         {showDetails && selectedForm && (
-          <div className={styles.modal}>
-            <div className={styles.modalContent}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
               <div className={styles.modalHeader}>
                 <h2>Form Details</h2>
                 <button 
@@ -326,7 +381,9 @@ const AdminFormularios = () => {
                   <h3>Form Details</h3>
                   <div className={styles.detailRow}>
                     <span className={styles.label}>Type:</span>
-                    <span>{getTypeLabel(selectedForm.type)}</span>
+                    <span className={`${styles.typeIndicator} ${selectedForm.type === 'PROPERTY_INQUIRY' ? styles.propertyIndicator : styles.contactIndicator}`}>
+                      {formatTypeForModal(selectedForm.type)}
+                    </span>
                   </div>
                   <div className={styles.detailRow}>
                     <span className={styles.label}>Date:</span>
@@ -347,7 +404,7 @@ const AdminFormularios = () => {
                   </div>
                 </div>
 
-                {selectedForm.property && (
+                {selectedForm.property && selectedForm.type === 'PROPERTY_INQUIRY' ? (
                   <div className={styles.detailSection}>
                     <h3>Related Property</h3>
                     <div className={styles.detailRow}>
@@ -377,6 +434,13 @@ const AdminFormularios = () => {
                       </div>
                     )}
                   </div>
+                ) : selectedForm.type === 'INQUIRY' && (
+                  <div className={styles.detailSection}>
+                    <h3>Contact Form Details</h3>
+                    <div className={styles.contactFormInfo}>
+                      <p>This is a general contact form submission from the website contact page.</p>
+                    </div>
+                  </div>
                 )}
 
                 <div className={styles.detailSection}>
@@ -388,6 +452,15 @@ const AdminFormularios = () => {
               </div>
             </div>
           </div>
+        )}
+
+        {/* Delete Confirmation Modal */}
+        {showDeleteModal && (
+          <DeleteConfirmationModal 
+            onConfirm={confirmDelete}
+            onCancel={() => setShowDeleteModal(null)}
+            formData={showDeleteModal}
+          />
         )}
       </div>
     </AdminLayout>
