@@ -8,21 +8,24 @@ const AdminFormularios = () => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [filter, setFilter] = useState('');
+  const [typeFilter, setTypeFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
   const [selectedForm, setSelectedForm] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
 
   useEffect(() => {
     loadFormularios();
-  }, [currentPage, filter]);
+  }, [currentPage, typeFilter, statusFilter]);
 
   const loadFormularios = async () => {
+    setLoading(true);
     try {
       const token = localStorage.getItem('token');
       const params = new URLSearchParams({
         page: currentPage,
         limit: 10,
-        ...(filter && { type: filter })
+        ...(typeFilter && { type: typeFilter }),
+        ...(statusFilter && { status: statusFilter })
       });
 
       const response = await fetch(`http://0.0.0.0:5000/api/admin/contacts?${params}`, {
@@ -37,51 +40,11 @@ const AdminFormularios = () => {
         setFormularios(data.contacts);
         setTotalPages(data.pagination.pages);
       } else {
-        // Mock data for development
-        setFormularios([
-          {
-            id: 1,
-            type: 'CONTACT',
-            name: 'João Silva',
-            email: 'joao@email.com',
-            phone: '+1 (305) 123-4567',
-            message: 'I am interested in learning more about luxury condos in Brickell. Could you please provide more information about available properties?',
-            propertyId: null,
-            property: null,
-            createdAt: '2024-01-15T10:30:00Z',
-            status: 'NEW'
-          },
-          {
-            id: 2,
-            type: 'PROPERTY_INQUIRY',
-            name: 'Maria Santos',
-            email: 'maria@email.com',
-            phone: '+1 (305) 987-6543',
-            message: 'I would like to schedule a viewing for this property. When would be a good time?',
-            propertyId: 1,
-            property: {
-              title: 'Luxury Condo in Brickell',
-              address: '2101 Brickell Ave, Unit 905'
-            },
-            createdAt: '2024-01-14T16:45:00Z',
-            status: 'CONTACTED'
-          },
-          {
-            id: 3,
-            type: 'SELL_INQUIRY',
-            name: 'Carlos Rodriguez',
-            email: 'carlos@email.com',
-            phone: '+1 (305) 555-0123',
-            message: 'I am looking to sell my property in Coconut Grove. Can you help me with a market analysis?',
-            propertyId: null,
-            property: null,
-            createdAt: '2024-01-13T09:15:00Z',
-            status: 'COMPLETED'
-          }
-        ]);
+        throw new Error('Failed to fetch contacts');
       }
     } catch (error) {
       console.error('Error loading formularios:', error);
+      setFormularios([]);
     } finally {
       setLoading(false);
     }
@@ -90,7 +53,7 @@ const AdminFormularios = () => {
   const handleUpdateStatus = async (id, newStatus) => {
     try {
       const token = localStorage.getItem('token');
-      await fetch(`http://0.0.0.0:5000/api/admin/contacts/${id}`, {
+      const response = await fetch(`http://0.0.0.0:5000/api/admin/contacts/${id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -98,9 +61,15 @@ const AdminFormularios = () => {
         },
         body: JSON.stringify({ status: newStatus })
       });
-      loadFormularios();
+
+      if (response.ok) {
+        loadFormularios();
+      } else {
+        throw new Error('Failed to update status');
+      }
     } catch (error) {
       console.error('Error updating status:', error);
+      alert('Failed to update status');
     }
   };
 
@@ -108,15 +77,21 @@ const AdminFormularios = () => {
     if (window.confirm('Are you sure you want to delete this form submission?')) {
       try {
         const token = localStorage.getItem('token');
-        await fetch(`http://0.0.0.0:5000/api/admin/contacts/${id}`, {
+        const response = await fetch(`http://0.0.0.0:5000/api/admin/contacts/${id}`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
-        loadFormularios();
+
+        if (response.ok) {
+          loadFormularios();
+        } else {
+          throw new Error('Failed to delete contact');
+        }
       } catch (error) {
         console.error('Error deleting form:', error);
+        alert('Failed to delete contact');
       }
     }
   };
@@ -127,7 +102,8 @@ const AdminFormularios = () => {
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
+      timeZone: 'America/New_York'
     });
   };
 
@@ -136,18 +112,27 @@ const AdminFormularios = () => {
       case 'NEW': return '#ef4444';
       case 'CONTACTED': return '#f59e0b';
       case 'COMPLETED': return '#10b981';
+      case 'CLOSED': return '#6b7280';
       default: return '#6b7280';
     }
   };
 
   const getTypeLabel = (type) => {
     switch (type) {
-      case 'CONTACT': return 'General Contact';
+      case 'INQUIRY': return 'General Contact';
       case 'PROPERTY_INQUIRY': return 'Property Inquiry';
-      case 'SELL_INQUIRY': return 'Sell Inquiry';
-      case 'BUY_INQUIRY': return 'Buy Inquiry';
       default: return type;
     }
+  };
+
+  const formatPrice = (price) => {
+    if (!price) return 'N/A';
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(price);
   };
 
   const openDetails = (form) => {
@@ -169,21 +154,31 @@ const AdminFormularios = () => {
         <div className={styles.pageHeader}>
           <div>
             <h1>Form Submissions</h1>
-            <p>View and manage all form submissions and inquiries</p>
+            <p>View and manage all contact forms and property inquiries</p>
           </div>
         </div>
 
         <div className={styles.filters}>
           <select 
-            value={filter} 
-            onChange={(e) => setFilter(e.target.value)}
+            value={typeFilter} 
+            onChange={(e) => setTypeFilter(e.target.value)}
             className={styles.filterSelect}
           >
-            <option value="">All Forms</option>
-            <option value="CONTACT">General Contact</option>
+            <option value="">All Types</option>
+            <option value="INQUIRY">General Contact</option>
             <option value="PROPERTY_INQUIRY">Property Inquiries</option>
-            <option value="SELL_INQUIRY">Sell Inquiries</option>
-            <option value="BUY_INQUIRY">Buy Inquiries</option>
+          </select>
+
+          <select 
+            value={statusFilter} 
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className={styles.filterSelect}
+          >
+            <option value="">All Status</option>
+            <option value="NEW">New</option>
+            <option value="CONTACTED">Contacted</option>
+            <option value="COMPLETED">Completed</option>
+            <option value="CLOSED">Closed</option>
           </select>
         </div>
 
@@ -217,7 +212,10 @@ const AdminFormularios = () => {
                 {form.property ? (
                   <div>
                     <span className={styles.propertyTitle}>{form.property.title}</span>
-                    <span className={styles.propertyAddress}>{form.property.address}</span>
+                    <span className={styles.propertyAddress}>
+                      {form.property.address}, {form.property.city}, {form.property.state} {form.property.zipCode}
+                    </span>
+                    <span className={styles.propertyPrice}>{formatPrice(form.property.price)}</span>
                   </div>
                 ) : (
                   <span className={styles.noProperty}>-</span>
@@ -234,6 +232,7 @@ const AdminFormularios = () => {
                   <option value="NEW">New</option>
                   <option value="CONTACTED">Contacted</option>
                   <option value="COMPLETED">Completed</option>
+                  <option value="CLOSED">Closed</option>
                 </select>
               </div>
 
@@ -245,12 +244,14 @@ const AdminFormularios = () => {
                 <button 
                   onClick={() => openDetails(form)}
                   className={styles.viewBtn}
+                  title="View Details"
                 >
                   <i className="fas fa-eye"></i>
                 </button>
                 <button 
                   onClick={() => handleDelete(form.id)}
                   className={styles.deleteBtn}
+                  title="Delete"
                 >
                   <i className="fas fa-trash"></i>
                 </button>
@@ -262,7 +263,7 @@ const AdminFormularios = () => {
         {formularios.length === 0 && (
           <div className={styles.noResults}>
             <h3>No form submissions found</h3>
-            <p>No one has submitted any forms yet.</p>
+            <p>No contact forms or property inquiries have been submitted yet.</p>
           </div>
         )}
 
@@ -340,6 +341,10 @@ const AdminFormularios = () => {
                       {selectedForm.status}
                     </span>
                   </div>
+                  <div className={styles.detailRow}>
+                    <span className={styles.label}>Source:</span>
+                    <span>{selectedForm.source || 'Website'}</span>
+                  </div>
                 </div>
 
                 {selectedForm.property && (
@@ -351,8 +356,26 @@ const AdminFormularios = () => {
                     </div>
                     <div className={styles.detailRow}>
                       <span className={styles.label}>Address:</span>
-                      <span>{selectedForm.property.address}</span>
+                      <span>
+                        {selectedForm.property.address}, {selectedForm.property.city}, {selectedForm.property.state} {selectedForm.property.zipCode}
+                      </span>
                     </div>
+                    <div className={styles.detailRow}>
+                      <span className={styles.label}>Price:</span>
+                      <span>{formatPrice(selectedForm.property.price)}</span>
+                    </div>
+                    {selectedForm.property.bedrooms && (
+                      <div className={styles.detailRow}>
+                        <span className={styles.label}>Beds/Baths:</span>
+                        <span>{selectedForm.property.bedrooms} beds, {selectedForm.property.bathrooms} baths</span>
+                      </div>
+                    )}
+                    {selectedForm.property.sqft && (
+                      <div className={styles.detailRow}>
+                        <span className={styles.label}>Square Feet:</span>
+                        <span>{new Intl.NumberFormat('en-US').format(selectedForm.property.sqft)} sq ft</span>
+                      </div>
+                    )}
                   </div>
                 )}
 

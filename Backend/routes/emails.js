@@ -125,7 +125,7 @@ router.post('/contact', async (req, res) => {
 // Send property inquiry email
 router.post('/property-inquiry', async (req, res) => {
   try {
-    const { firstName, lastName, email, phone, message, propertyId } = req.body;
+    const { firstName, lastName, email, phone, message, propertyId, propertyUrl } = req.body;
 
     // Validate required fields
     if (!firstName || !lastName || !email || !phone || !propertyId) {
@@ -209,7 +209,8 @@ router.post('/property-inquiry', async (req, res) => {
       lastName,
       email,
       phone,
-      message: message || 'Interest in property'
+      message: message || 'Interest in property',
+      propertyUrl
     }, property);
 
     if (emailResult.success) {

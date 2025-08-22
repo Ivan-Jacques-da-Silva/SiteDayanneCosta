@@ -153,6 +153,14 @@
 .propertyAddress {
   color: #6b7280;
   font-size: 12px;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.propertyPrice {
+  color: #059669;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .noProperty {

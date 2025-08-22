@@ -86,6 +86,13 @@ const emailTemplates = {
           <p style="line-height: 1.6;">${data.message}</p>
         </div>
 
+        ${data.propertyUrl ? `
+        <div style="background: #f0f8ff; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h3 style="color: #555; margin-top: 0;">Property Link</h3>
+          <p><a href="${data.propertyUrl}" style="color: #0066cc; text-decoration: none;">${data.propertyUrl}</a></p>
+        </div>
+        ` : ''}
+
         <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin: 20px 0;">
           <p style="margin: 0; color: #666; font-size: 14px;">
             <strong>Source:</strong> Property Form — Dayanne Costa Website<br>

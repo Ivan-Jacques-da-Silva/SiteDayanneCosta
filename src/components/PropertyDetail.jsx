@@ -146,6 +146,12 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
     setSubmitMessage('');
 
     try {
+      // Get current page URL
+      const currentUrl = window.location.href;
+      
+      // Enhanced message with property URL
+      const enhancedMessage = `${formData.message}\n\nProperty URL: ${currentUrl}`;
+
       const response = await fetch('/api/emails/property-inquiry', {
         method: 'POST',
         headers: {
@@ -153,14 +159,16 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
         },
         body: JSON.stringify({
           ...formData,
-          propertyId: property.id
+          message: enhancedMessage,
+          propertyId: property.id,
+          propertyUrl: currentUrl
         }),
       });
 
       const data = await response.json();
 
       if (data.success) {
-        setSubmitMessage('Interesse enviado com sucesso! Entraremos em contato em breve.');
+        setSubmitMessage('Interest sent successfully! We will contact you soon.');
         setFormData({
           firstName: '',
           lastName: '',
@@ -169,10 +177,10 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
           message: `I am interested in ${property.address} ${property.city}, ${property.state} ${property.zipCode}`
         });
       } else {
-        setSubmitMessage('Erro ao enviar interesse: ' + data.message);
+        setSubmitMessage('Error sending interest: ' + data.message);
       }
     } catch (error) {
-      setSubmitMessage('Erro ao enviar interesse. Tente novamente.');
+      setSubmitMessage('Error sending interest. Please try again.');
       console.error('Error submitting form:', error);
     } finally {
       setIsSubmitting(false);
@@ -211,7 +219,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
       ? galleryImages.map((img) => getImageUrl(img.url))
       : property.images
         ? property.images.map((img) => getImageUrl(img.url))
-        : ["/placeholder-image.jpg"];
+        : ["/default.png"];
 
   return (
     <div className={styles.propertyDetail}>
@@ -247,13 +255,13 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
       <section className={styles.fullSlider} id="full-slider">
         <div className={styles.sliderContainer}>
           <img
-            src={images[currentImageIndex] || "/placeholder-image.jpg"}
+            src={images[currentImageIndex] || "/default.png"}
             alt={`${property.address} - Image ${currentImageIndex + 1}`}
             className={styles.sliderImage}
             onClick={() => handleImageClick(currentImageIndex)}
             onError={(e) => {
               console.log("Image load error:", e.target.src);
-              e.target.src = "/placeholder-image.jpg";
+              e.target.src = "/default.png";
             }}
           />
 
@@ -592,7 +600,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                     <PropertyMap
                       properties={[{
                         ...property,
-                        imageUrl: images[0] || "/placeholder-image.jpg"
+                        imageUrl: images[0] || "/default.png"
                       }]}
                       selectedPropertyId={property.id}
                       useSimpleMarker={true}
@@ -629,13 +637,13 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                                   similar.image ||
                                   (similar.images && similar.images.length > 0
                                     ? getImageUrl(similar.images[0].url)
-                                    : "/placeholder-image.jpg") ||
-                                  "/placeholder-image.jpg"
+                                    : "/default.png") ||
+                                  "/default.png"
                                 }
                                 alt={similar.address}
                                 className={styles.similarPropertyImage}
                                 onError={(e) => {
-                                  e.target.src = "/placeholder-image.jpg";
+                                  e.target.src = "/default.png";
                                 }}
                               />
                             </div>
@@ -776,7 +784,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                     className={styles.submitBtn}
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? 'Enviando...' : 'Request Information'}
+                    {isSubmitting ? 'Sending...' : 'Request Information'}
                   </button>
                 </form>
               </div>
@@ -805,6 +813,10 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
               src={images[currentImageIndex]}
               alt={`${property.address} - Image ${currentImageIndex + 1}`}
               className={styles.modalImage}
+              onError={(e) => {
+                console.log("Modal image load error:", e.target.src);
+                e.target.src = "/default.png";
+              }}
             />
             <button className={styles.prevBtn} onClick={prevImage}>
               ‹

@@ -84,13 +84,15 @@ router.get('/dashboard', async (req, res) => {
   }
 });
 
-// GET /api/admin/contacts - Get all contacts with pagination
+// GET /api/admin/contacts - Get all contacts with pagination and property details
 router.get('/contacts', async (req, res) => {
   try {
-    const { page = 1, limit = 10, status } = req.query;
+    const { page = 1, limit = 10, status, type } = req.query;
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
-    const where = status ? { status } : {};
+    const where = {};
+    if (status) where.status = status;
+    if (type) where.type = type;
 
     const [contacts, total] = await Promise.all([
       prisma.contact.findMany({
@@ -98,6 +100,20 @@ router.get('/contacts', async (req, res) => {
         include: {
           user: {
             select: { name: true, email: true }
+          },
+          property: {
+            select: {
+              id: true,
+              title: true,
+              address: true,
+              city: true,
+              state: true,
+              zipCode: true,
+              price: true,
+              bedrooms: true,
+              bathrooms: true,
+              sqft: true
+            }
           }
         },
         orderBy: { createdAt: 'desc' },
@@ -122,8 +138,8 @@ router.get('/contacts', async (req, res) => {
   }
 });
 
-// PUT /api/admin/contacts/:id/status - Update contact status
-router.put('/contacts/:id/status', async (req, res) => {
+// PUT /api/admin/contacts/:id - Update contact status
+router.put('/contacts/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
@@ -134,6 +150,17 @@ router.put('/contacts/:id/status', async (req, res) => {
       include: {
         user: {
           select: { name: true, email: true }
+        },
+        property: {
+          select: {
+            id: true,
+            title: true,
+            address: true,
+            city: true,
+            state: true,
+            zipCode: true,
+            price: true
+          }
         }
       }
     });
@@ -142,6 +169,22 @@ router.put('/contacts/:id/status', async (req, res) => {
   } catch (error) {
     console.error('Error updating contact:', error);
     res.status(400).json({ error: 'Failed to update contact status' });
+  }
+});
+
+// DELETE /api/admin/contacts/:id - Delete contact
+router.delete('/contacts/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await prisma.contact.delete({
+      where: { id }
+    });
+
+    res.json({ message: 'Contact deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting contact:', error);
+    res.status(400).json({ error: 'Failed to delete contact' });
   }
 });
 
