@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./PropertyDetail.module.css";
-import { getImageUrl } from "../config/api";
+import { getImageUrl, buildApiUrl } from "../config/api";
 import PropertyMap from "./PropertyMap";
 
 const PropertyDetail = ({ propertyId, propertyData = null }) => {
@@ -12,7 +12,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
   const [showImageModal, setShowImageModal] = useState(false);
   const [similarProperties, setSimilarProperties] = useState([]);
   const [viewMode, setViewMode] = useState("photos");
-  
+
   // Form state
   const [formData, setFormData] = useState({
     firstName: '',
@@ -64,7 +64,8 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
   const fetchPropertyData = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/property/${propertyId}`);
+      const response = await fetch(buildApiUrl(`/api/properties/${propertyId}`));
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
       setProperty(data);
       fetchSimilarProperties(data.categoria);
@@ -81,11 +82,14 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
       if (!categoryToSearch) return;
 
       // Use the properties-by-category endpoint to get properties from same category
-      const response = await fetch(
-        `/api/properties-by-category?category=${encodeURIComponent(categoryToSearch)}&limit=10`,
-      );
-      const data = await response.json();
-
+      const response = await fetch(buildApiUrl(`/api/properties-by-category?category=${encodeURIComponent(categoryToSearch)}&limit=10`));
+      const text = await response.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        data = [];
+      }
       // Filter out current property
       const filtered = (Array.isArray(data) ? data : data.properties || [])
         .filter((p) => p.id !== property?.id)
@@ -141,6 +145,10 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
   };
 
   const handleSubmit = async (e) => {
+    if (!property?.id) {
+      setSubmitMessage('Property not loaded.');
+      return;
+    }
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitMessage('');
@@ -148,11 +156,11 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
     try {
       // Get current page URL
       const currentUrl = window.location.href;
-      
+
       // Enhanced message with property URL
       const enhancedMessage = `${formData.message}\n\nProperty URL: ${currentUrl}`;
 
-      const response = await fetch('/api/emails/property-inquiry', {
+      const response = await fetch(buildApiUrl('/api/emails/property-inquiry'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -165,7 +173,10 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
         }),
       });
 
-      const data = await response.json();
+      const text = await response.text();
+      if (!response.ok) throw new Error(text || `HTTP ${response.status}`);
+      let data;
+      try { data = JSON.parse(text); } catch { data = { success: false, message: text }; }
 
       if (data.success) {
         setSubmitMessage('Interest sent successfully! We will contact you soon.');
@@ -203,14 +214,14 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
   // Filter images to show only gallery images for carousel (from multer uploads)
   const galleryImages = property.images
     ? property.images.filter((img) => {
-        // Check if it's a gallery image based on the filename pattern from multer
-        return (
-          img.url &&
-          (img.url.includes("gallery-") ||
-            img.url.includes("galleryimages-") ||
-            !img.isPrimary)
-        );
-      })
+      // Check if it's a gallery image based on the filename pattern from multer
+      return (
+        img.url &&
+        (img.url.includes("gallery-") ||
+          img.url.includes("galleryimages-") ||
+          !img.isPrimary)
+      );
+    })
     : [];
 
   // Use getImageUrl like in admin preview to load images correctly from backend
@@ -341,14 +352,14 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
               <button
                 className={styles.autoNavBtn}
                 onClick={prevImage}
-                onMouseEnter={() => {}}
+                onMouseEnter={() => { }}
               >
                 ‹
               </button>
               <button
                 className={styles.autoNavBtn}
                 onClick={nextImage}
-                onMouseEnter={() => {}}
+                onMouseEnter={() => { }}
               >
                 ›
               </button>
@@ -771,16 +782,16 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                       onChange={handleInputChange}
                     />
                   </div>
-                  
+
                   {submitMessage && (
                     <div className={styles.submitMessage}>
                       {submitMessage}
                     </div>
                   )}
-                  
+
                   <div className={styles.requiredFields}>* Required Fields</div>
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     className={styles.submitBtn}
                     disabled={isSubmitting}
                   >

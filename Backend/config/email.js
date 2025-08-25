@@ -12,7 +12,6 @@ const EMAIL_CONFIG = {
   }
 };
 
-
 // Create transporter
 const transporter = nodemailer.createTransport({
   ...EMAIL_CONFIG,
@@ -101,7 +100,54 @@ const emailTemplates = {
         </div>
       </div>
     `
-  })
+  }),
+
+  buySellForm: (data) => {
+    const resumo = [
+      `Action: ${data.formData?.action || 'Not specified'}`,
+      `Property Type: ${data.formData?.propertyType || 'Not specified'}`,
+      `Price Range: ${data.formData?.priceRange || 'Not specified'}`,
+      `Bedrooms: ${data.formData?.bedrooms || 'Not specified'}`,
+      `Bathrooms: ${data.formData?.bathrooms || 'Not specified'}`,
+      `Timeline: ${data.formData?.timeline || 'Not specified'}`
+    ].join(', ');
+
+    return {
+      from: EMAIL_CONFIG.auth.user,
+      // to: 'dayannecosta@compass.com',
+      to: 'ivanjacques1997@gmail.com',
+      subject: `Buy/Sell Quiz Submission — ${data.firstName} ${data.lastName}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #333;">Buy/Sell Quiz Submission</h2>
+
+          <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="color: #555; margin-top: 0;">Client Information</h3>
+            <p><strong>Name:</strong> ${data.firstName} ${data.lastName}</p>
+            <p><strong>Email:</strong> ${data.email}</p>
+            <p><strong>Phone:</strong> ${data.phone}</p>
+          </div>
+
+          <div style="background: #e8f5e8; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="color: #555; margin-top: 0;">Quiz Responses</h3>
+            <p>${resumo}</p>
+          </div>
+
+          <div style="background: #fff; padding: 20px; border-left: 4px solid #007bff; margin: 20px 0;">
+            <h3 style="color: #555; margin-top: 0;">Additional Comments</h3>
+            <p style="line-height: 1.6;">${data.message}</p>
+          </div>
+
+          <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin: 20px 0;">
+            <p style="margin: 0; color: #666; font-size: 14px;">
+              <strong>Source:</strong> Buy/Sell Quiz — Dayanne Costa Website<br>
+              <strong>Date:</strong> ${new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })}
+            </p>
+          </div>
+        </div>
+      `
+    };
+  }
 };
 
 // Function to send email

@@ -8,7 +8,7 @@ let prisma;
 try {
   // Check if DATABASE_URL exists, if not, construct it from individual variables
   let databaseUrl = process.env.DATABASE_URL;
-  
+
   if (!databaseUrl) {
     // Construct DATABASE_URL from individual environment variables
     const host = process.env.DB_HOST || 'localhost';
@@ -16,7 +16,7 @@ try {
     const database = process.env.DB_NAME || 'real_estate_db';
     const username = process.env.DB_USER || 'postgres';
     const password = process.env.DB_PASSWORD || 'admin';
-    
+
     databaseUrl = `postgresql://${username}:${password}@${host}:${port}/${database}`;
     process.env.DATABASE_URL = databaseUrl;
   }
@@ -53,9 +53,9 @@ router.post('/contact', async (req, res) => {
 
     // Validate required fields
     if (!firstName || !lastName || !email || !phone) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'All required fields must be filled in' 
+      return res.status(400).json({
+        success: false,
+        message: 'All required fields must be filled in'
       });
     }
 
@@ -77,17 +77,17 @@ router.post('/contact', async (req, res) => {
         console.log('Contact saved to database successfully');
       } catch (dbError) {
         console.error('Error saving contact to database:', dbError);
-        return res.status(500).json({ 
-          success: false, 
+        return res.status(500).json({
+          success: false,
           message: 'Failed to save contact to database',
-          error: dbError.message 
+          error: dbError.message
         });
       }
     } else {
       console.error('Database not available');
-      return res.status(500).json({ 
-        success: false, 
-        message: '**Failed** - Database connection not available' 
+      return res.status(500).json({
+        success: false,
+        message: '**Failed** - Database connection not available'
       });
     }
 
@@ -101,23 +101,110 @@ router.post('/contact', async (req, res) => {
     });
 
     if (emailResult.success) {
-      res.json({ 
-        success: true, 
-        message: 'Message sent successfully!' 
+      res.json({
+        success: true,
+        message: 'Message sent successfully!'
       });
     } else {
-      res.status(500).json({ 
-        success: false, 
-        message: '**Failed** to send email', 
-        error: emailResult.error 
+      res.status(500).json({
+        success: false,
+        message: '**Failed** to send email',
+        error: emailResult.error
       });
     }
   } catch (error) {
     console.error('Error in contact route:', error);
-    res.status(500).json({ 
-      success: false, 
+    res.status(500).json({
+      success: false,
       message: '**Failed** - Internal server error',
-      error: error.message 
+      error: error.message
+    });
+  }
+});
+
+// Send buy/sell form email
+router.post('/buy-sell-form', async (req, res) => {
+  try {
+    const { firstName, lastName, email, phone, message, formData } = req.body;
+
+    console.log('Buy-sell form received data:', { firstName, lastName, email, phone, message, formData });
+
+    // Validate required fields
+    if (!firstName || !email || !phone) {
+      return res.status(400).json({
+        success: false,
+        message: 'All required fields must be filled in'
+      });
+    }
+
+    // Save to database
+    if (prisma) {
+      try {
+        // Create a formatted metadata string
+        const metadataString = formData ? Object.entries(formData)
+          .map(([key, value]) => `${key}: ${value || 'Not specified'}`)
+          .join(', ') : '';
+
+        console.log('Formatted metadata:', metadataString);
+
+        await prisma.contact.create({
+          data: {
+            name: `${firstName} ${lastName || ''}`.trim(),
+            email,
+            phone,
+            message: message || 'No additional comments',
+            type: 'BUY_SELL_FORM',
+            source: 'BUY_SELL_FORM',
+            status: 'NEW',
+            metadata: JSON.stringify(formData || {}),
+            userId: null // Explicitly set as null for anonymous contacts
+          }
+        });
+        console.log('Buy/Sell quiz saved to database successfully');
+      } catch (dbError) {
+        console.error('Error saving buy/sell quiz to database:', dbError);
+        return res.status(500).json({
+          success: false,
+          message: 'Failed to save quiz to database',
+          error: dbError.message
+        });
+      }
+    } else {
+      console.error('Database not available');
+      return res.status(500).json({
+        success: false,
+        message: '**Failed** - Database connection not available'
+      });
+    }
+
+    // Send email
+    const emailResult = await sendEmail('buySellForm', {
+      firstName,
+      lastName: lastName || '',
+      email,
+      phone,
+      message: message || 'No additional comments',
+      formData
+    });
+
+    if (emailResult.success) {
+      res.json({
+        success: true,
+        message: 'Buy/Sell quiz submission sent successfully!'
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: '**Failed** to send email notification',
+        error: emailResult.error
+      });
+    }
+  } catch (error) {
+    console.error('Error in buy-sell form route:', error);
+    res.status(500).json({
+      success: false,
+      message: '**Failed** - Internal server error',
+      error: error.message
     });
   }
 });
@@ -129,9 +216,9 @@ router.post('/property-inquiry', async (req, res) => {
 
     // Validate required fields
     if (!firstName || !lastName || !email || !phone || !propertyId) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'All required fields must be filled in' 
+      return res.status(400).json({
+        success: false,
+        message: 'All required fields must be filled in'
       });
     }
 
@@ -179,7 +266,7 @@ router.post('/property-inquiry', async (req, res) => {
             email,
             phone,
             message: message || '',
-            type: 'INQUIRY',
+            type: 'PROPERTY_INQUIRY',
             source: 'PROPERTY_INQUIRY',
             status: 'NEW',
             propertyId: propertyId,
@@ -189,17 +276,17 @@ router.post('/property-inquiry', async (req, res) => {
         console.log('Property inquiry saved to database successfully');
       } catch (dbError) {
         console.error('Error saving property inquiry to database:', dbError);
-        return res.status(500).json({ 
-          success: false, 
+        return res.status(500).json({
+          success: false,
           message: 'Failed to save inquiry to database',
-          error: dbError.message 
+          error: dbError.message
         });
       }
     } else {
       console.error('Database not available');
-      return res.status(500).json({ 
-        success: false, 
-        message: '**Failed** - Database connection not available' 
+      return res.status(500).json({
+        success: false,
+        message: '**Failed** - Database connection not available'
       });
     }
 
@@ -214,23 +301,23 @@ router.post('/property-inquiry', async (req, res) => {
     }, property);
 
     if (emailResult.success) {
-      res.json({ 
-        success: true, 
-        message: 'Inquiry sent successfully!' 
+      res.json({
+        success: true,
+        message: 'Inquiry sent successfully!'
       });
     } else {
-      res.status(500).json({ 
-        success: false, 
-        message: '**Failed** to send email', 
-        error: emailResult.error 
+      res.status(500).json({
+        success: false,
+        message: '**Failed** to send email',
+        error: emailResult.error
       });
     }
   } catch (error) {
     console.error('Error in property inquiry route:', error);
-    res.status(500).json({ 
-      success: false, 
+    res.status(500).json({
+      success: false,
       message: '**Failed** - Internal server error',
-      error: error.message 
+      error: error.message
     });
   }
 });

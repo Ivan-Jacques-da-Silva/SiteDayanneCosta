@@ -9,7 +9,7 @@ import styles from './Login.module.css';
 const Login = () => {
   const navigate = useNavigate();
   const { login: authLogin, isAuthenticated, user, loading } = useAuth();
-  
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -40,7 +40,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       const response = await fetch(buildApiUrl('/api/users/login'), {
         method: 'POST',
@@ -61,7 +61,7 @@ const Login = () => {
 
       // Use auth context to handle login
       authLogin(data.user, data.token);
-      
+
       // Navigation will be handled by useEffect above
     } catch (error) {
       console.error('Login error:', error);
@@ -78,14 +78,14 @@ const Login = () => {
   // Show loading while checking authentication
   if (loading) {
     return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         height: '100vh',
         fontSize: '18px'
       }}>
-        Verificando autenticação...
+        Checking authentication...
       </div>
     );
   }
@@ -93,7 +93,7 @@ const Login = () => {
   return (
     <div className={styles.loginPage}>
       <Header />
-      
+
       <main className={styles.mainContent}>
         <div className={styles.container}>
           <div className={styles.loginWrapper}>
@@ -109,7 +109,7 @@ const Login = () => {
                     {errors.general}
                   </div>
                 )}
-                
+
                 <div className={styles.formGroup}>
                   <label htmlFor="email" className={styles.label}>
                     Email Address
@@ -162,7 +162,7 @@ const Login = () => {
                     />
                     <span className={styles.checkboxText}>Remember me</span>
                   </label>
-                  
+
                   <Link to="/forgot-password" className={styles.forgotLink}>
                     Forgot password?
                   </Link>

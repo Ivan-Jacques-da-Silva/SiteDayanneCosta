@@ -163,6 +163,41 @@
   transform: translateY(-2px);
 }
 
+/* Message styling for success/error alerts */
+.message {
+  padding: 15px;
+  border-radius: 8px;
+  margin: 15px 0;
+  font-size: 14px;
+  border: 1px solid;
+  text-align: center;
+  font-weight: normal;
+}
+
+/* Success messages (green background) */
+.message:has-text("**Success**"),
+.message[data-type="success"] {
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  color: #155724;
+}
+
+/* Error/Failed messages (red background) */
+.message:has-text("**Failed**"),
+.message:has-text("Failed"),
+.message:has-text("Error"),
+.message[data-type="error"] {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+}
+
+/* Bold text styling for Success/Failed words */
+.message strong,
+.message b {
+  font-weight: bold;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .mainWrap {

@@ -45,7 +45,7 @@ router.get('/', async (req, res) => {
 // Create contact
 router.post('/', async (req, res) => {
   try {
-    const { name, email, phone, message, source } = req.body;
+    const { name, email, phone, message, type, source, formData, propertyId } = req.body;
 
     const contact = await prisma.contact.create({
       data: {
@@ -53,10 +53,29 @@ router.post('/', async (req, res) => {
         email,
         phone,
         message,
+        type: type || 'INQUIRY',
         source,
-        userId: 'default-user-id' // You'll need proper auth
+        propertyId,
+        metadata: formData ? JSON.stringify(formData) : null
       }
     });
+
+    // Send email notification
+    if (type === 'BUY_SELL_FORM') {
+      try {
+        const { sendEmail } = require('../config/email');
+        await sendEmail('buySellForm', {
+          firstName: name.split(' ')[0] || name,
+          lastName: name.split(' ').slice(1).join(' ') || '',
+          email,
+          phone,
+          message: message || 'No additional comments',
+          formData
+        });
+      } catch (emailError) {
+        console.error('Error sending email:', emailError);
+      }
+    }
 
     res.status(201).json(contact);
   } catch (error) {

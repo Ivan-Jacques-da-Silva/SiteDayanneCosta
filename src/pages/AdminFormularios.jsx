@@ -1,9 +1,24 @@
-
 import React, { useState, useEffect } from 'react';
 import AdminLayout from '../components/AdminLayout';
 import styles from './AdminFormularios.module.css';
-
 import { buildApiUrl } from '../config/api';
+
+// Helpers para unificar lógica de tipo
+const ehPropriedade = (f) =>
+  f?.type === 'PROPERTY_INQUIRY' || f?.source === 'PROPERTY_INQUIRY';
+
+const rotuloTipo = (f) => {
+  if (f?.type === 'BUY_SELL_FORM') return 'Buy/Sell Quiz';
+  if (ehPropriedade(f)) return 'Property Inquiry';
+  if (f?.type === 'CONTACT_PAGE') return 'Contact Page';
+  return 'General Contact';
+};
+
+const classeTipo = (f) => {
+  if (f?.type === 'BUY_SELL_FORM') return styles.propertyType; // use classe apropriada se tiver
+  if (ehPropriedade(f)) return styles.propertyType;
+  return styles.contactType;
+};
 
 // Delete Confirmation Modal Component
 const DeleteConfirmationModal = ({ onConfirm, onCancel, formData }) => {
@@ -14,7 +29,7 @@ const DeleteConfirmationModal = ({ onConfirm, onCancel, formData }) => {
           <h3>Confirm Deletion</h3>
           <p>Are you sure you want to delete this form submission?</p>
           <p><strong>Contact:</strong> {formData?.name} ({formData?.email})</p>
-          <p><strong>Type:</strong> {formData?.type === 'PROPERTY_INQUIRY' ? 'Property Inquiry' : 'General Contact'}</p>
+          <p><strong>Type:</strong> {rotuloTipo(formData)}</p>
           <div className={styles.modalActions}>
             <button 
               onClick={onCancel}
@@ -160,18 +175,12 @@ const AdminFormularios = () => {
       case 'INQUIRY': return 'General Contact';
       case 'PROPERTY_INQUIRY': return 'Property Inquiry';
       case 'CONTACT_PAGE': return 'Contact Page';
+      case 'BUY_SELL_FORM': return 'Buy/Sell Quiz';
       default: return type;
     }
   };
 
-  const formatTypeForModal = (type) => {
-    switch (type) {
-      case 'PROPERTY_INQUIRY': return 'Property Inquiry';
-      case 'CONTACT_PAGE': return 'Contact Page';
-      case 'INQUIRY': return 'General Contact';
-      default: return type;
-    }
-  };
+  const formatTypeForModal = (f) => rotuloTipo(f);
 
   const formatPrice = (price) => {
     if (!price) return 'N/A';
@@ -187,7 +196,6 @@ const AdminFormularios = () => {
     setSelectedForm(form);
     setShowDetails(true);
 
-    // Auto-update status to CONTACTED when viewing details (only if it's NEW)
     if (form.status === 'NEW') {
       await handleUpdateStatus(form.id, 'CONTACTED');
     }
@@ -220,9 +228,10 @@ const AdminFormularios = () => {
             <option value="">All Types</option>
             <option value="INQUIRY">General Contact</option>
             <option value="PROPERTY_INQUIRY">Property Inquiry</option>
+            <option value="BUY_SELL_FORM">Buy/Sell Quiz</option>
           </select>
 
-          <select 
+        <select 
             value={statusFilter} 
             onChange={(e) => setStatusFilter(e.target.value)}
             className={styles.filterSelect}
@@ -256,13 +265,13 @@ const AdminFormularios = () => {
               </div>
 
               <div className={styles.typeCell}>
-                <span className={`${styles.typeTag} ${form.type === 'PROPERTY_INQUIRY' ? styles.propertyType : styles.contactType}`}>
-                  {getTypeLabel(form.type)}
+                <span className={`${styles.typeTag} ${classeTipo(form)}`}>
+                  {rotuloTipo(form)}
                 </span>
               </div>
 
               <div className={styles.propertyCell}>
-                {form.property && form.type === 'PROPERTY_INQUIRY' ? (
+                {form.property && ehPropriedade(form) ? (
                   <div>
                     <span className={styles.propertyTitle}>{form.property.title}</span>
                     <span className={styles.propertyAddress}>
@@ -272,7 +281,9 @@ const AdminFormularios = () => {
                   </div>
                 ) : (
                   <span className={styles.noProperty}>
-                    {form.type === 'INQUIRY' ? 'General Contact Form' : '-'}
+                    {form.type === 'BUY_SELL_FORM' ? 'Buy/Sell Quiz' : 
+                     form.type === 'CONTACT_PAGE' ? 'Contact Page Form' : 
+                     'General Contact Form'}
                   </span>
                 )}
               </div>
@@ -381,8 +392,8 @@ const AdminFormularios = () => {
                   <h3>Form Details</h3>
                   <div className={styles.detailRow}>
                     <span className={styles.label}>Type:</span>
-                    <span className={`${styles.typeIndicator} ${selectedForm.type === 'PROPERTY_INQUIRY' ? styles.propertyIndicator : styles.contactIndicator}`}>
-                      {formatTypeForModal(selectedForm.type)}
+                    <span className={`${styles.typeIndicator} ${ehPropriedade(selectedForm) ? styles.propertyIndicator : styles.contactIndicator}`}>
+                      {formatTypeForModal(selectedForm)}
                     </span>
                   </div>
                   <div className={styles.detailRow}>
@@ -404,7 +415,7 @@ const AdminFormularios = () => {
                   </div>
                 </div>
 
-                {selectedForm.property && selectedForm.type === 'PROPERTY_INQUIRY' ? (
+                {selectedForm.property && ehPropriedade(selectedForm) ? (
                   <div className={styles.detailSection}>
                     <h3>Related Property</h3>
                     <div className={styles.detailRow}>
@@ -434,7 +445,50 @@ const AdminFormularios = () => {
                       </div>
                     )}
                   </div>
-                ) : selectedForm.type === 'INQUIRY' && (
+                ) : selectedForm.type === 'BUY_SELL_FORM' ? (
+                  <div className={styles.detailSection}>
+                    <h3>Buy/Sell Quiz Details</h3>
+                    {(() => {
+                      try {
+                        const quizData = selectedForm.metadata ? JSON.parse(selectedForm.metadata) : {};
+                        return (
+                          <div>
+                            <div className={styles.detailRow}>
+                              <span className={styles.label}>Action:</span>
+                              <span>{quizData.action ? (quizData.action === 'buy' ? 'I Want To Buy' : 'I Want To Sell') : 'Not specified'}</span>
+                            </div>
+                            <div className={styles.detailRow}>
+                              <span className={styles.label}>Property Type:</span>
+                              <span>{quizData.propertyType || 'Not specified'}</span>
+                            </div>
+                            <div className={styles.detailRow}>
+                              <span className={styles.label}>Price Range:</span>
+                              <span>{quizData.priceRange || 'Not specified'}</span>
+                            </div>
+                            <div className={styles.detailRow}>
+                              <span className={styles.label}>Bedrooms:</span>
+                              <span>{quizData.bedrooms || 'Not specified'}</span>
+                            </div>
+                            <div className={styles.detailRow}>
+                              <span className={styles.label}>Bathrooms:</span>
+                              <span>{quizData.bathrooms || 'Not specified'}</span>
+                            </div>
+                            <div className={styles.detailRow}>
+                              <span className={styles.label}>Timeline:</span>
+                              <span>{quizData.timeline || 'Not specified'}</span>
+                            </div>
+                          </div>
+                        );
+                      } catch (error) {
+                        return (
+                          <div className={styles.contactFormInfo}>
+                            <p>Buy/Sell quiz submission data is not available.</p>
+                          </div>
+                        );
+                      }
+                    })()}
+                  </div>
+                ) : (
                   <div className={styles.detailSection}>
                     <h3>Contact Form Details</h3>
                     <div className={styles.contactFormInfo}>

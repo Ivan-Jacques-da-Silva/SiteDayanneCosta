@@ -15,7 +15,7 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
         height: '100vh',
         fontSize: '18px'
       }}>
-        Verificando autenticação...
+        Checking authentication...
       </div>
     );
   }
