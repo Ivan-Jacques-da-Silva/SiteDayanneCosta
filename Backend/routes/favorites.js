@@ -34,6 +34,20 @@ router.post('/', async (req, res) => {
   try {
     const { userId, propertyId } = req.body;
 
+    // Check if favorite already exists
+    const existingFavorite = await prisma.favorite.findUnique({
+      where: {
+        userId_propertyId: {
+          userId,
+          propertyId
+        }
+      }
+    });
+
+    if (existingFavorite) {
+      return res.status(400).json({ error: 'Property is already in favorites' });
+    }
+
     const favorite = await prisma.favorite.create({
       data: { userId, propertyId }
     });
@@ -51,7 +65,10 @@ router.delete('/:userId/:propertyId', async (req, res) => {
     const { userId, propertyId } = req.params;
 
     await prisma.favorite.deleteMany({
-      where: { userId, propertyId }
+      where: { 
+        userId: userId, 
+        propertyId: propertyId 
+      }
     });
 
     res.json({ message: 'Favorite removed successfully' });

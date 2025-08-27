@@ -676,4 +676,109 @@ router.delete('/properties/:id', async (req, res) => {
   }
 });
 
+// Get all favorites with user and property data
+router.get('/favorites', authenticateToken, async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const userId = req.query.userId;
+
+    let whereCondition = {};
+    if (userId) {
+      whereCondition.userId = userId;
+    }
+
+    const [favorites, totalCount] = await Promise.all([
+      prisma.favorite.findMany({
+        where: whereCondition,
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true
+            }
+          },
+          property: {
+            include: {
+              images: {
+                where: { isPrimary: true },
+                take: 1
+              }
+            }
+          }
+        },
+        skip,
+        take: limit,
+        orderBy: {
+          createdAt: 'desc'
+        }
+      }),
+      prisma.favorite.count({ where: whereCondition })
+    ]);
+
+    const totalPages = Math.ceil(totalCount / limit);
+
+    res.json({
+      favorites,
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalItems: totalCount,
+        pages: totalPages
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching favorites:', error);
+    res.status(500).json({ error: 'Failed to fetch favorites' });
+  }
+});
+
+// Delete favorite
+router.delete('/favorites/:id', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await prisma.favorite.delete({
+      where: { id }
+    });
+
+    res.json({ message: 'Favorite removed successfully' });
+  } catch (error) {
+    console.error('Error removing favorite:', error);
+    res.status(500).json({ error: 'Failed to remove favorite' });
+  }
+});
+
+
+
+// Dashboard stats
+router.get('/dashboard/stats', authenticateToken, async (req, res) => {
+  try {
+    const [
+      totalProperties,
+      totalContacts,
+      totalUsers,
+      totalFavorites
+    ] = await Promise.all([
+      prisma.property.count(),
+      prisma.contact.count(),
+      prisma.user.count(),
+      prisma.favorite.count()
+    ]);
+
+    res.json({
+      totalProperties,
+      totalContacts,
+      totalUsers,
+      totalFavorites
+    });
+  } catch (error) {
+    console.error('Error fetching dashboard stats:', error);
+    res.status(500).json({ error: 'Failed to fetch dashboard stats' });
+  }
+});
+
+
 module.exports = router;

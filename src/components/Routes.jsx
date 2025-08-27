@@ -36,6 +36,8 @@ import NewDevelopments from '../pages/NewDevelopments';
 import CompassConcierge from '../pages/CompassConcierge';
 import PrivateExclusive from '../pages/PrivateExclusive';
 import PropertyDetailPage from '../pages/PropertyDetailPage';
+import UserDashboard from '../pages/UserDashboard';
+import UserFavorites from '../pages/UserFavorites';
 
 
 const AppRoutes = () => {
@@ -79,15 +81,96 @@ const AppRoutes = () => {
 
         {/* Admin Routes */}
         <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-        <Route path="/admin/dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-        <Route path="/admin/properties" element={<ProtectedRoute><AdminProperties /></ProtectedRoute>} />
-        <Route path="/admin/properties/new" element={<ProtectedRoute><AdminPropertyForm /></ProtectedRoute>} />
-        <Route path="/admin/properties/edit/:id" element={<ProtectedRoute><AdminPropertyForm /></ProtectedRoute>} />
-        <Route path="/admin/condominios" element={<ProtectedRoute><AdminCondominios /></ProtectedRoute>} />
-        <Route path="/admin/usuarios" element={<ProtectedRoute><AdminUsuarios /></ProtectedRoute>} />
-        <Route path="/admin/favoritos" element={<ProtectedRoute><AdminFavoritos /></ProtectedRoute>} />
-        <Route path="/admin/contacts" element={<ProtectedRoute><AdminContacts /></ProtectedRoute>} />
-        <Route path="/admin/formularios" element={<ProtectedRoute><AdminFormularios /></ProtectedRoute>} />
+        <Route 
+          path="/admin/dashboard" 
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminDashboard />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/admin/properties" 
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminProperties />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/admin/properties/new" 
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminPropertyForm />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/admin/properties/edit/:id" 
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminPropertyForm />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/admin/condominios" 
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminCondominios />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/admin/usuarios" 
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminUsuarios />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/admin/favoritos" 
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminFavoritos />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/admin/contacts" 
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminContacts />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/admin/formularios" 
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminFormularios />
+            </ProtectedRoute>
+          } 
+        />
+
+        {/* Protected User Routes */}
+        <Route 
+          path="/dashboard" 
+          element={
+            <ProtectedRoute>
+              <UserDashboard />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/favorites" 
+          element={
+            <ProtectedRoute>
+              <UserFavorites />
+            </ProtectedRoute>
+          } 
+        />
 
         {/* Property Detail Route */}
         <Route path="/property/:id" element={<PropertyDetailPage />} />

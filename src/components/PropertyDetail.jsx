@@ -2,16 +2,25 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./PropertyDetail.module.css";
 import { getImageUrl, buildApiUrl } from "../config/api";
+import { useAuth } from "../contexts/AuthContext";
 import PropertyMap from "./PropertyMap";
+import FavoriteModal from "./FavoriteModal";
+import LoginModal from "./LoginModal";
+import perfil from '../assets/img/perfil.jpg';
 
 const PropertyDetail = ({ propertyId, propertyData = null }) => {
   const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth();
   const [property, setProperty] = useState(propertyData);
   const [loading, setLoading] = useState(!propertyData);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showImageModal, setShowImageModal] = useState(false);
   const [similarProperties, setSimilarProperties] = useState([]);
   const [viewMode, setViewMode] = useState("photos");
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [favoriteLoading, setFavoriteLoading] = useState(false);
+  const [showFavoriteModal, setShowFavoriteModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -42,8 +51,80 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
         ...prev,
         message: `I am interested in ${property.address} ${property.city}, ${property.state} ${property.zipCode}`
       }));
+      
+      // Check if property is favorite
+      if (isAuthenticated && user) {
+        checkIfFavorite();
+      }
     }
-  }, [property]);
+  }, [property, isAuthenticated, user]);
+
+  const checkIfFavorite = async () => {
+    if (!isAuthenticated || !user || !property?.id) return;
+    
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(buildApiUrl(`/api/favorites/${user.id}`), {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const favorites = await response.json();
+        const isFav = favorites.some(fav => fav.propertyId === property.id);
+        setIsFavorite(isFav);
+      }
+    } catch (error) {
+      console.error('Error checking favorite status:', error);
+    }
+  };
+
+  const handleFavoriteClick = async () => {
+    if (!isAuthenticated) {
+      setShowFavoriteModal(true);
+      return;
+    }
+
+    setFavoriteLoading(true);
+
+    try {
+      const token = localStorage.getItem('token');
+
+      if (isFavorite) {
+        // Remove from favorites
+        await fetch(buildApiUrl(`/api/favorites/${user.id}/${property.id}`), {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        setIsFavorite(false);
+      } else {
+        // Add to favorites
+        await fetch(buildApiUrl('/api/favorites'), {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            userId: user.id,
+            propertyId: property.id
+          })
+        });
+
+        setIsFavorite(true);
+      }
+    } catch (error) {
+      console.error('Error updating favorite:', error);
+    } finally {
+      setFavoriteLoading(false);
+    }
+  };
 
   // Debug images when property loads
   useEffect(() => {
@@ -411,7 +492,15 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
               <span className={styles.infoLabel}>$/Sqft</span>
             </li>
             <li className={styles.saveBtn}>
-              <button className={styles.saveButton}>
+              <button 
+                className={`${styles.saveButton} ${isFavorite ? styles.favorited : ''}`}
+                onClick={handleFavoriteClick}
+                disabled={favoriteLoading}
+                title={isAuthenticated ? (isFavorite ? 'Remove from favorites' : 'Add to favorites') : 'Login to save favorites'}
+              >
+                <span className={styles.heartIcon}>
+                  {favoriteLoading ? '⏳' : (isFavorite ? '♥' : '♡')}
+                </span>
                 <span>Save</span>
               </button>
             </li>
@@ -422,19 +511,19 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
             {/* Left Column - Property Details */}
             <div className={styles.leftColumn}>
               {/* Basic Information */}
-              <div className={styles.basicInfoCard}>
+              <div className={`${styles.basicInfoCard} ${!isAuthenticated ? styles.restrictedCard : ''}`}>
                 <h2>Basic Information</h2>
                 <ul className={styles.basicInfoList}>
                   <li>
                     <span className={styles.infoLabel}>MLS #</span>
                     <span className={styles.infoValue}>
-                      {property.mlsNumber || "N/A"}
+                      {isAuthenticated ? (property.mlsNumber || "N/A") : "***"}
                     </span>
                   </li>
                   <li>
                     <span className={styles.infoLabel}>Type</span>
                     <span className={styles.infoValue}>
-                      {property.propertyType || "N/A"}
+                      {isAuthenticated ? (property.propertyType || "N/A") : "***"}
                     </span>
                   </li>
                   <li>
@@ -442,50 +531,86 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                       Subdivision/Complex
                     </span>
                     <span className={styles.infoValue}>
-                      {property.subdivision || "N/A"}
+                      {isAuthenticated ? (property.subdivision || "N/A") : "***"}
                     </span>
                   </li>
                   <li>
                     <span className={styles.infoLabel}>Year Built</span>
                     <span className={styles.infoValue}>
-                      {property.yearBuilt || "N/A"}
+                      {isAuthenticated ? (property.yearBuilt || "N/A") : "***"}
                     </span>
                   </li>
                   <li>
                     <span className={styles.infoLabel}>Total Sqft</span>
                     <span className={styles.infoValue}>
-                      {formatNumber(property.sqft)}
+                      {isAuthenticated ? formatNumber(property.sqft) : "***"}
                     </span>
                   </li>
                   <li>
                     <span className={styles.infoLabel}>Date Listed</span>
                     <span className={styles.infoValue}>
-                      {property.dateListed || "N/A"}
+                      {isAuthenticated ? (property.dateListed || "N/A") : "***"}
                     </span>
                   </li>
                   <li>
                     <span className={styles.infoLabel}>Days on Market</span>
                     <span className={styles.infoValue}>
-                      {property.daysOnMarket || "N/A"}
+                      {isAuthenticated ? (property.daysOnMarket || "N/A") : "***"}
                     </span>
                   </li>
                 </ul>
+                
+                {!isAuthenticated && (
+                  <div className={styles.cardLoginOverlay}>
+                    <div className={styles.cardLoginOverlayContent}>
+                      <i className="fas fa-lock" style={{ fontSize: '24px', marginBottom: '10px' }}></i>
+                      <p>Login to view details</p>
+                      <button 
+                        className={styles.cardOverlayLoginBtn}
+                        onClick={() => setShowLoginModal(true)}
+                      >
+                        Login
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Description */}
               {property.description && (
-                <div className={styles.descriptionCard}>
+                <div className={`${styles.descriptionCard} ${!isAuthenticated ? styles.restrictedCard : ''}`}>
                   <h2>Description</h2>
-                  <p>{property.description}</p>
+                  <p>{isAuthenticated ? property.description : "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***"}</p>
+                  
+                  {!isAuthenticated && (
+                    <div className={styles.cardLoginOverlay}>
+                      <div className={styles.cardLoginOverlayContent}>
+                        <i className="fas fa-lock" style={{ fontSize: '24px', marginBottom: '10px' }}></i>
+                        <p>Login to view details</p>
+                        <button 
+                          className={styles.cardOverlayLoginBtn}
+                          onClick={() => setShowLoginModal(true)}
+                        >
+                          Login
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
               {/* Amenities */}
               {property.amenities && (
-                <div className={styles.amenitiesCard}>
+                <div className={`${styles.amenitiesCard} ${!isAuthenticated ? styles.restrictedCard : ''}`}>
                   <h2>Amenities</h2>
                   <ul className={styles.amenitiesList}>
                     {(() => {
+                      if (!isAuthenticated) {
+                        return Array(6).fill(0).map((_, index) => (
+                          <li key={index}>*** *** ***</li>
+                        ));
+                      }
+                      
                       // Handle both string and array formats
                       let amenitiesArray = [];
                       if (typeof property.amenities === 'string') {
@@ -502,11 +627,26 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                       )) : null;
                     })()}
                   </ul>
+                  
+                  {!isAuthenticated && (
+                    <div className={styles.cardLoginOverlay}>
+                      <div className={styles.cardLoginOverlayContent}>
+                        <i className="fas fa-lock" style={{ fontSize: '24px', marginBottom: '10px' }}></i>
+                        <p>Login to view details</p>
+                        <button 
+                          className={styles.cardOverlayLoginBtn}
+                          onClick={() => setShowLoginModal(true)}
+                        >
+                          Login
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
               {/* Property Features */}
-              <div className={styles.featuresCard}>
+              <div className={`${styles.featuresCard} ${!isAuthenticated ? styles.restrictedCard : ''}`}>
                 <h2>Property Features</h2>
                 <ul className={styles.featuresList}>
                   {property.lotSize && (
@@ -515,43 +655,56 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                         Aprox. Lot Size
                       </span>
                       <span className={styles.featureValue}>
-                        {property.lotSize}
+                        {isAuthenticated ? property.lotSize : "***"}
                       </span>
                     </li>
                   )}
                   <li>
                     <span className={styles.featureLabel}>Furnished Info</span>
                     <span className={styles.featureValue}>
-                      {property.furnished ? "Yes" : "No"}
+                      {isAuthenticated ? (property.furnished ? "Yes" : "No") : "***"}
                     </span>
                   </li>
                   <li>
                     <span className={styles.featureLabel}>Sale Type</span>
                     <span className={styles.featureValue}>
-                      {property.saleType || "Regular Sale"}
+                      {isAuthenticated ? (property.saleType || "Regular Sale") : "***"}
                     </span>
                   </li>
                   <li>
                     <span className={styles.featureLabel}>HOA Fees</span>
                     <span className={styles.featureValue}>
-                      {property.hoaFees ? formatPrice(property.hoaFees) : "N/A"}
+                      {isAuthenticated ? (property.hoaFees ? formatPrice(property.hoaFees) : "N/A") : "$***"}
                     </span>
                   </li>
                   <li>
                     <span className={styles.featureLabel}>Tax Amount</span>
                     <span className={styles.featureValue}>
-                      {property.taxAmount
-                        ? formatPrice(property.taxAmount)
-                        : "N/A"}
+                      {isAuthenticated ? (property.taxAmount ? formatPrice(property.taxAmount) : "N/A") : "$***"}
                     </span>
                   </li>
                   <li>
                     <span className={styles.featureLabel}>Tax Year</span>
                     <span className={styles.featureValue}>
-                      {property.taxYear || "N/A"}
+                      {isAuthenticated ? (property.taxYear || "N/A") : "***"}
                     </span>
                   </li>
                 </ul>
+                
+                {!isAuthenticated && (
+                  <div className={styles.cardLoginOverlay}>
+                    <div className={styles.cardLoginOverlayContent}>
+                      <i className="fas fa-lock" style={{ fontSize: '24px', marginBottom: '10px' }}></i>
+                      <p>Login to view details</p>
+                      <button 
+                        className={styles.cardOverlayLoginBtn}
+                        onClick={() => setShowLoginModal(true)}
+                      >
+                        Login
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {property.interiorFeatures && (
@@ -704,7 +857,8 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                 <div className={styles.agentInfo}>
                   <div className={styles.agentAvatar}>
                     <img
-                      src="/src/assets/img/perfil.jpg"
+                      // src="/src/assets/img/perfil.jpg"
+                      src={perfil} 
                       alt={property.agent?.name || "Agent"}
                       className={styles.agentPhoto}
                     />
@@ -841,6 +995,16 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
           </div>
         </div>
       )}
+
+      <FavoriteModal 
+        isOpen={showFavoriteModal} 
+        onClose={() => setShowFavoriteModal(false)} 
+      />
+      
+      <LoginModal 
+        isOpen={showLoginModal} 
+        onClose={() => setShowLoginModal(false)} 
+      />
     </div>
   );
 };

@@ -377,6 +377,9 @@
 }
 
 .saveButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   padding: 10px 20px;
   background: transparent;
   border: 1px solid #000;
@@ -391,6 +394,25 @@
 .saveButton:hover {
   background: #000;
   color: #fff;
+}
+
+.saveButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.saveButton.favorited {
+  background: #000;
+  color: #fff;
+}
+
+.saveButton.favorited .heartIcon {
+  color: #ff4757;
+}
+
+.heartIcon {
+  font-size: 14px;
+  transition: all 0.3s ease;
 }
 
 /* Main Content Layout */
@@ -418,6 +440,66 @@
   border: 1px solid #e0e0e0;
   padding: 25px;
   margin-bottom: 20px;
+}
+
+/* Restricted cards for non-authenticated users */
+.restrictedCard {
+  position: relative;
+  overflow: hidden;
+}
+
+.restrictedCard .basicInfoList,
+.restrictedCard .featuresList,
+.restrictedCard .amenitiesList,
+.restrictedCard p {
+  opacity: 0.4;
+  filter: blur(1px);
+  pointer-events: none;
+}
+
+.cardLoginOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.cardLoginOverlayContent {
+  text-align: center;
+  color: white;
+  padding: 20px;
+}
+
+.cardLoginOverlayContent p {
+  margin: 10px 0;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 1 !important;
+  filter: none !important;
+  pointer-events: auto !important;
+}
+
+.cardOverlayLoginBtn {
+  background-color: #fff;
+  color: #000;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cardOverlayLoginBtn:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-1px);
 }
 
 .basicInfoCard h2, .descriptionCard h2, .amenitiesCard h2, .featuresCard h2, .locationMapCard h2, .similarPropertiesCard h2 {

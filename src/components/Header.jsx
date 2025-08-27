@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MdEmail, MdPhone } from 'react-icons/md';
+import { useAuth } from '../contexts/AuthContext';
 import styles from './Header.module.css';
 import compassImg from '../assets/img/compas.png';
 import logoLight from '../assets/img/logo-dc.png';
@@ -17,9 +18,11 @@ window.googleTranslateElementInit = function () {
 };
 
 const Header = () => {
+  const { user, isAuthenticated, logout } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState(null);
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState(() => {
     return localStorage.getItem('selectedLanguage') || 'EN';
   });
@@ -62,6 +65,12 @@ const Header = () => {
   const handleNavClick = () => {
     setShowMobileMenu(false);
     setOpenSubmenu(null);
+    setShowUserDropdown(false);
+  };
+
+  const handleLogout = () => {
+    logout();
+    setShowUserDropdown(false);
   };
 
   const toggleSubmenu = (menuName) => {
@@ -271,23 +280,55 @@ const Header = () => {
                     </div>
                   </div>
 
-                  {/* Login Section */}
+                  {/* Login/User Section */}
                   <div className={`ip-login js-login ${styles.ipLogin}`}>
-                    <ul className={`ip-login-wrap item-no-hea ibc-u-d-flex ibc-u-align-items-center ${styles.ipLoginWrap}`} id="user-options">
-                      <li className={`ip-login-item login ${styles.ipLoginItem}`} data-modal="modal_login" data-tab="tabLogin">
-                        <Link to="/login" aria-label="Login" className={`lg-login ip-login-btn ${styles.ipLoginBtn}`}>
+                    {isAuthenticated && user ? (
+                      <div className={styles.userProfile}>
+                        <button 
+                          className={styles.userProfileBtn}
+                          onMouseEnter={() => setShowUserDropdown(true)}
+                          onMouseLeave={() => setShowUserDropdown(false)}
+                        >
                           <span className={`ip-login-icon idx-icon-user ${styles.ipLoginIcon}`}>
                             <i className="fas fa-user"></i>
                           </span>
-                          <span className={`ip-login-text ${styles.ipLoginText}`}>Login</span>
-                        </Link>
-                      </li>
-                      <li className={`ip-login-item register ibc-u-position-relative ip-pl-2 ${styles.ipLoginItem} ${styles.register}`} data-modal="modal_login" data-tab="tabRegister">
-                        <Link to="/register" aria-label="Register" className={`lg-register ip-login-btn ${styles.ipLoginBtn}`}>
-                          <span className={`ip-login-text ${styles.ipLoginText}`}>Register</span>
-                        </Link>
-                      </li>
-                    </ul>
+                          <span className={`ip-login-text ${styles.ipLoginText}`}>{user.name}</span>
+                          <i className="fas fa-chevron-down" style={{ marginLeft: '5px', fontSize: '12px' }}></i>
+                        </button>
+                        {showUserDropdown && (
+                          <div 
+                            className={styles.userDropdown}
+                            onMouseEnter={() => setShowUserDropdown(true)}
+                            onMouseLeave={() => setShowUserDropdown(false)}
+                          >
+                            <a href={user.role === 'admin' ? '/admin/dashboard' : '/dashboard'} className={styles.dropdownItem}>
+                              <i className="fas fa-tachometer-alt"></i>
+                              Panel
+                            </a>
+                            <button onClick={handleLogout} className={styles.dropdownItem}>
+                              <i className="fas fa-sign-out-alt"></i>
+                              Logout
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <ul className={`ip-login-wrap item-no-hea ibc-u-d-flex ibc-u-align-items-center ${styles.ipLoginWrap}`} id="user-options">
+                        <li className={`ip-login-item login ${styles.ipLoginItem}`}>
+                          <Link to="/login" aria-label="Login" className={`lg-login ip-login-btn ${styles.ipLoginBtn}`}>
+                            <span className={`ip-login-icon idx-icon-user ${styles.ipLoginIcon}`}>
+                              <i className="fas fa-user"></i>
+                            </span>
+                            <span className={`ip-login-text ${styles.ipLoginText}`}>Login</span>
+                          </Link>
+                        </li>
+                        <li className={`ip-login-item register ibc-u-position-relative ip-pl-2 ${styles.ipLoginItem} ${styles.register}`}>
+                          <Link to="/register" aria-label="Register" className={`lg-register ip-login-btn ${styles.ipLoginBtn}`}>
+                            <span className={`ip-login-text ${styles.ipLoginText}`}>Register</span>
+                          </Link>
+                        </li>
+                      </ul>
+                    )}
                   </div>
                 </div>
 
@@ -668,35 +709,76 @@ const Header = () => {
                 </div>
               </li>
 
-              {/* Login */}
-              <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
-                  <Link
-                    to="/login"
-                    className={`ip-menu-link ${styles.ipMenuLink}`}
-                    style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}
-                    onClick={handleNavClick}
-                  >
-                    <i className="fas fa-user" style={{ fontSize: '16px', width: '20px' }}></i>
-                    <span>Login</span>
-                  </Link>
-                </div>
-              </li>
-
-              {/* Register */}
-              <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
-                  <Link
-                    to="/register"
-                    className={`ip-menu-link ${styles.ipMenuLink}`}
-                    style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}
-                    onClick={handleNavClick}
-                  >
-                    <i className="fas fa-user-plus" style={{ fontSize: '16px', width: '20px' }}></i>
-                    <span>Register</span>
-                  </Link>
-                </div>
-              </li>
+              {/* Login/User Section */}
+              {isAuthenticated && user ? (
+                <>
+                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                    <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
+                      <div
+                        className={`ip-menu-link ${styles.ipMenuLink}`}
+                        style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '12px 0' }}
+                      >
+                        <i className="fas fa-user" style={{ fontSize: '16px', width: '20px' }}></i>
+                        <span>{user.name}</span>
+                      </div>
+                    </div>
+                  </li>
+                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                    <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
+                      <Link
+                        to={user.role === 'admin' ? '/admin/dashboard' : '/dashboard'}
+                        className={`ip-menu-link ${styles.ipMenuLink}`}
+                        style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none', paddingLeft: '2rem', backgroundColor: '#e9ecef' }}
+                        onClick={handleNavClick}
+                      >
+                        <i className="fas fa-tachometer-alt" style={{ fontSize: '16px', width: '20px' }}></i>
+                        <span>Dashboard</span>
+                      </Link>
+                    </div>
+                  </li>
+                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                    <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
+                      <button
+                        onClick={handleLogout}
+                        className={`ip-menu-link ${styles.ipMenuLink}`}
+                        style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'none', border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left', paddingLeft: '2rem', backgroundColor: '#e9ecef', color: '#ef4444' }}
+                      >
+                        <i className="fas fa-sign-out-alt" style={{ fontSize: '16px', width: '20px' }}></i>
+                        <span>Logout</span>
+                      </button>
+                    </div>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                    <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
+                      <Link
+                        to="/login"
+                        className={`ip-menu-link ${styles.ipMenuLink}`}
+                        style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}
+                        onClick={handleNavClick}
+                      >
+                        <i className="fas fa-user" style={{ fontSize: '16px', width: '20px' }}></i>
+                        <span>Login</span>
+                      </Link>
+                    </div>
+                  </li>
+                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                    <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
+                      <Link
+                        to="/register"
+                        className={`ip-menu-link ${styles.ipMenuLink}`}
+                        style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}
+                        onClick={handleNavClick}
+                      >
+                        <i className="fas fa-user-plus" style={{ fontSize: '16px', width: '20px' }}></i>
+                        <span>Register</span>
+                      </Link>
+                    </div>
+                  </li>
+                </>
+              )}
 
               {/* Language Switcher */}
               <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>

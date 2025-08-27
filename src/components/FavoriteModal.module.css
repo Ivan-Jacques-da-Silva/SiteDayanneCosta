@@ -1,0 +1,100 @@
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modalContent {
+  background: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px 0 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modalHeader h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeBtn:hover {
+  color: #374151;
+}
+
+.modalBody {
+  padding: 24px;
+}
+
+.modalBody p {
+  margin: 0;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+.modalFooter {
+  display: flex;
+  gap: 12px;
+  padding: 0 24px 24px 24px;
+  justify-content: flex-end;
+}
+
+.cancelBtn, .registerBtn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancelBtn {
+  background: white;
+  border: 1px solid #d1d5db;
+  color: #374151;
+}
+
+.cancelBtn:hover {
+  background: #f9fafb;
+}
+
+.registerBtn {
+  background: #000;
+  border: 1px solid #000;
+  color: white;
+}
+
+.registerBtn:hover {
+  background: #1f2937;
+}

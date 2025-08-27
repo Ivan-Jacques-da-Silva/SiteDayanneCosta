@@ -3,6 +3,7 @@ import React from 'react';
 import styles from './Footer.module.css';
 import logoHabitacao from '../assets/img/logoHabitacao.png';
 import compassImg from '../assets/img/compas.png';
+import logoFooter from "../assets/img/logo-dcBlack.png";
 
 const Footer = () => {
   return (
@@ -12,7 +13,7 @@ const Footer = () => {
           <div className={styles.logoSection}>
             <div className={styles.compassLogo}>
               <img 
-                src="/src/assets/img/logo-dcBlack.png" 
+                src={logoFooter}
                 alt="Dayanne Costa Logo" 
                 className={styles.logoImage}
               />

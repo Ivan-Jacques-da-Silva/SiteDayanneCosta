@@ -99,7 +99,8 @@ const Register = () => {
           localStorage.setItem('token', data.token);
           localStorage.setItem('user', JSON.stringify(data.user));
           
-          // Redirect to home page
+          // Show success message and redirect
+          alert('Registration successful! You are now logged in.');
           window.location.href = '/';
         } else {
           setErrors({ general: data.error || 'Registration failed' });

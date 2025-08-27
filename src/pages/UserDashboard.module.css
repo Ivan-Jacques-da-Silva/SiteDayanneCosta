@@ -1,0 +1,103 @@
+
+.mainContainer {
+  min-height: 100vh;
+  padding-top: 120px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.dashboardContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.welcomeSection {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 60px 40px;
+  text-align: center;
+}
+
+.welcomeContent {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.welcomeTitle {
+  font-size: 2.5rem;
+  font-weight: 300;
+  color: #333;
+  margin-bottom: 20px;
+  font-family: 'Raleway', sans-serif;
+}
+
+.welcomeText {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 40px;
+  line-height: 1.6;
+  font-family: 'Raleway', sans-serif;
+}
+
+.quickActions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.actionBtn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 30px;
+  background: #000;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  min-width: 180px;
+  justify-content: center;
+}
+
+.actionBtn:hover {
+  background: #333;
+  transform: translateY(-2px);
+  color: white;
+  text-decoration: none;
+}
+
+.actionBtn i {
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .mainContainer {
+    padding-top: 100px;
+  }
+
+  .welcomeSection {
+    padding: 40px 20px;
+  }
+
+  .welcomeTitle {
+    font-size: 2rem;
+  }
+
+  .welcomeText {
+    font-size: 1.1rem;
+  }
+
+  .quickActions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .actionBtn {
+    width: 100%;
+    max-width: 280px;
+  }
+}

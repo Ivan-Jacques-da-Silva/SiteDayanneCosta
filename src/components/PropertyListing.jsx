@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { buildApiUrl, getImageUrl } from "../config/api";
+import { useAuth } from "../contexts/AuthContext";
 import PropertyMap from "./PropertyMap";
+import FavoriteModal from "./FavoriteModal";
 import styles from "./PropertyListing.module.css";
 import placeholderImage from "../assets/img/default.png";
 
@@ -15,6 +17,7 @@ const PropertyListing = ({
   showNeighborhoodFilter = false,
 }) => {
   const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth();
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState("grid");
@@ -34,6 +37,9 @@ const PropertyListing = ({
   const [maxPrice, setMaxPrice] = useState(50000000);
   const [availableCategories, setAvailableCategories] = useState([]);
   const [availableNeighborhoods, setAvailableNeighborhoods] = useState([]);
+  const [userFavorites, setUserFavorites] = useState([]);
+  const [favoriteLoading, setFavoriteLoading] = useState({});
+  const [showFavoriteModal, setShowFavoriteModal] = useState(false);
 
   const handleViewDetails = (property) => {
     navigate(`/property/${property.id}`, { state: { property } });
@@ -51,7 +57,10 @@ const PropertyListing = ({
     if (showNeighborhoodFilter) {
       fetchAvailableNeighborhoods();
     }
-  }, [filters, apiEndpoint, currentPage, showCategoryFilter, showNeighborhoodFilter]);
+    if (isAuthenticated && user) {
+      fetchUserFavorites();
+    }
+  }, [filters, apiEndpoint, currentPage, showCategoryFilter, showNeighborhoodFilter, isAuthenticated, user]);
 
   const fetchAvailableCategories = async () => {
     try {
@@ -107,6 +116,72 @@ const PropertyListing = ({
       }
     } catch (error) {
       console.error('Error fetching neighborhoods:', error);
+    }
+  };
+
+  const fetchUserFavorites = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(buildApiUrl(`/api/favorites/${user.id}`), {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const favorites = await response.json();
+        setUserFavorites(favorites.map(fav => fav.propertyId));
+      }
+    } catch (error) {
+      console.error('Error fetching user favorites:', error);
+    }
+  };
+
+  const handleFavoriteClick = async (propertyId) => {
+    if (!isAuthenticated) {
+      setShowFavoriteModal(true);
+      return;
+    }
+
+    setFavoriteLoading(prev => ({ ...prev, [propertyId]: true }));
+
+    try {
+      const token = localStorage.getItem('token');
+      const isFavorite = userFavorites.includes(propertyId);
+
+      if (isFavorite) {
+        // Remove from favorites
+        await fetch(buildApiUrl(`/api/favorites/${user.id}/${propertyId}`), {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        setUserFavorites(prev => prev.filter(id => id !== propertyId));
+      } else {
+        // Add to favorites
+        await fetch(buildApiUrl('/api/favorites'), {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            userId: user.id,
+            propertyId: propertyId
+          })
+        });
+
+        setUserFavorites(prev => [...prev, propertyId]);
+      }
+    } catch (error) {
+      console.error('Error updating favorite:', error);
+      alert('Error updating favorite. Please try again.');
+    } finally {
+      setFavoriteLoading(prev => ({ ...prev, [propertyId]: false }));
     }
   };
 
@@ -719,7 +794,14 @@ const PropertyListing = ({
                             >
                               View Details
                             </button>
-                            <button className={styles.favoriteBtn}>♡</button>
+                            <button 
+                              className={`${styles.favoriteBtn} ${userFavorites.includes(property.id) ? styles.favorited : ''}`}
+                              onClick={() => handleFavoriteClick(property.id)}
+                              disabled={favoriteLoading[property.id]}
+                              title={isAuthenticated ? (userFavorites.includes(property.id) ? 'Remove from favorites' : 'Add to favorites') : 'Login to save favorites'}
+                            >
+                              {favoriteLoading[property.id] ? '⏳' : (userFavorites.includes(property.id) ? '♥' : '♡')}
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -915,6 +997,11 @@ const PropertyListing = ({
           {renderPagination()}
         </div>
       </div>
+
+      <FavoriteModal 
+        isOpen={showFavoriteModal} 
+        onClose={() => setShowFavoriteModal(false)} 
+      />
     </div>
   );
 };
