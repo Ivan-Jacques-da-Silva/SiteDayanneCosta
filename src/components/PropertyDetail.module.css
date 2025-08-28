@@ -988,11 +988,11 @@
     height: 40px;
     font-size: 20px;
   }
-  
+
   .prevBtn {
     left: 15px;
   }
-  
+
   .nextBtn {
     right: 15px;
   }
@@ -1004,11 +1004,11 @@
     height: 36px;
     font-size: 18px;
   }
-  
+
   .prevBtn {
     left: 10px;
   }
-  
+
   .nextBtn {
     right: 10px;
   }
@@ -1331,3 +1331,59 @@
     font-size: 10px;
   }
 }
+
+/* Download Buttons Section */
+.downloadButtonsSection {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 30px 0;
+  padding: 20px 0;
+}
+
+.downloadBtn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background: #4a5568;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  min-width: 140px;
+  justify-content: center;
+}
+
+.downloadBtn:hover {
+  background: #2d3748;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.downloadBtnIcon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .downloadButtonsSection {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .downloadBtn {
+    width: 200px;
+  }
+}
+
+/* Map Section */
+.locationMapCard {

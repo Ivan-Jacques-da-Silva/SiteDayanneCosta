@@ -734,6 +734,45 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                 </div>
               )}
 
+              {/* Download Buttons Section */}
+              {(property.pricingUrl || property.factSheetUrl || property.brochureUrl) && (
+                <div className={styles.downloadButtonsSection}>
+                  {property.pricingUrl && (
+                    <a 
+                      href={property.pricingUrl} 
+                      className={styles.downloadBtn}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <div className={styles.downloadBtnIcon}>$</div>
+                      <span>Pricing</span>
+                    </a>
+                  )}
+                  {property.factSheetUrl && (
+                    <a 
+                      href={property.factSheetUrl} 
+                      className={styles.downloadBtn}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <div className={styles.downloadBtnIcon}>📋</div>
+                      <span>Fact Sheet</span>
+                    </a>
+                  )}
+                  {property.brochureUrl && (
+                    <a 
+                      href={property.brochureUrl} 
+                      className={styles.downloadBtn}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <div className={styles.downloadBtnIcon}>📄</div>
+                      <span>Brochure</span>
+                    </a>
+                  )}
+                </div>
+              )}
+
               {/* Map Section */}
               <div className={styles.locationMapCard}>
                 <div className={styles.mapHeader}>
