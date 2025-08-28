@@ -21,6 +21,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
   const [favoriteLoading, setFavoriteLoading] = useState(false);
   const [showFavoriteModal, setShowFavoriteModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showMapModal, setShowMapModal] = useState(false);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -315,8 +316,8 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
 
   return (
     <div className={styles.propertyDetail}>
-      {/* Fixed Header Section */}
-      <section className={styles.fixedHeader}>
+      {/* Property Header Section */}
+      <section className={styles.propertyHeader}>
         <div className={styles.container}>
           <div className={styles.headerContent}>
             <h1 className={styles.propertyTitle}>
@@ -331,7 +332,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                 Back to results
               </button>
               <button className={styles.newSearchBtn}>New Search</button>
-              <button className={styles.favoriteBtn}>♡</button>
+              <button className={`${styles.favoriteBtn} ${styles.desktopOnly}`}>♡</button>
               <a
                 href={`tel:${property.agentPhone || "+1 (646) 598-3588"}`}
                 className={styles.phoneBtn}
@@ -357,62 +358,24 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
             }}
           />
 
-          {/* Map View */}
-          <div
-            className={`${styles.mapView} ${viewMode === "map" ? styles.active : ""}`}
-          >
-            <div className={styles.mapContainer}>
-              <div className={styles.mapPlaceholder}>
-                <h3>Map View</h3>
-                <p>Interactive map with property location</p>
-                {property.coordinates && (
-                  <p>
-                    Coordinates: {property.coordinates.lat},{" "}
-                    {property.coordinates.lng}
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
+          
 
           {/* Slider Options */}
           <div className={styles.sliderOptions}>
-            <ul className={styles.sliderOptionsList}>
-              <li>
-                <button
-                  className={`${styles.optionBtn} ${viewMode === "photos" ? styles.active : ""}`}
-                  onClick={() => setViewMode("photos")}
-                >
-                  photos
-                </button>
-              </li>
-              <li>
-                <button
-                  className={`${styles.optionBtn} ${viewMode === "map" ? styles.active : ""}`}
-                  onClick={() => setViewMode("map")}
-                >
-                  map view
-                </button>
-              </li>
-              <li>
-                {property.virtualTour && (
-                  <a
-                    href={property.virtualTour}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.tourBtn}
-                  >
-                    Video Tour
-                  </a>
-                )}
-              </li>
-            </ul>
-            <button
-              className={styles.fullScreenBtn}
-              onClick={() => setShowImageModal(true)}
-            >
-              Full screen
-            </button>
+            <div className={styles.sliderOptionsList}>
+              <button
+                className={styles.optionBtn}
+                onClick={() => setShowMapModal(true)}
+              >
+                MAP VIEW
+              </button>
+              <button
+                className={styles.fullScreenBtn}
+                onClick={() => setShowImageModal(true)}
+              >
+                FULL SCREEN
+              </button>
+            </div>
           </div>
 
           {/* Navigation Arrows */}
@@ -453,45 +416,65 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
       <section className={styles.mainSection}>
         <div className={styles.container}>
           {/* Property Information Bar */}
-          <ul className={styles.propertyInfoBar}>
-            <li className={styles.priceProperty}>
-              {formatPrice(property.price)}
-              <div className={styles.estimatedPayment}>
-                Est. Payment
-                <button className={styles.calculatorBtn}>Calculate</button>
+          <div className={styles.propertyInfoBar}>
+            <div className={styles.priceSection}>
+              <div className={styles.priceContainer}>
+                <div className={styles.propertyPrice}>
+                  {formatPrice(property.price)}
+                </div>
+                <div className={styles.estimatedPayment}>
+                  Est. Payment
+                  <button className={styles.calculatorBtn}>Calculate</button>
+                </div>
               </div>
-            </li>
-            <li className={styles.infoItem}>
-              <span className={styles.infoNumber}>
-                {property.beds || property.bedrooms || "N/A"}
-              </span>
-              <span className={styles.infoLabel}>Bed</span>
-            </li>
-            <li className={styles.infoItem}>
-              <span className={styles.infoNumber}>
-                {property.baths || property.bathrooms || "N/A"}
-              </span>
-              <span className={styles.infoLabel}>Bath</span>
-            </li>
-            {property.halfBaths > 0 && (
-              <li className={styles.infoItem}>
-                <span className={styles.infoNumber}>{property.halfBaths}</span>
-                <span className={styles.infoLabel}>Half Bath</span>
-              </li>
-            )}
-            <li className={styles.infoItem}>
-              <span className={styles.infoNumber}>
-                {formatNumber(property.sqft) || "N/A"}
-              </span>
-              <span className={styles.infoLabel}>Size sq.ft.</span>
-            </li>
-            <li className={styles.infoItem}>
-              <span className={styles.infoNumber}>
-                ${Math.round((property.price || 0) / (property.sqft || 1))}
-              </span>
-              <span className={styles.infoLabel}>$/Sqft</span>
-            </li>
-            <li className={styles.saveBtn}>
+              
+              {/* Botão de favorito mobile - só aparece no mobile */}
+              <button 
+                className={`${styles.mobileFavoriteBtn} ${isFavorite ? styles.favorited : ''}`}
+                onClick={handleFavoriteClick}
+                disabled={favoriteLoading}
+                title={isAuthenticated ? (isFavorite ? 'Remove from favorites' : 'Add to favorites') : 'Login to save favorites'}
+              >
+                <span className={styles.heartIcon}>
+                  {favoriteLoading ? '⏳' : (isFavorite ? '♥' : '♡')}
+                </span>
+              </button>
+            </div>
+
+            <div className={styles.propertySpecs}>
+              <div className={styles.infoItem}>
+                <span className={styles.infoNumber}>
+                  {property.beds || property.bedrooms || "N/A"}
+                </span>
+                <span className={styles.infoLabel}>Bed</span>
+              </div>
+              <div className={styles.infoItem}>
+                <span className={styles.infoNumber}>
+                  {property.baths || property.bathrooms || "N/A"}
+                </span>
+                <span className={styles.infoLabel}>Bath</span>
+              </div>
+              {property.halfBaths > 0 && (
+                <div className={styles.infoItem}>
+                  <span className={styles.infoNumber}>{property.halfBaths}</span>
+                  <span className={styles.infoLabel}>Half Bath</span>
+                </div>
+              )}
+              <div className={styles.infoItem}>
+                <span className={styles.infoNumber}>
+                  {formatNumber(property.sqft) || "N/A"}
+                </span>
+                <span className={styles.infoLabel}>Size sq.ft.</span>
+              </div>
+              <div className={styles.infoItem}>
+                <span className={styles.infoNumber}>
+                  ${Math.round((property.price || 0) / (property.sqft || 1))}
+                </span>
+                <span className={styles.infoLabel}>$/Sqft</span>
+              </div>
+            </div>
+            
+            <div className={styles.saveBtn}>
               <button 
                 className={`${styles.saveButton} ${isFavorite ? styles.favorited : ''}`}
                 onClick={handleFavoriteClick}
@@ -503,8 +486,8 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                 </span>
                 <span>Save</span>
               </button>
-            </li>
-          </ul>
+            </div>
+          </div>
 
           {/* Main Content Layout */}
           <div className={styles.mainContent}>
@@ -1005,6 +988,51 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
         isOpen={showLoginModal} 
         onClose={() => setShowLoginModal(false)} 
       />
+
+      {/* Map Modal */}
+      {showMapModal && (
+        <div
+          className={styles.mapModal}
+          onClick={() => setShowMapModal(false)}
+        >
+          <div
+            className={styles.mapModalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className={styles.closeMapModal}
+              onClick={() => setShowMapModal(false)}
+            >
+              ×
+            </button>
+            <div className={styles.mapModalHeader}>
+              <h3>Property Location</h3>
+              <p>{property.address}, {property.city}, {property.state} {property.zipCode}</p>
+            </div>
+            <div className={styles.mapModalContainer}>
+              {property.latitude && property.longitude ? (
+                <PropertyMap
+                  properties={[{
+                    ...property,
+                    imageUrl: images[0] || "/default.png"
+                  }]}
+                  selectedPropertyId={property.id}
+                  useSimpleMarker={true}
+                  hidePopup={true}
+                />
+              ) : (
+                <div className={styles.mapPlaceholder}>
+                  <div className={styles.mapContent}>
+                    <div className={styles.errorIcon}>🗺️</div>
+                    <h3>Map View</h3>
+                    <p>Location coordinates not available for this property.</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

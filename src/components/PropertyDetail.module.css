@@ -37,16 +37,11 @@
   color: #666;
 }
 
-/* Fixed Header Section */
-.fixedHeader {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+/* Property Header Section */
+.propertyHeader {
   background: #fff;
   border-bottom: 1px solid #e0e0e0;
-  z-index: 1000;
-  padding: 15px 0;
+  padding: 20px 0;
 }
 
 .container {
@@ -117,7 +112,6 @@
 
 /* Full Screen Slider Section */
 .fullSlider {
-  margin-top: 80px;
   position: relative;
   height: 60vh;
   min-height: 500px;
@@ -145,13 +139,14 @@
   height: 100%;
   background: #f5f5f5;
   display: none;
+  z-index: 5;
 }
 
 .mapView.active {
   display: block;
 }
 
-.mapContainer {
+.mapView .mapContainer {
   width: 100%;
   height: 100%;
 }
@@ -163,6 +158,16 @@
   align-items: center;
   justify-content: center;
   background: #f8f9fa;
+}
+
+.mapContent {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.errorIcon {
+  font-size: 48px;
+  margin-bottom: 20px;
 }
 
 .mapPlaceholder h3 {
@@ -189,7 +194,6 @@
 
 .sliderOptionsList {
   display: flex;
-  list-style: none;
   padding: 0;
   margin: 0;
   gap: 20px;
@@ -309,21 +313,27 @@
 .propertyInfoBar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 30px;
-  padding: 20px 0;
+  padding: 30px 0;
   border-bottom: 1px solid #e0e0e0;
   margin-bottom: 40px;
-  list-style: none;
-  margin: 0 0 40px 0;
+  flex-wrap: wrap;
 }
 
-.priceProperty {
+.priceSection {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.priceContainer {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
-.priceProperty {
+.propertyPrice {
   font-size: 2rem;
   font-weight: 700;
   color: #000;
@@ -353,8 +363,16 @@
   color: #fff;
 }
 
+.propertySpecs {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
 .infoItem {
   text-align: center;
+  min-width: 80px;
 }
 
 .infoNumber {
@@ -373,7 +391,46 @@
 }
 
 .saveBtn {
-  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* Mobile favorite button - só aparece no mobile */
+.mobileFavoriteBtn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 1px solid #000;
+  color: #000;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+}
+
+.mobileFavoriteBtn:hover {
+  background: #000;
+  color: #fff;
+}
+
+.mobileFavoriteBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.mobileFavoriteBtn.favorited {
+  background: #000;
+  color: #fff;
+}
+
+.mobileFavoriteBtn.favorited .heartIcon {
+  color: #ff4757;
+}
+
+/* Desktop only elements */
+.desktopOnly {
+  display: inline-block;
 }
 
 .saveButton {
@@ -430,7 +487,7 @@
 
 .rightColumn {
   position: sticky;
-  top: 120px;
+  top: 20px;
   height: fit-content;
 }
 
@@ -829,7 +886,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2000;
+  z-index: 10000;
 }
 
 .modalContent {
@@ -853,11 +910,43 @@
   right: 20px;
   width: 40px;
   height: 40px;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   border: none;
   font-size: 24px;
   cursor: pointer;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  z-index: 10002;
+}
+
+.closeModal:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.1);
+}
+
+/* Mobile adjustments for close button */
+@media (max-width: 768px) {
+  .closeModal {
+    top: 15px;
+    right: 15px;
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .closeModal {
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+  }
 }
 
 .prevBtn, .nextBtn {
@@ -866,11 +955,22 @@
   transform: translateY(-50%);
   width: 50px;
   height: 50px;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   border: none;
   font-size: 24px;
   cursor: pointer;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  z-index: 10002;
+}
+
+.prevBtn:hover, .nextBtn:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: translateY(-50%) scale(1.1);
 }
 
 .prevBtn {
@@ -881,16 +981,154 @@
   right: 20px;
 }
 
+/* Mobile adjustments for modal buttons */
+@media (max-width: 768px) {
+  .prevBtn, .nextBtn {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+  
+  .prevBtn {
+    left: 15px;
+  }
+  
+  .nextBtn {
+    right: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .prevBtn, .nextBtn {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+  
+  .prevBtn {
+    left: 10px;
+  }
+  
+  .nextBtn {
+    right: 10px;
+  }
+}
+
 .imageCounter {
   position: absolute;
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.8);
   color: #fff;
   padding: 10px 20px;
   border-radius: 20px;
   font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  z-index: 10002;
+}
+
+/* Mobile adjustments for image counter */
+@media (max-width: 768px) {
+  .imageCounter {
+    bottom: 15px;
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .imageCounter {
+    bottom: 10px;
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+/* Map Modal */
+.mapModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  padding: 20px;
+}
+
+.mapModalContent {
+  position: relative;
+  width: 90vw;
+  height: 85vh;
+  max-width: 1200px;
+  max-height: 800px;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.closeMapModal {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  border-radius: 50%;
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.closeMapModal:hover {
+  background: rgba(255, 255, 255, 1);
+}
+
+.mapModalHeader {
+  padding: 20px 25px 15px;
+  border-bottom: 1px solid #e0e0e0;
+  background: #fff;
+}
+
+.mapModalHeader h3 {
+  margin: 0 0 5px 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #000;
+}
+
+.mapModalHeader p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.mapModalContainer {
+  flex: 1;
+  position: relative;
+  min-height: 400px;
+}
+
+.mapModalContainer .mapContainer {
+  height: 100%;
+  width: 100%;
+}
+
+.mapModalContainer .map {
+  height: 100% !important;
+  width: 100% !important;
 }
 
 /* Responsive Design */
@@ -920,6 +1158,21 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
+  }
+
+  .headerActions {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+
+  .shareBtn, .backBtn, .newSearchBtn, .favoriteBtn, .phoneBtn {
+    flex: 1;
+    padding: 6px 8px;
+    font-size: 11px;
+    text-align: center;
+    white-space: nowrap;
   }
 
   .propertyTitle {
@@ -981,17 +1234,48 @@
   }
 }
 
+@media (max-width: 768px) {
+  /* Esconder botão de favorito no header mobile */
+  .desktopOnly {
+    display: none !important;
+  }
+
+  /* Mostrar botão de favorito mobile */
+  .mobileFavoriteBtn {
+    display: flex !important;
+  }
+
+  /* Reorganizar propertyInfoBar para mobile */
+  .propertyInfoBar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .priceSection {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .propertySpecs {
+    width: 100%;
+    justify-content: space-between;
+    gap: 15px;
+  }
+
+  /* Ocultar botão Save grande no mobile */
+  .saveBtn {
+    display: none !important;
+  }
+}
+
 @media (max-width: 480px) {
   .container {
     padding: 0 15px;
   }
 
-  .fixedHeader {
-    padding: 10px 0;
-  }
-
-  .fullSlider {
-    margin-top: 70px;
+  .propertyHeader {
+    padding: 15px 0;
   }
 
   .basicInfoCard, .descriptionCard, .amenitiesCard, .featuresCard, .locationMapCard, .similarPropertiesCard, .contactSidebar {
@@ -999,8 +1283,16 @@
   }
 
   .propertyInfoBar {
-    flex-direction: column;
-    align-items: flex-start;
+    padding: 20px 0;
+    gap: 15px;
+  }
+
+  .infoItem {
+    min-width: 60px;
+  }
+
+  .infoNumber {
+    font-size: 1.25rem;
   }
 
   .headerActions {
