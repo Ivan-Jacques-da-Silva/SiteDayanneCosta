@@ -429,3 +429,18 @@
     opacity: 1;
   }
 }
+
+.submitButton:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+.currentFile {
+  margin-top: 5px;
+  padding: 5px 10px;
+  background-color: #f0f9ff;
+  border: 1px solid #0ea5e9;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #0369a1;
+}

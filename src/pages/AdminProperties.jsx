@@ -481,11 +481,18 @@ const PropertyEditModal = ({ property, onClose, onSave, showNotification }) => {
     waterfront: property?.waterfront || false,
     furnished: property?.furnished || false,
     petFriendly: property?.petFriendly || false,
-    isFeatured: property?.isFeatured || false
+    isFeatured: property?.isFeatured || false,
+    virtualTour: property?.virtualTour || '',
+    pricingPdf: property?.pricingPdf || '',
+    factSheetPdf: property?.factSheetPdf || '',
+    brochurePdf: property?.brochurePdf || '',
   });
 
   const [primaryImage, setPrimaryImage] = useState(null);
   const [galleryImages, setGalleryImages] = useState(null);
+  const [pricingPdf, setPricingPdf] = useState(null);
+  const [factSheetPdf, setFactSheetPdf] = useState(null);
+  const [brochurePdf, setBrochurePdf] = useState(null);
   const [saving, setSaving] = useState(false);
 
   const categories = [
@@ -515,6 +522,9 @@ const PropertyEditModal = ({ property, onClose, onSave, showNotification }) => {
     setEditingProperty(null);
     setPrimaryImage(null);
     setGalleryImages(null);
+    setPricingPdf(null);
+    setFactSheetPdf(null);
+    setBrochurePdf(null);
 
     // Clear file inputs
     const fileInputs = document.querySelectorAll('input[type="file"]');
@@ -549,11 +559,23 @@ const PropertyEditModal = ({ property, onClose, onSave, showNotification }) => {
 
       if (galleryImages && galleryImages.length > 0) {
         Array.from(galleryImages).forEach(file => {
-          if (file instanceof File) {
-            formDataToSend.append('galleryImages', file);
-          }
+          formDataToSend.append('galleryImages', file);
         });
       }
+
+      // Add PDF documents
+      if (pricingPdf instanceof File) {
+        formDataToSend.append('pricingPdf', pricingPdf);
+      }
+
+      if (factSheetPdf instanceof File) {
+        formDataToSend.append('factSheetPdf', factSheetPdf);
+      }
+
+      if (brochurePdf instanceof File) {
+        formDataToSend.append('brochurePdf', brochurePdf);
+      }
+
 
       const url = property 
         ? `/api/admin/properties/${property.id}` 
@@ -585,6 +607,12 @@ const PropertyEditModal = ({ property, onClose, onSave, showNotification }) => {
     } finally {
       setSaving(false);
     }
+  };
+
+  // Helper to get current file names for display
+  const getFileName = (url) => {
+    if (!url) return '';
+    return url.split('/').pop();
   };
 
   return (
@@ -803,6 +831,84 @@ const PropertyEditModal = ({ property, onClose, onSave, showNotification }) => {
             </div>
           </div>
 
+          {/* Tour Virtual */}
+        <section className={styles.formSection}>
+          <h2><i className="fas fa-video"></i> Media</h2>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="virtualTour">Virtual Tour (URL)</label>
+            <input
+              type="url"
+              id="virtualTour"
+              name="virtualTour"
+              value={formData.virtualTour || ''}
+              onChange={handleInputChange}
+              placeholder="https://..."
+            />
+          </div>
+        </section>
+
+        {/* PDF Documents */}
+        <section className={styles.formSection}>
+          <h2><i className="fas fa-file-pdf"></i> PDF Documents</h2>
+
+          <div className={styles.formRow}>
+            <div className={styles.formGroup}>
+              <label htmlFor="pricingPdf">Pricing PDF</label>
+              <input
+                type="file"
+                id="pricingPdf"
+                name="pricingPdf"
+                accept=".pdf"
+                onChange={(e) => setPricingPdf(e.target.files[0])}
+                className={styles.fileInput}
+              />
+              <small>Upload pricing document (PDF only)</small>
+              {property?.pricingPdf && (
+                <div className={styles.currentFile}>
+                  <span>Current: {getFileName(property.pricingPdf)}</span>
+                </div>
+              )}
+            </div>
+
+            <div className={styles.formGroup}>
+              <label htmlFor="factSheetPdf">Fact Sheet PDF</label>
+              <input
+                type="file"
+                id="factSheetPdf"
+                name="factSheetPdf"
+                accept=".pdf"
+                onChange={(e) => setFactSheetPdf(e.target.files[0])}
+                className={styles.fileInput}
+              />
+              <small>Upload fact sheet document (PDF only)</small>
+              {property?.factSheetPdf && (
+                <div className={styles.currentFile}>
+                  <span>Current: {getFileName(property.factSheetPdf)}</span>
+                </div>
+              )}
+            </div>
+
+            <div className={styles.formGroup}>
+              <label htmlFor="brochurePdf">Brochure PDF</label>
+              <input
+                type="file"
+                id="brochurePdf"
+                name="brochurePdf"
+                accept=".pdf"
+                onChange={(e) => setBrochurePdf(e.target.files[0])}
+                className={styles.fileInput}
+              />
+              <small>Upload brochure document (PDF only)</small>
+              {property?.brochurePdf && (
+                <div className={styles.currentFile}>
+                  <span>Current: {getFileName(property.brochurePdf)}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+
           <div className={styles.checkboxGroup}>
             <label>
               <input
@@ -843,7 +949,7 @@ const PropertyEditModal = ({ property, onClose, onSave, showNotification }) => {
               />
               Pet Friendly
             </label>
-            
+
             <label className={styles.starCheckbox}>
               <input
                 type="checkbox"

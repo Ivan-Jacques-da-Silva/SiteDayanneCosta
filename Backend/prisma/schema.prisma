@@ -76,6 +76,11 @@ model Property {
   listingAgent          String?
   listingOffice         String?
   shortSale             String         @default("Regular Sale")
+  
+  // PDF Documents
+  pricingPdf            String?
+  factSheetPdf          String?
+  brochurePdf           String?
 
   // Categorias simplificadas
   categoria Categoria @default(NEW_DEVELOPMENTS)

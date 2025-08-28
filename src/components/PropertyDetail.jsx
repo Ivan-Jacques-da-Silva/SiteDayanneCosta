@@ -52,7 +52,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
         ...prev,
         message: `I am interested in ${property.address} ${property.city}, ${property.state} ${property.zipCode}`
       }));
-      
+
       // Check if property is favorite
       if (isAuthenticated && user) {
         checkIfFavorite();
@@ -62,7 +62,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
 
   const checkIfFavorite = async () => {
     if (!isAuthenticated || !user || !property?.id) return;
-    
+
     try {
       const token = localStorage.getItem('token');
       const response = await fetch(buildApiUrl(`/api/favorites/${user.id}`), {
@@ -358,7 +358,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
             }}
           />
 
-          
+
 
           {/* Slider Options */}
           <div className={styles.sliderOptions}>
@@ -427,7 +427,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                   <button className={styles.calculatorBtn}>Calculate</button>
                 </div>
               </div>
-              
+
               {/* Botão de favorito mobile - só aparece no mobile */}
               <button 
                 className={`${styles.mobileFavoriteBtn} ${isFavorite ? styles.favorited : ''}`}
@@ -473,7 +473,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                 <span className={styles.infoLabel}>$/Sqft</span>
               </div>
             </div>
-            
+
             <div className={styles.saveBtn}>
               <button 
                 className={`${styles.saveButton} ${isFavorite ? styles.favorited : ''}`}
@@ -542,7 +542,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                     </span>
                   </li>
                 </ul>
-                
+
                 {!isAuthenticated && (
                   <div className={styles.cardLoginOverlay}>
                     <div className={styles.cardLoginOverlayContent}>
@@ -564,7 +564,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                 <div className={`${styles.descriptionCard} ${!isAuthenticated ? styles.restrictedCard : ''}`}>
                   <h2>Description</h2>
                   <p>{isAuthenticated ? property.description : "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***"}</p>
-                  
+
                   {!isAuthenticated && (
                     <div className={styles.cardLoginOverlay}>
                       <div className={styles.cardLoginOverlayContent}>
@@ -593,7 +593,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                           <li key={index}>*** *** ***</li>
                         ));
                       }
-                      
+
                       // Handle both string and array formats
                       let amenitiesArray = [];
                       if (typeof property.amenities === 'string') {
@@ -610,7 +610,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                       )) : null;
                     })()}
                   </ul>
-                  
+
                   {!isAuthenticated && (
                     <div className={styles.cardLoginOverlay}>
                       <div className={styles.cardLoginOverlayContent}>
@@ -673,7 +673,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                     </span>
                   </li>
                 </ul>
-                
+
                 {!isAuthenticated && (
                   <div className={styles.cardLoginOverlay}>
                     <div className={styles.cardLoginOverlayContent}>
@@ -735,39 +735,44 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
               )}
 
               {/* Download Buttons Section */}
-              {(property.pricingUrl || property.factSheetUrl || property.brochureUrl) && (
+              {(property.pricingPdf || property.factSheetPdf || property.brochurePdf) && (
                 <div className={styles.downloadButtonsSection}>
-                  {property.pricingUrl && (
+                  {property.pricingPdf && (
                     <a 
-                      href={property.pricingUrl} 
-                      className={styles.downloadBtn}
-                      target="_blank"
+                      href={`${buildApiUrl('')}${property.pricingPdf}`} 
+                      target="_blank" 
                       rel="noopener noreferrer"
+                      className={styles.downloadBtn}
+                      download
                     >
                       <div className={styles.downloadBtnIcon}>$</div>
-                      <span>Pricing</span>
+                      Pricing
                     </a>
                   )}
-                  {property.factSheetUrl && (
+
+                  {property.factSheetPdf && (
                     <a 
-                      href={property.factSheetUrl} 
-                      className={styles.downloadBtn}
-                      target="_blank"
+                      href={`${buildApiUrl('')}${property.factSheetPdf}`} 
+                      target="_blank" 
                       rel="noopener noreferrer"
+                      className={styles.downloadBtn}
+                      download
                     >
-                      <div className={styles.downloadBtnIcon}>📋</div>
-                      <span>Fact Sheet</span>
+                      <div className={styles.downloadBtnIcon}>📊</div>
+                      Fact Sheet
                     </a>
                   )}
-                  {property.brochureUrl && (
+
+                  {property.brochurePdf && (
                     <a 
-                      href={property.brochureUrl} 
-                      className={styles.downloadBtn}
-                      target="_blank"
+                      href={`${buildApiUrl('')}${property.brochurePdf}`} 
+                      target="_blank" 
                       rel="noopener noreferrer"
+                      className={styles.downloadBtn}
+                      download
                     >
                       <div className={styles.downloadBtnIcon}>📄</div>
-                      <span>Brochure</span>
+                      Brochure
                     </a>
                   )}
                 </div>
@@ -1022,7 +1027,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
         isOpen={showFavoriteModal} 
         onClose={() => setShowFavoriteModal(false)} 
       />
-      
+
       <LoginModal 
         isOpen={showLoginModal} 
         onClose={() => setShowLoginModal(false)} 

@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const unico = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    const prefixo = file.fieldname === 'primaryImage' ? 'primary' : 'gallery';
+    const prefixo = file.fieldname === 'primaryImage' ? 'primary' : file.fieldname === 'pricingPdf' ? 'pricing' : file.fieldname === 'factSheetPdf' ? 'factsheet' : file.fieldname === 'brochurePdf' ? 'brochure' : 'gallery';
     cb(null, `${prefixo}-${unico}${path.extname(file.originalname)}`);
   }
 
@@ -31,17 +31,35 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 10 * 1024 * 1024 // 10MB limit
+    fileSize: parseInt(process.env.MAX_FILE_SIZE) || 10485760 // 10MB for PDFs
   },
   fileFilter: (req, file, cb) => {
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-    if (allowedTypes.includes(file.mimetype)) {
+    console.log('📁 Processing file:', {
+      fieldname: file.fieldname,
+      mimetype: file.mimetype,
+      originalname: file.originalname
+    });
+
+    const allowedImageTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    const allowedPdfTypes = ['application/pdf'];
+
+    if (allowedImageTypes.includes(file.mimetype) || allowedPdfTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error('Only JPEG, PNG and WebP images are allowed'), false);
+      console.log('❌ File rejected - Invalid type:', file.mimetype);
+      cb(new Error(`Invalid file type: ${file.mimetype}. Only JPEG, PNG, WebP images and PDF documents are allowed.`), false);
     }
   }
 });
+
+// Define upload fields including PDF documents
+const uploadFields = upload.fields([
+  { name: 'primaryImage', maxCount: 1 },
+  { name: 'galleryImages', maxCount: 10 },
+  { name: 'pricingPdf', maxCount: 1 },
+  { name: 'factSheetPdf', maxCount: 1 },
+  { name: 'brochurePdf', maxCount: 1 }
+]);
 
 
 // Apply authentication and admin middleware to all routes
@@ -320,10 +338,7 @@ router.get('/properties', async (req, res) => {
 });
 
 // POST /api/admin/properties - Create new property
-router.post('/properties', upload.fields([
-  { name: 'primaryImage', maxCount: 1 },
-  { name: 'galleryImages', maxCount: 20 }
-]), (req, res, next) => {
+router.post('/properties', uploadFields, (req, res, next) => {
 
   // Debug middleware para verificar campos recebidos
   console.log('🔍 POST Request Debug:');
@@ -450,7 +465,10 @@ router.post('/properties', upload.fields([
               order: i + 1
             })) : [])
           ]
-        }
+        },
+        pricingPdf: req.files?.pricingPdf ? `/uploads/properties/${req.files.pricingPdf[0].filename}` : null,
+        factSheetPdf: req.files?.factSheetPdf ? `/uploads/properties/${req.files.factSheetPdf[0].filename}` : null,
+        brochurePdf: req.files?.brochurePdf ? `/uploads/properties/${req.files.brochurePdf[0].filename}` : null,
       },
       include: {
         user: {
@@ -470,10 +488,7 @@ router.post('/properties', upload.fields([
 });
 
 // PUT /api/admin/properties/:id - Update property
-router.put('/properties/:id', upload.fields([
-  { name: 'primaryImage', maxCount: 1 },
-  { name: 'galleryImages', maxCount: 20 }
-]), (req, res, next) => {
+router.put('/properties/:id', uploadFields, (req, res, next) => {
 
   // Debug middleware para verificar campos recebidos
   console.log('🔍 PUT Request Debug:');
@@ -491,7 +506,7 @@ router.put('/properties/:id', upload.fields([
     const updateData = { ...req.body };
     const existingProperty = await prisma.property.findUnique({
       where: { id },
-      include: { images: true }
+      include: { images: true } // Include images to check for existing ones
     });
 
     if (!existingProperty) {
@@ -552,6 +567,33 @@ router.put('/properties/:id', upload.fields([
         });
       }
 
+      // Handle PDF document updates
+      if (req.files?.pricingPdf) {
+        // Remove old pricing PDF if exists
+        if (existingProperty.pricingPdf) {
+          const oldPath = path.resolve(process.cwd(), existingProperty.pricingPdf.replace(/^\//, ''));
+          if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+        }
+        updateData.pricingPdf = `/uploads/properties/${req.files.pricingPdf[0].filename}`;
+      }
+
+      if (req.files?.factSheetPdf) {
+        // Remove old fact sheet PDF if exists
+        if (existingProperty.factSheetPdf) {
+          const oldPath = path.resolve(process.cwd(), existingProperty.factSheetPdf.replace(/^\//, ''));
+          if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+        }
+        updateData.factSheetPdf = `/uploads/properties/${req.files.factSheetPdf[0].filename}`;
+      }
+
+      if (req.files?.brochurePdf) {
+        // Remove old brochure PDF if exists
+        if (existingProperty.brochurePdf) {
+          const oldPath = path.resolve(process.cwd(), existingProperty.brochurePdf.replace(/^\//, ''));
+          if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+        }
+        updateData.brochurePdf = `/uploads/properties/${req.files.brochurePdf[0].filename}`;
+      }
     }
 
     // Convert numeric fields
@@ -610,6 +652,9 @@ router.put('/properties/:id', upload.fields([
     delete updateData.dateListed;
     delete updateData.primaryImage;
     delete updateData.galleryImages;
+    delete updateData.pricingPdf;
+    delete updateData.factSheetPdf;
+    delete updateData.brochurePdf;
     delete updateData.userId;
     delete updateData.id;
     delete updateData.createdAt;
@@ -645,10 +690,10 @@ router.delete('/properties/:id', async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Find the property to get its images
+    // Find the property to get its images and documents
     const property = await prisma.property.findUnique({
       where: { id },
-      include: { images: true }
+      include: { images: true } // Assuming images are related, you might need to include documents too if they are structured similarly
     });
 
     if (!property) {
@@ -663,8 +708,21 @@ router.delete('/properties/:id', async (req, res) => {
       }
     }
 
+    // Delete associated PDF documents from the server
+    if (property.pricingPdf) {
+      const pricingPdfPath = path.resolve(process.cwd(), property.pricingPdf.replace(/^\//, ''));
+      if (fs.existsSync(pricingPdfPath)) fs.unlinkSync(pricingPdfPath);
+    }
+    if (property.factSheetPdf) {
+      const factSheetPdfPath = path.resolve(process.cwd(), property.factSheetPdf.replace(/^\//, ''));
+      if (fs.existsSync(factSheetPdfPath)) fs.unlinkSync(factSheetPdfPath);
+    }
+    if (property.brochurePdf) {
+      const brochurePdfPath = path.resolve(process.cwd(), property.brochurePdf.replace(/^\//, ''));
+      if (fs.existsSync(brochurePdfPath)) fs.unlinkSync(brochurePdfPath);
+    }
 
-    // Delete the property and its associated images from the database
+    // Delete the property and its associated data from the database
     await prisma.property.delete({
       where: { id }
     });
