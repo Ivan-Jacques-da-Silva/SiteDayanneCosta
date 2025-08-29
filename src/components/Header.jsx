@@ -284,7 +284,7 @@ const Header = () => {
                   <div className={`ip-login js-login ${styles.ipLogin}`}>
                     {isAuthenticated && user ? (
                       <div className={styles.userProfile}>
-                        <button 
+                        <button
                           className={styles.userProfileBtn}
                           onMouseEnter={() => setShowUserDropdown(true)}
                           onMouseLeave={() => setShowUserDropdown(false)}
@@ -296,7 +296,7 @@ const Header = () => {
                           <i className="fas fa-chevron-down" style={{ marginLeft: '5px', fontSize: '12px' }}></i>
                         </button>
                         {showUserDropdown && (
-                          <div 
+                          <div
                             className={styles.userDropdown}
                             onMouseEnter={() => setShowUserDropdown(true)}
                             onMouseLeave={() => setShowUserDropdown(false)}
@@ -389,7 +389,7 @@ const Header = () => {
                                     View All
                                   </Link>
                                 </li>
-                              </ul> 
+                              </ul>
                             </li>
                           </ul>
                         </li>
@@ -410,7 +410,12 @@ const Header = () => {
                             </li>
                             <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                               <Link to="/private-exclusive" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                                Private Exclusive
+                                Private & Exclusive
+                              </Link>
+                            </li>
+                            <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                              <Link to="/lifestyle-properties" className={styles.ipMenuLink}>
+                                Lifestyle Properties
                               </Link>
                             </li>
                           </ul>
@@ -592,7 +597,12 @@ const Header = () => {
                   </li>
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                     <Link to="/private-exclusive" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                      Private Exclusive
+                      Private & Exclusive
+                    </Link>
+                  </li>
+                  <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                    <Link to="/lifestyle-properties" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                      Lifestyle Properties
                     </Link>
                   </li>
                 </ul>

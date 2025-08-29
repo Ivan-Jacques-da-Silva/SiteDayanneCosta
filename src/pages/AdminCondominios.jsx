@@ -1040,6 +1040,8 @@ const AdminCondominios = () => {
                           {cat.label}
                         </option>
                       ))}
+                      {/* Updated to include the new category */}
+                      <option value="LIFESTYLE_PROPERTIES">Lifestyle Properties</option>
                     </select>
                   </div>
 
