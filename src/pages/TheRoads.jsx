@@ -45,7 +45,7 @@ const TheRoads = () => {
         apiEndpoint="/api/properties-by-category"
         title={pageData.title}
         breadcrumbPath="The Roads"
-        filters={{ category: 'the_roads' }}
+        filters={{ category: 'NEIGHBORHOODS', bairro: 'THE_ROADS' }}
         placeholderImage={pageData.heroImage}
         pageData={pageData}
       />

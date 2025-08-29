@@ -45,7 +45,7 @@ const CoconutGrove = () => {
         apiEndpoint="/api/properties-by-category"
         title={pageData.title}
         breadcrumbPath="Coconut Grove"
-        filters={{ category: 'coconut_grove' }}
+        filters={{ category: 'NEIGHBORHOODS', bairro: 'COCONUT_GROVE' }}
         placeholderImage={pageData.heroImage}
         pageData={pageData}
       />

@@ -45,7 +45,7 @@ const Brickell = () => {
         apiEndpoint="/api/properties-by-category"
         title={pageData.title}
         breadcrumbPath="Brickell"
-        filters={{ category: 'brickell' }}
+        filters={{ category: 'NEIGHBORHOODS', bairro: 'BRICKELL' }}
         placeholderImage={pageData.heroImage}
         pageData={pageData}
       />
