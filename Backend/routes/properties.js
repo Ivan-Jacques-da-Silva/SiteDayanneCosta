@@ -63,7 +63,10 @@ router.get('/', async (req, res) => {
           { title: { contains: search, mode: 'insensitive' } },
           { description: { contains: search, mode: 'insensitive' } },
           { address: { contains: search, mode: 'insensitive' } },
-          { city: { contains: search, mode: 'insensitive' } }
+          { city: { contains: search, mode: 'insensitive' } },
+          { bairro: { contains: search, mode: 'insensitive' } },
+          { zipCode: { contains: search, mode: 'insensitive' } },
+          { mlsId: { contains: search, mode: 'insensitive' } }
         ]
       }),
       ...(propertyType && { propertyType }),
