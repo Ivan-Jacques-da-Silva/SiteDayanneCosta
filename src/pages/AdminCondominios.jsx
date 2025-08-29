@@ -87,6 +87,11 @@ const AdminCondominios = () => {
   const [imagePreviews, setImagePreviews] = useState([]);
   const [mainImagePreview, setMainImagePreview] = useState('');
   const [removedImageIndexes, setRemovedImageIndexes] = useState([]);
+  
+  // PDF file states
+  const [pricingPdf, setPricingPdf] = useState(null);
+  const [factSheetPdf, setFactSheetPdf] = useState(null);
+  const [brochurePdf, setBrochurePdf] = useState(null);
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 12,
@@ -107,6 +112,12 @@ const AdminCondominios = () => {
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState('');
   const [notificationType, setNotificationType] = useState('success'); // 'success' or 'error'
+
+  // Helper function to extract filename from path
+  const getFileName = (filePath) => {
+    if (!filePath) return '';
+    return filePath.split('/').pop() || filePath;
+  };
 
   // Categorias fixas
   const PROPERTY_CATEGORIES = [
@@ -292,6 +303,17 @@ const AdminCondominios = () => {
           });
         }
 
+        // Adicionar PDFs se existirem
+        if (pricingPdf instanceof File) {
+          formDataToSend.append('pricingPdf', pricingPdf);
+        }
+        if (factSheetPdf instanceof File) {
+          formDataToSend.append('factSheetPdf', factSheetPdf);
+        }
+        if (brochurePdf instanceof File) {
+          formDataToSend.append('brochurePdf', brochurePdf);
+        }
+
         response = await fetch(url, {
           method: 'PUT',
           headers: { 'Authorization': `Bearer ${token}` },
@@ -325,6 +347,17 @@ const AdminCondominios = () => {
               formDataToSend.append('galleryImages', file);
             }
           });
+        }
+
+        // Adicionar PDFs se existirem
+        if (pricingPdf instanceof File) {
+          formDataToSend.append('pricingPdf', pricingPdf);
+        }
+        if (factSheetPdf instanceof File) {
+          formDataToSend.append('factSheetPdf', factSheetPdf);
+        }
+        if (brochurePdf instanceof File) {
+          formDataToSend.append('brochurePdf', brochurePdf);
         }
 
         response = await fetch(url, {
@@ -371,6 +404,12 @@ const AdminCondominios = () => {
 
         const previewUrls = fileArray.map(file => URL.createObjectURL(file));
         setImagePreviews(prev => [...prev, ...previewUrls]); // Append new previews
+      } else if (name === 'pricingPdf' && files[0]) {
+        setPricingPdf(files[0]);
+      } else if (name === 'factSheetPdf' && files[0]) {
+        setFactSheetPdf(files[0]);
+      } else if (name === 'brochurePdf' && files[0]) {
+        setBrochurePdf(files[0]);
       }
     } else if (type === 'checkbox') {
       setFormData(prev => ({ ...prev, [name]: checked }));
@@ -456,6 +495,11 @@ const AdminCondominios = () => {
     setImagePreviews([]);
     setMainImagePreview('');
     setRemovedImageIndexes([]);
+
+    // Clear PDF states
+    setPricingPdf(null);
+    setFactSheetPdf(null);
+    setBrochurePdf(null);
 
     // Clear editing state
     setEditingCondominio(null);
@@ -1388,6 +1432,82 @@ const AdminCondominios = () => {
                     <option value="Foreclosure">Foreclosure</option>
                     <option value="REO">REO</option>
                   </select>
+                </div>
+              </section>
+
+              {/* PDF Documents Section */}
+              <section className={styles.formSection}>
+                <h2><i className="fas fa-file-pdf"></i> PDF Documents</h2>
+                
+                <div className={styles.pdfGrid}>
+                  <div className={styles.formGroup}>
+                    <label htmlFor="pricingPdf">Pricing PDF</label>
+                    <input
+                      type="file"
+                      id="pricingPdf"
+                      name="pricingPdf"
+                      accept=".pdf"
+                      onChange={handleInputChange}
+                      className={styles.fileInput}
+                    />
+                    <small>Upload pricing document (PDF only)</small>
+                    {editingCondominio?.pricingPdf && (
+                      <div className={styles.currentFile}>
+                        <span>Current: {editingCondominio.pricingPdf.split('/').pop()}</span>
+                      </div>
+                    )}
+                    {pricingPdf && (
+                      <div className={styles.selectedFile}>
+                        <span>Selected: {pricingPdf.name}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <label htmlFor="factSheetPdf">Fact Sheet PDF</label>
+                    <input
+                      type="file"
+                      id="factSheetPdf"
+                      name="factSheetPdf"
+                      accept=".pdf"
+                      onChange={handleInputChange}
+                      className={styles.fileInput}
+                    />
+                    <small>Upload fact sheet document (PDF only)</small>
+                    {editingCondominio?.factSheetPdf && (
+                      <div className={styles.currentFile}>
+                        <span>Current: {editingCondominio.factSheetPdf.split('/').pop()}</span>
+                      </div>
+                    )}
+                    {factSheetPdf && (
+                      <div className={styles.selectedFile}>
+                        <span>Selected: {factSheetPdf.name}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <label htmlFor="brochurePdf">Brochure PDF</label>
+                    <input
+                      type="file"
+                      id="brochurePdf"
+                      name="brochurePdf"
+                      accept=".pdf"
+                      onChange={handleInputChange}
+                      className={styles.fileInput}
+                    />
+                    <small>Upload brochure document (PDF only)</small>
+                    {editingCondominio?.brochurePdf && (
+                      <div className={styles.currentFile}>
+                        <span>Current: {editingCondominio.brochurePdf.split('/').pop()}</span>
+                      </div>
+                    )}
+                    {brochurePdf && (
+                      <div className={styles.selectedFile}>
+                        <span>Selected: {brochurePdf.name}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </section>
 
