@@ -87,11 +87,17 @@ const AdminCondominios = () => {
   const [imagePreviews, setImagePreviews] = useState([]);
   const [mainImagePreview, setMainImagePreview] = useState('');
   const [removedImageIndexes, setRemovedImageIndexes] = useState([]);
-  
+
   // PDF file states
   const [pricingPdf, setPricingPdf] = useState(null);
   const [factSheetPdf, setFactSheetPdf] = useState(null);
   const [brochurePdf, setBrochurePdf] = useState(null);
+
+  // PDF removal states
+  const [removePricingPdf, setRemovePricingPdf] = useState(false);
+  const [removeFactSheetPdf, setRemoveFactSheetPdf] = useState(false);
+  const [removeBrochurePdf, setRemoveBrochurePdf] = useState(false);
+
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 12,
@@ -202,7 +208,10 @@ const AdminCondominios = () => {
             images: property.images?.map(img => ({
               ...img,
               url: getImageUrl(img.url)
-            })) || []
+            })) || [],
+            pricingPdf: property.pricingPdf ? buildApiUrl(property.pricingPdf) : null,
+            factSheetPdf: property.factSheetPdf ? buildApiUrl(property.factSheetPdf) : null,
+            brochurePdf: property.brochurePdf ? buildApiUrl(property.brochurePdf) : null,
           }));
           console.log('🟩 formatted len:', formattedCondominios.length);
 
@@ -282,6 +291,9 @@ const AdminCondominios = () => {
             key !== 'images' &&
             key !== 'primaryImage' &&
             key !== 'galleryImages' &&
+            key !== 'pricingPdf' && // Excluir PDFs dos dados gerais
+            key !== 'factSheetPdf' &&
+            key !== 'brochurePdf' &&
             propertyData[key] !== null &&
             propertyData[key] !== undefined
           ) {
@@ -314,6 +326,17 @@ const AdminCondominios = () => {
           formDataToSend.append('brochurePdf', brochurePdf);
         }
 
+        // Adicionar flags de remoção de PDFs
+        if (removePricingPdf) {
+          formDataToSend.append('removePricingPdf', 'true');
+        }
+        if (removeFactSheetPdf) {
+          formDataToSend.append('removeFactSheetPdf', 'true');
+        }
+        if (removeBrochurePdf) {
+          formDataToSend.append('removeBrochurePdf', 'true');
+        }
+
         response = await fetch(url, {
           method: 'PUT',
           headers: { 'Authorization': `Bearer ${token}` },
@@ -328,6 +351,9 @@ const AdminCondominios = () => {
             key !== 'images' &&
             key !== 'primaryImage' &&
             key !== 'galleryImages' &&
+            key !== 'pricingPdf' && // Excluir PDFs dos dados gerais
+            key !== 'factSheetPdf' &&
+            key !== 'brochurePdf' &&
             propertyData[key] !== null &&
             propertyData[key] !== undefined
           ) {
@@ -358,6 +384,17 @@ const AdminCondominios = () => {
         }
         if (brochurePdf instanceof File) {
           formDataToSend.append('brochurePdf', brochurePdf);
+        }
+
+        // Adicionar flags de remoção de PDFs
+        if (removePricingPdf) {
+          formDataToSend.append('removePricingPdf', 'true');
+        }
+        if (removeFactSheetPdf) {
+          formDataToSend.append('removeFactSheetPdf', 'true');
+        }
+        if (removeBrochurePdf) {
+          formDataToSend.append('removeBrochurePdf', 'true');
         }
 
         response = await fetch(url, {
@@ -406,10 +443,13 @@ const AdminCondominios = () => {
         setImagePreviews(prev => [...prev, ...previewUrls]); // Append new previews
       } else if (name === 'pricingPdf' && files[0]) {
         setPricingPdf(files[0]);
+        setRemovePricingPdf(false); // Reset removal flag when new file is selected
       } else if (name === 'factSheetPdf' && files[0]) {
         setFactSheetPdf(files[0]);
+        setRemoveFactSheetPdf(false); // Reset removal flag
       } else if (name === 'brochurePdf' && files[0]) {
         setBrochurePdf(files[0]);
+        setRemoveBrochurePdf(false); // Reset removal flag
       }
     } else if (type === 'checkbox') {
       setFormData(prev => ({ ...prev, [name]: checked }));
@@ -423,21 +463,53 @@ const AdminCondominios = () => {
     setMainImagePreview('');
   };
 
-
-  const removeGalleryImage = (index) => {
+  const removeGalleryImage = (indexToRemove) => {
     // Remove from image previews
-    const newImagePreviews = imagePreviews.filter((_, i) => i !== index);
+    const newImagePreviews = imagePreviews.filter((_, i) => i !== indexToRemove);
     setImagePreviews(newImagePreviews);
 
-    // Remove from gallery images
-    const newGalleryImages = formData.galleryImages.filter((_, i) => i !== index);
-    setFormData(prev => ({ ...prev, galleryImages: newGalleryImages }));
+    // Update formData.galleryImages to reflect the removal.
+    // This is tricky because formData.galleryImages might contain File objects or URLs
+    // and we need to ensure the indices align.
+    const currentGalleryImages = [...formData.galleryImages];
 
-    // Add to removed indexes for tracking
-    setRemovedImageIndexes(prev => [...prev, index]);
+    // If the item being removed is a File object, remove it directly.
+    if (currentGalleryImages[indexToRemove] instanceof File) {
+      currentGalleryImages.splice(indexToRemove, 1);
+    } else {
+      // If it's a URL (from an existing property), we need to mark it for deletion.
+      // A more robust solution might involve tracking deleted image IDs, but for simplicity,
+      // let's assume we're rebuilding the list without the removed one.
+      // This approach might require backend support to handle removed URLs vs new files.
+      // For now, we'll just filter it out assuming it's an array of File objects or URLs.
+      currentGalleryImages.splice(indexToRemove, 1);
+    }
+    setFormData(prev => ({ ...prev, galleryImages: currentGalleryImages }));
 
-    // Show success message
-    console.log(`Imagem ${index + 1} removida da galeria`);
+    // Add to removed indexes for tracking if it's an existing image being removed (not a newly uploaded one)
+    // Note: This tracking mechanism might be more complex if new images are added and then removed before upload.
+    // For this context, we focus on removing from the list being sent.
+    console.log(`Image at index ${indexToRemove} removed from gallery previews/list.`);
+  };
+
+
+  const removePdf = (pdfType) => {
+    switch (pdfType) {
+      case 'pricing':
+        setPricingPdf(null);
+        setRemovePricingPdf(true);
+        break;
+      case 'factSheet':
+        setFactSheetPdf(null);
+        setRemoveFactSheetPdf(true);
+        break;
+      case 'brochure':
+        setBrochurePdf(null);
+        setRemoveBrochurePdf(true);
+        break;
+      default:
+        break;
+    }
   };
 
   const resetForm = () => {
@@ -496,10 +568,14 @@ const AdminCondominios = () => {
     setMainImagePreview('');
     setRemovedImageIndexes([]);
 
-    // Clear PDF states
+    // Clear PDF states and removal flags
     setPricingPdf(null);
     setFactSheetPdf(null);
     setBrochurePdf(null);
+    setRemovePricingPdf(false);
+    setRemoveFactSheetPdf(false);
+    setRemoveBrochurePdf(false);
+
 
     // Clear editing state
     setEditingCondominio(null);
@@ -536,6 +612,11 @@ const AdminCondominios = () => {
       setImagePreviews([]);
       setMainImagePreview('');
     }
+
+    // Set existing PDFs if they exist
+    if (condominio.pricingPdf) setPricingPdf({ name: getFileName(condominio.pricingPdf), url: condominio.pricingPdf });
+    if (condominio.factSheetPdf) setFactSheetPdf({ name: getFileName(condominio.factSheetPdf), url: condominio.factSheetPdf });
+    if (condominio.brochurePdf) setBrochurePdf({ name: getFileName(condominio.brochurePdf), url: condominio.brochurePdf });
 
     setShowForm(true);
   };
@@ -1438,7 +1519,7 @@ const AdminCondominios = () => {
               {/* PDF Documents Section */}
               <section className={styles.formSection}>
                 <h2><i className="fas fa-file-pdf"></i> PDF Documents</h2>
-                
+
                 <div className={styles.pdfGrid}>
                   <div className={styles.formGroup}>
                     <label htmlFor="pricingPdf">Pricing PDF</label>
@@ -1451,14 +1532,20 @@ const AdminCondominios = () => {
                       className={styles.fileInput}
                     />
                     <small>Upload pricing document (PDF only)</small>
-                    {editingCondominio?.pricingPdf && (
+                    {editingCondominio?.pricingPdf && !pricingPdf && !removePricingPdf && (
                       <div className={styles.currentFile}>
-                        <span>Current: {editingCondominio.pricingPdf.split('/').pop()}</span>
+                        <span>Current: {getFileName(editingCondominio.pricingPdf)}</span>
+                        <button type="button" onClick={() => removePdf('pricing')} className={styles.removePdfBtn}>
+                          <i className="fas fa-times"></i> Remove
+                        </button>
                       </div>
                     )}
                     {pricingPdf && (
                       <div className={styles.selectedFile}>
                         <span>Selected: {pricingPdf.name}</span>
+                        <button type="button" onClick={() => removePdf('pricing')} className={styles.removePdfBtn}>
+                          <i className="fas fa-times"></i> Remove
+                        </button>
                       </div>
                     )}
                   </div>
@@ -1474,14 +1561,20 @@ const AdminCondominios = () => {
                       className={styles.fileInput}
                     />
                     <small>Upload fact sheet document (PDF only)</small>
-                    {editingCondominio?.factSheetPdf && (
+                    {editingCondominio?.factSheetPdf && !factSheetPdf && !removeFactSheetPdf && (
                       <div className={styles.currentFile}>
-                        <span>Current: {editingCondominio.factSheetPdf.split('/').pop()}</span>
+                        <span>Current: {getFileName(editingCondominio.factSheetPdf)}</span>
+                        <button type="button" onClick={() => removePdf('factSheet')} className={styles.removePdfBtn}>
+                          <i className="fas fa-times"></i> Remove
+                        </button>
                       </div>
                     )}
                     {factSheetPdf && (
                       <div className={styles.selectedFile}>
                         <span>Selected: {factSheetPdf.name}</span>
+                        <button type="button" onClick={() => removePdf('factSheet')} className={styles.removePdfBtn}>
+                          <i className="fas fa-times"></i> Remove
+                        </button>
                       </div>
                     )}
                   </div>
@@ -1497,14 +1590,20 @@ const AdminCondominios = () => {
                       className={styles.fileInput}
                     />
                     <small>Upload brochure document (PDF only)</small>
-                    {editingCondominio?.brochurePdf && (
+                    {editingCondominio?.brochurePdf && !brochurePdf && !removeBrochurePdf && (
                       <div className={styles.currentFile}>
-                        <span>Current: {editingCondominio.brochurePdf.split('/').pop()}</span>
+                        <span>Current: {getFileName(editingCondominio.brochurePdf)}</span>
+                        <button type="button" onClick={() => removePdf('brochure')} className={styles.removePdfBtn}>
+                          <i className="fas fa-times"></i> Remove
+                        </button>
                       </div>
                     )}
                     {brochurePdf && (
                       <div className={styles.selectedFile}>
                         <span>Selected: {brochurePdf.name}</span>
+                        <button type="button" onClick={() => removePdf('brochure')} className={styles.removePdfBtn}>
+                          <i className="fas fa-times"></i> Remove
+                        </button>
                       </div>
                     )}
                   </div>

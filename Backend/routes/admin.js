@@ -594,6 +594,31 @@ router.put('/properties/:id', uploadFields, (req, res, next) => {
         }
         updateData.brochurePdf = `/uploads/properties/${req.files.brochurePdf[0].filename}`;
       }
+
+      // Handle PDF removal flags
+      if (req.body.removePricingPdf === 'true') {
+        if (existingProperty.pricingPdf) {
+          const oldPath = path.resolve(process.cwd(), existingProperty.pricingPdf.replace(/^\//, ''));
+          if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+        }
+        updateData.pricingPdf = null;
+      }
+
+      if (req.body.removeFactSheetPdf === 'true') {
+        if (existingProperty.factSheetPdf) {
+          const oldPath = path.resolve(process.cwd(), existingProperty.factSheetPdf.replace(/^\//, ''));
+          if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+        }
+        updateData.factSheetPdf = null;
+      }
+
+      if (req.body.removeBrochurePdf === 'true') {
+        if (existingProperty.brochurePdf) {
+          const oldPath = path.resolve(process.cwd(), existingProperty.brochurePdf.replace(/^\//, ''));
+          if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+        }
+        updateData.brochurePdf = null;
+      }
     }
 
     // Convert numeric fields

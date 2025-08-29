@@ -1,0 +1,53 @@
+.selectedFile span {
+  color: #1d4ed8;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.removePdfBtn {
+  position: absolute;
+  top: 5px;
+  right: 8px;
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.removePdfBtn:hover {
+  background: rgba(220, 38, 38, 1);
+  transform: scale(1.1);
+}
+
+.currentFile,
+.selectedFile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 30px;
+}
+
+.removedFile {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: #fef2f2;
+  border-radius: 6px;
+  border-left: 4px solid #ef4444;
+}
+
+.removedFile span {
+  color: #dc2626;
+  font-weight: 500;
+  font-size: 14px;
+  font-style: italic;
+}
