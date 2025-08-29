@@ -4,7 +4,9 @@ import { buildApiUrl, getImageUrl } from "../config/api";
 import { useAuth } from "../contexts/AuthContext";
 import PropertyMap from "./PropertyMap";
 import FavoriteModal from "./FavoriteModal";
+import useScrollAnimation from "../hooks/useScrollAnimation";
 import styles from "./PropertyListing.module.css";
+import "../styles/animations.css";
 import placeholderImage from "../assets/img/default.png";
 
 const PropertyListing = ({
@@ -18,6 +20,14 @@ const PropertyListing = ({
 }) => {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
+  
+  // Animation hooks
+  const [breadcrumbRef, breadcrumbVisible] = useScrollAnimation();
+  const [filtersRef, filtersVisible] = useScrollAnimation();
+  const [resultsBarRef, resultsBarVisible] = useScrollAnimation();
+  const [propertiesGridRef, propertiesGridVisible] = useScrollAnimation();
+  const [propertiesListRef, propertiesListVisible] = useScrollAnimation();
+  const [mapViewRef, mapViewVisible] = useScrollAnimation();
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState("grid");
@@ -538,7 +548,10 @@ const PropertyListing = ({
   return (
     <div className={styles.propertyListing}>
       {/* Breadcrumb */}
-      <div className={styles.breadcrumbSection}>
+      <div 
+        ref={breadcrumbRef}
+        className={`${styles.breadcrumbSection} animate-on-scroll ${breadcrumbVisible ? 'fade-in-up' : ''}`}
+      >
         <div className={styles.container}>
           <div className={styles.breadcrumb}>
             <span>Home</span> / <span>{breadcrumbPath}</span>
@@ -547,7 +560,10 @@ const PropertyListing = ({
       </div>
 
       {/* Filters Section */}
-      <div className={styles.filtersSection}>
+      <div 
+        ref={filtersRef}
+        className={`${styles.filtersSection} animate-on-scroll ${filtersVisible ? 'fade-in-up delay-100' : ''}`}
+      >
         <div className={styles.container}>
           <div className={styles.filtersRow}>
             <div className={styles.priceRangeGroup}>
@@ -670,7 +686,10 @@ const PropertyListing = ({
             <button className={styles.saveSearchBtn}>SAVE SEARCH</button>
           </div>
 
-          <div className={styles.resultsBar}>
+          <div 
+            ref={resultsBarRef}
+            className={`${styles.resultsBar} animate-on-scroll ${resultsBarVisible ? 'fade-in-up delay-200' : ''}`}
+          >
             <div className={styles.resultsCount}>
               Showing {currentProperties.length} of {sortedProperties.length}{" "}
               Properties (Page {currentPage} of {totalPagesCalculated || 1})
@@ -727,7 +746,10 @@ const PropertyListing = ({
           ) : (
             <>
               {viewMode === "grid" && (
-                <div className={styles.propertiesGrid}>
+                <div 
+                  ref={propertiesGridRef}
+                  className={`${styles.propertiesGrid} animate-on-scroll ${propertiesGridVisible ? 'fade-in-up delay-300' : ''}`}
+                >
                   {currentProperties.length > 0 ? (
                     currentProperties.map((property, index) => (
                       <div
@@ -818,7 +840,10 @@ const PropertyListing = ({
               )}
 
               {viewMode === "list" && (
-                <div className={styles.propertiesList}>
+                <div 
+                  ref={propertiesListRef}
+                  className={`${styles.propertiesList} animate-on-scroll ${propertiesListVisible ? 'fade-in-up delay-300' : ''}`}
+                >
                   {currentProperties.length > 0 ? (
                     <table className={styles.propertiesTable}>
                       <thead>
@@ -881,7 +906,10 @@ const PropertyListing = ({
               )}
 
               {viewMode === "map" && (
-                <div className={styles.mapView}>
+                <div 
+                  ref={mapViewRef}
+                  className={`${styles.mapView} animate-on-scroll ${mapViewVisible ? 'fade-in-up delay-300' : ''}`}
+                >
                   <div className={styles.mapPropertiesList}>
                     <div className={styles.propertiesListHeader}>
                       <h3>Properties ({sortedProperties.length})</h3>
