@@ -43,7 +43,7 @@ const SingleFamilyHomes = () => {
         apiEndpoint="/api/properties-by-category"
         title={pageData.title}
         breadcrumbPath="Single Family Homes"
-        filters={{ category: 'SINGLE_FAMILY_HOMES' }}
+        filters={{ category: 'single_family_homes' }}
         placeholderImage="/src/assets/img/waterfront-homes.jpeg"
         pageData={pageData}
       />

@@ -247,7 +247,7 @@ const PropertyListing = ({
 
       // Add category filter
       if (filters.category) {
-        url += `&category=${encodeURIComponent(filters.category)}`;
+        url += `&categoryName=${encodeURIComponent(filters.category)}`;
       }
 
       // Add neighborhood filter

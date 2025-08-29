@@ -29,49 +29,8 @@ const HeroSection = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    
-    if (!searchData.location.trim()) {
-      alert('Please enter a location to search');
-      return;
-    }
-
-    // Construir parâmetros de busca
-    const searchParams = new URLSearchParams();
-    
-    if (searchData.location) {
-      searchParams.set('search', searchData.location);
-    }
-    
-    if (searchData.propertyType !== 'All') {
-      searchParams.set('propertyType', searchData.propertyType);
-    }
-    
-    if (searchData.price !== 'Any') {
-      // Converter price para filtros min/max
-      const priceRanges = {
-        'Under $500K': { max: 500000 },
-        '$500K - $1M': { min: 500000, max: 1000000 },
-        '$1M - $2M': { min: 1000000, max: 2000000 },
-        '$2M - $5M': { min: 2000000, max: 5000000 },
-        'Over $5M': { min: 5000000 }
-      };
-      
-      if (priceRanges[searchData.price]) {
-        if (priceRanges[searchData.price].min) {
-          searchParams.set('minPrice', priceRanges[searchData.price].min);
-        }
-        if (priceRanges[searchData.price].max) {
-          searchParams.set('maxPrice', priceRanges[searchData.price].max);
-        }
-      }
-    }
-    
-    if (searchData.beds !== 'Any') {
-      searchParams.set('bedrooms', searchData.beds);
-    }
-
-    // Navegar para página de resultados
-    navigate(`/search-results?${searchParams.toString()}`);
+    console.log('Search data:', searchData);
+    // Implementar lógica de busca
   };
 
   const handleBuyClick = () => {
@@ -116,29 +75,19 @@ const HeroSection = () => {
                   </Col>
                 </Row>
 
-                <Form className={styles.searchForm} onSubmit={handleSearch}>
+                <Form className={styles.searchForm}>
                   <Form.Group controlId="searchProperty">
-                    <div className="input-group mb-3">
-                      <Form.Select 
-                        className="w-auto"
-                        value={searchData.propertyType}
-                        onChange={(e) => handleInputChange('propertyType', e.target.value)}
-                      >
-                        <option value="All">All Types</option>
-                        <option value="CONDO">Condo</option>
-                        <option value="SINGLE_FAMILY">Single Family</option>
-                        <option value="TOWNHOUSE">Townhouse</option>
-                        <option value="LUXURY_CONDO">Luxury Condo</option>
+                    <div className="input-group">
+                      <Form.Select className="w-auto">
+                        <option>For Sale</option>
+                        <option>For Rent</option>
                       </Form.Select>
                       <Form.Control
                         type="text"
-                        placeholder="Enter an address, city, neighborhood, or zip code"
+                        placeholder="Enter an address, city, zip code or MLS number"
                         className="py-3"
-                        value={searchData.location}
-                        onChange={(e) => handleInputChange('location', e.target.value)}
                       />
                       <Button
-                        type="submit"
                         variant="outline-dark"
                         className="px-4 bg-white"
                         style={{ border: '1px solid #ccc' }}
@@ -146,37 +95,10 @@ const HeroSection = () => {
                         <i className="fas fa-search"></i>
                       </Button>
                     </div>
-                    
-                    <div className="row g-2">
-                      <div className="col-md-6">
-                        <Form.Select
-                          value={searchData.price}
-                          onChange={(e) => handleInputChange('price', e.target.value)}
-                          className="form-select-sm"
-                        >
-                          <option value="Any">Any Price</option>
-                          <option value="Under $500K">Under $500K</option>
-                          <option value="$500K - $1M">$500K - $1M</option>
-                          <option value="$1M - $2M">$1M - $2M</option>
-                          <option value="$2M - $5M">$2M - $5M</option>
-                          <option value="Over $5M">Over $5M</option>
-                        </Form.Select>
-                      </div>
-                      <div className="col-md-6">
-                        <Form.Select
-                          value={searchData.beds}
-                          onChange={(e) => handleInputChange('beds', e.target.value)}
-                          className="form-select-sm"
-                        >
-                          <option value="Any">Any Beds</option>
-                          <option value="1">1+ Bed</option>
-                          <option value="2">2+ Beds</option>
-                          <option value="3">3+ Beds</option>
-                          <option value="4">4+ Beds</option>
-                        </Form.Select>
-                      </div>
-                    </div>
                   </Form.Group>
+                  <div className="text-end mt-1">
+                    <a href="#" className="text-white-50 small">Advanced search options</a>
+                  </div>
                 </Form>
               </Col>
             </Row>

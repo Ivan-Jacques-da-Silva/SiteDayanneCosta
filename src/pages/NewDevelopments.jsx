@@ -40,7 +40,7 @@ const NewDevelopments = () => {
 
   // Custom filters for New Developments
   const customFilters = {
-    category: 'NEW_DEVELOPMENTS'
+    category: 'new_developments'
   };
 
   return (

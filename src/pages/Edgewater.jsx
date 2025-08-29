@@ -45,7 +45,7 @@ const Edgewater = () => {
         apiEndpoint="/api/properties-by-category"
         title={pageData.title}
         breadcrumbPath="Edgewater"
-        filters={{ category: 'NEIGHBORHOODS', bairro: 'EDGEWATER' }}
+        filters={{ category: 'edgewater' }}
         placeholderImage={pageData.heroImage}
         pageData={pageData}
       />

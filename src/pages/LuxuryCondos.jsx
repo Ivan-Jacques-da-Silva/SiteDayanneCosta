@@ -7,32 +7,33 @@ import PropertyListing from '../components/PropertyListing';
 const LuxuryCondos = () => {
   const pageData = {
     title: "Luxury Condos in Miami",
-    subtitle: "Sophisticated Urban Living",
-    description: "Discover Miami's most prestigious luxury condominiums featuring world-class amenities and breathtaking views.",
+    subtitle: "High-End Condominium Living",
+    description: "Experience the finest in luxury condominium living with breathtaking views, premium amenities, and prime locations.",
     searchParams: {
-      property_type: "Luxury Condo",
+      property_type: "Condo",
       city: "Miami",
-      state: "FL"
+      state: "FL",
+      min_price: 1000000
     },
     heroImage: "/src/assets/img/luxury-condos.jpeg",
     sections: [
       {
-        title: "Luxury Condominium Living",
-        subtitle: "Premium High-Rise Properties",
-        content: "Experience the epitome of luxury living in Miami's most exclusive condominium towers, featuring stunning ocean and city views."
+        title: "Premium Luxury Condominiums",
+        subtitle: "Elevated Living Standards",
+        content: "Our luxury condos feature floor-to-ceiling windows, premium finishes, and world-class amenities including spas, fitness centers, and concierge services."
       },
       {
-        title: "Luxury Condo Features",
-        subtitle: "World-Class Amenities",
+        title: "Luxury Condo Amenities",
+        subtitle: "World-Class Features",
         features: [
-          "Floor-to-ceiling windows with panoramic views",
-          "Premium finishes and appliances",
-          "Concierge and doorman services",
-          "Rooftop pools and sky lounges",
+          "24/7 concierge and security",
+          "Resort-style pools and spas",
           "State-of-the-art fitness centers",
-          "Spa and wellness facilities",
-          "Private elevators and foyers",
-          "Valet parking services"
+          "Private beach access",
+          "Valet parking services",
+          "Rooftop terraces with city views",
+          "Wine cellars and tasting rooms",
+          "Private dining rooms"
         ]
       }
     ]
@@ -45,7 +46,7 @@ const LuxuryCondos = () => {
         apiEndpoint="/api/properties-by-category"
         title={pageData.title}
         breadcrumbPath="Luxury Condos"
-        filters={{ category: 'LUXURY_CONDOS' }}
+        filters={{ category: 'luxury_condos' }}
         placeholderImage="/src/assets/img/luxury-condos.jpeg"
         pageData={pageData}
       />
