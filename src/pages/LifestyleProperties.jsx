@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import styles from './LifestyleProperties.module.css';
 import PropertyListing from '../components/PropertyListing';
 
@@ -10,6 +10,7 @@ const LifestyleProperties = () => {
   const [loading, setLoading] = useState(true);
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [viewMode, setViewMode] = useState('grid');
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const lifestyleCategories = [
     { 
@@ -51,6 +52,12 @@ const LifestyleProperties = () => {
 
   useEffect(() => {
     fetchProperties();
+    
+    // Check URL params for initial filter
+    const urlFilter = searchParams.get('filter');
+    if (urlFilter && lifestyleCategories.some(cat => cat.key === urlFilter)) {
+      setSelectedFilter(urlFilter);
+    }
   }, []);
 
   useEffect(() => {
@@ -114,7 +121,15 @@ const LifestyleProperties = () => {
                 className={`${styles.categoryCard} ${
                   selectedFilter === category.key ? styles.active : ''
                 }`}
-                onClick={() => setSelectedFilter(category.key)}
+                onClick={() => {
+                  setSelectedFilter(category.key);
+                  // Update URL params
+                  if (category.key === 'all') {
+                    setSearchParams({});
+                  } else {
+                    setSearchParams({ filter: category.key });
+                  }
+                }}
               >
                 <div className={styles.categoryIcon}>{category.icon}</div>
                 <h3>{category.label}</h3>
