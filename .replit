@@ -35,6 +35,3 @@ mode = "sequential"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd Backend && npm run dev"
-
-[agent]
-expertMode = true
