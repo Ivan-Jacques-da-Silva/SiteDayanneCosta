@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
@@ -20,30 +19,30 @@ const LifestyleProperties = () => {
   });
 
   const categories = [
-    { 
+    {
       key: 'waterfront',
-      title: 'Waterfront Homes', 
+      title: 'Waterfront Homes',
       image: img1,
       filter: 'waterfront',
       description: 'Luxury waterfront properties'
     },
-    { 
+    {
       key: 'boatDocks',
-      title: 'Boat Docks', 
+      title: 'Boat Docks',
       image: img2,
       filter: 'boat_docks',
       description: 'Properties with boat access'
     },
-    { 
+    {
       key: 'golfCourse',
-      title: 'Golf Course', 
+      title: 'Golf Course',
       image: img3,
       filter: 'golf_course',
       description: 'Golf course communities'
     },
-    { 
+    {
       key: 'luxuryCondos',
-      title: 'Luxury Condos', 
+      title: 'Luxury Condos',
       image: img4,
       filter: 'luxury_condos',
       description: 'Premium condominium living'
@@ -60,21 +59,21 @@ const LifestyleProperties = () => {
       if (response.ok) {
         const data = await response.json();
         const properties = data.properties || [];
-        
+
         // Count properties by filter type
         const counts = {
           waterfront: properties.filter(p => p.waterfront === true).length,
           boatDocks: properties.filter(p => p.waterfront === true && p.waterfrontDescription?.toLowerCase().includes('dock')).length,
-          golfCourse: properties.filter(p => 
-            p.amenities?.toLowerCase().includes('golf') || 
+          golfCourse: properties.filter(p =>
+            p.amenities?.toLowerCase().includes('golf') ||
             p.description?.toLowerCase().includes('golf')
           ).length,
-          luxuryCondos: properties.filter(p => 
-            p.propertyType === 'LUXURY_CONDO' || 
+          luxuryCondos: properties.filter(p =>
+            p.propertyType === 'LUXURY_CONDO' ||
             p.propertyType === 'CONDO'
           ).length
         };
-        
+
         setPropertyCounts(counts);
       }
     } catch (error) {
@@ -85,7 +84,7 @@ const LifestyleProperties = () => {
   return (
     <section className="py-5">
       <Container>
-        <Row 
+        <Row
           ref={titleRef}
           className={`mb-4 text-center animate-on-scroll ${titleVisible ? 'fade-in-up' : ''}`}
         >
@@ -95,20 +94,20 @@ const LifestyleProperties = () => {
           </Col>
         </Row>
 
-        <Row 
+        <Row
           ref={cardsRef}
           className={`g-4 animate-on-scroll ${cardsVisible ? 'fade-in-up delay-200' : ''}`}
         >
           {categories.map((item, index) => (
-            <Col 
-              key={index} 
-              xs={12} 
-              sm={6} 
+            <Col
+              key={index}
+              xs={12}
+              sm={6}
               lg={6}
               className={`animate-on-scroll ${cardsVisible ? `fade-in-up delay-${300 + (index * 100)}` : ''}`}
             >
-              <Link 
-                to={`/lifestyle-properties?filter=${item.filter}`} 
+              <Link
+                to={`/properties?category=LIFESTYLE_PROPERTIES&filter=${item.filter}`}
                 className="text-decoration-none"
                 style={{ display: 'block' }}
               >
@@ -117,14 +116,14 @@ const LifestyleProperties = () => {
                     src={item.image}
                     alt={item.title}
                     className="w-100"
-                    style={{ 
-                      height: '300px', 
-                      objectFit: 'cover', 
+                    style={{
+                      height: '300px',
+                      objectFit: 'cover',
                       transition: 'transform 0.4s ease',
                       borderRadius: '8px'
                     }}
                   />
-                  
+
                   {/* Overlay with property count */}
                   <div style={{
                     position: 'absolute',
@@ -161,8 +160,8 @@ const LifestyleProperties = () => {
                       <p style={{ margin: '0 0 4px 0', fontSize: '14px', opacity: '0.9' }}>
                         {item.description}
                       </p>
-                      <span style={{ 
-                        fontSize: '12px', 
+                      <span style={{
+                        fontSize: '12px',
                         background: 'rgba(255,255,255,0.2)',
                         padding: '2px 8px',
                         borderRadius: '4px'

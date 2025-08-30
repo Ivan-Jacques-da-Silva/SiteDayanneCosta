@@ -7,15 +7,18 @@ const useScrollAnimation = (threshold = 0.1) => {
 
   useEffect(() => {
     const currentElement = elementRef.current;
-    if (!currentElement) return;
+    if (!currentElement) {
+      // Se não há elemento, assume como visível para evitar travamento
+      setIsVisible(true);
+      return;
+    }
 
     // Verificar se o elemento já está visível ao carregar
     const rect = currentElement.getBoundingClientRect();
-    const isInitiallyVisible = rect.top < window.innerHeight * 0.8 && rect.bottom > 0;
+    const isInitiallyVisible = rect.top < window.innerHeight && rect.bottom > 0;
     
     if (isInitiallyVisible) {
-      // Pequeno delay para garantir que a animação seja visível
-      setTimeout(() => setIsVisible(true), 100);
+      setIsVisible(true);
       return;
     }
 
@@ -23,20 +26,21 @@ const useScrollAnimation = (threshold = 0.1) => {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          // Uma vez visível, para de observar para evitar re-animações
           observer.unobserve(entry.target);
         }
       },
       { 
         threshold,
-        rootMargin: '-50px 0px' // Trigger animation a bit before element is fully visible
+        rootMargin: '50px 0px'
       }
     );
 
     observer.observe(currentElement);
 
     return () => {
-      observer.unobserve(currentElement);
+      if (currentElement) {
+        observer.unobserve(currentElement);
+      }
     };
   }, [threshold]);
 

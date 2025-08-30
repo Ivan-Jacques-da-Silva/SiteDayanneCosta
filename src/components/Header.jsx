@@ -301,7 +301,7 @@ const Header = () => {
                             onMouseEnter={() => setShowUserDropdown(true)}
                             onMouseLeave={() => setShowUserDropdown(false)}
                           >
-                            <a href={user.role === 'admin' ? '/admin/dashboard' : '/dashboard'} className={styles.dropdownItem}>
+                            <a href={user.role === 'ADMIN' ? '/admin/dashboard' : '/dashboard'} className={styles.dropdownItem}>
                               <i className="fas fa-tachometer-alt"></i>
                               Panel
                             </a>
@@ -414,7 +414,7 @@ const Header = () => {
                               </Link>
                             </li>
                             <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                              <Link to="/lifestyle-properties" className={styles.ipMenuLink}>
+                              <Link to="/properties?category=LIFESTYLE_PROPERTIES" className={styles.ipMenuLink}>
                                 Lifestyle Properties
                               </Link>
                             </li>
@@ -601,7 +601,7 @@ const Header = () => {
                     </Link>
                   </li>
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                    <Link to="/lifestyle-properties" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                    <Link to="/properties?category=LIFESTYLE_PROPERTIES" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
                       Lifestyle Properties
                     </Link>
                   </li>
@@ -736,7 +736,7 @@ const Header = () => {
                   <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                     <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
                       <Link
-                        to={user.role === 'admin' ? '/admin/dashboard' : '/dashboard'}
+                        to={user.role === 'ADMIN' ? '/admin/dashboard' : '/dashboard'}
                         className={`ip-menu-link ${styles.ipMenuLink}`}
                         style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none', paddingLeft: '2rem', backgroundColor: '#e9ecef' }}
                         onClick={handleNavClick}

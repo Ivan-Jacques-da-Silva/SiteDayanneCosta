@@ -166,8 +166,10 @@ app.use('/api/amenities', amenityRoutes);
 app.use('/api/features', featureRoutes);
 app.use('/api/categories', require('./routes/categories'));
 app.use('/api/admin', adminRoutes);
-app.use('/api/emails', emailRoutes);
+app.use('/api/emails', require('./routes/emails'));
 app.use('/api/search', searchRoutes);
+app.use('/api/featured-listings', featuredListingsRoutes);
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {
