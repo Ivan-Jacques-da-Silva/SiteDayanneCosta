@@ -55,8 +55,13 @@
 
 /* Classes de animação */
 .animate-on-scroll {
-  opacity: 0;
+  opacity: 1;
+  transform: translateY(0);
   transition: all 0.6s ease-out;
+}
+
+.animate-on-scroll:not(.fade-in-up):not(.fade-in-left):not(.fade-in-right):not(.fade-in):not(.scale-in) {
+  opacity: 1;
 }
 
 .animate-on-scroll.animated {
@@ -64,22 +69,31 @@
 }
 
 .fade-in-up {
+  opacity: 0;
+  transform: translateY(30px);
   animation: fadeInUp 0.8s ease-out forwards;
 }
 
 .fade-in-left {
+  opacity: 0;
+  transform: translateX(-30px);
   animation: fadeInLeft 0.8s ease-out forwards;
 }
 
 .fade-in-right {
+  opacity: 0;
+  transform: translateX(30px);
   animation: fadeInRight 0.8s ease-out forwards;
 }
 
 .fade-in {
+  opacity: 0;
   animation: fadeIn 0.8s ease-out forwards;
 }
 
 .scale-in {
+  opacity: 0;
+  transform: scale(0.8);
   animation: scaleIn 0.8s ease-out forwards;
 }
 

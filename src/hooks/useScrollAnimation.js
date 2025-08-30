@@ -6,6 +6,18 @@ const useScrollAnimation = (threshold = 0.1) => {
   const elementRef = useRef();
 
   useEffect(() => {
+    // Verificar se o elemento já está visível ao carregar
+    const currentElement = elementRef.current;
+    if (currentElement) {
+      const rect = currentElement.getBoundingClientRect();
+      const isInitiallyVisible = rect.top < window.innerHeight && rect.bottom > 0;
+      
+      if (isInitiallyVisible) {
+        setIsVisible(true);
+        return;
+      }
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -17,7 +29,6 @@ const useScrollAnimation = (threshold = 0.1) => {
       { threshold }
     );
 
-    const currentElement = elementRef.current;
     if (currentElement) {
       observer.observe(currentElement);
     }
