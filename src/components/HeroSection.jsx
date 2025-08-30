@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { getImageUrl } from '../config/api';
 import styles from './HeroSection.module.css';
 import BackgroundCarousel from './BackgroundCarousel.jsx';
+import useSearch from '../hooks/useSearch';
 import mulherFixa from '../assets/img/mulher.png';
 
 import slide1 from '../assets/img/slide1.jpeg';
@@ -12,6 +13,8 @@ import slide3 from '../assets/img/slide3.jpeg';
 
 const HeroSection = () => {
   const [searchData, setSearchData] = useState({
+    saleType: 'For Sale',
+    search: '',
     propertyType: 'All',
     price: 'Any',
     beds: 'Any',
@@ -19,6 +22,7 @@ const HeroSection = () => {
   });
 
   const navigate = useNavigate();
+  const { performSearch, isLoading } = useSearch();
 
   const handleInputChange = (field, value) => {
     setSearchData(prev => ({
@@ -29,8 +33,17 @@ const HeroSection = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    console.log('Search data:', searchData);
-    // Implementar lógica de busca
+    
+    const searchParams = {
+      search: searchData.search,
+      saleType: searchData.saleType,
+      propertyType: searchData.propertyType,
+      price: searchData.price,
+      beds: searchData.beds,
+      location: searchData.location
+    };
+
+    performSearch(searchParams);
   };
 
   const handleBuyClick = () => {
@@ -75,29 +88,41 @@ const HeroSection = () => {
                   </Col>
                 </Row>
 
-                <Form className={styles.searchForm}>
+                <Form className={styles.searchForm} onSubmit={handleSearch}>
                   <Form.Group controlId="searchProperty">
                     <div className="input-group">
-                      <Form.Select className="w-auto">
-                        <option>For Sale</option>
-                        <option>For Rent</option>
+                      <Form.Select 
+                        className="w-auto"
+                        value={searchData.saleType}
+                        onChange={(e) => handleInputChange('saleType', e.target.value)}
+                      >
+                        <option value="For Sale">For Sale</option>
+                        <option value="For Rent">For Rent</option>
                       </Form.Select>
                       <Form.Control
                         type="text"
                         placeholder="Enter an address, city, zip code or MLS number"
                         className="py-3"
+                        value={searchData.search}
+                        onChange={(e) => handleInputChange('search', e.target.value)}
                       />
                       <Button
                         variant="outline-dark"
                         className="px-4 bg-white"
                         style={{ border: '1px solid #ccc' }}
+                        type="submit"
+                        disabled={isLoading}
                       >
-                        <i className="fas fa-search"></i>
+                        {isLoading ? (
+                          <i className="fas fa-spinner fa-spin"></i>
+                        ) : (
+                          <i className="fas fa-search"></i>
+                        )}
                       </Button>
                     </div>
                   </Form.Group>
                   <div className="text-end mt-1">
-                    <a href="#" className="text-white-50 small">Advanced search options</a>
+                    <a href="/search" className="text-white-50 small">Advanced search options</a>
                   </div>
                 </Form>
               </Col>
