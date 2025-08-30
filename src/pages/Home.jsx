@@ -31,42 +31,42 @@ function Home() {
         
         <div 
           ref={featuredListingsRef}
-          className={`animate-on-scroll ${featuredListingsVisible ? 'fade-in-up' : ''}`}
+          className={`fade-in-up delay-100 ${featuredListingsVisible ? 'animated' : ''}`}
         >
           <FeaturedListings />
         </div>
         
         <div 
           ref={featuredDevelopmentsRef}
-          className={`animate-on-scroll ${featuredDevelopmentsVisible ? 'fade-in-up delay-100' : ''}`}
+          className={`fade-in-up delay-200 ${featuredDevelopmentsVisible ? 'animated' : ''}`}
         >
           <FeaturedDevelopments />
         </div>
         
         <div 
           ref={aboutSectionRef}
-          className={`animate-on-scroll ${aboutSectionVisible ? 'fade-in-left delay-200' : ''}`}
+          className={`fade-in-left delay-300 ${aboutSectionVisible ? 'animated' : ''}`}
         >
           <AboutSection />
         </div>
         
         <div 
           ref={benMossGroupRef}
-          className={`animate-on-scroll ${benMossGroupVisible ? 'fade-in-right delay-100' : ''}`}
+          className={`fade-in-right delay-200 ${benMossGroupVisible ? 'animated' : ''}`}
         >
           <BenMossGroup />
         </div>
         
         <div 
           ref={ctaSectionRef}
-          className={`animate-on-scroll ${ctaSectionVisible ? 'scale-in delay-200' : ''}`}
+          className={`scale-in delay-400 ${ctaSectionVisible ? 'animated' : ''}`}
         >
           <CTASection />
         </div>
         
         <div 
           ref={lifestylePropertiesRef}
-          className={`animate-on-scroll ${lifestylePropertiesVisible ? 'fade-in-up delay-100' : ''}`}
+          className={`fade-in-up delay-300 ${lifestylePropertiesVisible ? 'animated' : ''}`}
         >
           <LifestyleProperties />
         </div>

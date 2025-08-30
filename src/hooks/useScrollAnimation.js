@@ -6,16 +6,17 @@ const useScrollAnimation = (threshold = 0.1) => {
   const elementRef = useRef();
 
   useEffect(() => {
-    // Verificar se o elemento já está visível ao carregar
     const currentElement = elementRef.current;
-    if (currentElement) {
-      const rect = currentElement.getBoundingClientRect();
-      const isInitiallyVisible = rect.top < window.innerHeight && rect.bottom > 0;
-      
-      if (isInitiallyVisible) {
-        setIsVisible(true);
-        return;
-      }
+    if (!currentElement) return;
+
+    // Verificar se o elemento já está visível ao carregar
+    const rect = currentElement.getBoundingClientRect();
+    const isInitiallyVisible = rect.top < window.innerHeight * 0.8 && rect.bottom > 0;
+    
+    if (isInitiallyVisible) {
+      // Pequeno delay para garantir que a animação seja visível
+      setTimeout(() => setIsVisible(true), 100);
+      return;
     }
 
     const observer = new IntersectionObserver(
@@ -26,17 +27,16 @@ const useScrollAnimation = (threshold = 0.1) => {
           observer.unobserve(entry.target);
         }
       },
-      { threshold }
+      { 
+        threshold,
+        rootMargin: '-50px 0px' // Trigger animation a bit before element is fully visible
+      }
     );
 
-    if (currentElement) {
-      observer.observe(currentElement);
-    }
+    observer.observe(currentElement);
 
     return () => {
-      if (currentElement) {
-        observer.unobserve(currentElement);
-      }
+      observer.unobserve(currentElement);
     };
   }, [threshold]);
 
