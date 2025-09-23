@@ -134,7 +134,7 @@ const HeroSection = () => {
       <img
         src={mulherFixa}
         alt="Dayanne Costa"
-        className="position-absolute end-0 bottom-0"
+        className={`position-absolute end-0 bottom-0 d-none d-lg-block ${styles.heroImage}`}
         style={{
           maxHeight: '90%',
           zIndex: 1,

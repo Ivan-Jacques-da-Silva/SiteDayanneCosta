@@ -25,7 +25,7 @@ const emailTemplates = {
   contactForm: (data) => ({
     from: EMAIL_CONFIG.auth.user,
     // to: 'dayannecosta@compass.com',
-    to: 'ivanjacques1997@gmail.com',
+    to: 'dayannecosta@compass.com',
     subject: `New contact message - ${data.firstName} ${data.lastName}`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -56,7 +56,7 @@ const emailTemplates = {
   propertyInquiry: (data, property) => ({
     from: EMAIL_CONFIG.auth.user,
     // to: 'dayannecosta@compass.com',
-    to: 'ivanjacques1997@gmail.com',
+    to: 'dayannecosta@compass.com',
     subject: `Property Inquiry — ${property.address}`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -115,7 +115,7 @@ const emailTemplates = {
     return {
       from: EMAIL_CONFIG.auth.user,
       // to: 'dayannecosta@compass.com',
-      to: 'ivanjacques1997@gmail.com',
+      to: 'dayannecosta@compass.com',
       subject: `Buy/Sell Quiz Submission — ${data.firstName} ${data.lastName}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">

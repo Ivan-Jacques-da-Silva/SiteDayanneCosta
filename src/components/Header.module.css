@@ -60,8 +60,11 @@
 /* Mobile Header Adjustments */
 @media (max-width: 991.98px) {
   .ipHeader {
-    position: relative;
-    z-index: 1000;
+    position: fixed; /* Manter fixo em mobile também */
+    top: 0;
+    width: 100%;
+    z-index: 1030; /* Z-index mais alto */
+    background-color: rgba(0, 0, 0, 0.95) !important; /* Fundo semi-transparente em mobile */
   }
 }
 
