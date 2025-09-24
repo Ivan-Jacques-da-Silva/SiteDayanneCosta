@@ -67,8 +67,8 @@ const HeroSection = () => {
       <Container className="position-relative z-2 py-5 h-100">
         <Row className="justify-content-center text-center mb-4 h-100">
           <Col className="d-flex flex-column justify-content-center">
-            <h1 className={`${styles.heroTitle} fw-bold text-white mb-4`}>
-              Building Relationships, Building Real Estate Legacies
+            <h1 className={`${styles.heroTitle} text-white mb-4`}>
+              Building Relationships, Building <br/> Real Estate Legacies
               <br />
               <span className={`${styles.heroSubtitle} d-block mt-3`}>Dayanne Costa</span>
             </h1>
@@ -77,12 +77,12 @@ const HeroSection = () => {
               <Col lg={8}>
                 <Row className="justify-content-center mb-4 g-2">
                   <Col xs={12} sm={6} md="auto">
-                    <Button variant="light" className={`${styles.heroButton} w-100 px-4 py-3 fw-bold`} onClick={handleBuyClick}>
+                    <Button variant="light" className={`${styles.heroButton} w-100 px-4 py-3`} onClick={handleBuyClick}>
                       I Want To Buy
                     </Button>
                   </Col>
                   <Col xs={12} sm={6} md="auto">
-                    <Button variant="light" className={`${styles.heroButton} w-100 px-4 py-3 fw-bold`} onClick={handleSellClick}>
+                    <Button variant="light" className={`${styles.heroButton} w-100 px-4 py-3`} onClick={handleSellClick}>
                       I Want To Sell
                     </Button>
                   </Col>
@@ -121,9 +121,6 @@ const HeroSection = () => {
                       </Button>
                     </div>
                   </Form.Group>
-                  <div className="text-end mt-1">
-                    <a href="/search" className="text-white-50 small">Advanced search options</a>
-                  </div>
                 </Form>
               </Col>
             </Row>
