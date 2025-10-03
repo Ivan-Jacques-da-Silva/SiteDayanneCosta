@@ -170,6 +170,34 @@ app.use('/api/emails', require('./routes/emails'));
 app.use('/api/search', searchRoutes);
 app.use('/api/featured-listings', featuredListingsRoutes);
 
+// Rota IDX Broker
+const token = "E2zacX5HZjIrbp1SeiZ0i@";
+const base = "https://api.idxbroker.com";
+
+async function chamarIDXFeatured(parametros = {}) {
+  const qs = new URLSearchParams(parametros);
+  const url = `${base}/clients/featured${qs.toString() ? "?" + qs.toString() : ""}`;
+
+  const r = await fetch(url, {
+    method: "GET",
+    headers: { accesskey: token, outputtype: "json" }
+  });
+
+  const texto = await r.text();
+  if (!r.ok) throw new Error(`HTTP ${r.status} – ${texto.slice(0, 300)}`);
+
+  try { return JSON.parse(texto); } catch { return texto; }
+}
+
+app.get("/api/idx/clients/featured", async (req, res) => {
+  try {
+    const count = req.query.count || 25;
+    const dados = await chamarIDXFeatured({ count });
+    res.json(dados);
+  } catch (e) {
+    res.status(500).json({ erro: e.message });
+  }
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
