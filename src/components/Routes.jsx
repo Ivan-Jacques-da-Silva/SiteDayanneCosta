@@ -39,6 +39,8 @@ import PrivateExclusive from '../pages/PrivateExclusive';
 import PropertyDetailPage from '../pages/PropertyDetailPage';
 import UserDashboard from '../pages/UserDashboard';
 import UserFavorites from '../pages/UserFavorites';
+import Terms from '../pages/Terms';
+import Privacy from '../pages/Privacy';
 
 
 
@@ -75,7 +77,7 @@ const AppRoutes = () => {
         {/* Services */}
         <Route path="/compass-concierge" element={<CompassConcierge />} />
         <Route path="/private-exclusive" element={<PrivateExclusive />} />
-        
+
 
         {/* Auth */}
         <Route path="/login" element={<Login />} />
@@ -180,6 +182,10 @@ const AppRoutes = () => {
 
         {/* Search Results Route */}
         <Route path="/search-results" element={<SearchResults />} />
+
+        {/* Terms and Privacy Routes */}
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy" element={<Privacy />} />
       </RouterRoutes>
     </>
   );

@@ -147,7 +147,55 @@ const emailTemplates = {
         </div>
       `
     };
-  }
+  },
+
+  welcomeEmail: (data) => ({
+    subject: 'Welcome to Dayanne Costa Real Estate',
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+        <!-- Header -->
+        <div style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); padding: 30px; text-align: center;">
+          <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 300;">Welcome!</h1>
+        </div>
+
+        <!-- Main Content -->
+        <div style="padding: 40px 30px;">
+          <h2 style="color: #2c3e50; margin-bottom: 20px; font-size: 24px;">Hello ${data.firstName}!</h2>
+
+          <p style="color: #555; line-height: 1.6; margin-bottom: 20px; font-size: 16px;">
+            Thank you for registering on our website. I'm Dayanne Costa, and I'm glad to have you here.
+          </p>
+
+          <p style="color: #555; line-height: 1.6; margin-bottom: 30px; font-size: 16px;">
+            You can now explore our complete collection of properties in Miami and find exactly what you're looking for.
+          </p>
+
+          <!-- CTA Button -->
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="https://dayannecosta.com/properties" style="display: inline-block; background-color: #3498db; color: #ffffff; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">View Properties</a>
+          </div>
+
+          <p style="color: #555; line-height: 1.6; margin-bottom: 20px; font-size: 16px;">
+            If you have any questions, feel free to contact me.
+          </p>
+
+          <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+            <p style="color: #777; margin: 5px 0; font-size: 14px;"><strong>Dayanne Costa</strong></p>
+            <p style="color: #777; margin: 5px 0; font-size: 14px;">Licensed Real Estate Agent</p>
+            <p style="color: #777; margin: 5px 0; font-size: 14px;">📱 +1 (646) 598-3588</p>
+            <p style="color: #777; margin: 5px 0; font-size: 14px;">✉️ dayannecosta@compass.com</p>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="background-color: #2c3e50; padding: 20px; text-align: center;">
+          <p style="color: #bdc3c7; margin: 0; font-size: 12px;">
+            © 2024 Dayanne Costa Real Estate. All rights reserved.
+          </p>
+        </div>
+      </div>
+    `
+  }),
 };
 
 // Function to send email

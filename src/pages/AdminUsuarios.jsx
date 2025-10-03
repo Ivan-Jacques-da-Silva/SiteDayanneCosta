@@ -15,7 +15,7 @@ const AdminUsuarios = () => {
     name: '',
     email: '',
     password: '',
-    role: 'USER'
+    role: 'CLIENT'
   });
 
   useEffect(() => {
@@ -43,33 +43,8 @@ const AdminUsuarios = () => {
         setUsuarios(data.users);
         setTotalPages(data.pagination.pages);
       } else {
-        // Mock data for development
-        setUsuarios([
-          {
-            id: 1,
-            name: 'João Silva',
-            email: 'joao@email.com',
-            role: 'USER',
-            createdAt: '2024-01-15T10:30:00Z',
-            _count: {
-              properties: 3,
-              contacts: 5,
-              favorites: 12
-            }
-          },
-          {
-            id: 2,
-            name: 'Maria Santos',
-            email: 'maria@email.com',
-            role: 'AGENT',
-            createdAt: '2024-01-10T14:20:00Z',
-            _count: {
-              properties: 15,
-              contacts: 23,
-              favorites: 8
-            }
-          }
-        ]);
+        console.error('Failed to load users:', response.status, response.statusText);
+        setUsuarios([]);
       }
     } catch (error) {
       console.error('Error loading users:', error);
@@ -119,7 +94,7 @@ const AdminUsuarios = () => {
       name: '',
       email: '',
       password: '',
-      role: 'USER'
+      role: 'CLIENT'
     });
   };
 
@@ -134,20 +109,27 @@ const AdminUsuarios = () => {
     setShowForm(true);
   };
 
+  const [deleteUserId, setDeleteUserId] = useState(null);
+
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
-      try {
-        const token = localStorage.getItem('token');
-        await fetch(buildApiUrl(`/api/admin/users/${id}`), {
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        loadUsuarios();
-      } catch (error) {
-        console.error('Error deleting user:', error);
-      }
+    setDeleteUserId(id);
+  };
+
+  const confirmDeleteUser = async () => {
+    const id = deleteUserId;
+    setDeleteUserId(null);
+    
+    try {
+      const token = localStorage.getItem('token');
+      await fetch(buildApiUrl(`/api/admin/users/${id}`), {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      loadUsuarios();
+    } catch (error) {
+      console.error('Error deleting user:', error);
     }
   };
 
@@ -163,7 +145,7 @@ const AdminUsuarios = () => {
     switch (role) {
       case 'ADMIN': return '#ef4444';
       case 'AGENT': return '#3b82f6';
-      case 'USER': return '#10b981';
+      case 'CLIENT': return '#10b981';
       default: return '#6b7280';
     }
   };
@@ -172,7 +154,7 @@ const AdminUsuarios = () => {
     switch (role) {
       case 'ADMIN': return 'Administrator';
       case 'AGENT': return 'Broker';
-      case 'USER': return 'User';
+      case 'CLIENT': return 'Client';
       default: return role;
     }
   };
@@ -212,7 +194,7 @@ const AdminUsuarios = () => {
             className={styles.filterSelect}
           >
             <option value="">All Users</option>
-            <option value="USER">Users</option>
+            <option value="CLIENT">Clients</option>
             <option value="AGENT">Brokers</option>
             <option value="ADMIN">Administrators</option>
           </select>
@@ -268,7 +250,7 @@ const AdminUsuarios = () => {
                     value={formData.role}
                     onChange={(e) => setFormData({...formData, role: e.target.value})}
                   >
-                    <option value="USER">User</option>
+                    <option value="CLIENT">Client</option>
                     <option value="AGENT">Broker</option>
                     <option value="ADMIN">Administrator</option>
                   </select>
@@ -369,6 +351,41 @@ const AdminUsuarios = () => {
             >
               Next
             </button>
+          </div>
+        )}
+
+        {/* Delete User Confirmation Modal */}
+        {deleteUserId && (
+          <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+            <div className="modal-dialog modal-dialog-centered">
+              <div className="modal-content">
+                <div className="modal-header border-0">
+                  <h5 className="modal-title">
+                    <i className="fas fa-exclamation-triangle text-danger me-2"></i>
+                    Confirmar Exclusão
+                  </h5>
+                </div>
+                <div className="modal-body">
+                  <p className="mb-0">Tem certeza que deseja excluir este usuário? Esta ação não pode ser desfeita.</p>
+                </div>
+                <div className="modal-footer border-0">
+                  <button 
+                    type="button" 
+                    className="btn btn-secondary"
+                    onClick={() => setDeleteUserId(null)}
+                  >
+                    Cancelar
+                  </button>
+                  <button 
+                    type="button" 
+                    className="btn btn-danger"
+                    onClick={confirmDeleteUser}
+                  >
+                    Excluir
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>

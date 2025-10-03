@@ -6,7 +6,7 @@ const { PrismaClient } = require('@prisma/client');
 const router = express.Router();
 const prisma = new PrismaClient();
 
-// Login route
+// Login routes
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -75,7 +75,7 @@ router.post('/login', async (req, res) => {
 // POST /api/users/register - Register new user
 router.post('/register', async (req, res) => {
   try {
-    const { name, email, password, role = 'AGENT' } = req.body;
+    const { name, email, password, role = 'CLIENT' } = req.body;
 
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
@@ -112,6 +112,30 @@ router.post('/register', async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
+
+    // Send welcome email (don't wait for it to complete to avoid delaying response)
+    try {
+      const { sendEmail } = require('../config/email');
+      const nameParts = name.split(' ');
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+      
+      // Send welcome email asynchronously
+      setImmediate(async () => {
+        try {
+          await sendEmail('welcomeEmail', {
+            firstName,
+            lastName,
+            email
+          });
+          console.log(`Welcome email sent to: ${email}`);
+        } catch (emailError) {
+          console.error('Error sending welcome email:', emailError);
+        }
+      });
+    } catch (error) {
+      console.error('Error setting up welcome email:', error);
+    }
 
     res.status(201).json({
       user,

@@ -226,10 +226,12 @@ const BuySell = () => {
                 </div>
               )}
 
-              {/* Step 1: What Are You Looking To Buy? */}
+              {/* Step 1: What Are You Looking To Buy/Sell? */}
               {currentStep === 1 && (
                 <div className={styles.step}>
-                  <h1 className={styles.title}>What Are You Looking To Buy?</h1>
+                  <h1 className={styles.title}>
+                    {formData.action === 'sell' ? 'What Are You Looking To Sell?' : 'What Are You Looking To Buy?'}
+                  </h1>
                   <div className={styles.options}>
                     {['Condo', 'Single Family Home', 'Townhouse'].map((option) => (
                       <button

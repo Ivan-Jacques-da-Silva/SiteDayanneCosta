@@ -494,19 +494,19 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
             {/* Left Column - Property Details */}
             <div className={styles.leftColumn}>
               {/* Basic Information */}
-              <div className={`${styles.basicInfoCard} ${!isAuthenticated ? styles.restrictedCard : ''}`}>
+              <div className={styles.basicInfoCard}>
                 <h2>Basic Information</h2>
                 <ul className={styles.basicInfoList}>
                   <li>
                     <span className={styles.infoLabel}>MLS #</span>
                     <span className={styles.infoValue}>
-                      {isAuthenticated ? (property.mlsNumber || "N/A") : "***"}
+                      {property.mlsNumber || "N/A"}
                     </span>
                   </li>
                   <li>
                     <span className={styles.infoLabel}>Type</span>
                     <span className={styles.infoValue}>
-                      {isAuthenticated ? (property.propertyType || "N/A") : "***"}
+                      {property.propertyType || "N/A"}
                     </span>
                   </li>
                   <li>
@@ -514,71 +514,41 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                       Subdivision/Complex
                     </span>
                     <span className={styles.infoValue}>
-                      {isAuthenticated ? (property.subdivision || "N/A") : "***"}
+                      {property.subdivision || "N/A"}
                     </span>
                   </li>
                   <li>
                     <span className={styles.infoLabel}>Year Built</span>
                     <span className={styles.infoValue}>
-                      {isAuthenticated ? (property.yearBuilt || "N/A") : "***"}
+                      {property.yearBuilt || "N/A"}
                     </span>
                   </li>
                   <li>
                     <span className={styles.infoLabel}>Total Sqft</span>
                     <span className={styles.infoValue}>
-                      {isAuthenticated ? formatNumber(property.sqft) : "***"}
+                      {formatNumber(property.sqft)}
                     </span>
                   </li>
                   <li>
                     <span className={styles.infoLabel}>Date Listed</span>
                     <span className={styles.infoValue}>
-                      {isAuthenticated ? (property.dateListed || "N/A") : "***"}
+                      {property.dateListed || "N/A"}
                     </span>
                   </li>
                   <li>
                     <span className={styles.infoLabel}>Days on Market</span>
                     <span className={styles.infoValue}>
-                      {isAuthenticated ? (property.daysOnMarket || "N/A") : "***"}
+                      {property.daysOnMarket || "N/A"}
                     </span>
                   </li>
                 </ul>
-
-                {!isAuthenticated && (
-                  <div className={styles.cardLoginOverlay}>
-                    <div className={styles.cardLoginOverlayContent}>
-                      <i className="fas fa-lock" style={{ fontSize: '24px', marginBottom: '10px' }}></i>
-                      <p>Login to view details</p>
-                      <button 
-                        className={styles.cardOverlayLoginBtn}
-                        onClick={() => setShowLoginModal(true)}
-                      >
-                        Login
-                      </button>
-                    </div>
-                  </div>
-                )}
               </div>
 
               {/* Description */}
               {property.description && (
-                <div className={`${styles.descriptionCard} ${!isAuthenticated ? styles.restrictedCard : ''}`}>
+                <div className={styles.descriptionCard}>
                   <h2>Description</h2>
-                  <p>{isAuthenticated ? property.description : "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***"}</p>
-
-                  {!isAuthenticated && (
-                    <div className={styles.cardLoginOverlay}>
-                      <div className={styles.cardLoginOverlayContent}>
-                        <i className="fas fa-lock" style={{ fontSize: '24px', marginBottom: '10px' }}></i>
-                        <p>Login to view details</p>
-                        <button 
-                          className={styles.cardOverlayLoginBtn}
-                          onClick={() => setShowLoginModal(true)}
-                        >
-                          Login
-                        </button>
-                      </div>
-                    </div>
-                  )}
+                  <p>{property.description}</p>
                 </div>
               )}
 

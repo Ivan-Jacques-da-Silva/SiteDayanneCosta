@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styles from './AdminSidebar.module.css';
 
 const AdminSidebar = ({ user }) => {
   const location = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const isAdmin = user?.role === 'ADMIN';
 
@@ -26,11 +27,12 @@ const AdminSidebar = ({ user }) => {
         icon: 'fas fa-users'
       }
     ] : []),
-    {
-      label: 'Favorites',
-      path: '/admin/favoritos',
-      icon: 'fas fa-heart'
-    },
+    // Comentado temporariamente - Favoritos não são necessários para admin por enquanto
+    // {
+    //   label: 'Favorites',
+    //   path: '/admin/favoritos',
+    //   icon: 'fas fa-heart'
+    // },
     {
       label: 'Forms',
       path: '/admin/formularios',
@@ -45,9 +47,42 @@ const AdminSidebar = ({ user }) => {
     return location.pathname.startsWith(path);
   };
 
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   return (
-    <div className={styles.sidebar}>
+    <>
+      {/* Mobile Menu Button */}
+      <button 
+        className={styles.mobileMenuButton}
+        onClick={toggleMobileMenu}
+        aria-label="Toggle menu"
+      >
+        <span className={styles.hamburger}></span>
+        <span className={styles.hamburger}></span>
+        <span className={styles.hamburger}></span>
+      </button>
+
+      {/* Mobile Menu Overlay */}
+      <div 
+        className={`${styles.overlay} ${isMobileMenuOpen ? styles.show : ''}`}
+        onClick={closeMobileMenu}
+      ></div>
+
+    <div className={`${styles.sidebar} ${isMobileMenuOpen ? styles.open : ''}`}>
       <div className={styles.sidebarHeader}>
+        <button 
+          className={styles.closeButton}
+          onClick={closeMobileMenu}
+          aria-label="Close menu"
+        >
+          ×
+        </button>
         <div className={styles.logo}>
           <span className={styles.logoIcon}><i className="fas fa-home"></i></span>
           <span className={styles.logoText}>Admin Panel</span>
@@ -72,6 +107,7 @@ const AdminSidebar = ({ user }) => {
                 className={`${styles.menuLink} ${
                   isActiveRoute(item.path, item.exact) ? styles.active : ''
                 }`}
+                onClick={closeMobileMenu}
               >
                 <span className={styles.menuIcon}><i className={item.icon}></i></span>
                 <span className={styles.menuLabel}>{item.label}</span>
@@ -82,7 +118,7 @@ const AdminSidebar = ({ user }) => {
       </nav>
 
       <div className={styles.sidebarFooter}>
-        <Link to="/" className={styles.backToSite}>
+        <Link to="/" className={styles.backToSite} onClick={closeMobileMenu}>
           <span className={styles.menuIcon}><i className="fas fa-globe"></i></span>
           <span>Back to Site</span>
         </Link>
@@ -99,6 +135,7 @@ const AdminSidebar = ({ user }) => {
         </button>
       </div>
     </div>
+    </>
   );
 };
 

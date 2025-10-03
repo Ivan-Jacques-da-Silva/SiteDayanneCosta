@@ -1,4 +1,3 @@
-
 .usuariosPage {
   max-width: 1200px;
   margin: 0 auto;
@@ -387,4 +386,11 @@
   .actionsCell {
     justify-content: flex-start;
   }
+}
+
+.usuariosGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: 20px;
+  margin-top: 20px;
 }

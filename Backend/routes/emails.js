@@ -209,6 +209,50 @@ router.post('/buy-sell-form', async (req, res) => {
   }
 });
 
+// Send welcome email
+router.post('/welcome', async (req, res) => {
+  try {
+    const { firstName, lastName, email } = req.body;
+
+    console.log('Welcome email request:', { firstName, lastName, email });
+
+    // Validate required fields
+    if (!firstName || !email) {
+      return res.status(400).json({
+        success: false,
+        message: 'First name and email are required'
+      });
+    }
+
+    // Send welcome email
+    const emailResult = await sendEmail('welcomeEmail', {
+      firstName,
+      lastName: lastName || '',
+      email
+    });
+
+    if (emailResult.success) {
+      res.json({
+        success: true,
+        message: 'Welcome email sent successfully!'
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: 'Failed to send welcome email',
+        error: emailResult.error
+      });
+    }
+  } catch (error) {
+    console.error('Error in welcome email route:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error.message
+    });
+  }
+});
+
 // Send property inquiry email
 router.post('/property-inquiry', async (req, res) => {
   try {

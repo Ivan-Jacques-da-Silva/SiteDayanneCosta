@@ -80,13 +80,15 @@ router.get('/dashboard', async (req, res) => {
       activeProperties,
       totalContacts,
       newContacts,
-      totalUsers
+      totalUsers,
+      totalFavorites
     ] = await Promise.all([
       prisma.property.count(),
       prisma.property.count({ where: { status: 'ACTIVE' } }),
       prisma.contact.count(),
       prisma.contact.count({ where: { status: 'NEW' } }),
-      prisma.user.count({ where: { role: { not: 'ADMIN' } } })
+      prisma.user.count({ where: { role: { not: 'ADMIN' } } }),
+      prisma.favorite.count()
     ]);
 
     res.json({
@@ -94,11 +96,131 @@ router.get('/dashboard', async (req, res) => {
       activeProperties,
       totalContacts,
       newContacts,
-      totalUsers
+      totalUsers,
+      totalFavorites
     });
   } catch (error) {
     console.error('Dashboard error:', error);
     res.status(500).json({ error: 'Failed to fetch dashboard data' });
+  }
+});
+
+// GET /api/admin/recent-activity - Recent activity feed
+router.get('/recent-activity', async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 10;
+    
+    // Get recent activities from different sources
+    const [recentContacts, recentUsers, recentProperties, recentFavorites] = await Promise.all([
+      prisma.contact.findMany({
+        select: {
+          id: true,
+          name: true,
+          type: true,
+          createdAt: true,
+          property: {
+            select: { title: true }
+          }
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 5
+      }),
+      prisma.user.findMany({
+        where: { role: { not: 'ADMIN' } },
+        select: {
+          id: true,
+          name: true,
+          role: true,
+          createdAt: true
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 3
+      }),
+      prisma.property.findMany({
+        select: {
+          id: true,
+          title: true,
+          status: true,
+          createdAt: true,
+          user: {
+            select: { name: true }
+          }
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 3
+      }),
+      prisma.favorite.findMany({
+        select: {
+          id: true,
+          createdAt: true,
+          user: {
+            select: { name: true }
+          },
+          property: {
+            select: { title: true }
+          }
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 3
+      })
+    ]);
+
+    // Combine and format activities
+    const activities = [];
+    
+    // Add contact activities
+    recentContacts.forEach(contact => {
+      activities.push({
+        id: `contact-${contact.id}`,
+        type: 'contact',
+        icon: 'fas fa-envelope',
+        text: `New ${contact.type.toLowerCase()} from ${contact.name}${contact.property ? ` for ${contact.property.title}` : ''}`,
+        timestamp: contact.createdAt
+      });
+    });
+
+    // Add user activities
+    recentUsers.forEach(user => {
+      activities.push({
+        id: `user-${user.id}`,
+        type: 'user',
+        icon: 'fas fa-user-plus',
+        text: `New ${user.role.toLowerCase()} registered: ${user.name}`,
+        timestamp: user.createdAt
+      });
+    });
+
+    // Add property activities
+    recentProperties.forEach(property => {
+      activities.push({
+        id: `property-${property.id}`,
+        type: 'property',
+        icon: 'fas fa-home',
+        text: `Property "${property.title}" was added by ${property.user.name}`,
+        timestamp: property.createdAt
+      });
+    });
+
+    // Add favorite activities
+    recentFavorites.forEach(favorite => {
+      activities.push({
+        id: `favorite-${favorite.id}`,
+        type: 'favorite',
+        icon: 'fas fa-heart',
+        text: `${favorite.user.name} favorited "${favorite.property.title}"`,
+        timestamp: favorite.createdAt
+      });
+    });
+
+    // Sort by timestamp and limit
+    const sortedActivities = activities
+      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+      .slice(0, limit);
+
+    res.json({ activities: sortedActivities });
+  } catch (error) {
+    console.error('Recent activity error:', error);
+    res.status(500).json({ error: 'Failed to fetch recent activity' });
   }
 });
 

@@ -20,6 +20,7 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
+  const [showSuccessModal, setShowSuccessModal] = useState(false); // State for success modal
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -76,7 +77,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validateForm();
-    
+
     if (Object.keys(newErrors).length === 0) {
       try {
         const response = await fetch(buildApiUrl('/api/users/register'), {
@@ -98,10 +99,9 @@ const Register = () => {
           // Save user data and token to localStorage
           localStorage.setItem('token', data.token);
           localStorage.setItem('user', JSON.stringify(data.user));
-          
-          // Show success message and redirect
-          alert('Registration successful! You are now logged in.');
-          window.location.href = '/';
+
+          // Show success modal and redirect
+          setShowSuccessModal(true);
         } else {
           setErrors({ general: data.error || 'Registration failed' });
         }
@@ -117,7 +117,7 @@ const Register = () => {
   return (
     <div className={styles.registerPage}>
       <Header />
-      
+
       <main className={styles.mainContent}>
         <div className={styles.container}>
           <div className={styles.registerWrapper}>
@@ -133,7 +133,7 @@ const Register = () => {
                     {errors.general}
                   </div>
                 )}
-                
+
                 <div className={styles.formRow}>
                   <div className={styles.formGroup}>
                     <label htmlFor="firstName" className={styles.label}>
@@ -320,6 +320,37 @@ const Register = () => {
       </main>
 
       <Footer />
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header border-0">
+                <h5 className="modal-title">
+                  <i className="fas fa-check-circle text-success me-2"></i>
+                  Registro Concluído!
+                </h5>
+              </div>
+              <div className="modal-body">
+                <p className="mb-0">Seu cadastro foi realizado com sucesso! Você já está logado e será redirecionado para a página inicial.</p>
+              </div>
+              <div className="modal-footer border-0">
+                <button 
+                  type="button" 
+                  className="btn btn-primary"
+                  onClick={() => {
+                    setShowSuccessModal(false);
+                    window.location.href = '/';
+                  }}
+                >
+                  OK
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

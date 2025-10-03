@@ -1,6 +1,7 @@
 .contactPage {
   min-height: 100vh;
   background-color: white;
+  padding-top: 80px; /* Space for fixed header */
 }
 
 .hero {
@@ -10,7 +11,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 80px;
+  margin-top: 0; /* Remove extra margin since we added padding-top to parent */
 }
 
 .heroOverlay {
@@ -234,6 +235,10 @@
 }
 
 @media (max-width: 768px) {
+  .contactPage {
+    padding-top: 60px; /* Reduced header space for mobile */
+  }
+
   .heroContent h1 {
     font-size: 36px;
   }
@@ -263,5 +268,27 @@
   .checkboxOptions {
     flex-direction: column;
     gap: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  .contactPage {
+    padding-top: 70px; /* Adjust for smaller mobile screens */
+  }
+
+  .hero {
+    height: 250px; /* Reduce hero height on mobile */
+  }
+
+  .heroContent h1 {
+    font-size: 28px;
+  }
+
+  .mainContent {
+    padding: 30px 0;
+  }
+
+  .contactForm {
+    padding: 20px 15px;
   }
 }

@@ -100,7 +100,7 @@ const AdminCondominios = () => {
 
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 12,
+    limit: 6,
     total: 0,
     pages: 0
   });
@@ -622,24 +622,31 @@ const AdminCondominios = () => {
   };
 
 
+  const [deleteModalId, setDeleteModalId] = useState(null);
+
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this condominium?')) {
-      try {
-        const token = localStorage.getItem('token');
-        await fetch(buildApiUrl(`/api/admin/properties/${id}`), {
-          method: 'DELETE',
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        await loadCondominios(); // Reload properties after delete
-        setNotificationMessage('Propriedade deletada com sucesso!');
-        setNotificationType('success');
-        setShowNotification(true);
-      } catch (error) {
-        console.error('Error deleting condominio:', error);
-        setNotificationMessage('Erro ao deletar propriedade.');
-        setNotificationType('error');
-        setShowNotification(true);
-      }
+    setDeleteModalId(id);
+  };
+
+  const confirmDelete = async () => {
+    const id = deleteModalId;
+    setDeleteModalId(null);
+    
+    try {
+      const token = localStorage.getItem('token');
+      await fetch(buildApiUrl(`/api/admin/properties/${id}`), {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      await loadCondominios(); // Reload properties after delete
+      setNotificationMessage('Propriedade deletada com sucesso!');
+      setNotificationType('success');
+      setShowNotification(true);
+    } catch (error) {
+      console.error('Error deleting condominio:', error);
+      setNotificationMessage('Erro ao deletar propriedade.');
+      setNotificationType('error');
+      setShowNotification(true);
     }
   };
 
@@ -789,7 +796,7 @@ const AdminCondominios = () => {
 
             <div className={styles.condominiosList}>
               {Array.isArray(condominios) && condominios.length > 0 ? (
-                condominios.map((condominio) => (
+                condominios.slice((currentPage - 1) * 6, currentPage * 6).map((condominio) => (
                   <div key={condominio.id} className={styles.condominioCard}>
                     {/* Property Image */}
                     <div style={{
@@ -899,7 +906,30 @@ const AdminCondominios = () => {
               )}
             </div>
 
-            {/* Pagination - Removed as we are loading all properties */}
+            {/* Pagination */}
+            {!loading && condominios.length > 6 && (
+              <div className={styles.paginationContainer}>
+                <button
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                  className={styles.paginationBtn}
+                >
+                  <i className="fas fa-chevron-left"></i> Anterior
+                </button>
+
+                <div className={styles.paginationInfo}>
+                  Página {currentPage} de {Math.ceil(condominios.length / 6)}
+                </div>
+
+                <button
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(condominios.length / 6)))}
+                  disabled={currentPage === Math.ceil(condominios.length / 6)}
+                  className={styles.paginationBtn}
+                >
+                  Próxima <i className="fas fa-chevron-right"></i>
+                </button>
+              </div>
+            )}
             {/* {!loading && condominios.length > 0 && pagination.pages > 1 && (
               <div style={{
                 display: 'flex',
@@ -1880,6 +1910,41 @@ const AdminCondominios = () => {
                 >
                   OK
                 </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Delete Confirmation Modal */}
+        {deleteModalId && (
+          <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+            <div className="modal-dialog modal-dialog-centered">
+              <div className="modal-content">
+                <div className="modal-header border-0">
+                  <h5 className="modal-title">
+                    <i className="fas fa-exclamation-triangle text-danger me-2"></i>
+                    Confirmar Exclusão
+                  </h5>
+                </div>
+                <div className="modal-body">
+                  <p className="mb-0">Tem certeza que deseja excluir esta propriedade? Esta ação não pode ser desfeita.</p>
+                </div>
+                <div className="modal-footer border-0">
+                  <button 
+                    type="button" 
+                    className="btn btn-secondary"
+                    onClick={() => setDeleteModalId(null)}
+                  >
+                    Cancelar
+                  </button>
+                  <button 
+                    type="button" 
+                    className="btn btn-danger"
+                    onClick={confirmDelete}
+                  >
+                    Excluir
+                  </button>
+                </div>
               </div>
             </div>
           </div>
