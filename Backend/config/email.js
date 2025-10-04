@@ -24,8 +24,8 @@ const transporter = nodemailer.createTransport({
 const emailTemplates = {
   contactForm: (data) => ({
     from: EMAIL_CONFIG.auth.user,
+    to: 'ivanjacques1997@gmail.com',
     // to: 'dayannecosta@compass.com',
-    to: 'dayannecosta@compass.com',
     subject: `New contact message - ${data.firstName} ${data.lastName}`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">

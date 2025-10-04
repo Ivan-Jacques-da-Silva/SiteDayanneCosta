@@ -174,6 +174,10 @@ app.use('/api/featured-listings', featuredListingsRoutes);
 const token = "E2zacX5HZjIrbp1SeiZ0i@";
 const base = "https://api.idxbroker.com";
 
+if (!token) {
+  console.warn('⚠️  IDX_API_KEY não configurada. As rotas IDX não funcionarão corretamente.');
+}
+
 async function chamarIDXFeatured(parametros = {}) {
   const qs = new URLSearchParams(parametros);
   const url = `${base}/clients/featured${qs.toString() ? "?" + qs.toString() : ""}`;
@@ -194,6 +198,31 @@ app.get("/api/idx/clients/featured", async (req, res) => {
     const count = req.query.count || 25;
     const dados = await chamarIDXFeatured({ count });
     res.json(dados);
+  } catch (e) {
+    res.status(500).json({ erro: e.message });
+  }
+});
+
+// Rota para buscar detalhes de uma propriedade IDX específica
+app.get("/api/idx/properties/:idxID", async (req, res) => {
+  try {
+    const { idxID } = req.params;
+    const url = `${base}/clients/properties/${idxID}`;
+    
+    const r = await fetch(url, {
+      method: "GET",
+      headers: { accesskey: token, outputtype: "json" }
+    });
+
+    const texto = await r.text();
+    if (!r.ok) throw new Error(`HTTP ${r.status} – ${texto.slice(0, 300)}`);
+
+    try {
+      const data = JSON.parse(texto);
+      res.json(data);
+    } catch {
+      res.json(texto);
+    }
   } catch (e) {
     res.status(500).json({ erro: e.message });
   }

@@ -148,12 +148,32 @@ const AdminContacts = () => {
                           {contact.message.substring(0, 50)}...
                         </div>
                       )}
+                      {contact.metadata && (() => {
+                        try {
+                          const meta = JSON.parse(contact.metadata);
+                          if (meta.idxPropertyId) {
+                            return (
+                              <div className={styles.idxInfo}>
+                                <small>
+                                  <strong>IDX ID:</strong> {meta.idxPropertyId}
+                                  {meta.propertyUrl && (
+                                    <> | <a href={meta.propertyUrl} target="_blank" rel="noopener noreferrer">Ver imóvel</a></>
+                                  )}
+                                </small>
+                              </div>
+                            );
+                          }
+                        } catch (e) {
+                          return null;
+                        }
+                        return null;
+                      })()}
                     </td>
                     <td>{contact.email}</td>
                     <td>{contact.phone || 'N/A'}</td>
                     <td>
                       <span className={styles.typeTag}>
-                        {contact.type}
+                        {contact.type === 'IDX_PROPERTY_INQUIRY' ? 'MLS/IDX' : contact.type}
                       </span>
                     </td>
                     <td>
