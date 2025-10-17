@@ -203,27 +203,90 @@ app.get("/api/idx/clients/featured", async (req, res) => {
   }
 });
 
+// Rota para buscar TODAS as propriedades IDX formatadas no padrão local
+app.get("/api/idx/properties", async (req, res) => {
+  try {
+    console.log('📥 Fetching IDX properties...');
+    const count = req.query.count || 100;
+    const dados = await chamarIDXFeatured({ count });
+    
+    console.log('📦 IDX API Response:', dados ? 'received' : 'null');
+    
+    if (!dados || !dados.data) {
+      console.log('⚠️ No data in IDX response');
+      return res.json({ properties: [], total: 0 });
+    }
+
+    const properties = Object.values(dados.data).map(prop => {
+      const images = prop.image && prop.image[0] ? [{ url: prop.image[0].url, isPrimary: true }] : [];
+      
+      return {
+        id: `idx-${prop.listingID}`,
+        idxID: prop.listingID,
+        mlsId: prop.listingID,
+        title: prop.address,
+        address: prop.address,
+        city: prop.cityName || 'Miami',
+        state: prop.state || 'FL',
+        zipCode: prop.zipcode || '',
+        price: parseFloat(prop.listPrice || prop.price) || 0,
+        bedrooms: parseInt(prop.bedrooms) || 0,
+        bathrooms: parseFloat(prop.totalBaths || prop.bathrooms) || 0,
+        sqft: prop.sqFt ? parseInt(prop.sqFt.replace(/,/g, '')) : 0,
+        propertyType: prop.propType || 'Residential',
+        status: 'ACTIVE',
+        images: images,
+        latitude: parseFloat(prop.latitude) || null,
+        longitude: parseFloat(prop.longitude) || null,
+        isIDX: true
+      };
+    });
+
+    console.log(`✅ Returning ${properties.length} IDX properties`);
+    
+    res.json({ 
+      properties: properties,
+      total: properties.length 
+    });
+  } catch (e) {
+    console.error('❌ Error fetching IDX properties:', e.message);
+    res.status(500).json({ erro: e.message, properties: [], total: 0 });
+  }
+});
+
 // Rota para buscar detalhes de uma propriedade IDX específica
 app.get("/api/idx/properties/:idxID", async (req, res) => {
   try {
-    const { idxID } = req.params;
-    const url = `${base}/clients/properties/${idxID}`;
+    let { idxID } = req.params;
     
-    const r = await fetch(url, {
-      method: "GET",
-      headers: { accesskey: token, outputtype: "json" }
-    });
-
-    const texto = await r.text();
-    if (!r.ok) throw new Error(`HTTP ${r.status} – ${texto.slice(0, 300)}`);
-
-    try {
-      const data = JSON.parse(texto);
-      res.json(data);
-    } catch {
-      res.json(texto);
+    if (idxID.startsWith('idx-')) {
+      idxID = idxID.replace('idx-', '');
     }
+    
+    console.log(`🔍 Fetching IDX property details for: ${idxID}`);
+    
+    const dados = await chamarIDXFeatured({ count: 500 });
+    
+    if (!dados || !dados.data) {
+      console.log('⚠️ No data in IDX response');
+      return res.status(404).json({ erro: 'Property not found' });
+    }
+    
+    const propertyEntry = Object.entries(dados.data).find(([key, prop]) => {
+      return prop.listingID === idxID || prop.idxID === idxID;
+    });
+    
+    if (!propertyEntry) {
+      console.log(`⚠️ Property ${idxID} not found in featured listings`);
+      return res.status(404).json({ erro: 'Property not found in featured listings' });
+    }
+    
+    const propertyData = propertyEntry[1];
+    console.log(`✅ Found property: ${propertyData.address}`);
+    
+    res.json(propertyData);
   } catch (e) {
+    console.error('❌ Error fetching IDX property:', e.message);
     res.status(500).json({ erro: e.message });
   }
 });
@@ -252,8 +315,8 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Serve React app for non-API routes
-app.use('*', (req, res, next) => {
+// Serve React app for non-API routes (fallback handler)
+app.use((req, res, next) => {
   if (req.originalUrl.startsWith('/api/')) {
     return res.status(404).json({ error: 'Route not found' });
   }

@@ -22,6 +22,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
   const [showFavoriteModal, setShowFavoriteModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showMapModal, setShowMapModal] = useState(false);
+  const [isIDXProperty, setIsIDXProperty] = useState(false);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -40,9 +41,16 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
 
   useEffect(() => {
     if (!propertyData && propertyId) {
-      fetchPropertyData();
+      const idStr = String(propertyId);
+      const isIDX = idStr.startsWith('idx-');
+      setIsIDXProperty(isIDX);
+      fetchPropertyData(isIDX);
     } else if (propertyData) {
-      fetchSimilarProperties(propertyData.categoria);
+      const isIDX = propertyData.isIDX === true;
+      setIsIDXProperty(isIDX);
+      if (!isIDX && propertyData.categoria) {
+        fetchSimilarProperties(propertyData.categoria);
+      }
     }
   }, [propertyId, propertyData]);
 
@@ -61,7 +69,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
   }, [property, isAuthenticated, user]);
 
   const checkIfFavorite = async () => {
-    if (!isAuthenticated || !user || !property?.id) return;
+    if (!isAuthenticated || !user || !property?.id || isIDXProperty) return;
 
     try {
       const token = localStorage.getItem('token');
@@ -132,25 +140,132 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
     if (property && property.images) {
       console.log("Property images:", property.images);
       const galleryImages = property.images.filter((img) => {
+        // Handle both string and object formats
+        const url = typeof img === 'string' ? img : img?.url;
+        if (!url || typeof url !== 'string') return false;
+
         return (
-          img.url &&
-          (img.url.includes("gallery-") ||
-            img.url.includes("galleryimages-") ||
-            !img.isPrimary)
+          url.includes("gallery-") ||
+          url.includes("galleryimages-") ||
+          !img.isPrimary
         );
       });
       console.log("Filtered gallery images:", galleryImages);
     }
   }, [property]);
 
-  const fetchPropertyData = async () => {
+  const normalizeIDXProperty = (idxData) => {
+    console.log('Normalizing IDX property:', idxData);
+
+    let images = [];
+
+    if (idxData.image && typeof idxData.image === 'object') {
+      if (Array.isArray(idxData.image)) {
+        images = idxData.image.map(img => ({ url: img.url || img }));
+      } else {
+        const imageKeys = Object.keys(idxData.image).filter(key => key !== 'totalCount' && !isNaN(key));
+        images = imageKeys.map(key => ({
+          url: idxData.image[key].url || idxData.image[key],
+          caption: idxData.image[key].caption || ''
+        }));
+      }
+    }
+
+    if (images.length === 0) {
+      images = [{ url: '/default.png' }];
+    }
+
+    const sqft = idxData.sqFt
+      ? (typeof idxData.sqFt === 'string' ? parseInt(idxData.sqFt.replace(/,/g, '')) : parseInt(idxData.sqFt))
+      : (idxData.sqft ? parseInt(idxData.sqft) : 0);
+
+    const price = parseFloat(idxData.price || idxData.listPrice) || 0;
+
+    const advanced = idxData.advanced || {};
+
+    const amenitiesArray = [];
+    if (advanced.poolfeatures && Array.isArray(advanced.poolfeatures)) {
+      amenitiesArray.push(...advanced.poolfeatures);
+    } else if (advanced.poolFeatures && Array.isArray(advanced.poolFeatures)) {
+      amenitiesArray.push(...advanced.poolFeatures);
+    }
+    if (advanced.appliances && Array.isArray(advanced.appliances)) {
+      amenitiesArray.push(...advanced.appliances);
+    }
+
+    const interiorFeaturesArray = [];
+    if (advanced.interiorfeatures && Array.isArray(advanced.interiorfeatures)) {
+      interiorFeaturesArray.push(...advanced.interiorfeatures);
+    } else if (advanced.interiorFeatures && Array.isArray(advanced.interiorFeatures)) {
+      interiorFeaturesArray.push(...advanced.interiorFeatures);
+    }
+    if (advanced.roomType && Array.isArray(advanced.roomType)) {
+      interiorFeaturesArray.push(...advanced.roomType);
+    }
+
+    const exteriorFeaturesArray = [];
+    if (advanced.exteriorfeatures && Array.isArray(advanced.exteriorfeatures)) {
+      exteriorFeaturesArray.push(...advanced.exteriorfeatures);
+    } else if (advanced.exteriorFeatures && Array.isArray(advanced.exteriorFeatures)) {
+      exteriorFeaturesArray.push(...advanced.exteriorFeatures);
+    }
+    if (advanced.view && Array.isArray(advanced.view)) {
+      exteriorFeaturesArray.push(...advanced.view);
+    }
+
+    return {
+      id: idxData.listingID || idxData.idxID || 'N/A',
+      idxID: idxData.listingID || idxData.idxID || 'N/A',
+      address: idxData.address || idxData.streetAddress || 'N/A',
+      city: idxData.cityName || idxData.city || 'Miami',
+      state: idxData.state || 'FL',
+      zipCode: idxData.zipcode || idxData.zipCode || '',
+      price: price,
+      beds: parseInt(idxData.bedrooms || idxData.beds) || 0,
+      bedrooms: parseInt(idxData.bedrooms || idxData.beds) || 0,
+      baths: parseFloat(idxData.fullBaths || idxData.totalBaths || idxData.bathrooms || idxData.baths) || 0,
+      bathrooms: parseFloat(idxData.fullBaths || idxData.totalBaths || idxData.bathrooms || idxData.baths) || 0,
+      halfBaths: parseInt(idxData.halfBaths) || 0,
+      sqft: sqft,
+      propertyType: idxData.propType || idxData.propertyType || 'Residential',
+      yearBuilt: idxData.yearBuilt || advanced.yearBuilt || 'N/A',
+      description: idxData.remarksConcat || idxData.remarks || idxData.description || '',
+      mlsNumber: idxData.listingID || idxData.idxID || 'N/A',
+      latitude: parseFloat(idxData.latitude) || null,
+      longitude: parseFloat(idxData.longitude) || null,
+      subdivision: idxData.subdivision || advanced.subdivision || 'N/A',
+      amenities: amenitiesArray.length > 0 ? amenitiesArray.join(', ') : '',
+      interiorFeatures: interiorFeaturesArray.length > 0 ? interiorFeaturesArray.join(', ') : '',
+      exteriorFeatures: exteriorFeaturesArray.length > 0 ? exteriorFeaturesArray.join(', ') : '',
+      lotSize: idxData.acres || advanced.lotSizeArea || advanced.acres || 'N/A',
+      daysOnMarket: idxData.daysOnMarket || idxData.dom || 'N/A',
+      dateListed: idxData.dateAdded || idxData.listDate || idxData.dateAvailable || 'N/A',
+      agent: {
+        name: advanced.colistagentfullname || idxData.listingAgent || 'Dayanne Costa'
+      },
+      agentPhone: idxData.listingAgentPhone || '+1 (646) 598-3588',
+      images: images,
+      isIDX: true
+    };
+  };
+
+  const fetchPropertyData = async (isIDX = false) => {
     try {
       setLoading(true);
-      const response = await fetch(buildApiUrl(`/api/properties/${propertyId}`));
+      const endpoint = isIDX
+        ? `/api/idx/properties/${propertyId}`
+        : `/api/properties/${propertyId}`;
+
+      const response = await fetch(buildApiUrl(endpoint));
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
-      setProperty(data);
-      fetchSimilarProperties(data.categoria);
+
+      const normalizedData = isIDX ? normalizeIDXProperty(data) : data;
+      setProperty(normalizedData);
+
+      if (!isIDX && normalizedData.categoria) {
+        fetchSimilarProperties(normalizedData.categoria);
+      }
     } catch (error) {
       console.error("Error fetching property:", error);
     } finally {
@@ -236,23 +351,39 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
     setSubmitMessage('');
 
     try {
-      // Get current page URL
       const currentUrl = window.location.href;
-
-      // Enhanced message with property URL
       const enhancedMessage = `${formData.message}\n\nProperty URL: ${currentUrl}`;
+
+      const requestBody = {
+        ...formData,
+        message: enhancedMessage,
+        propertyUrl: currentUrl,
+        source: isIDXProperty ? 'IDX' : 'LOCAL'
+      };
+
+      if (isIDXProperty) {
+        requestBody.idxPropertyId = property.idxID || property.id;
+        requestBody.propertySummary = {
+          address: property.address,
+          city: property.city,
+          state: property.state,
+          zipCode: property.zipCode,
+          price: property.price,
+          beds: property.beds || property.bedrooms,
+          baths: property.baths || property.bathrooms,
+          sqft: property.sqft,
+          mlsNumber: property.mlsNumber
+        };
+      } else {
+        requestBody.propertyId = property.id;
+      }
 
       const response = await fetch(buildApiUrl('/api/emails/property-inquiry'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...formData,
-          message: enhancedMessage,
-          propertyId: property.id,
-          propertyUrl: currentUrl
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       const text = await response.text();
@@ -293,26 +424,38 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
     return <div className={styles.error}>Property not found</div>;
   }
 
-  // Filter images to show only gallery images for carousel (from multer uploads)
   const galleryImages = property.images
     ? property.images.filter((img) => {
-      // Check if it's a gallery image based on the filename pattern from multer
+      // Handle both string and object formats
+      const url = typeof img === 'string' ? img : img?.url;
+      if (!url || typeof url !== 'string') return false;
+
       return (
-        img.url &&
-        (img.url.includes("gallery-") ||
-          img.url.includes("galleryimages-") ||
-          !img.isPrimary)
+        url.includes("gallery-") ||
+        url.includes("galleryimages-") ||
+        !img.isPrimary
       );
     })
     : [];
 
-  // Use getImageUrl like in admin preview to load images correctly from backend
-  const images =
-    galleryImages.length > 0
-      ? galleryImages.map((img) => getImageUrl(img.url))
-      : property.images
-        ? property.images.map((img) => getImageUrl(img.url))
-        : ["/default.png"];
+  const images = isIDXProperty
+    ? (property.images && property.images.length > 0
+        ? property.images.map((img) => {
+            if (typeof img === 'string') return img;
+            return img?.url || '/default.png';
+          })
+        : ["/default.png"])
+    : (galleryImages.length > 0
+        ? galleryImages.map((img) => {
+            const url = typeof img === 'string' ? img : img?.url;
+            return url && typeof url === 'string' ? getImageUrl(url) : '/default.png';
+          })
+        : property.images
+          ? property.images.map((img) => {
+              const url = typeof img === 'string' ? img : img?.url;
+              return url && typeof url === 'string' ? getImageUrl(url) : '/default.png';
+            })
+          : ["/default.png"]);
 
   return (
     <div className={styles.propertyDetail}>
@@ -332,7 +475,6 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                 Back to results
               </button>
               <button className={styles.newSearchBtn}>New Search</button>
-              <button className={`${styles.favoriteBtn} ${styles.desktopOnly}`}>♡</button>
               <a
                 href={`tel:${property.agentPhone || "+1 (646) 598-3588"}`}
                 className={styles.phoneBtn}
@@ -428,17 +570,18 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                 </div>
               </div>
 
-              {/* Botão de favorito mobile - só aparece no mobile */}
-              <button 
-                className={`${styles.mobileFavoriteBtn} ${isFavorite ? styles.favorited : ''}`}
-                onClick={handleFavoriteClick}
-                disabled={favoriteLoading}
-                title={isAuthenticated ? (isFavorite ? 'Remove from favorites' : 'Add to favorites') : 'Login to save favorites'}
-              >
-                <span className={styles.heartIcon}>
-                  {favoriteLoading ? '⏳' : (isFavorite ? '♥' : '♡')}
-                </span>
-              </button>
+              {!isIDXProperty && (
+                <button
+                  className={`${styles.mobileFavoriteBtn} ${isFavorite ? styles.favorited : ''}`}
+                  onClick={handleFavoriteClick}
+                  disabled={favoriteLoading}
+                  title={isAuthenticated ? (isFavorite ? 'Remove from favorites' : 'Add to favorites') : 'Login to save favorites'}
+                >
+                  <span className={styles.heartIcon}>
+                    {favoriteLoading ? '⏳' : (isFavorite ? '♥' : '♡')}
+                  </span>
+                </button>
+              )}
             </div>
 
             <div className={styles.propertySpecs}>
@@ -474,19 +617,21 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
               </div>
             </div>
 
-            <div className={styles.saveBtn}>
-              <button 
-                className={`${styles.saveButton} ${isFavorite ? styles.favorited : ''}`}
-                onClick={handleFavoriteClick}
-                disabled={favoriteLoading}
-                title={isAuthenticated ? (isFavorite ? 'Remove from favorites' : 'Add to favorites') : 'Login to save favorites'}
-              >
-                <span className={styles.heartIcon}>
-                  {favoriteLoading ? '⏳' : (isFavorite ? '♥' : '♡')}
-                </span>
-                <span>Save</span>
-              </button>
-            </div>
+            {!isIDXProperty && (
+              <div className={styles.saveBtn}>
+                <button
+                  className={`${styles.saveButton} ${isFavorite ? styles.favorited : ''}`}
+                  onClick={handleFavoriteClick}
+                  disabled={favoriteLoading}
+                  title={isAuthenticated ? (isFavorite ? 'Remove from favorites' : 'Add to favorites') : 'Login to save favorites'}
+                >
+                  <span className={styles.heartIcon}>
+                    {favoriteLoading ? '⏳' : (isFavorite ? '♥' : '♡')}
+                  </span>
+                  <span>Save</span>
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Main Content Layout */}
@@ -586,7 +731,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                       <div className={styles.cardLoginOverlayContent}>
                         <i className="fas fa-lock" style={{ fontSize: '24px', marginBottom: '10px' }}></i>
                         <p>Login to view details</p>
-                        <button 
+                        <button
                           className={styles.cardOverlayLoginBtn}
                           onClick={() => setShowLoginModal(true)}
                         >
@@ -649,7 +794,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                     <div className={styles.cardLoginOverlayContent}>
                       <i className="fas fa-lock" style={{ fontSize: '24px', marginBottom: '10px' }}></i>
                       <p>Login to view details</p>
-                      <button 
+                      <button
                         className={styles.cardOverlayLoginBtn}
                         onClick={() => setShowLoginModal(true)}
                       >
@@ -708,9 +853,9 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
               {(property.pricingPdf || property.factSheetPdf || property.brochurePdf) && (
                 <div className={styles.downloadButtonsSection}>
                   {property.pricingPdf && (
-                    <a 
-                      href={`${buildApiUrl('')}${property.pricingPdf}`} 
-                      target="_blank" 
+                    <a
+                      href={`${buildApiUrl('')}${property.pricingPdf}`}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className={styles.downloadBtn}
                       download
@@ -721,9 +866,9 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                   )}
 
                   {property.factSheetPdf && (
-                    <a 
-                      href={`${buildApiUrl('')}${property.factSheetPdf}`} 
-                      target="_blank" 
+                    <a
+                      href={`${buildApiUrl('')}${property.factSheetPdf}`}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className={styles.downloadBtn}
                       download
@@ -734,9 +879,9 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                   )}
 
                   {property.brochurePdf && (
-                    <a 
-                      href={`${buildApiUrl('')}${property.brochurePdf}`} 
-                      target="_blank" 
+                    <a
+                      href={`${buildApiUrl('')}${property.brochurePdf}`}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className={styles.downloadBtn}
                       download
@@ -855,7 +1000,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                   <div className={styles.agentAvatar}>
                     <img
                       // src="/src/assets/img/perfil.jpg"
-                      src={perfil} 
+                      src={perfil}
                       alt={property.agent?.name || "Agent"}
                       className={styles.agentPhoto}
                     />
@@ -993,14 +1138,14 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
         </div>
       )}
 
-      <FavoriteModal 
-        isOpen={showFavoriteModal} 
-        onClose={() => setShowFavoriteModal(false)} 
+      <FavoriteModal
+        isOpen={showFavoriteModal}
+        onClose={() => setShowFavoriteModal(false)}
       />
 
-      <LoginModal 
-        isOpen={showLoginModal} 
-        onClose={() => setShowLoginModal(false)} 
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
       />
 
       {/* Map Modal */}

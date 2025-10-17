@@ -26,6 +26,8 @@ const Header = () => {
   const [currentLanguage, setCurrentLanguage] = useState(() => {
     return localStorage.getItem('selectedLanguage') || 'EN';
   });
+  // Temporarily hide language switcher per client request
+  const showLanguageSwitcher = false;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -223,6 +225,7 @@ const Header = () => {
                   </div>
 
                   {/* Language Switcher */}
+                  {showLanguageSwitcher && (
                   <div className={`ibc-c-language-switcher ip-position-relative notranslate js-language-switcher ${styles.languageSwitcher}`}>
                     <button className={`ibc-c-language-switcher-button ip-position-relative ip-d-flex ibc-u-align-items-center ibc-u-justify-content-center ip-h-full body-xs ip-text-uppercase js-language-switcher-button ${styles.languageButton}`}>
                       <span className={`ibc-c-language-switcher-flag ip-d-inline-block ip-my-0 ip-mr-1 flag-english js-language-switcher-flag ${styles.flagIcon}`}>
@@ -257,6 +260,7 @@ const Header = () => {
                       </button>
                     </div>
                   </div>
+                  )}
 
                   {/* Contact Section */}
                   <div className={`ip-contact ${styles.ipContact}`}>
@@ -791,6 +795,7 @@ const Header = () => {
               )}
 
               {/* Language Switcher */}
+              {showLanguageSwitcher && (
               <li className={`ip-menu-item ip-menu-item-has-children ${styles.ipMenuItem} ${styles.ipMenuItemHasChildren}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
                   <button
@@ -847,6 +852,7 @@ const Header = () => {
                   </li>
                 </ul>
               </li>
+              )}
             </div>
           </nav>
         </div>

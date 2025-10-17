@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { API_ENDPOINTS, buildApiUrl, authenticatedFetch } from '../config/apiConfig';
 import AdminLayout from '../components/AdminLayout';
 import styles from './AdminFavoritos.module.css';
 
@@ -17,18 +18,13 @@ const AdminFavoritos = () => {
   const loadFavoritos = async () => {
     try {
       const token = localStorage.getItem('token');
-      const params = new URLSearchParams({
+      const params = {
         page: currentPage,
         limit: 10,
         ...(filter && { userId: filter })
-      });
+      };
 
-      const response = await fetch(`http://0.0.0.0:5000/api/admin/favorites?${params}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await authenticatedFetch(buildApiUrl(API_ENDPOINTS.ADMIN_FAVORITES, params));
 
       if (response.ok) {
         const data = await response.json();
@@ -98,11 +94,8 @@ const AdminFavoritos = () => {
     if (window.confirm('Are you sure you want to remove this favorite?')) {
       try {
         const token = localStorage.getItem('token');
-        await fetch(`http://0.0.0.0:5000/api/admin/favorites/${id}`, {
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
+        await authenticatedFetch(`${API_ENDPOINTS.ADMIN_FAVORITES}/${id}`, {
+          method: 'DELETE'
         });
         loadFavoritos();
       } catch (error) {

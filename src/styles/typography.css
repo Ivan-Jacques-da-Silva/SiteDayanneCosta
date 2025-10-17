@@ -1,0 +1,67 @@
+/* Global typography aligned to the guide */
+
+:root {
+  /* Families & weights */
+  --font-title-family: 'Raleway', sans-serif;
+  --font-title-weight: 300;
+  --font-body-family: 'Raleway', sans-serif;
+  --font-body-weight: 400;
+  --font-button-family: 'Raleway', sans-serif;
+  --font-button-weight: 400;
+
+  /* Preset sizes */
+  --font-size-small: 13px;
+  --font-size-medium: 20px;
+  --font-size-large: 36px;
+  --font-size-x-large: 42px;
+}
+
+/* Base */
+html, body, #root {
+  font-family: var(--font-body-family);
+  font-weight: var(--font-body-weight);
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-title-family);
+  font-weight: var(--font-title-weight) !important;
+}
+
+/* Buttons (inherits family from globals) */
+button, .btn, input[type="button"], input[type="submit"] {
+  font-family: var(--font-button-family);
+  font-weight: var(--font-button-weight);
+  font-size: 1.125em;
+}
+
+/* Preset size helpers (optional) */
+.has-small-font-size, small { font-size: var(--font-size-small); }
+.has-medium-font-size { font-size: var(--font-size-medium); }
+.has-large-font-size { font-size: var(--font-size-large); }
+.has-x-large-font-size { font-size: var(--font-size-x-large); }
+
+/* Normalize strong/bold to body weight + step */
+strong, b { font-weight: 500; }
+
+/* Preserve Font Awesome icons */
+.fa, .fas, .fa-solid {
+  font-family: 'Font Awesome 6 Free' !important;
+  font-weight: 900 !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+}
+
+.far, .fa-regular {
+  font-family: 'Font Awesome 6 Free' !important;
+  font-weight: 400 !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+}
+
+.fab, .fa-brands {
+  font-family: 'Font Awesome 6 Brands' !important;
+  font-weight: 400 !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+}

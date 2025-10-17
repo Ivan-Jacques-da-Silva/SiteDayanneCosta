@@ -256,19 +256,47 @@ router.post('/welcome', async (req, res) => {
 // Send property inquiry email
 router.post('/property-inquiry', async (req, res) => {
   try {
-    const { firstName, lastName, email, phone, message, propertyId, propertyUrl } = req.body;
+    const { 
+      firstName, 
+      lastName, 
+      email, 
+      phone, 
+      message, 
+      propertyId, 
+      idxPropertyId,
+      propertyUrl,
+      source,
+      propertySummary
+    } = req.body;
 
     // Validate required fields
-    if (!firstName || !lastName || !email || !phone || !propertyId) {
+    if (!firstName || !lastName || !email || !phone) {
       return res.status(400).json({
         success: false,
         message: 'All required fields must be filled in'
       });
     }
 
-    // Get property details
     let property = null;
-    if (prisma) {
+
+    // Handle IDX property
+    if (source === 'IDX' && idxPropertyId) {
+      property = propertySummary || {
+        id: idxPropertyId,
+        address: 'IDX Property',
+        city: 'Miami',
+        state: 'FL',
+        zipCode: 'N/A',
+        price: null,
+        beds: 'N/A',
+        baths: 'N/A',
+        sqft: null,
+        mlsId: idxPropertyId
+      };
+      console.log('Processing IDX property inquiry:', idxPropertyId);
+    } 
+    // Handle local database property
+    else if (propertyId && prisma) {
       try {
         property = await prisma.property.findUnique({
           where: { id: propertyId },
@@ -282,27 +310,26 @@ router.post('/property-inquiry', async (req, res) => {
       } catch (dbError) {
         console.error('Error fetching property from database:', dbError);
       }
+
+      if (!property) {
+        property = {
+          id: propertyId,
+          address: 'Property Address Not Available',
+          city: 'Miami',
+          state: 'FL',
+          zipCode: 'N/A',
+          price: null,
+          beds: 'N/A',
+          baths: 'N/A',
+          sqft: null,
+          mlsId: null
+        };
+        console.warn('Property not found in database, using fallback data');
+      }
     }
 
-    if (!property) {
-      // Create fallback property object
-      property = {
-        id: propertyId,
-        address: 'Property Address Not Available',
-        city: 'Miami',
-        state: 'FL',
-        zipCode: 'N/A',
-        price: null,
-        beds: 'N/A',
-        baths: 'N/A',
-        sqft: null,
-        mlsId: null
-      };
-      console.warn('Property not found in database, using fallback data');
-    }
-
-    // Save to database
-    if (prisma) {
+    // Save to database (only for local properties)
+    if (prisma && source !== 'IDX' && propertyId) {
       try {
         await prisma.contact.create({
           data: {
@@ -314,24 +341,32 @@ router.post('/property-inquiry', async (req, res) => {
             source: 'PROPERTY_INQUIRY',
             status: 'NEW',
             propertyId: propertyId,
-            userId: null // Explicitly set as null for anonymous contacts
+            userId: null
           }
         });
         console.log('Property inquiry saved to database successfully');
       } catch (dbError) {
         console.error('Error saving property inquiry to database:', dbError);
-        return res.status(500).json({
-          success: false,
-          message: 'Failed to save inquiry to database',
-          error: dbError.message
-        });
       }
-    } else {
-      console.error('Database not available');
-      return res.status(500).json({
-        success: false,
-        message: '**Failed** - Database connection not available'
-      });
+    } else if (prisma && source === 'IDX') {
+      try {
+        await prisma.contact.create({
+          data: {
+            name: `${firstName} ${lastName}`,
+            email,
+            phone,
+            message: message || '',
+            type: 'IDX_PROPERTY_INQUIRY',
+            source: 'IDX_PROPERTY',
+            status: 'NEW',
+            metadata: JSON.stringify({ idxPropertyId, propertySummary }),
+            userId: null
+          }
+        });
+        console.log('IDX property inquiry saved to database successfully');
+      } catch (dbError) {
+        console.error('Error saving IDX inquiry to database:', dbError);
+      }
     }
 
     // Send email
@@ -341,7 +376,8 @@ router.post('/property-inquiry', async (req, res) => {
       email,
       phone,
       message: message || 'Interest in property',
-      propertyUrl
+      propertyUrl,
+      isIDX: source === 'IDX'
     }, property);
 
     if (emailResult.success) {

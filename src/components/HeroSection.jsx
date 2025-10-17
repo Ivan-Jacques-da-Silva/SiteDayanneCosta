@@ -75,18 +75,14 @@ const HeroSection = () => {
 
             <Row className="justify-content-center">
               <Col lg={8}>
-                <Row className="justify-content-center mb-4 g-2">
-                  <Col xs={12} sm={6} md="auto">
-                    <Button variant="light" className={`${styles.heroButton} w-100 px-4 py-3`} onClick={handleBuyClick}>
-                      I Want To Buy
-                    </Button>
-                  </Col>
-                  <Col xs={12} sm={6} md="auto">
-                    <Button variant="light" className={`${styles.heroButton} w-100 px-4 py-3`} onClick={handleSellClick}>
-                      I Want To Sell
-                    </Button>
-                  </Col>
-                </Row>
+              <div className="d-flex flex-column flex-sm-row gap-3 justify-content-center mb-3">
+                <Button variant="light" className={`${styles.heroButton} px-4 py-3`} onClick={handleBuyClick}>
+                  I Want To Buy
+                </Button>
+                <Button variant="light" className={`${styles.heroButton} px-4 py-3`} onClick={handleSellClick}>
+                  I Want To Sell
+                </Button>
+              </div>
 
                 <Form className={styles.searchForm} onSubmit={handleSearch}>
                   <Form.Group controlId="searchProperty">

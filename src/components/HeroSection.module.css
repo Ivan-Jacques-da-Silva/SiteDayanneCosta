@@ -8,27 +8,33 @@
   padding-top: 120px;  /* Espaçamento para não ficar por baixo do menu fixo */
 }
 .heroTitle {
-  font-size: 3.5rem;
-  line-height: 1.2;
+  font-size: 4rem;
+  line-height: 1.1;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-  font-weight: 400;
+  font-weight: 200;
+  margin-bottom: 1.5rem !important;
 }
 
 .heroSubtitle {
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   color: #ffffff;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-  font-weight: 400;
+  font-weight: 200;
+  margin-bottom: 3rem !important;
 }
 
 .heroButton {
-  border-radius: 0px;
+  border-radius: 0px !important;
   border: none;
   font-size: 1.1rem;
   transition: all 0.3s ease;
-  text-transform: uppercase;
+  text-transform: capitalize;
   letter-spacing: 0.5px;
-  background-color: rgba(255, 255, 255, 0.9) !important;
+  background-color: rgba(255, 255, 255, 0.7) !important;
+  color: #333 !important;
+  font-weight: 600;
+  min-width: 220px;
+  padding: 6px 30px !important;
 }
 
 .heroButton:hover {
@@ -52,7 +58,7 @@
 .searchForm {
   background: white;
   border-radius: 0px;
-  padding: 15px 20px 15px 20px;
+  padding: 0px;
   box-shadow: none;
   border: none;
 }

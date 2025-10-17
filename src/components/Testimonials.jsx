@@ -1,11 +1,9 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import styles from './Testimonials.module.css';
 
 const Testimonials = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
   const testimonials = [
     {
       quote: "Dayanne has great energy and loves what she does. Which we found important when searching for a home in NYC. She was able to find us exclusive apartments that were fresh to the market and met our requirements. Dayanne kept asking the human about the process, never too anxious about closing a deal and was very transparent.",
@@ -21,33 +19,6 @@ const Testimonials = () => {
     }
   ];
 
-  // Auto-play do carrossel
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentIndex((prevIndex) => 
-        prevIndex === testimonials.length - 1 ? 0 : prevIndex + 1
-      );
-    }, 6000);
-
-    return () => clearInterval(timer);
-  }, [testimonials.length]);
-
-  const goToSlide = (index) => {
-    setCurrentIndex(index);
-  };
-
-  const goToPrevious = () => {
-    setCurrentIndex((prevIndex) => 
-      prevIndex === 0 ? testimonials.length - 1 : prevIndex - 1
-    );
-  };
-
-  const goToNext = () => {
-    setCurrentIndex((prevIndex) => 
-      prevIndex === testimonials.length - 1 ? 0 : prevIndex + 1
-    );
-  };
-
   return (
     <section className={`${styles.testimonials} py-5`}>
       <Container>
@@ -58,42 +29,22 @@ const Testimonials = () => {
           </Col>
         </Row>
 
-        <div className={styles.carouselContainer}>
-          <button 
-            className={`${styles.carouselButton} ${styles.carouselButtonPrev}`}
-            onClick={goToPrevious}
-          >
-            ‹
-          </button>
-
-          <div className={styles.testimonialSlide}>
-            <div className={styles.testimonialContent}>
-              <p className={styles.testimonialText}>
-                "{testimonials[currentIndex].quote}"
-              </p>
-              <div className={styles.testimonialAuthor}>
-                — {testimonials[currentIndex].author} —
+        <Row className="g-4">
+          {testimonials.map((testimonial, index) => (
+            <Col key={index} md={4}>
+              <div className={styles.testimonialCard}>
+                <div className={styles.testimonialContent}>
+                  <p className={styles.testimonialText}>
+                    "{testimonial.quote}"
+                  </p>
+                  <div className={styles.testimonialAuthor}>
+                    — {testimonial.author} —
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-
-          <button 
-            className={`${styles.carouselButton} ${styles.carouselButtonNext}`}
-            onClick={goToNext}
-          >
-            ›
-          </button>
-        </div>
-
-        <div className={styles.indicators}>
-          {testimonials.map((_, index) => (
-            <button
-              key={index}
-              className={`${styles.indicator} ${index === currentIndex ? styles.active : ''}`}
-              onClick={() => goToSlide(index)}
-            />
+            </Col>
           ))}
-        </div>
+        </Row>
       </Container>
     </section>
   );

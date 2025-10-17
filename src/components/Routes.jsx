@@ -41,6 +41,7 @@ import UserDashboard from '../pages/UserDashboard';
 import UserFavorites from '../pages/UserFavorites';
 import Terms from '../pages/Terms';
 import Privacy from '../pages/Privacy';
+import IDXProperties from '../pages/IDXProperties';
 
 
 
@@ -61,6 +62,7 @@ const AppRoutes = () => {
 
         {/* Property Types */}
         <Route path="/properties" element={<AllProperties />} />
+        <Route path="/idx-properties" element={<IDXProperties />} />
         <Route path="/single-family-homes" element={<SingleFamilyHomes />} />
         <Route path="/luxury-condos" element={<LuxuryCondos />} />
         <Route path="/new-developments" element={<NewDevelopments />} />

@@ -86,7 +86,7 @@ const FeaturedDevelopments = () => {
           <Row className="mb-4 text-center">
             <Col>
               <h5 className="text-uppercase text-white">Featured</h5>
-              <h3 className="fw-bold">New Developments</h3>
+              <h3 className="text-white">New Developments</h3>
               <p className="text-white">Loading developments...</p>
             </Col>
           </Row>
@@ -109,7 +109,7 @@ const FeaturedDevelopments = () => {
         <Row className="mb-4 text-center">
           <Col>
             <h5 className="text-uppercase text-white">Featured</h5>
-            <h3 className="fw-bold">New Developments</h3>
+            <h3 className="text-white">New Developments</h3>
           </Col>
         </Row>
 
@@ -130,7 +130,7 @@ const FeaturedDevelopments = () => {
           <Col className="text-center">
             <Button 
               variant="outline-light" 
-              className="rounded-0 px-5 py-2 fw-bold"
+              className="rounded-0 px-5 py-2"
               onClick={handleViewAll}
             >
               View All

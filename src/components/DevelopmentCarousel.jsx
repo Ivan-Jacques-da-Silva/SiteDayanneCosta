@@ -2,45 +2,53 @@ import React, { useState, useEffect } from 'react';
 
 const DevelopmentCarousel = ({ developments = [], onPropertyClick }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [itemsPerSlide, setItemsPerSlide] = useState(3);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Responsividade
+  // Detectar se é mobile
   useEffect(() => {
-    const updateItemsPerSlide = () => {
-      if (window.innerWidth <= 480) {
-        setItemsPerSlide(1);
-      } else if (window.innerWidth <= 768) {
-        setItemsPerSlide(2);
-      } else {
-        setItemsPerSlide(3);
-      }
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
     };
-
-    updateItemsPerSlide();
-    window.addEventListener('resize', updateItemsPerSlide);
-
-    return () => window.removeEventListener('resize', updateItemsPerSlide);
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Auto-play do carrossel
+  // Auto-play do carrossel - mostra 3 imagens por vez, passando uma por uma
   useEffect(() => {
     if (developments.length === 0) return;
 
     const timer = setInterval(() => {
       setCurrentIndex((prevIndex) => {
-        const maxIndex = Math.ceil(developments.length / itemsPerSlide) - 1;
-        return prevIndex === maxIndex ? 0 : prevIndex + 1;
+        // Loop contínuo - quando chega ao final, volta ao início
+        return prevIndex === developments.length - 1 ? 0 : prevIndex + 1;
       });
-    }, 5000);
+    }, 3000); // Mudança a cada 3 segundos
 
     return () => clearInterval(timer);
-  }, [developments.length, itemsPerSlide]);
+  }, [developments.length]);
 
   if (developments.length === 0) return null;
 
-  const startIndex = currentIndex * itemsPerSlide;
-  const visibleDevelopments = developments.slice(startIndex, startIndex + itemsPerSlide);
-  const totalSlides = Math.ceil(developments.length / itemsPerSlide);
+  // Função para obter as imagens visíveis (com loop infinito)
+  const getVisibleDevelopments = () => {
+    if (isMobile) {
+      // No mobile, mostra apenas 1 imagem
+      return [developments[currentIndex]];
+    } else {
+      // No desktop, mostra 3 imagens
+      const visible = [];
+      for (let i = 0; i < 3; i++) {
+        const index = (currentIndex + i) % developments.length;
+        visible.push(developments[index]);
+      }
+      return visible;
+    }
+  };
+
+  const visibleDevelopments = getVisibleDevelopments();
 
   const formatPrice = (price) => {
     if (!price) return 'Contact for Price';
@@ -65,20 +73,20 @@ const DevelopmentCarousel = ({ developments = [], onPropertyClick }) => {
 
   const goToPrevious = () => {
     setCurrentIndex(prevIndex => 
-      prevIndex === 0 ? totalSlides - 1 : prevIndex - 1
+      prevIndex === 0 ? developments.length - 1 : prevIndex - 1
     );
   };
 
   const goToNext = () => {
     setCurrentIndex(prevIndex => 
-      prevIndex === totalSlides - 1 ? 0 : prevIndex + 1
+      prevIndex === developments.length - 1 ? 0 : prevIndex + 1
     );
   };
 
   return (
     <div style={{ position: 'relative', overflow: 'hidden', padding: '0 60px' }}>
       {/* Navigation Arrows */}
-      {totalSlides > 1 && (
+      {developments.length > 1 && (
         <>
           <button
             onClick={goToPrevious}
@@ -149,92 +157,65 @@ const DevelopmentCarousel = ({ developments = [], onPropertyClick }) => {
         </>
       )}
 
-      {/* Carrossel Content */}
+      {/* Carrossel Content - Responsivo: 1 coluna no mobile, 3 no desktop */}
       <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: window.innerWidth <= 480 ? '1fr' : 
-                            window.innerWidth <= 768 ? 'repeat(2, 1fr)' : 
-                            'repeat(3, 1fr)', 
-        gap: window.innerWidth <= 480 ? '20px' : '30px', 
+        display: 'flex',
+        justifyContent: 'center',
+        gap: isMobile ? '0' : '20px',
         marginBottom: '40px',
-        margin: '0 auto'
+        flexWrap: 'nowrap',
+        width: '100%'
       }}>
-        {visibleDevelopments.map((item, index) => (
+        {visibleDevelopments.map((development, index) => (
           <div 
-            key={item.id || startIndex + index} 
+            key={`${development.id}-${currentIndex}-${index}`} 
             style={{ 
               position: 'relative', 
               overflow: 'hidden',
               cursor: 'pointer',
-              transition: 'transform 0.3s ease'
+              transition: 'transform 0.3s ease',
+              minWidth: isMobile ? '100%' : '250px',
+              width: isMobile ? '100%' : '100%',
+              flex: isMobile ? '0 0 100%' : '1 1 0'
             }}
-            onClick={(e) => handlePropertyClick(item.id, e)}
+            onClick={(e) => handlePropertyClick(development.id, e)}
             onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
             onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
           >
-            <div style={{ 
-              position: 'relative', 
-              overflow: 'hidden', 
-              height: window.innerWidth <= 768 ? (window.innerWidth <= 480 ? '200px' : '220px') : '250px',
-              borderRadius: '8px'
-            }}>
-              <img 
-                src={item.image} 
-                alt={item.name}
-                style={{ 
-                  width: '100%', 
-                  height: '100%', 
-                  objectFit: 'cover',
-                  transition: 'transform 0.3s ease'
-                }}
-                onError={(e) => {
-                  e.target.src = '/default.png';
-                }}
-              />
+            <div>
+              <div style={{ 
+                position: 'relative', 
+                overflow: 'hidden', 
+                height: '250px',
+                borderRadius: '0px'
+              }}>
+                <img 
+                  src={development.image} 
+                  alt={development.name}
+                  style={{ 
+                    width: '100%', 
+                    height: '100%', 
+                    objectFit: 'cover',
+                    transition: 'transform 0.3s ease'
+                  }}
+                  onError={(e) => {
+                    e.target.src = '/default.png';
+                  }}
+                />
+              </div>
               <div style={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                right: 0,
-                background: 'linear-gradient(transparent, rgba(0,0,0,0.8))',
-                padding: '20px',
-                color: '#fff'
+                padding: '15px 0',
+                color: '#fff',
+                textAlign: 'center'
               }}>
                 <h6 style={{ 
                   margin: 0, 
                   fontSize: '16px', 
-                  fontWeight: '600',
-                  marginBottom: '8px',
+                  fontWeight: 'normal',
                   lineHeight: '1.3'
                 }}>
-                  {item.name}
+                  {development.name}
                 </h6>
-                <p style={{ 
-                  margin: 0, 
-                  fontSize: '18px', 
-                  fontWeight: 'bold',
-                  marginBottom: '4px'
-                }}>
-                  {formatPrice(item.price)}
-                </p>
-                {item.bedrooms && item.bathrooms && (
-                  <p style={{ 
-                    margin: 0, 
-                    fontSize: '12px', 
-                    opacity: 0.9,
-                    marginBottom: '4px'
-                  }}>
-                    {item.bedrooms} Bed • {item.bathrooms} Bath
-                    {item.sqft && ` • ${item.sqft.toLocaleString()} Sq.Ft.`}
-                  </p>
-                )}
-                <p style={{ 
-                  margin: 0, 
-                  fontSize: '12px', 
-                  opacity: 0.8 
-                }}>
-                  {item.address}, {item.city}
-                </p>
               </div>
             </div>
           </div>
@@ -242,9 +223,9 @@ const DevelopmentCarousel = ({ developments = [], onPropertyClick }) => {
       </div>
 
       {/* Indicators */}
-      {totalSlides > 1 && (
+      {developments.length > 1 && (
         <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '20px' }}>
-          {Array.from({ length: totalSlides }).map((_, index) => (
+          {developments.map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}

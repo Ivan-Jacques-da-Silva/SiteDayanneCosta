@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { API_ENDPOINTS, authenticatedFetch } from '../config/apiConfig';
 import styles from './CategoryManager.module.css';
 
 const CategoryManager = ({ 
@@ -24,7 +25,7 @@ const CategoryManager = ({
 
   const loadCategories = async () => {
     try {
-      const response = await fetch('http://0.0.0.0:5000/api/categories');
+      const response = await fetch(API_ENDPOINTS.CATEGORIES);
       if (response.ok) {
         const data = await response.json();
         setCategories(data);
@@ -58,12 +59,8 @@ const CategoryManager = ({
 
     setLoading(true);
     try {
-      const response = await fetch('http://0.0.0.0:5000/api/categories', {
+      const response = await authenticatedFetch(API_ENDPOINTS.CATEGORIES, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
         body: JSON.stringify(newCategory)
       });
 

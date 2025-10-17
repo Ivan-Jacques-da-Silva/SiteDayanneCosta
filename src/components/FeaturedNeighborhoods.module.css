@@ -3,18 +3,27 @@
   }
 
   .sectionTitle {
-    font-weight: 700;
+    font-weight: 400;
     letter-spacing: 1px;
     color: #2c3e50;
   }
 
+  .exploreText {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
   .neighborhoodCard {
     background-color: white;
-    border-radius: 8px;
+    border-radius: 0px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     transition: all 0.3s ease;
     overflow: hidden;
-    height: 200px;
+    height: 300px;
+    margin: 2px;
   }
 
   .neighborhoodCard:hover {

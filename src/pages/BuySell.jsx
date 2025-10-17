@@ -337,10 +337,12 @@ const BuySell = () => {
                 </div>
               )}
 
-              {/* Step 5: Timeline To Purchase */}
+              {/* Step 5: Timeline To Purchase/Sell */}
               {currentStep === 5 && (
                 <div className={styles.step}>
-                  <h1 className={styles.title}>Timeline To Purchase</h1>
+                  <h1 className={styles.title}>
+                    {formData.action === 'buy' ? 'Timeline To Purchase' : 'Timeline To Sell'}
+                  </h1>
                   <div className={styles.options}>
                     {['Now', 'Soon', 'Later'].map((option) => (
                       <button

@@ -64,14 +64,50 @@ const FeaturedNeighborhoods = () => {
     <section className={`${styles.featuredNeighborhoods} py-5`}>
       <Container>
         <Row className="mb-4">
-          <Col>
+          <Col className="text-center">
+            <p className={styles.exploreText}>Explore</p>
             <h2 className={`${styles.sectionTitle} text-uppercase`}>FEATURED NEIGHBORHOODS</h2>
           </Col>
         </Row>
 
+        {/* Primeira linha - 2 imagens */}
+        <Row className="g-3 mb-3">
+          {neighborhoods.slice(0, 2).map((neighborhood, index) => (
+            <Col key={index} xs={12} md={6} className="px-1">
+              <div
+                className={styles.neighborhoodCard}
+                onClick={() => navigate(neighborhood.link)}
+                style={{ cursor: 'pointer' }}
+              >
+                <div className={styles.neighborhoodImageContainer}>
+                  {loading ? (
+                    <div className={styles.imagePlaceholder}>
+                      <div className={styles.loadingSpinner}></div>
+                    </div>
+                  ) : neighborhoodImages[neighborhood.name] ? (
+                    <img
+                      src={neighborhoodImages[neighborhood.name]}
+                      alt={neighborhood.name}
+                      className={styles.neighborhoodImage}
+                    />
+                  ) : (
+                    <div className={styles.imagePlaceholder}>
+                      <span style={{color: '#666', fontSize: '14px'}}>No image available</span>
+                    </div>
+                  )}
+                  <div className={styles.neighborhoodOverlay}>
+                    <span className={styles.neighborhoodName}>{neighborhood.name}</span>
+                  </div>
+                </div>
+              </div>
+            </Col>
+          ))}
+        </Row>
+
+        {/* Segunda linha - 2 imagens */}
         <Row className="g-3 mb-5">
-          {neighborhoods.map((neighborhood, index) => (
-            <Col key={index} xs={6} md={3}>
+          {neighborhoods.slice(2, 4).map((neighborhood, index) => (
+            <Col key={index + 2} xs={12} md={6} className="px-1">
               <div
                 className={styles.neighborhoodCard}
                 onClick={() => navigate(neighborhood.link)}

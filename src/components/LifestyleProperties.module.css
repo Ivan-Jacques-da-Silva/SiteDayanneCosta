@@ -27,3 +27,12 @@
 .imageWrapper:hover .overlay {
   background-color: rgba(0, 0, 0, 0.25);
 }
+
+/* Estilos para hover dos grupos de propriedades */
+.group:hover .hoverOverlay {
+  opacity: 1 !important;
+}
+
+.group:hover img {
+  transform: scale(1.05) !important;
+}

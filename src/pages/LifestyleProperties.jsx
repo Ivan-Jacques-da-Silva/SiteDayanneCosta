@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { API_ENDPOINTS, buildApiUrl } from '../config/apiConfig';
 import styles from './LifestyleProperties.module.css';
 import PropertyListing from '../components/PropertyListing';
 
@@ -66,7 +67,7 @@ const LifestyleProperties = () => {
 
   const fetchProperties = async () => {
     try {
-      const response = await fetch('http://0.0.0.0:5000/api/properties-by-category?category=LIFESTYLE_PROPERTIES');
+      const response = await fetch(buildApiUrl('/api/properties-by-category', { category: 'LIFESTYLE_PROPERTIES' }));
       if (response.ok) {
         const data = await response.json();
         setProperties(data.properties || []);

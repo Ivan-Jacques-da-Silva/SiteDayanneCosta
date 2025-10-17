@@ -55,7 +55,7 @@ const LifestyleProperties = () => {
 
   const fetchPropertyCounts = async () => {
     try {
-      const response = await fetch('http://0.0.0.0:5000/api/properties-by-category?category=LIFESTYLE_PROPERTIES');
+      const response = await fetch('http://localhost:5000/api/properties-by-category?category=LIFESTYLE_PROPERTIES');
       if (response.ok) {
         const data = await response.json();
         const properties = data.properties || [];
@@ -90,7 +90,7 @@ const LifestyleProperties = () => {
         >
           <Col>
             <small className="text-muted text-uppercase">Browse</small>
-            <h2 className="fw-bold text-uppercase">Lifestyle Properties</h2>
+            <h2 className="text-uppercase">Lifestyle Properties</h2>
           </Col>
         </Row>
 
@@ -111,16 +111,16 @@ const LifestyleProperties = () => {
                 className="text-decoration-none"
                 style={{ display: 'block' }}
               >
-                <div className="overflow-hidden position-relative group" style={{ cursor: 'pointer' }}>
+                <div className={`overflow-hidden position-relative ${styles.group}`} style={{ cursor: 'pointer' }}>
                   <img
                     src={item.image}
                     alt={item.title}
                     className="w-100"
                     style={{
-                      height: '300px',
+                      height: '400px',
                       objectFit: 'cover',
                       transition: 'transform 0.4s ease',
-                      borderRadius: '8px'
+                      borderRadius: '0px'
                     }}
                   />
 
@@ -152,9 +152,9 @@ const LifestyleProperties = () => {
                     display: 'flex',
                     alignItems: 'flex-end',
                     padding: '20px',
-                    borderRadius: '8px'
+                    borderRadius: '0px'
                   }}
-                  className="hover-overlay"
+                  className={styles.hoverOverlay}
                   >
                     <div style={{ color: 'white' }}>
                       <p style={{ margin: '0 0 4px 0', fontSize: '14px', opacity: '0.9' }}>
@@ -172,7 +172,7 @@ const LifestyleProperties = () => {
                   </div>
 
                   <div className="text-center mt-3">
-                    <p className="fw-semibold mb-0 fs-5 text-dark">{item.title}</p>
+                    <p className="mb-0 fs-5 text-dark">{item.title}</p>
                   </div>
                 </div>
               </Link>
@@ -181,14 +181,7 @@ const LifestyleProperties = () => {
         </Row>
       </Container>
 
-      <style jsx>{`
-        .group:hover .hover-overlay {
-          opacity: 1 !important;
-        }
-        .group:hover img {
-          transform: scale(1.05) !important;
-        }
-      `}</style>
+
     </section>
   );
 };

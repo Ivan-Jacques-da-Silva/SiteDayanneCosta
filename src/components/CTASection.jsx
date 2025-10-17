@@ -29,11 +29,11 @@ const BuySellSection = () => {
       >
         <div className="position-absolute top-0 start-0 w-100 h-100" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}></div>
         <Container className="position-relative z-1">
-          <h2 className="display-5 fw-bold">SELLING A HOME?</h2>
+          <h2 className="display-5">SELLING A HOME?</h2>
           <p className="lead">Find out the market value of your home.</p>
           <Button
             variant="outline-light"
-            className="mt-3 px-4 py-2 rounded-0 fw-bold"
+            className="mt-3 px-4 py-2 rounded-0"
             onClick={handleSellClick} // Add onClick handler
           >
             I Want To Sell
@@ -52,11 +52,11 @@ const BuySellSection = () => {
       >
         <div className="position-absolute top-0 start-0 w-100 h-100" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}></div>
         <Container className="position-relative z-1">
-          <h2 className="display-5 fw-bold">BUYING A HOME?</h2>
+          <h2 className="display-5">BUYING A HOME?</h2>
           <p className="lead">Explore our gallery of beautiful properties available now!</p>
           <Button
             variant="outline-light"
-            className="mt-3 px-4 py-2 rounded-0 fw-bold"
+            className="mt-3 px-4 py-2 rounded-0"
             onClick={handleBuyClick} // Add onClick handler
           >
             I Want To Buy

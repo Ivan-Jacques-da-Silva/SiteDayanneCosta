@@ -303,17 +303,9 @@ const PropertyListing = ({
         const highestPrice = Math.max(...prices);
         const dynamicMaxPrice = highestPrice + 500000;
 
-        // Update max price if it's different
-        if (dynamicMaxPrice !== maxPrice) {
+        // Update max price if it's significantly different (prevent infinite loops)
+        if (Math.abs(dynamicMaxPrice - maxPrice) > 1000) {
           setMaxPrice(dynamicMaxPrice);
-          // Update filters to use new max price if current max is at the old limit
-          setFilters((prev) => ({
-            ...prev,
-            priceRange: [
-              prev.priceRange[0],
-              Math.min(prev.priceRange[1], dynamicMaxPrice),
-            ],
-          }));
         }
       }
 

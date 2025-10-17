@@ -120,19 +120,17 @@ const FeaturedListings = () => {
         const maxIndex = Math.ceil(properties.length / itemsPerSlide) - 1;
         return prevIndex === maxIndex ? 0 : prevIndex + 1;
       });
-    }, 5000);
+    }, 8000);
 
     return () => clearInterval(timer);
   }, [properties.length, itemsPerSlide]);
 
   const handlePropertyClick = (property) => {
-    if (property.detailsURL) {
-      window.open(property.detailsURL, '_blank');
-    }
+    navigate(`/property/idx-${property.id}`);
   };
 
   const handleViewAll = () => {
-    navigate('/properties');
+    navigate('/idx-properties');
   };
 
   const goToSlide = (slideIndex) => {
@@ -188,14 +186,14 @@ const FeaturedListings = () => {
   const startIndex = currentIndex * itemsPerSlide;
   const visibleProperties = properties.slice(startIndex, startIndex + itemsPerSlide);
   const totalSlides = Math.ceil(properties.length / itemsPerSlide);
+  const isMobile = itemsPerSlide === 1;
 
   return (
     <section className={`${styles.featuredSection} py-3`}>
       <Container>
         <Row className="text-center mb-3">
           <Col>
-            <h5 className="text-uppercase text-muted">Featured</h5>
-            <h2 className="fw-bold">Listings</h2>
+            <h2 className="text-uppercase" style={{ fontWeight: '200' }}>FEATURED LISTINGS</h2>
           </Col>
         </Row>
 
@@ -206,20 +204,20 @@ const FeaturedListings = () => {
                 onClick={goToPrevious}
                 style={{
                   position: 'absolute',
-                  left: '10px',
-                  top: '50%',
+                  left: '15px',
+                  top: '45%',
                   transform: 'translateY(-50%)',
                   background: 'rgba(255, 255, 255, 0.9)',
                   border: 'none',
                   borderRadius: '50%',
-                  width: '45px',
-                  height: '45px',
+                  width: '55px',
+                  height: '55px',
                   cursor: 'pointer',
                   zIndex: 10,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '20px',
+                  fontSize: '28px',
                   color: '#000',
                   boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
                   transition: 'all 0.3s ease'
@@ -239,20 +237,20 @@ const FeaturedListings = () => {
                 onClick={goToNext}
                 style={{
                   position: 'absolute',
-                  right: '10px',
-                  top: '50%',
+                  right: '15px',
+                  top: '45%',
                   transform: 'translateY(-50%)',
                   background: 'rgba(255, 255, 255, 0.9)',
                   border: 'none',
                   borderRadius: '50%',
-                  width: '45px',
-                  height: '45px',
+                  width: '55px',
+                  height: '55px',
                   cursor: 'pointer',
                   zIndex: 10,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '20px',
+                  fontSize: '28px',
                   color: '#000',
                   boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
                   transition: 'all 0.3s ease'
@@ -306,14 +304,10 @@ const FeaturedListings = () => {
                   />
                 </div>
                 <div style={{ padding: '15px' }}>
-                  <div className={styles.propertyTitle}>
-                    {property.title}
-                  </div>
-                  
                   <div className={styles.propertyPrice}>
                     {formatPrice(property.price)}
                   </div>
-
+                  
                   <div className={styles.propertyDetails}>
                     {property.bedrooms && (
                       <span className={styles.detailItem}>
@@ -341,24 +335,27 @@ const FeaturedListings = () => {
             ))}
           </div>
 
-          {totalSlides > 1 && (
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '20px' }}>
+          {totalSlides > 1 && !isMobile && (
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '20px', marginTop: '30px' }}>
               {Array.from({ length: totalSlides }).map((_, index) => (
                 <button
                   key={index}
                   onClick={() => goToSlide(index)}
                   style={{
-                    width: '8px',
-                    height: '8px',
-                    minWidth: '8px',
-                    minHeight: '8px',
-                    borderRadius: '4px',
+                    width: '2px',
+                    height: '2px',
+                    minWidth: '2px',
+                    minHeight: '2px',
+                    borderRadius: '1px',
                     border: 'none',
                     backgroundColor: currentIndex === index ? '#000' : 'rgba(0, 0, 0, 0.3)',
                     cursor: 'pointer',
                     transition: 'all 0.3s ease',
                     padding: '0',
-                    outline: 'none'
+                    margin: '0',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                    overflow: 'hidden'
                   }}
                 />
               ))}
@@ -370,10 +367,10 @@ const FeaturedListings = () => {
           <Col className="text-center">
             <Button 
               variant="outline-dark" 
-              className="rounded-0 px-5 py-2 fw-bold"
+              className="rounded-0 px-5 py-2"
               onClick={handleViewAll}
             >
-              View All Properties
+              View All Listings
             </Button>
           </Col>
         </Row>

@@ -12,7 +12,7 @@ const AboutSection = () => {
           <Col lg={6} className="px-5 py-4">
             <h5 className="text-muted mb-2">Luxury Real Estate Specialist</h5>
             <h2 className="fw-bold mb-4">Dayanne Costa</h2>
-            <p className="lead">
+            <p>
               Dayanne is a dedicated real estate professional with a relentless pursuit of opportunities for her clients,
               dedicating herself to breaking sales records and turning real estate dreams into reality.
             </p>
@@ -28,9 +28,9 @@ const AboutSection = () => {
               homebuyers to sophisticated sellers or international real estate developers and everything in between, every
               client is a VIP, and she treasures each relationship.
             </p>
-            <Button 
-              variant="outline-dark" 
-              href="/about" 
+            <Button
+              variant="outline-dark"
+              href="/about"
               className="rounded-0 px-4 py-2 fw-bold"
             >
               Read More
@@ -39,10 +39,10 @@ const AboutSection = () => {
 
           {/* Coluna da direita - imagem */}
           <Col lg={6} className="p-0">
-            <Image 
-              src={perfil} 
-              alt="Dayanne Costa" 
-              className="w-100 h-100" 
+            <Image
+              src={perfil}
+              alt="Dayanne Costa"
+              className="w-100 h-100"
               style={{ objectFit: 'cover', border: 'none' }}
             />
           </Col>

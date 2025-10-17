@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { API_ENDPOINTS } from '../config/apiConfig';
 import styles from './CategoryFilter.module.css';
 
 const CategoryFilter = ({ onCategorySelect, selectedCategories = [] }) => {
@@ -12,7 +13,7 @@ const CategoryFilter = ({ onCategorySelect, selectedCategories = [] }) => {
 
   const loadCategories = async () => {
     try {
-      const response = await fetch('http://0.0.0.0:5000/api/categories');
+      const response = await fetch(API_ENDPOINTS.CATEGORIES);
       if (response.ok) {
         const data = await response.json();
         setCategories(data);
