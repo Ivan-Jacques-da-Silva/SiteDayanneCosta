@@ -11,31 +11,29 @@
   }
   
   .sectionTitle {
-    font-weight: 700;
-    /* color: #2c3e50; */
-    position: relative;
-    padding-bottom: 15px;
-  }
-  
-  .sectionTitle::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 50px;
-    height: 3px;
-    background-color: #e74c3c;
-  }
-  
-  .aboutContent p {
-    margin-bottom: 1.2rem;
-    line-height: 1.8;
-    color: #555;
-  }
+  font-family: 'Raleway', sans-serif !important;
+  font-weight: 700;
+  font-size: 2.2rem;
+  letter-spacing: 0.8px;
+  line-height: 1.3;
+  margin-bottom: 1.5rem;
+  /* color: #2c3e50; */
+}
+
+.aboutContent p {
+  font-family: 'Raleway', sans-serif !important;
+  margin-bottom: 1.2rem;
+  line-height: 1.7;
+  letter-spacing: 0.3px;
+  font-size: 1.1rem;
+  color: #555;
+}
   
   .aboutContent .lead {
     font-size: 1.2rem;
     font-weight: 500;
+    letter-spacing: 0.4px;
+    line-height: 1.5;
     color: #2c3e50;
   }
   

@@ -254,6 +254,43 @@ router.post('/welcome', async (req, res) => {
 });
 
 // Send property inquiry email
+// Send sell registration email
+router.post('/sell-registration', async (req, res) => {
+  try {
+    const { address } = req.body;
+
+    if (!address) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Address is required' 
+      });
+    }
+
+    // Send email notification
+    const emailResult = await sendEmail('sellRegistration', { address });
+
+    if (emailResult.success) {
+      res.json({ 
+        success: true, 
+        message: 'Sell registration email sent successfully' 
+      });
+    } else {
+      res.status(500).json({ 
+        success: false, 
+        message: 'Failed to send sell registration email',
+        error: emailResult.error 
+      });
+    }
+  } catch (error) {
+    console.error('Error in sell registration:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Internal server error',
+      error: error.message 
+    });
+  }
+});
+
 router.post('/property-inquiry', async (req, res) => {
   try {
     const { 

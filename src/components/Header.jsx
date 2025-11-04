@@ -399,8 +399,14 @@ const Header = () => {
                         </li>
 
                         <li className={`ip-menu-item ${styles.ipMenuItem}`}>
-                          <Link to="/buy-sell" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                            Buy/Sell
+                          <Link to="/buy" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                            Buy
+                          </Link>
+                        </li>
+
+                        <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                          <Link to="/sell" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                            Sell
                           </Link>
                         </li>
 
@@ -576,8 +582,16 @@ const Header = () => {
 
               <li className={`ip-menu-item ${styles.ipMenuItem}`}>
                 <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
-                  <Link to="/buy-sell" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
-                    Buy/Sell
+                  <Link to="/buy" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                    Buy
+                  </Link>
+                </div>
+              </li>
+
+              <li className={`ip-menu-item ${styles.ipMenuItem}`}>
+                <div className={`ip-menu-item-wrapper ${styles.ipMenuItemWrapper}`}>
+                  <Link to="/sell" className={`ip-menu-link ${styles.ipMenuLink}`} onClick={handleNavClick}>
+                    Sell
                   </Link>
                 </div>
               </li>

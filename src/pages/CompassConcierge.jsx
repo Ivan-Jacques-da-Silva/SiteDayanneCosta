@@ -3,6 +3,8 @@ import { Container, Row, Col } from 'react-bootstrap';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import styles from './CompassConcierge.module.css';
+import conciergeVideo from '../assets/img/3 - Concierge Treatment Video.mp4';
+import successStoriesVideo from '../assets/img/Compass Concierge Seller Series  - Julia.mp4';
 
 const CompassConcierge = () => {
   return (
@@ -32,9 +34,9 @@ const CompassConcierge = () => {
                 <div className={styles.ipWrapBtn}></div>
               </article>
               <div className={styles.ipWrapImage}>
-                <img 
-                  src="https://api-cms.idxboost.com/assets/images/compass/concierge-services.jpeg" 
-                  alt="Compass Concierge Services" 
+                <img
+                  src="https://api-cms.idxboost.com/assets/images/compass/concierge-services.jpeg"
+                  alt="Compass Concierge Services"
                   className={`${styles.ipImage} ${styles.msLazy}`}
                 />
               </div>
@@ -94,6 +96,30 @@ const CompassConcierge = () => {
           </div>
           <div className={styles.ipSectionWrapper}>
             <div className={styles.ipSectionContent}>
+              <div className={styles.ipVideoColumn}>
+                <div
+                  style={{
+                    width: '100%',
+                    background: '#000',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <video
+                    controls
+                    style={{
+                      width: '100%',
+                      height: 'auto',
+                      display: 'block',
+                      background: '#000',
+                    }}
+                  >
+                    <source src={successStoriesVideo} type="video/mp4" />
+                    Seu navegador não suporta vídeo.
+                  </video>
+                </div>
+              </div>
+
               <div className={styles.ipTextColumn}>
                 <h4 className={`${styles.ibcUHeading} ${styles.headingSm}`}>
                   Success Stories
@@ -110,20 +136,6 @@ const CompassConcierge = () => {
                 <p className={`${styles.ibcUText} ${styles.bodyMd}`}>
                   Individual results may vary. Testimonials are not intended to guarantee the same or similar results
                 </p>
-              </div>
-              <div className={styles.ipVideoColumn}>
-                <div className={styles.ipVideo} style={{ border: '3px solid #ccc', borderRadius: '8px', overflow: 'hidden' }}>
-                  <iframe
-                    width="100%"
-                    height="315"
-                    src="https://www.youtube.com/embed/4hd018raScA?autoplay=0"
-                    title="Success Stories Video"
-                    frameBorder="0"
-                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className={styles.video}
-                  ></iframe>
-                </div>
               </div>
             </div>
           </div>
@@ -169,9 +181,9 @@ const CompassConcierge = () => {
                 <div className={styles.ipWrapBtn}></div>
               </article>
               <div className={styles.ipWrapImage}>
-                <img 
-                  src="https://api-cms.idxboost.com/assets/images/compass/concierge-covered-services.jpeg" 
-                  alt="Covered Services" 
+                <img
+                  src="https://api-cms.idxboost.com/assets/images/compass/concierge-covered-services.jpeg"
+                  alt="Covered Services"
                   className={`${styles.ipImage} ${styles.msLazy}`}
                 />
               </div>
@@ -189,9 +201,9 @@ const CompassConcierge = () => {
               <div className={`${styles.ipSlider} ${styles.jsSliderOverview}`} data-columns="3">
                 <div className={styles.ipItem}>
                   <div className={styles.ipWrapImage}>
-                    <img 
-                      src="https://api-cms.idxboost.com/assets/images/compass/concierge-percentage-1.png" 
-                      alt="54%" 
+                    <img
+                      src="https://api-cms.idxboost.com/assets/images/compass/concierge-percentage-1.png"
+                      alt="54%"
                       className={`${styles.ipImage} ${styles.msLazy}`}
                     />
                   </div>
@@ -203,9 +215,9 @@ const CompassConcierge = () => {
                 </div>
                 <div className={styles.ipItem}>
                   <div className={styles.ipWrapImage}>
-                    <img 
-                      src="https://api-cms.idxboost.com/assets/images/compass/concierge-percentage-2.png" 
-                      alt="$400" 
+                    <img
+                      src="https://api-cms.idxboost.com/assets/images/compass/concierge-percentage-2.png"
+                      alt="$400"
                       className={`${styles.ipImage} ${styles.msLazy}`}
                     />
                   </div>
@@ -217,9 +229,9 @@ const CompassConcierge = () => {
                 </div>
                 <div className={styles.ipItem}>
                   <div className={styles.ipWrapImage}>
-                    <img 
-                      src="https://api-cms.idxboost.com/assets/images/compass/concierge-percentage-3.png" 
-                      alt="85%" 
+                    <img
+                      src="https://api-cms.idxboost.com/assets/images/compass/concierge-percentage-3.png"
+                      alt="85%"
                       className={`${styles.ipImage} ${styles.msLazy}`}
                     />
                   </div>
@@ -259,19 +271,36 @@ const CompassConcierge = () => {
                 </p>
               </div>
               <div className={styles.ipVideoColumn}>
-                <div className={styles.ipVideo} style={{ border: '3px solid #ccc', borderRadius: '8px', overflow: 'hidden' }}>
+                <div
+                  style={{
+                    width: '100%',
+                    maxWidth: '700px',
+                    aspectRatio: '16 / 9',
+                    background: '#000',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    position: 'relative',
+                  }}
+                >
                   <video
-                    width="100%"
-                    height="315"
                     controls
-                    className={styles.video}
-                    style={{ display: 'block' }}
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',      // corta as laterais/topo pra caber
+                      objectPosition: 'center' // centraliza o corte
+                    }}
                   >
-                    <source src="/src/assets/img/3 - Concierge Treatment Video.mp4" type="video/mp4" />
-                    Seu navegador não suporta o elemento de vídeo.
+                    <source src={conciergeVideo} type="video/mp4" />
+                    Seu navegador não suporta vídeo.
                   </video>
                 </div>
               </div>
+
+
             </div>
           </div>
         </section>

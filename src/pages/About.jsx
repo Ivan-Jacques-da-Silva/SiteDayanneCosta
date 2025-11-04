@@ -13,10 +13,21 @@ const About = () => {
       
       <main className={styles.aboutPage}>
         <section className={styles.aboutSection}>
-          <Container>
-            <Row className="align-items-center min-vh-100">
-              {/* Content column */}
-              <Col lg={6} className="pe-lg-5">
+          <Container fluid className="p-0">
+            <Row className="align-items-stretch h-100 g-0">
+              {/* Image column - agora à esquerda */}
+              <Col lg={6} className="p-0 d-flex">
+                <div className={styles.imageWrapper}>
+                  <img 
+                    src={perfil} 
+                    alt="Dayanne Costa" 
+                    className={styles.profileImage}
+                  />
+                </div>
+              </Col>
+              
+              {/* Text column - agora à direita */}
+              <Col lg={6} className="ps-lg-4 d-flex">
                 <div className={styles.aboutContent}>
                   <h6 className={styles.subtitle}>
                     Luxury Real Estate Specialist
@@ -57,17 +68,6 @@ const About = () => {
                       Contact Dayanne
                     </Button>
                   </div>
-                </div>
-              </Col>
-              
-              {/* Image column */}
-              <Col lg={6} className="p-0">
-                <div className={styles.imageWrapper}>
-                  <img 
-                    src={perfil} 
-                    alt="Dayanne Costa" 
-                    className={styles.profileImage}
-                  />
                 </div>
               </Col>
             </Row>

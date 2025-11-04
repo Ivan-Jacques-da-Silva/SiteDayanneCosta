@@ -47,11 +47,11 @@ const HeroSection = () => {
   };
 
   const handleBuyClick = () => {
-    navigate('/buy-sell?action=buy');
+    navigate('/buy');
   };
 
   const handleSellClick = () => {
-    navigate('/buy-sell?action=sell');
+    navigate('/sell');
   };
 
   const carouselImages = [slide1, slide2, slide3];

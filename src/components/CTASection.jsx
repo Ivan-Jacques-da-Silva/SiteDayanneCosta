@@ -9,11 +9,11 @@ const BuySellSection = () => {
   const navigate = useNavigate(); // Initialize navigate
 
   const handleBuyClick = () => {
-    navigate('/buy-sell?action=buy'); // Navigate to Buy/Sell with 'buy' action
+    navigate('/buy'); // Navigate to Buy page
   };
 
   const handleSellClick = () => {
-    navigate('/buy-sell?action=sell'); // Navigate to Buy/Sell with 'sell' action
+    navigate('/sell'); // Navigate to Sell page
   };
 
   return (

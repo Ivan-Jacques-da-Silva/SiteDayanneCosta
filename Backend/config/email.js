@@ -102,6 +102,36 @@ const emailTemplates = {
     `
   }),
 
+  sellRegistration: (data) => ({
+    from: EMAIL_CONFIG.auth.user,
+    to: 'dayannecosta@compass.com',
+    subject: `Cadastro Sell - ${data.address}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #333;">Sell Registration - New Property Address Submitted</h2>
+
+        <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h3 style="color: #555; margin-top: 0;">Property Information</h3>
+          <p><strong>Address:</strong> ${data.address}</p>
+        </div>
+
+        <div style="background: #e8f5e8; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h3 style="color: #555; margin-top: 0;">Request Details</h3>
+          <p>A potential seller has submitted their property address for a home valuation. This is an initial inquiry that may lead to a listing opportunity.</p>
+          <p><strong>Next Steps:</strong> Follow up with the property owner to provide a comprehensive market analysis and discuss listing services.</p>
+        </div>
+
+        <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin: 20px 0;">
+          <p style="margin: 0; color: #666; font-size: 14px;">
+            <strong>Source:</strong> Sell Page — Home Valuation Form<br>
+            <strong>Date:</strong> ${new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })}<br>
+            <strong>Type:</strong> Property Address Submission
+          </p>
+        </div>
+      </div>
+    `
+  }),
+
   buySellForm: (data) => {
     const resumo = [
       `Action: ${data.formData?.action || 'Not specified'}`,

@@ -33,19 +33,14 @@ const BuySell = () => {
 
   const location = useLocation();
 
-  // Detectar parâmetros da URL e avançar automaticamente
+  // Iniciar diretamente no step 0 (tipo de propriedade) já que sempre será 'buy'
   useEffect(() => {
-    const urlParams = new URLSearchParams(location.search);
-    const actionParam = urlParams.get('action');
-
-    if (actionParam === 'buy' || actionParam === 'sell') {
-      setFormData(prevData => ({
-        ...prevData,
-        action: actionParam
-      }));
-      setCurrentStep(1); // Pula para a próxima etapa
-    }
-  }, [location.search]);
+    // Sempre definir como 'buy' já que removemos a opção de 'sell'
+    setFormData(prevData => ({
+      ...prevData,
+      action: 'buy'
+    }));
+  }, []);
 
   const handleNext = () => {
     setCurrentStep(currentStep + 1);
@@ -59,6 +54,15 @@ const BuySell = () => {
 
   const handleInputChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
+    // Avançar automaticamente após selecionar uma opção
+    setTimeout(() => {
+      // Se for o último step (timeline), chamar handleSubmit, senão handleNext
+      if (field === 'timeline') {
+        handleSubmit();
+      } else {
+        handleNext();
+      }
+    }, 300); // Pequeno delay para feedback visual
   };
 
   const handleSubmit = async (e) => {
@@ -77,7 +81,7 @@ const BuySell = () => {
     console.log('Quiz answers prepared:', currentQuizAnswers);
     setQuizAnswers(currentQuizAnswers);
     setContactForm({
-      name: '', // Resetting contact form fields to be filled in step 6
+      name: '', // Resetting contact form fields to be filled in step 5
       email: '',
       phone: '',
       comments: ''
@@ -195,43 +199,12 @@ const BuySell = () => {
 
       <section className={styles.mainWrap}>
         <div className={styles.container}>
-          {currentStep < 6 ? (
+          {currentStep < 5 ? (
             <form onSubmit={handleSubmit} className={styles.form}>
-              {/* Step 0: I Want To Buy / I Want To Sell */}
+              {/* Step 0: What Are You Looking To Buy? */}
               {currentStep === 0 && (
                 <div className={styles.step}>
-                  <h1 className={styles.title}>What would you like to do?</h1>
-                  <div className={styles.options}>
-                    <button
-                      type="button"
-                      className={`${styles.optionButton} ${formData.action === 'buy' ? styles.selected : ''}`}
-                      onClick={() => {
-                        handleInputChange('action', 'buy');
-                        handleNext();
-                      }}
-                    >
-                      I Want To Buy
-                    </button>
-                    <button
-                      type="button"
-                      className={`${styles.optionButton} ${formData.action === 'sell' ? styles.selected : ''}`}
-                      onClick={() => {
-                        handleInputChange('action', 'sell');
-                        handleNext();
-                      }}
-                    >
-                      I Want To Sell
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Step 1: What Are You Looking To Buy/Sell? */}
-              {currentStep === 1 && (
-                <div className={styles.step}>
-                  <h1 className={styles.title}>
-                    {formData.action === 'sell' ? 'What Are You Looking To Sell?' : 'What Are You Looking To Buy?'}
-                  </h1>
+                  <h1 className={styles.title}>What Are You Looking To Buy?</h1>
                   <div className={styles.options}>
                     {['Condo', 'Single Family Home', 'Townhouse'].map((option) => (
                       <button
@@ -245,18 +218,13 @@ const BuySell = () => {
                     ))}
                   </div>
                   <div className={styles.buttons}>
-                    <button type="button" className={styles.backButton} onClick={handleBack}>
-                      Back
-                    </button>
-                    <button type="button" className={styles.nextButton} onClick={handleSubmit}>
-                      Next
-                    </button>
+                    {/* Botão Next removido - avanço automático */}
                   </div>
                 </div>
               )}
 
-              {/* Step 2: What's Your Price Range? */}
-              {currentStep === 2 && (
+              {/* Step 1: Price Range */}
+              {currentStep === 1 && (
                 <div className={styles.step}>
                   <h1 className={styles.title}>What's Your Price Range?</h1>
                   <div className={styles.options}>
@@ -275,15 +243,13 @@ const BuySell = () => {
                     <button type="button" className={styles.backButton} onClick={handleBack}>
                       Back
                     </button>
-                    <button type="button" className={styles.nextButton} onClick={handleSubmit}>
-                      Next
-                    </button>
+                    {/* Botão Next removido - avanço automático */}
                   </div>
                 </div>
               )}
 
-              {/* Step 3: How Many Bedrooms? */}
-              {currentStep === 3 && (
+              {/* Step 2: How Many Bedrooms? */}
+              {currentStep === 2 && (
                 <div className={styles.step}>
                   <h1 className={styles.title}>How Many Bedrooms?</h1>
                   <div className={styles.options}>
@@ -302,15 +268,13 @@ const BuySell = () => {
                     <button type="button" className={styles.backButton} onClick={handleBack}>
                       Back
                     </button>
-                    <button type="button" className={styles.nextButton} onClick={handleSubmit}>
-                      Next
-                    </button>
+                    {/* Botão Next removido - avanço automático */}
                   </div>
                 </div>
               )}
 
-              {/* Step 4: How Many Bathrooms? */}
-              {currentStep === 4 && (
+              {/* Step 3: How Many Bathrooms? */}
+              {currentStep === 3 && (
                 <div className={styles.step}>
                   <h1 className={styles.title}>How Many Bathrooms?</h1>
                   <div className={styles.options}>
@@ -329,20 +293,15 @@ const BuySell = () => {
                     <button type="button" className={styles.backButton} onClick={handleBack}>
                       Back
                     </button>
-                    <button type="button" className={styles.nextButton} onClick={handleSubmit}>
-                      Next
-                    </button>
-
+                    {/* Botão Next removido - avanço automático */}
                   </div>
                 </div>
               )}
 
-              {/* Step 5: Timeline To Purchase/Sell */}
-              {currentStep === 5 && (
+              {/* Step 4: Timeline To Purchase */}
+              {currentStep === 4 && (
                 <div className={styles.step}>
-                  <h1 className={styles.title}>
-                    {formData.action === 'buy' ? 'Timeline To Purchase' : 'Timeline To Sell'}
-                  </h1>
+                  <h1 className={styles.title}>Timeline To Purchase</h1>
                   <div className={styles.options}>
                     {['Now', 'Soon', 'Later'].map((option) => (
                       <button
@@ -359,16 +318,13 @@ const BuySell = () => {
                     <button type="button" className={styles.backButton} onClick={handleBack}>
                       Back
                     </button>
-                    <button type="button" className={styles.nextButton} onClick={handleSubmit}>
-                      Next
-                    </button>
-
+                    {/* Botão Next removido - avanço automático */}
                   </div>
                 </div>
               )}
             </form>
           ) : (
-            // Step 6: Contact Information (separate form for submission)
+            // Step 5: Contact Information (separate form for submission)
             <div className={styles.step}>
               <h1 className={styles.title}>Contact Information</h1>
               <form onSubmit={handleContactSubmit} className={styles.form}>

@@ -92,7 +92,7 @@
 .categoryCard p {
   color: #6b7280;
   margin: 0;
-  font-size: 14px;
+  font-size: 1rem;
   line-height: 1.5;
 }
 
@@ -178,7 +178,7 @@
 .emptyState p {
   color: #6b7280;
   margin: 0;
-  font-size: 16px;
+  font-size: 1.1rem;
   line-height: 1.6;
 }
 

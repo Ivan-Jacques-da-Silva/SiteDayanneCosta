@@ -10,6 +10,7 @@ import Contact from '../pages/Contact';
 import Buy from '../pages/Buy';
 import BuySell from '../pages/BuySell';
 import Sell from '../pages/Sell';
+import SellNew from '../pages/SellNew';
 import Search from '../pages/Search';
 import SearchResults from '../pages/SearchResults';
 import Login from '../pages/Login';
@@ -55,9 +56,9 @@ const AppRoutes = () => {
         <Route path="/about" element={<About />} />
         <Route path="/about-team" element={<AboutTeam />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/buy" element={<Buy />} />
+        <Route path="/buy" element={<BuySell />} />
         <Route path="/buy-sell" element={<BuySell />} />
-        <Route path="/sell" element={<Sell />} />
+        <Route path="/sell" element={<SellNew />} />
         <Route path="/search" element={<Search />} />
 
         {/* Property Types */}

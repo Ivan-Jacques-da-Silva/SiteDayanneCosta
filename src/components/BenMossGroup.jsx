@@ -21,8 +21,8 @@ const BenMossGroup = () => {
 
           {/* Coluna da direita - texto */}
           <Col lg={6} className="px-5 py-4">
-            <h2 className="fw-bold mb-4">Ben Moss Group</h2>
-            <p>
+            <h2 className={styles.sectionTitle}>Ben Moss Group</h2>
+            <p className={styles.paragraphText}>
               The Ben Moss Group combines individual strengths including negotiation, sales, marketing, and sports to create a strong
               team approach when servicing the needs of our clients. Through our expertise in sports and entertainment, we also
               specialize in representing athletes and celebrities with their unique real estate needs around the country. Based in South

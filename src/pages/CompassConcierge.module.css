@@ -208,6 +208,11 @@
   background-color: #f8f9fa;
 }
 
+/* Slightly bolder hero title only on Compass Concierge hero */
+#ip-section-about-compass-concierge .ibcUHeading.headingSm {
+  font-weight: 600;
+}
+
 #ip-section-contentSectionTwo-smart-fast {
   background-color: #fff;
 }
@@ -218,6 +223,27 @@
 
 #ip-section-about-covered-services {
   background-color: #fff;
+}
+
+/* Make right image fill full column height (crop if needed) */
+#ip-section-about-covered-services .ipSectionContent {
+  align-items: stretch !important;
+}
+
+/* Ensure the media column stretches to row height and image fills */
+#ip-section-about-covered-services .ipWrapImage {
+  align-self: stretch !important;
+  display: block !important;
+  height: 100% !important;
+  min-height: 100% !important;
+}
+
+#ip-section-about-covered-services .ipWrapImage .ipImage {
+  display: block !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  width: 100% !important;
+  object-fit: cover !important;
 }
 
 #ip-section-contentSectionTwo-percentages {

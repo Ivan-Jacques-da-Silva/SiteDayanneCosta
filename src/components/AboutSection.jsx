@@ -9,9 +9,9 @@ const AboutSection = () => {
       <Container fluid>
         <Row className="align-items-center g-0">
           {/* Coluna da esquerda - texto */}
-          <Col lg={6} className="px-5 py-4">
+          <Col lg={6} className={`px-5 py-4 ${styles.aboutContent}`}>
             <h5 className="text-muted mb-2">Luxury Real Estate Specialist</h5>
-            <h2 className="fw-bold mb-4">Dayanne Costa</h2>
+            <h2 className={styles.sectionTitle}>Dayanne Costa</h2>
             <p>
               Dayanne is a dedicated real estate professional with a relentless pursuit of opportunities for her clients,
               dedicating herself to breaking sales records and turning real estate dreams into reality.
