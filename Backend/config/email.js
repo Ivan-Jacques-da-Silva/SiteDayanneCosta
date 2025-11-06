@@ -180,6 +180,8 @@ const emailTemplates = {
   },
 
   welcomeEmail: (data) => ({
+    from: EMAIL_CONFIG.auth.user,
+    to: data.email,
     subject: 'Welcome to Dayanne Costa Real Estate',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff;">
@@ -220,7 +222,7 @@ const emailTemplates = {
         <!-- Footer -->
         <div style="background-color: #2c3e50; padding: 20px; text-align: center;">
           <p style="color: #bdc3c7; margin: 0; font-size: 12px;">
-            © 2024 Dayanne Costa Real Estate. All rights reserved.
+            © 2025 Dayanne Costa Real Estate. All rights reserved.
           </p>
         </div>
       </div>

@@ -127,51 +127,37 @@ const Register = () => {
                 <p className={styles.subtitle}>Join our exclusive real estate community</p>
               </div>
 
-              <form onSubmit={handleSubmit} className={styles.registerForm}>
-                {errors.general && (
-                  <div className={styles.errorMessage}>
-                    {errors.general}
-                  </div>
-                )}
-
-                <div className={styles.formRow}>
-                  <div className={styles.formGroup}>
-                    <label htmlFor="firstName" className={styles.label}>
-                      First Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="firstName"
-                      name="firstName"
-                      value={formData.firstName}
-                      onChange={handleChange}
-                      className={`${styles.input} ${errors.firstName ? styles.inputError : ''}`}
-                      placeholder="Enter your first name"
-                    />
-                    {errors.firstName && <span className={styles.errorText}>{errors.firstName}</span>}
-                  </div>
-
-                  <div className={styles.formGroup}>
-                    <label htmlFor="lastName" className={styles.label}>
-                      Last Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="lastName"
-                      name="lastName"
-                      value={formData.lastName}
-                      onChange={handleChange}
-                      className={`${styles.input} ${errors.lastName ? styles.inputError : ''}`}
-                      placeholder="Enter your last name"
-                    />
-                    {errors.lastName && <span className={styles.errorText}>{errors.lastName}</span>}
-                  </div>
+              <form className={styles.form} onSubmit={handleSubmit}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="firstName">First Name</label>
+                  <input
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    className={`${styles.input} ${errors.firstName ? styles.inputError : ''}`}
+                    placeholder="Enter your first name"
+                  />
+                  {errors.firstName && <span className={styles.errorText}>{errors.firstName}</span>}
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label htmlFor="email" className={styles.label}>
-                    Email Address *
-                  </label>
+                  <label htmlFor="lastName">Last Name</label>
+                  <input
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    className={`${styles.input} ${errors.lastName ? styles.inputError : ''}`}
+                    placeholder="Enter your last name"
+                  />
+                  {errors.lastName && <span className={styles.errorText}>{errors.lastName}</span>}
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="email">Email</label>
                   <input
                     type="email"
                     id="email"
@@ -179,15 +165,13 @@ const Register = () => {
                     value={formData.email}
                     onChange={handleChange}
                     className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
-                    placeholder="Enter your email"
+                    placeholder="Enter your email address"
                   />
                   {errors.email && <span className={styles.errorText}>{errors.email}</span>}
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label htmlFor="phone" className={styles.label}>
-                    Phone Number
-                  </label>
+                  <label htmlFor="phone">Phone (optional)</label>
                   <input
                     type="tel"
                     id="phone"
@@ -200,9 +184,7 @@ const Register = () => {
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label htmlFor="password" className={styles.label}>
-                    Password *
-                  </label>
+                  <label htmlFor="password">Password</label>
                   <div className={styles.passwordWrapper}>
                     <input
                       type={showPassword ? 'text' : 'password'}
@@ -225,9 +207,7 @@ const Register = () => {
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label htmlFor="confirmPassword" className={styles.label}>
-                    Confirm Password *
-                  </label>
+                  <label htmlFor="confirmPassword">Confirm Password</label>
                   <div className={styles.passwordWrapper}>
                     <input
                       type={showConfirmPassword ? 'text' : 'password'}
@@ -329,11 +309,11 @@ const Register = () => {
               <div className="modal-header border-0">
                 <h5 className="modal-title">
                   <i className="fas fa-check-circle text-success me-2"></i>
-                  Registro Concluído!
+                  Registration Complete
                 </h5>
               </div>
               <div className="modal-body">
-                <p className="mb-0">Seu cadastro foi realizado com sucesso! Você já está logado e será redirecionado para a página inicial.</p>
+                <p className="mb-0">Your account has been created successfully. You are now logged in and will be redirected to the home page.</p>
               </div>
               <div className="modal-footer border-0">
                 <button 
@@ -356,3 +336,4 @@ const Register = () => {
 };
 
 export default Register;
+

@@ -362,11 +362,11 @@ const AdminUsuarios = () => {
                 <div className="modal-header border-0">
                   <h5 className="modal-title">
                     <i className="fas fa-exclamation-triangle text-danger me-2"></i>
-                    Confirmar Exclusão
+                    Confirm Deletion
                   </h5>
                 </div>
                 <div className="modal-body">
-                  <p className="mb-0">Tem certeza que deseja excluir este usuário? Esta ação não pode ser desfeita.</p>
+                  <p className="mb-0">Are you sure you want to delete this user? This action cannot be undone.</p>
                 </div>
                 <div className="modal-footer border-0">
                   <button 
@@ -374,14 +374,14 @@ const AdminUsuarios = () => {
                     className="btn btn-secondary"
                     onClick={() => setDeleteUserId(null)}
                   >
-                    Cancelar
+                    Cancel
                   </button>
                   <button 
                     type="button" 
                     className="btn btn-danger"
                     onClick={confirmDeleteUser}
                   >
-                    Excluir
+                    Delete
                   </button>
                 </div>
               </div>

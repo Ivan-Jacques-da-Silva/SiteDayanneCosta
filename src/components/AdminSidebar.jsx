@@ -8,6 +8,15 @@ const AdminSidebar = ({ user }) => {
 
   const isAdmin = user?.role === 'ADMIN';
 
+  const getRoleLabel = (role) => {
+    switch (role) {
+      case 'ADMIN': return 'Administrator';
+      case 'AGENT': return 'Broker';
+      case 'CLIENT': return 'Client';
+      default: return role || '';
+    }
+  };
+
   const menuItems = [
     {
       label: 'Dashboard',
@@ -20,6 +29,11 @@ const AdminSidebar = ({ user }) => {
         label: 'Condominiums',
         path: '/admin/condominios',
         icon: 'fas fa-building'
+      },
+      {
+        label: 'Site Editor',
+        path: '/admin/site-editor',
+        icon: 'fas fa-paint-brush'
       },
       {
         label: 'Users',
@@ -93,7 +107,7 @@ const AdminSidebar = ({ user }) => {
           </div>
           <div className={styles.userDetails}>
             <span className={styles.userName}>{user?.name}</span>
-            <span className={styles.userRole}>{user?.role}</span>
+            <span className={styles.userRole}>{getRoleLabel(user?.role)}</span>
           </div>
         </div>
       </div>
@@ -140,3 +154,4 @@ const AdminSidebar = ({ user }) => {
 };
 
 export default AdminSidebar;
+ 

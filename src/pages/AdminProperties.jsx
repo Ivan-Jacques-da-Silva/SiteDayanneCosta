@@ -440,18 +440,18 @@ const DeleteConfirmationModal = ({ onConfirm, onCancel }) => {
     <div className={styles.modalOverlay}>
       <div className={styles.confirmModal}>
         <div className={styles.modalHeader}>
-          <h3>Confirmar Exclusão</h3>
+          <h3>Confirm Deletion</h3>
         </div>
         <div className={styles.modalBody}>
-          <p>Tem certeza que deseja excluir esta propriedade?</p>
+          <p>Are you sure you want to delete this property?</p>
           <p><strong>Esta ação não pode ser desfeita.</strong></p>
         </div>
         <div className={styles.modalActions}>
           <button onClick={onCancel} className={styles.cancelButton}>
-            Cancelar
+            Cancel
           </button>
           <button onClick={onConfirm} className={styles.deleteButton}>
-            Excluir
+            Delete
           </button>
         </div>
       </div>
@@ -863,7 +863,7 @@ const PropertyEditModal = ({ property, onClose, onSave, showNotification }) => {
                 onChange={(e) => setPricingPdf(e.target.files[0])}
                 className={styles.fileInput}
               />
-              <small>Upload pricing document (PDF only)</small>
+              <small>Upload pricing document (PDF only, max 10MB)</small>
               {property?.pricingPdf && (
                 <div className={styles.currentFile}>
                   <span>Current: {getFileName(property.pricingPdf)}</span>
@@ -881,7 +881,7 @@ const PropertyEditModal = ({ property, onClose, onSave, showNotification }) => {
                 onChange={(e) => setFactSheetPdf(e.target.files[0])}
                 className={styles.fileInput}
               />
-              <small>Upload fact sheet document (PDF only)</small>
+              <small>Upload fact sheet document (PDF only, max 10MB)</small>
               {property?.factSheetPdf && (
                 <div className={styles.currentFile}>
                   <span>Current: {getFileName(property.factSheetPdf)}</span>
@@ -899,7 +899,7 @@ const PropertyEditModal = ({ property, onClose, onSave, showNotification }) => {
                 onChange={(e) => setBrochurePdf(e.target.files[0])}
                 className={styles.fileInput}
               />
-              <small>Upload brochure document (PDF only)</small>
+              <small>Upload brochure document (PDF only, max 10MB)</small>
               {property?.brochurePdf && (
                 <div className={styles.currentFile}>
                   <span>Current: {getFileName(property.brochurePdf)}</span>

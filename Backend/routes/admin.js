@@ -55,7 +55,7 @@ const upload = multer({
 // Define upload fields including PDF documents
 const uploadFields = upload.fields([
   { name: 'primaryImage', maxCount: 1 },
-  { name: 'galleryImages', maxCount: 10 },
+  { name: 'galleryImages', maxCount: 50 },
   { name: 'pricingPdf', maxCount: 1 },
   { name: 'factSheetPdf', maxCount: 1 },
   { name: 'brochurePdf', maxCount: 1 }
@@ -331,12 +331,22 @@ router.delete('/contacts/:id', async (req, res) => {
 // GET /api/admin/users - Get all users
 router.get('/users', async (req, res) => {
   try {
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 10, role, search } = req.query;
     const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    // Build dynamic where clause
+    const where = {};
+    if (role) where.role = role; // ADMIN | AGENT | CLIENT
+    if (search) {
+      where.OR = [
+        { name: { contains: String(search), mode: 'insensitive' } },
+        { email: { contains: String(search), mode: 'insensitive' } }
+      ];
+    }
 
     const [users, total] = await Promise.all([
       prisma.user.findMany({
-        where: { role: { not: 'ADMIN' } },
+        where,
         select: {
           id: true,
           name: true,
@@ -355,7 +365,7 @@ router.get('/users', async (req, res) => {
         skip,
         take: parseInt(limit)
       }),
-      prisma.user.count({ where: { role: { not: 'ADMIN' } } })
+      prisma.user.count({ where })
     ]);
 
     res.json({
@@ -370,6 +380,66 @@ router.get('/users', async (req, res) => {
   } catch (error) {
     console.error('Error fetching users:', error);
     res.status(500).json({ error: 'Failed to fetch users' });
+  }
+});
+
+// PUT /api/admin/users/:id - Update user (name, email, role, password)
+router.put('/users/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, email, role, password } = req.body;
+
+    const data = {};
+    if (name !== undefined) data.name = name;
+    if (email !== undefined) data.email = email;
+    if (role !== undefined) data.role = role; // 'ADMIN' | 'AGENT' | 'CLIENT'
+    if (password && String(password).trim() !== '') {
+      data.password = await bcrypt.hash(password, 12);
+    }
+
+    const user = await prisma.user.update({
+      where: { id },
+      data,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true
+      }
+    });
+
+    res.json(user);
+  } catch (error) {
+    console.error('Error updating user:', error);
+    if (error.code === 'P2002') {
+      return res.status(400).json({ error: 'Email already in use' });
+    }
+    if (error.code === 'P2025') {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.status(500).json({ error: 'Failed to update user' });
+  }
+});
+
+// DELETE /api/admin/users/:id - Delete user
+router.delete('/users/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Optional safety: prevent deleting current logged admin
+    if (req.user && req.user.id === id) {
+      return res.status(400).json({ error: 'Cannot delete the currently logged-in user' });
+    }
+
+    await prisma.user.delete({ where: { id } });
+    res.json({ message: 'User deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    if (error.code === 'P2025') {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.status(500).json({ error: 'Failed to delete user' });
   }
 });
 
@@ -486,7 +556,6 @@ router.post('/properties', uploadFields, (req, res, next) => {
       city,
       state,
       zipCode,
-      neighborhood,
       subdivision,
       price,
       pricePerSqft,
@@ -561,7 +630,6 @@ router.post('/properties', uploadFields, (req, res, next) => {
         taxYear: taxYear ? parseInt(taxYear) : null,
         latitude: latitude ? parseFloat(latitude) : null,
         longitude: longitude ? parseFloat(longitude) : null,
-        neighborhood: neighborhood || bairro,
         subdivision,
         virtualTour,
         amenities,
@@ -572,7 +640,7 @@ router.post('/properties', uploadFields, (req, res, next) => {
         newConstruction: newConstruction === 'true' || newConstruction === true,
         petFriendly: petFriendly === 'true' || petFriendly === true,
         isFeatured: isFeatured === 'true' || isFeatured === true, // Handle isFeatured boolean
-        userId: userId || req.user.userId,
+        userId: userId || req.user.id,
         country: 'USA',
         images: {
           create: [

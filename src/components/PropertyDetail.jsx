@@ -520,17 +520,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
             </div>
           </div>
 
-          {/* Navigation Arrows */}
-          {images.length > 1 && viewMode === "photos" && (
-            <>
-              <button className={styles.sliderPrev} onClick={prevImage}>
-                ‹
-              </button>
-              <button className={styles.sliderNext} onClick={nextImage}>
-                ›
-              </button>
-            </>
-          )}
+          {/* Navigation Arrows: keep only round buttons (autoNavBtn) */}
 
           {/* Auto navigation timer for carousel */}
           {images.length > 1 && viewMode === "photos" && (
@@ -638,6 +628,78 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
           <div className={styles.mainContent}>
             {/* Left Column - Property Details */}
             <div className={styles.leftColumn}>
+              {/* Downloads (auto-fit by count) */}
+              {(() => {
+                const items = [];
+                if (property.pricingPdf) {
+                  items.push({
+                    key: 'pricing',
+                    title: 'Price Ranges',
+                    href: `${buildApiUrl('')}${property.pricingPdf}`,
+                    icon: 'far fa-file',
+                    cta: 'View Price Ranges'
+                  });
+                }
+                if (property.factSheetPdf) {
+                  items.push({
+                    key: 'facts',
+                    title: 'Features List',
+                    href: `${buildApiUrl('')}${property.factSheetPdf}`,
+                    icon: 'far fa-file-lines',
+                    cta: 'View Fact Sheet'
+                  });
+                }
+                if (property.brochurePdf) {
+                  items.push({
+                    key: 'brochure',
+                    title: 'Brochure',
+                    href: `${buildApiUrl('')}${property.brochurePdf}`,
+                    icon: 'far fa-file-pdf',
+                    cta: 'View Brochure'
+                  });
+                }
+                if (items.length === 0) return null;
+                return (
+                  <div
+                    className={styles.downloadCards}
+                    style={{ gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))` }}
+                  >
+                    {items.map(item => (
+                      <div className={styles.downloadCard} key={item.key}>
+                        <div className={styles.downloadCardLeft}>
+                          <i className={item.icon} aria-hidden="true"></i>
+                        </div>
+                        <div className={styles.downloadCardRight}>
+                          <h3 className={styles.downloadCardTitle}>{item.title}</h3>
+                          <a
+                            href={item.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.downloadCardButton}
+                            download
+                          >
+                            <span>{item.cta}</span>
+                          </a>
+                        </div>
+                      </div>
+                    ))}
+                    {!isAuthenticated && (
+                      <div className={styles.cardLoginOverlay}>
+                        <div className={styles.cardLoginOverlayContent}>
+                          <i className="fas fa-lock" style={{ fontSize: '24px', marginBottom: '10px' }}></i>
+                          <p>Login to view documents</p>
+                          <button
+                            className={styles.cardOverlayLoginBtn}
+                            onClick={() => setShowLoginModal(true)}
+                          >
+                            Login
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
               {/* Basic Information */}
               <div className={styles.basicInfoCard}>
                 <h2>Basic Information</h2>
@@ -849,49 +911,7 @@ const PropertyDetail = ({ propertyId, propertyData = null }) => {
                 </div>
               )}
 
-              {/* Download Buttons Section */}
-              {(property.pricingPdf || property.factSheetPdf || property.brochurePdf) && (
-                <div className={styles.downloadButtonsSection}>
-                  {property.pricingPdf && (
-                    <a
-                      href={`${buildApiUrl('')}${property.pricingPdf}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={styles.downloadBtn}
-                      download
-                    >
-                      <div className={styles.downloadBtnIcon}>$</div>
-                      Pricing
-                    </a>
-                  )}
-
-                  {property.factSheetPdf && (
-                    <a
-                      href={`${buildApiUrl('')}${property.factSheetPdf}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={styles.downloadBtn}
-                      download
-                    >
-                      <div className={styles.downloadBtnIcon}>📊</div>
-                      Fact Sheet
-                    </a>
-                  )}
-
-                  {property.brochurePdf && (
-                    <a
-                      href={`${buildApiUrl('')}${property.brochurePdf}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={styles.downloadBtn}
-                      download
-                    >
-                      <div className={styles.downloadBtnIcon}>📄</div>
-                      Brochure
-                    </a>
-                  )}
-                </div>
-              )}
+              {/* Download Cards moved above Basic Information */}
 
               {/* Map Section */}
               <div className={styles.locationMapCard}>

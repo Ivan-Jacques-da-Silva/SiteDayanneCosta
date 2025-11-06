@@ -1337,6 +1337,7 @@
   grid-template-columns: repeat(3, minmax(240px, 1fr));
   gap: 16px;
   margin: 30px 0;
+  position: relative; /* allow login overlay to cover cards */
 }
 
 .downloadCard {
@@ -1362,12 +1363,13 @@
 .downloadCardLeft::after {
   content: "";
   position: absolute;
-  right: -60px; /* push farther to make a stronger diagonal */
+  right: -18px; /* narrow wedge intruding just a bit */
   top: 0;
-  width: 70px; /* wider wedge */
+  width: 24px; /* very slim wedge */
   height: 100%;
   background: #e5e7eb; /* extend color into right with diagonal */
-  clip-path: polygon(0 0, 100% 0, 55% 100%, 0% 100%);
+  /* Increase the diagonal by reducing the lower extent only */
+  clip-path: polygon(0 0, 100% 0, 40% 100%, 0% 100%);
   z-index: 0; /* keep wedge behind content */
 }
 
@@ -1379,7 +1381,7 @@
 .downloadCardRight {
   position: relative;
   z-index: 1; /* ensure text sits above wedge */
-  padding: 12px 16px 14px 56px; /* move content further right to center in white area */
+  padding: 12px 16px 14px 60px; /* shift content further right to compensate reduced wedge */
 }
 
 .downloadCardTitle {
@@ -1424,7 +1426,7 @@
 
 @media (max-width: 640px) {
   .downloadCards { grid-template-columns: 1fr; }
-  .downloadCardRight { padding-left: 28px; }
+  .downloadCardRight { padding-left: 32px; }
 }
 
 @media (max-width: 768px) {

@@ -24,6 +24,7 @@ import AdminFormularios from '../pages/AdminFormularios';
 import AdminContacts from '../pages/AdminContacts';
 import AdminProperties from '../pages/AdminProperties';
 import AdminPropertyForm from '../pages/AdminPropertyForm';
+import AdminSiteEditor from '../pages/AdminSiteEditor';
 import SingleFamilyHomes from '../pages/SingleFamilyHomes';
 import LuxuryCondos from '../pages/LuxuryCondos';
 import Neighborhoods from '../pages/Neighborhoods';
@@ -134,6 +135,14 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute requiredRole="admin">
               <AdminUsuarios />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/site-editor"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminSiteEditor />
             </ProtectedRoute>
           }
         />

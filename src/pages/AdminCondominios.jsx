@@ -6,6 +6,7 @@ import styles from './AdminCondominios.module.css';
 import { buildApiUrl, getImageUrl } from '../config/api';
 
 const AdminCondominios = () => {
+  const MAX_GALLERY_IMAGES = 50;
   const [condominios, setCondominios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -308,7 +309,7 @@ const AdminCondominios = () => {
 
         // Adicionar novas imagens da galeria se existirem
         if (Array.isArray(formData.galleryImages) && formData.galleryImages.length > 0) {
-          formData.galleryImages.forEach((file) => {
+          formData.galleryImages.slice(0, MAX_GALLERY_IMAGES).forEach((file) => {
             if (file instanceof File) {
               formDataToSend.append('galleryImages', file);
             }
@@ -368,7 +369,7 @@ const AdminCondominios = () => {
 
         // Adicionar imagens da galeria
         if (Array.isArray(formData.galleryImages) && formData.galleryImages.length > 0) {
-          formData.galleryImages.forEach((file) => {
+          formData.galleryImages.slice(0, MAX_GALLERY_IMAGES).forEach((file) => {
             if (file instanceof File) {
               formDataToSend.append('galleryImages', file);
             }
@@ -415,12 +416,12 @@ const AdminCondominios = () => {
       setEditingCondominio(null);
       resetForm();
       await loadCondominios(); // Reload properties after save
-      setNotificationMessage('Condomínio salvo com sucesso!');
+      setNotificationMessage('Property saved successfully!');
       setNotificationType('success');
       setShowNotification(true);
     } catch (error) {
       console.error('Error saving condominio:', error);
-      setNotificationMessage(`Falha ao salvar o imóvel: ${error.message}`);
+      setNotificationMessage(`Failed to save property: ${error.message}`);
       setNotificationType('error');
       setShowNotification(true);
     } finally {
@@ -436,7 +437,13 @@ const AdminCondominios = () => {
         setFormData(prev => ({ ...prev, [name]: files[0] }));
         setMainImagePreview(URL.createObjectURL(files[0]));
       } else if (name === 'galleryImages') {
-        const fileArray = Array.from(files);
+        let fileArray = Array.from(files);
+        if (fileArray.length > MAX_GALLERY_IMAGES) {
+          fileArray = fileArray.slice(0, MAX_GALLERY_IMAGES);
+          setNotificationMessage(`You can upload up to ${MAX_GALLERY_IMAGES} gallery images.`);
+          setNotificationType('error');
+          setShowNotification(true);
+        }
         setFormData(prev => ({ ...prev, [name]: fileArray }));
 
         const previewUrls = fileArray.map(file => URL.createObjectURL(file));
@@ -639,7 +646,7 @@ const AdminCondominios = () => {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       await loadCondominios(); // Reload properties after delete
-      setNotificationMessage('Propriedade deletada com sucesso!');
+      setNotificationMessage('Property deleted successfully!');
       setNotificationType('success');
       setShowNotification(true);
     } catch (error) {
@@ -1527,7 +1534,7 @@ const AdminCondominios = () => {
                       name="taxYear"
                       value={formData.taxYear}
                       onChange={handleInputChange}
-                      placeholder="2024"
+                      placeholder="2025"
                     />
                   </div>
                 </div>
@@ -1563,7 +1570,7 @@ const AdminCondominios = () => {
                       onChange={handleInputChange}
                       className={styles.fileInput}
                     />
-                    <small>Upload pricing document (PDF only)</small>
+                    <small>Upload pricing document (PDF only, max 10MB)</small>
                     {editingCondominio?.pricingPdf && !pricingPdf && !removePricingPdf && (
                       <div className={styles.currentFile}>
                         <span>Current: {getFileName(editingCondominio.pricingPdf)}</span>
@@ -1592,7 +1599,7 @@ const AdminCondominios = () => {
                       onChange={handleInputChange}
                       className={styles.fileInput}
                     />
-                    <small>Upload fact sheet document (PDF only)</small>
+                    <small>Upload fact sheet document (PDF only, max 10MB)</small>
                     {editingCondominio?.factSheetPdf && !factSheetPdf && !removeFactSheetPdf && (
                       <div className={styles.currentFile}>
                         <span>Current: {getFileName(editingCondominio.factSheetPdf)}</span>
@@ -1621,7 +1628,7 @@ const AdminCondominios = () => {
                       onChange={handleInputChange}
                       className={styles.fileInput}
                     />
-                    <small>Upload brochure document (PDF only)</small>
+                    <small>Upload brochure document (PDF only, max 10MB)</small>
                     {editingCondominio?.brochurePdf && !brochurePdf && !removeBrochurePdf && (
                       <div className={styles.currentFile}>
                         <span>Current: {getFileName(editingCondominio.brochurePdf)}</span>
@@ -1710,7 +1717,7 @@ const AdminCondominios = () => {
                     multiple
                     className={styles.fileInput}
                   />
-                  <small>Upload multiple images for the gallery (maximum 20 images)</small>
+                  <small>Upload multiple images for the gallery (maximum 50 images)</small>
                   {imagePreviews.length > 0 && (
                     <div style={{
                       display: 'grid',
@@ -1892,7 +1899,7 @@ const AdminCondominios = () => {
                 <div className={styles.notificationIcon}>
                   <i className={notificationType === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-triangle'}></i>
                 </div>
-                <h3>{notificationType === 'success' ? 'Sucesso!' : 'Erro!'}</h3>
+                <h3>{notificationType === 'success' ? 'Success!' : 'Error!'}</h3>
                 <button
                   className={styles.closeNotification}
                   onClick={() => setShowNotification(false)}
@@ -1923,11 +1930,11 @@ const AdminCondominios = () => {
                 <div className="modal-header border-0">
                   <h5 className="modal-title">
                     <i className="fas fa-exclamation-triangle text-danger me-2"></i>
-                    Confirmar Exclusão
+                    Confirm Deletion
                   </h5>
                 </div>
                 <div className="modal-body">
-                  <p className="mb-0">Tem certeza que deseja excluir esta propriedade? Esta ação não pode ser desfeita.</p>
+                  <p className="mb-0">Are you sure you want to delete this property? This action cannot be undone.</p>
                 </div>
                 <div className="modal-footer border-0">
                   <button 
@@ -1935,14 +1942,14 @@ const AdminCondominios = () => {
                     className="btn btn-secondary"
                     onClick={() => setDeleteModalId(null)}
                   >
-                    Cancelar
+                    Cancel
                   </button>
                   <button 
                     type="button" 
                     className="btn btn-danger"
                     onClick={confirmDelete}
                   >
-                    Excluir
+                    Delete
                   </button>
                 </div>
               </div>
